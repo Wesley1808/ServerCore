@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "org.provim.perplayerspawns.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "MinecraftServerMixin",
+    "PassiveEntityMixin",
+    "ServerChunkManagerMixin",
+    "ServerPlayerEntityMixin",
+    "SpawnHelperMixin",
+    "ThreadedAnvilChunkStorageMixin",
+    "accessor.SpawnHelperAccessor",
+    "accessor.SpawnHelperInfoAccessor",
+    "accessor.TACSAccessor"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

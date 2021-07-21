@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "perplayerspawns",
+  "version": "${version}",
+  "name": "Fabric-per-player-spawns",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "environment": "server",
+  "mixins": [
+    "perplayerspawns.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.6",
+    "minecraft": "1.17.1"
+  }
+}
