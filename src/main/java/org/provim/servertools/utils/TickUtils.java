@@ -4,15 +4,106 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import org.provim.servertools.ServerTools;
 import org.provim.servertools.config.Config;
 
+import java.math.BigDecimal;
+
 public final class TickUtils {
+    private static final BigDecimal value = new BigDecimal("0.1");
+    private static int viewDistance = Config.instance().defaultViewDistance;
+    private static int tickDistance = Config.instance().defaultTickDistance;
+    private static BigDecimal mobcapModifier = new BigDecimal(Config.instance().defaultMobcapModifier);
 
     private TickUtils() {
+    }
+
+    /**
+     * Runs performance checks based on the current MSPT.
+     *
+     * @param server: The minecraft server
+     */
+
+    public static void runPerformanceChecks(MinecraftServer server) {
+        if (Config.instance().useDynamicPerformance) {
+            double mspt = server.getTickTime();
+            checkViewDistance(mspt, server);
+            checkMobcaps(mspt);
+            checkTickDistance(mspt);
+        }
+    }
+
+    /**
+     * Modifies the tick distance based on the MSPT.
+     *
+     * @param mspt: The current MSPT
+     */
+
+    private static void checkTickDistance(double mspt) {
+        if (mspt > 40 && tickDistance > Config.instance().minTickDistance) {
+            tickDistance -= 1;
+        } else if (mspt < 30 && tickDistance < Config.instance().maxTickDistance && mobcapModifier.doubleValue() == Config.instance().maxMobcap) {
+            tickDistance += 1;
+        }
+    }
+
+    public static int getTickDistance() {
+        return tickDistance;
+    }
+
+    public static void setTickDistance(int distance) {
+        tickDistance = distance;
+    }
+
+    /**
+     * Modifies the mobcaps based on the MSPT.
+     *
+     * @param mspt: The current MSPT
+     */
+
+    private static void checkMobcaps(double mspt) {
+        if (mspt > 45 && tickDistance == Config.instance().minTickDistance && mobcapModifier.doubleValue() > Config.instance().minMobcap) {
+            mobcapModifier = mobcapModifier.subtract(value);
+        } else if (mspt < 35 && mobcapModifier.doubleValue() < Config.instance().maxMobcap && viewDistance == Config.instance().maxViewDistance) {
+            mobcapModifier = mobcapModifier.add(value);
+        }
+    }
+
+    public static double getModifier() {
+        return mobcapModifier.doubleValue();
+    }
+
+    public static void setModifier(BigDecimal modifier) {
+        mobcapModifier = modifier;
+    }
+
+    /**
+     * Modifies the view distance based on the MSPT.
+     *
+     * @param mspt:   The current MSPT
+     * @param server: The minecraft server
+     */
+
+    private static void checkViewDistance(double mspt, MinecraftServer server) {
+        if (mspt > 45 && mobcapModifier.doubleValue() == Config.instance().minMobcap && viewDistance > Config.instance().minViewDistance) {
+            setViewDistance(viewDistance - 1);
+        } else if (mspt < 35 && viewDistance < Config.instance().maxViewDistance) {
+            setViewDistance(viewDistance + 1);
+        }
+    }
+
+    public static int getViewDistance() {
+        return viewDistance;
+    }
+
+    public static void setViewDistance(int distance) {
+        ServerTools.getServer().getPlayerManager().setViewDistance(distance);
+        viewDistance = distance;
     }
 
     /**
@@ -24,12 +115,12 @@ public final class TickUtils {
      */
 
     public static boolean shouldTick(ChunkPos pos, World world) {
-        if (!Config.instance().useTickDistance) {
+        if (!Config.instance().useTickDistance || tickDistance == viewDistance) {
             return true;
         }
 
         for (PlayerEntity player : world.getPlayers()) {
-            if (player.getChunkPos().getChebyshevDistance(pos) <= Config.instance().tickDistance) {
+            if (player.getChunkPos().getChebyshevDistance(pos) <= tickDistance) {
                 return true;
             }
         }

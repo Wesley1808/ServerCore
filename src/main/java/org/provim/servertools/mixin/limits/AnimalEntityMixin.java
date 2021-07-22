@@ -15,12 +15,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AnimalEntity.class)
 public abstract class AnimalEntityMixin extends PassiveEntity {
-    @Shadow
-    public abstract void resetLoveTicks();
-
     protected AnimalEntityMixin(EntityType<? extends PassiveEntity> entityType, World world) {
         super(entityType, world);
     }
+
+    @Shadow
+    public abstract void resetLoveTicks();
 
     /**
      * Cancels animal breeding if there are too many animals of the same type in the surrounding area.
