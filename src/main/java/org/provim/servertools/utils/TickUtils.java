@@ -87,7 +87,7 @@ public final class TickUtils {
     /**
      * Modifies the view distance based on the MSPT.
      *
-     * @param mspt:   The current MSPT
+     * @param mspt: The current MSPT
      */
 
     private static void checkViewDistance(double mspt) {
