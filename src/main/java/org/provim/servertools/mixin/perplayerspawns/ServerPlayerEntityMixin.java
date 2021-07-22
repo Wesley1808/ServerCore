@@ -1,12 +1,12 @@
-package org.provim.perplayerspawns.mixin;
+package org.provim.servertools.mixin.perplayerspawns;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import org.provim.perplayerspawns.utils.PooledHashSets;
-import org.provim.perplayerspawns.utils.ServerPlayerEntityInterface;
+import org.provim.servertools.utils.perplayerspawns.PooledHashSets;
+import org.provim.servertools.utils.perplayerspawns.ServerPlayerEntityInterface;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

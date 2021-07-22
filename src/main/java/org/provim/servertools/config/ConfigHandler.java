@@ -1,10 +1,9 @@
-package org.provim.perplayerspawns.config;
+package org.provim.servertools.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.provim.servertools.ServerTools;
 
 import java.io.File;
 import java.io.FileReader;
@@ -12,10 +11,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public final class ConfigHandler {
-    private static final File DIR = FabricLoader.getInstance().getConfigDir().toFile();
-    private static final File CONFIG = new File(DIR, "perplayerspawns.json");
     private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
-    private static final Logger LOGGER = LogManager.getLogger("Per-Player-Spawns");
+    private static final File DIR = FabricLoader.getInstance().getConfigDir().toFile();
+    private static final File CONFIG = new File(DIR, "servertools.json");
 
     private ConfigHandler() {
     }
@@ -31,7 +29,7 @@ public final class ConfigHandler {
         try (var fw = new FileWriter(CONFIG)) {
             fw.write(GSON.toJson(Config.instance()));
         } catch (IOException e) {
-            LOGGER.error("Failed to save config!", e);
+            ServerTools.getLogger().error("Failed to save config!", e);
         }
     }
 
@@ -47,7 +45,7 @@ public final class ConfigHandler {
         try (var fr = new FileReader(CONFIG)) {
             Config.instance = GSON.fromJson(fr, Config.class);
         } catch (IOException e) {
-            LOGGER.error("Failed to load config!", e);
+            ServerTools.getLogger().error("Failed to load config!", e);
         }
     }
 }

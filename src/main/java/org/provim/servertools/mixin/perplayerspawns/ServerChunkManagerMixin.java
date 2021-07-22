@@ -1,4 +1,4 @@
-package org.provim.perplayerspawns.mixin;
+package org.provim.servertools.mixin.perplayerspawns;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -7,10 +7,10 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.chunk.ChunkManager;
-import org.provim.perplayerspawns.mixin.accessor.TACSAccessor;
-import org.provim.perplayerspawns.utils.PlayerMobDistanceMap;
-import org.provim.perplayerspawns.utils.ServerPlayerEntityInterface;
-import org.provim.perplayerspawns.utils.TACSInterface;
+import org.provim.servertools.mixin.accessor.TACSAccessor;
+import org.provim.servertools.utils.perplayerspawns.PlayerMobDistanceMap;
+import org.provim.servertools.utils.perplayerspawns.ServerPlayerEntityInterface;
+import org.provim.servertools.utils.perplayerspawns.TACSInterface;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

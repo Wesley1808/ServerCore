@@ -1,4 +1,4 @@
-package org.provim.perplayerspawns.mixin;
+package org.provim.servertools.mixin.perplayerspawns;
 
 import net.minecraft.entity.*;
 import net.minecraft.entity.mob.MobEntity;
@@ -18,10 +18,10 @@ import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import org.jetbrains.annotations.Nullable;
-import org.provim.perplayerspawns.config.Config;
-import org.provim.perplayerspawns.mixin.accessor.SpawnHelperAccessor;
-import org.provim.perplayerspawns.mixin.accessor.SpawnHelperInfoAccessor;
-import org.provim.perplayerspawns.utils.TACSInterface;
+import org.provim.servertools.config.Config;
+import org.provim.servertools.mixin.accessor.SpawnHelperAccessor;
+import org.provim.servertools.mixin.accessor.SpawnHelperInfoAccessor;
+import org.provim.servertools.utils.perplayerspawns.TACSInterface;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

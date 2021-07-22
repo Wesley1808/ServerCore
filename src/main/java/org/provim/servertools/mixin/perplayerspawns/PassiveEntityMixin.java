@@ -1,4 +1,4 @@
-package org.provim.perplayerspawns.mixin;
+package org.provim.servertools.mixin.perplayerspawns;
 
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;

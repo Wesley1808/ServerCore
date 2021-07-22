@@ -1,4 +1,4 @@
-package org.provim.perplayerspawns.utils;
+package org.provim.servertools.utils.perplayerspawns;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;

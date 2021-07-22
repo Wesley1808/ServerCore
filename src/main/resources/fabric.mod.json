@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "id": "perplayerspawns",
+  "id": "fabric-servertools",
   "version": "${version}",
-  "name": "Fabric-per-player-spawns",
+  "name": "Fabric-ServerTools",
   "description": "",
   "authors": [],
   "contact": {},
   "license": "MIT",
   "environment": "server",
   "mixins": [
-    "perplayerspawns.mixins.json"
+    "servertools.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.6",

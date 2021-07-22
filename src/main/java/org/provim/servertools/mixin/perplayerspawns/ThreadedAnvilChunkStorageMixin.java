@@ -1,4 +1,4 @@
-package org.provim.perplayerspawns.mixin;
+package org.provim.servertools.mixin.perplayerspawns;
 
 import com.mojang.datafixers.DataFixer;
 import net.minecraft.entity.Entity;
@@ -15,10 +15,10 @@ import net.minecraft.world.chunk.ChunkProvider;
 import net.minecraft.world.chunk.ChunkStatusChangeListener;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.level.storage.LevelStorage;
-import org.provim.perplayerspawns.config.Config;
-import org.provim.perplayerspawns.utils.PlayerMobDistanceMap;
-import org.provim.perplayerspawns.utils.ServerPlayerEntityInterface;
-import org.provim.perplayerspawns.utils.TACSInterface;
+import org.provim.servertools.config.Config;
+import org.provim.servertools.utils.perplayerspawns.PlayerMobDistanceMap;
+import org.provim.servertools.utils.perplayerspawns.ServerPlayerEntityInterface;
+import org.provim.servertools.utils.perplayerspawns.TACSInterface;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

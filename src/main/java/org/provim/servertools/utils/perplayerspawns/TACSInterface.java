@@ -1,4 +1,4 @@
-package org.provim.perplayerspawns.utils;
+package org.provim.servertools.utils.perplayerspawns;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SpawnGroup;

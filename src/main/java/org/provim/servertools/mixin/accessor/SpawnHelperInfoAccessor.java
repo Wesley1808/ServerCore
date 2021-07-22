@@ -1,4 +1,4 @@
-package org.provim.perplayerspawns.mixin.accessor;
+package org.provim.servertools.mixin.accessor;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.MobEntity;

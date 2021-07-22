@@ -1,4 +1,4 @@
-package org.provim.perplayerspawns.mixin.accessor;
+package org.provim.servertools.mixin.accessor;
 
 import net.minecraft.world.SpawnHelper;
 import org.spongepowered.asm.mixin.Mixin;
