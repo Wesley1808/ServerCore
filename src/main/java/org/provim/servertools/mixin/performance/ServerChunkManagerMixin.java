@@ -7,6 +7,7 @@ import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.SpawnHelper;
 import org.jetbrains.annotations.Nullable;
+import org.provim.servertools.config.Config;
 import org.provim.servertools.mixin.accessor.TACSAccessor;
 import org.provim.servertools.utils.TickUtils;
 import org.spongepowered.asm.mixin.Final;
@@ -50,26 +51,28 @@ public abstract class ServerChunkManagerMixin {
     @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V", ordinal = 0))
     private <T> void onlyTickActiveChunks(List<ChunkHolder> list, Consumer<? super T> action) {
         updateActiveChunks(list);
-        tickActiveChunks();
+        tickActiveChunks(list);
     }
 
     private void updateActiveChunks(List<ChunkHolder> list) {
-        if (this.count++ % 20 == 0) {
-            for (ChunkHolder holder : list) {
-                if (holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isPresent() && TickUtils.shouldTick(holder.getPos(), world)) {
-                    this.active.add(holder);
+        if (Config.instance().useTickDistance) {
+            if (this.count++ % 20 == 0) {
+                for (ChunkHolder holder : list) {
+                    if (holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isPresent() && TickUtils.shouldTick(holder.getPos(), world)) {
+                        this.active.add(holder);
+                    }
                 }
+                this.active.removeIf(holder -> holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickUtils.shouldTick(holder.getPos(), world));
             }
-            this.active.removeIf(holder -> holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickUtils.shouldTick(holder.getPos(), world));
         }
     }
 
-    private void tickActiveChunks() {
+    private void tickActiveChunks(List<ChunkHolder> list) {
         var chunkStorage = (TACSAccessor) this.threadedAnvilChunkStorage;
         long m = this.world.getTime() - this.lastMobSpawningTime;
         var rules = this.world.getGameRules();
         boolean rareSpawn = this.world.getLevelProperties().getTime() % 400L == 0L;
-        for (ChunkHolder holder : this.active) {
+        for (ChunkHolder holder : Config.instance().useTickDistance ? this.active : list) {
             var chunk = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null);
             if (chunk != null) {
                 var pos = chunk.getPos();

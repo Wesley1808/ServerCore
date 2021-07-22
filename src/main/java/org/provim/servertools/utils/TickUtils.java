@@ -2,14 +2,16 @@ package org.provim.servertools.utils;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 import org.provim.servertools.ServerTools;
 import org.provim.servertools.config.Config;
@@ -115,13 +117,13 @@ public final class TickUtils {
      * @return Boolean: whether or not the chunk should tick.
      */
 
-    public static boolean shouldTick(ChunkPos pos, World world) {
-        if (!Config.instance().useTickDistance || tickDistance == viewDistance) {
+    public static boolean shouldTick(ChunkPos pos, ServerWorld world) {
+        if (tickDistance == viewDistance) {
             return true;
         }
 
-        for (PlayerEntity player : world.getPlayers()) {
-            if (player.getChunkPos().getChebyshevDistance(pos) <= tickDistance) {
+        for (ServerPlayerEntity player : world.getPlayers()) {
+            if (player.interactionManager.getGameMode() != GameMode.SPECTATOR && player.getChunkPos().getChebyshevDistance(pos) <= tickDistance) {
                 return true;
             }
         }

@@ -15,7 +15,6 @@ import net.minecraft.world.chunk.ChunkProvider;
 import net.minecraft.world.chunk.ChunkStatusChangeListener;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.level.storage.LevelStorage;
-import org.provim.servertools.config.Config;
 import org.provim.servertools.utils.perplayerspawns.PlayerMobDistanceMap;
 import org.provim.servertools.utils.perplayerspawns.ServerPlayerEntityInterface;
 import org.provim.servertools.utils.perplayerspawns.TACSInterface;
@@ -48,7 +47,7 @@ public class ThreadedAnvilChunkStorageMixin implements TACSInterface {
      */
 
     public void updateMobCounts(Entity entity) {
-        if (Config.instance().perPlayerSpawns && entity instanceof MobEntity mob && !(mob.isPersistent() || mob.cannotDespawn())) {
+        if (entity instanceof MobEntity mob && !(mob.isPersistent() || mob.cannotDespawn())) {
             int chunkX = (int) Math.floor(entity.getPos().getX()) >> 4;
             int chunkZ = (int) Math.floor(entity.getPos().getZ()) >> 4;
             int index = entity.getType().getSpawnGroup().ordinal();

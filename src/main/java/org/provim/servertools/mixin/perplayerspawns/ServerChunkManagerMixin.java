@@ -7,6 +7,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.chunk.ChunkManager;
+import org.provim.servertools.config.Config;
 import org.provim.servertools.mixin.accessor.TACSAccessor;
 import org.provim.servertools.utils.perplayerspawns.PlayerMobDistanceMap;
 import org.provim.servertools.utils.perplayerspawns.ServerPlayerEntityInterface;
@@ -39,7 +40,7 @@ public abstract class ServerChunkManagerMixin extends ChunkManager {
     public SpawnHelper.Info updateSpawnHelper(int spawningChunkCount, Iterable<Entity> entities, SpawnHelper.ChunkSource chunkSource) {
         SpawnHelper.Info spawnHelperInfo;
         PlayerMobDistanceMap distanceMap = ((TACSInterface) threadedAnvilChunkStorage).getPlayerMobDistanceMap();
-        if (distanceMap != null) {
+        if (distanceMap != null && Config.instance().perPlayerSpawns) {
             // update distance map
             distanceMap.update(this.world.getPlayers(), ((TACSAccessor) threadedAnvilChunkStorage).getWatchDistance());
             // re-set mob counts
