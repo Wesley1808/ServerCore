@@ -41,6 +41,12 @@ public class ThreadedAnvilChunkStorageMixin implements TACSInterface {
         return playerMobDistanceMap;
     }
 
+    /**
+     * Adds entity to the per-player mobcap of nearby players when not persistent.
+     *
+     * @param entity: The entity to add
+     */
+
     public void updateMobCounts(Entity entity) {
         if (Config.instance().perPlayerSpawns && entity instanceof MobEntity mob && !(mob.isPersistent() || mob.cannotDespawn())) {
             int chunkX = (int) Math.floor(entity.getPos().getX()) >> 4;

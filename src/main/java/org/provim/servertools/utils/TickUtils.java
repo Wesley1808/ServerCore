@@ -5,6 +5,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
@@ -16,7 +18,7 @@ import java.math.BigDecimal;
 
 public final class TickUtils {
     private static final BigDecimal value = new BigDecimal("0.1");
-    private static int viewDistance = Config.instance().defaultViewDistance;
+    private static int viewDistance = ServerTools.getServer().getPlayerManager().getViewDistance();
     private static int tickDistance = Config.instance().defaultTickDistance;
     private static BigDecimal mobcapModifier = new BigDecimal(Config.instance().defaultMobcapModifier);
 
@@ -32,7 +34,7 @@ public final class TickUtils {
     public static void runPerformanceChecks(MinecraftServer server) {
         if (Config.instance().useDynamicPerformance) {
             double mspt = server.getTickTime();
-            checkViewDistance(mspt, server);
+            checkViewDistance(mspt);
             checkMobcaps(mspt);
             checkTickDistance(mspt);
         }
@@ -86,10 +88,9 @@ public final class TickUtils {
      * Modifies the view distance based on the MSPT.
      *
      * @param mspt:   The current MSPT
-     * @param server: The minecraft server
      */
 
-    private static void checkViewDistance(double mspt, MinecraftServer server) {
+    private static void checkViewDistance(double mspt) {
         if (mspt > 45 && mobcapModifier.doubleValue() == Config.instance().minMobcap && viewDistance > Config.instance().minViewDistance) {
             setViewDistance(viewDistance - 1);
         } else if (mspt < 35 && viewDistance < Config.instance().maxViewDistance) {
@@ -150,5 +151,13 @@ public final class TickUtils {
 
     public static boolean checkForEntities(Entity entity, int limit, int range) {
         return checkForEntities(entity.getType(), entity.getEntityWorld(), entity.getBlockPos(), limit, range);
+    }
+
+    public static MutableText createPerformanceReport() {
+        MinecraftServer server = ServerTools.getServer();
+        double ms = server.getTickTime();
+        var mspt = String.format("%.1f", ms);
+        var tps = String.format("%.1f", ms != 0 ? Math.min((1000 / ms), 20) : 20);
+        return new LiteralText(String.format("§3TPS: §a%s §3MSPT: §a%s\n§3Online: §a%d\n§3Tick distance: §a%d\n§3View distance: §a%d\n§3Mobcap multiplier: §a%s", tps, mspt, server.getCurrentPlayerCount(), tickDistance, viewDistance, String.format("%.1f", mobcapModifier.doubleValue())));
     }
 }

@@ -5,7 +5,6 @@ public class Config {
     public boolean perPlayerSpawns = true;
     public boolean noSpawnChunks = false;
     public boolean useTickDistance = true;
-    public int defaultViewDistance = 10;
     public int defaultTickDistance = 10;
     public double defaultMobcapModifier = 1.0;
     public double itemMergeRadius = 0.5;

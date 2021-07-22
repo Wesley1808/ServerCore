@@ -166,6 +166,7 @@ public abstract class SpawnHelperMixin {
                                         p++;
                                         world.spawnEntityAndPassengers(mobEntity);
                                         runner.run(mobEntity, chunk);
+
                                         if (trackEntity != null) {
                                             trackEntity.accept(mobEntity);
                                         }

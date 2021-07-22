@@ -41,11 +41,6 @@ public abstract class MinecraftServerMixin {
         ConfigHandler.load();
     }
 
-    @Inject(at = @At(value = "TAIL"), method = "runServer")
-    private void afterSetupServer(CallbackInfo info) {
-        TickUtils.setViewDistance(Config.instance().defaultViewDistance);
-    }
-
     /**
      * [Server Shutdown Event]
      */

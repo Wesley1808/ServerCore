@@ -31,6 +31,10 @@ public abstract class ServerChunkManagerMixin extends ChunkManager {
     @Final
     ServerWorld world;
 
+    /**
+     * Updates player-mob-distance maps and recalculates mob counts for each player.
+     */
+
     @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/SpawnHelper;setupSpawn(ILjava/lang/Iterable;Lnet/minecraft/world/SpawnHelper$ChunkSource;)Lnet/minecraft/world/SpawnHelper$Info;"))
     public SpawnHelper.Info updateSpawnHelper(int spawningChunkCount, Iterable<Entity> entities, SpawnHelper.ChunkSource chunkSource) {
         SpawnHelper.Info spawnHelperInfo;

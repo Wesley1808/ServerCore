@@ -31,6 +31,7 @@ public final class SettingCommand {
         dispatcher.register(literal("setting")
                 .requires(src -> src.hasPermissionLevel(2))
                 .then(literal("useDynamicPerformance").then(argument(VALUE, bool()).executes(SettingCommand::useDynamicPerformance)))
+                .then(literal("usePerPlayerSpawns").then(argument(VALUE, bool()).executes(SettingCommand::usePerPlayerSpawns)))
                 .then(literal("useTickDistance").then(argument(VALUE, bool()).executes(SettingCommand::useTickDistance)))
                 .then(literal("useEntityLimits").then(argument(VALUE, bool()).executes(SettingCommand::useEntityLimits)))
                 .then(literal("tickDistance").then(argument(VALUE, integer(1, 32)).executes(SettingCommand::setTickDistance)))
@@ -59,6 +60,13 @@ public final class SettingCommand {
         var value = getDouble(context, VALUE);
         TickUtils.setModifier(BigDecimal.valueOf(value));
         context.getSource().sendFeedback(new LiteralText("Mobcaps have been set to " + value).formatted(Formatting.WHITE), false);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int usePerPlayerSpawns(CommandContext<ServerCommandSource> context) {
+        var value = getBool(context, VALUE);
+        Config.instance().perPlayerSpawns = value;
+        context.getSource().sendFeedback(new LiteralText("Per player spawns has been set to " + value).formatted(Formatting.WHITE), false);
         return Command.SINGLE_SUCCESS;
     }
 

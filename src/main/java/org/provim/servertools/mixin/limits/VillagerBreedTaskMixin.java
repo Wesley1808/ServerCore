@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class VillagerBreedTaskMixin {
 
     /**
-     * Cancels villager breeding eggs if there are too many villagers in the surrounding area.
+     * Cancels villager breeding if there are too many villagers in the surrounding area.
      *
      * @return Double: distance to other villager.
      */
