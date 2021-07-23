@@ -1,4 +1,4 @@
-# Fabric Server Tools
+# ServerCore Fabric
 A fabric mod that adds certain features and tools for multiplayer servers to use.\
 \
 **Current features:**
@@ -10,7 +10,6 @@ A fabric mod that adds certain features and tools for multiplayer servers to use
 
 **Commands:**
 - /setting <name> <value> - Allows for modifying config settings at runtime.
-- /mobcaps - Displays the current mobcaps.
-- /tps - Displays current TPS, MSPT, Online players, tick/view distances and the mobcap multiplier.
+- /info mobcaps | tps - Gives information about the current settings.
 
 The config file can be found at `/config/servertools.json`
