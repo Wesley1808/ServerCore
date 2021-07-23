@@ -12,4 +12,4 @@ A fabric mod that adds certain features and tools for multiplayer servers to use
 - /setting <name> <value> - Allows for modifying config settings at runtime.
 - /info mobcaps | tps - Gives information about the current settings.
 
-The config file can be found at `/config/servertools.json`
+The config file can be found at `/config/servercore.json`
