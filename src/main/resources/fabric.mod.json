@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "id": "fabric-servertools",
+  "id": "servercore-fabric",
   "version": "${version}",
-  "name": "Fabric-ServerTools",
+  "name": "ServerCore-Fabric",
   "description": "",
   "authors": [],
   "contact": {},
   "license": "MIT",
   "environment": "server",
   "mixins": [
-    "servertools.mixins.json"
+    "servercore.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.6",
