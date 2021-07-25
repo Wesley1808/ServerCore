@@ -9,9 +9,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(ThreadedAnvilChunkStorage.class)
 public interface TACSAccessor {
 
-    @Accessor("watchDistance")
-    int getWatchDistance();
-
     @Invoker("isTooFarFromPlayersToSpawnMobs")
     boolean tooFarFromPlayersToSpawnMobs(ChunkPos chunkPos);
 }

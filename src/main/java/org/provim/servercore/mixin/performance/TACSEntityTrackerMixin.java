@@ -20,7 +20,7 @@ abstract class TACSEntityTrackerMixin {
 
     /**
      * @author Wesley1808
-     * @Reason Replace stream code and remove useless iterations.
+     * @reason Replace stream code and remove useless iterations.
      */
 
     @Overwrite

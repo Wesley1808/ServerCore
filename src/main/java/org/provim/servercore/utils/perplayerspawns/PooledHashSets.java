@@ -209,13 +209,13 @@ public class PooledHashSets<E> {
             return removed;
         }
 
+        public ObjectLinkedOpenHashSet<E> getHashSet() {
+            return set;
+        }
+
         @Override
         public Iterator<E> iterator() {
             return this.set.iterator();
-        }
-
-        public ObjectLinkedOpenHashSet<E> getHashSet() {
-            return set;
         }
 
         @Override

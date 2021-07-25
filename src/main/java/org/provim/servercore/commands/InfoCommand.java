@@ -9,9 +9,9 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import org.provim.servercore.config.Config;
+import org.provim.servercore.interfaces.ServerPlayerEntityInterface;
 import org.provim.servercore.mixin.accessor.SpawnHelperAccessor;
 import org.provim.servercore.utils.TickUtils;
-import org.provim.servercore.utils.perplayerspawns.ServerPlayerEntityInterface;
 
 import static net.minecraft.server.command.CommandManager.literal;
 

@@ -1,6 +1,7 @@
-package org.provim.servercore.utils.perplayerspawns;
+package org.provim.servercore.interfaces;
 
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.provim.servercore.utils.perplayerspawns.PooledHashSets;
 
 public interface ServerPlayerEntityInterface {
 

@@ -64,6 +64,10 @@ public final class TickUtils {
         tickDistance = distance;
     }
 
+    public static boolean isActive() {
+        return Config.instance().useTickDistance && viewDistance > tickDistance;
+    }
+
     /**
      * Modifies the mobcaps based on the MSPT.
      *
@@ -118,7 +122,7 @@ public final class TickUtils {
      */
 
     public static boolean shouldTick(ChunkPos pos, ServerWorld world) {
-        if (tickDistance == viewDistance) {
+        if (tickDistance >= viewDistance) {
             return true;
         }
 

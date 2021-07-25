@@ -1,8 +1,9 @@
-package org.provim.servercore.utils.perplayerspawns;
+package org.provim.servercore.interfaces;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.provim.servercore.utils.perplayerspawns.PlayerMobDistanceMap;
 
 public interface TACSInterface {
 

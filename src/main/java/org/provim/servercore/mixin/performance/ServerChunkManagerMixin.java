@@ -8,6 +8,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.SpawnHelper;
 import org.jetbrains.annotations.Nullable;
 import org.provim.servercore.config.Config;
+import org.provim.servercore.interfaces.ChunkHolderInterface;
 import org.provim.servercore.mixin.accessor.TACSAccessor;
 import org.provim.servercore.utils.TickUtils;
 import org.spongepowered.asm.mixin.Final;
@@ -18,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -57,12 +59,24 @@ public abstract class ServerChunkManagerMixin {
     private void updateActiveChunks(List<ChunkHolder> list) {
         if (Config.instance().useTickDistance) {
             if (this.count++ % 20 == 0) {
+
+                // Add active chunks
                 for (ChunkHolder holder : list) {
                     if (holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isPresent() && TickUtils.shouldTick(holder.getPos(), world)) {
+                        ((ChunkHolderInterface) holder).setActive(true);
                         this.active.add(holder);
                     }
                 }
-                this.active.removeIf(holder -> holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickUtils.shouldTick(holder.getPos(), world));
+
+                // Remove inactive chunks
+                final Iterator<ChunkHolder> holders = this.active.iterator();
+                while (holders.hasNext()) {
+                    ChunkHolder holder = holders.next();
+                    if (holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickUtils.shouldTick(holder.getPos(), world)) {
+                        ((ChunkHolderInterface) holder).setActive(false);
+                        holders.remove();
+                    }
+                }
             }
         }
     }

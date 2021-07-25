@@ -12,4 +12,7 @@ A fabric mod that adds certain features and tools for multiplayer servers to use
 - /setting <name> <value> - Allows for modifying config settings at runtime.
 - /info mobcaps | tps - Gives information about the current settings.
 
+**Known incompatibilities:**
+- /carpet lagFreeSpawning (from Carpet mod). -> If you want to use carpet, make sure this setting is set to false.
+
 The config file can be found at `/config/servercore.json`
