@@ -17,7 +17,7 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.level.storage.LevelStorage;
 import org.provim.servercore.interfaces.ServerPlayerEntityInterface;
 import org.provim.servercore.interfaces.TACSInterface;
-import org.provim.servercore.utils.perplayerspawns.PlayerMobDistanceMap;
+import org.provim.servercore.utils.patches.PlayerMobDistanceMap;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -42,12 +42,14 @@ public class ThreadedAnvilChunkStorageMixin implements TACSInterface {
 
     /**
      * Adds entity to the per-player mobcap of nearby players when not persistent.
+     * Reduced iterations by not adding misc mobs, since they don't have a mobcap.
      *
      * @param entity: The entity to add
      */
 
+    @Override
     public void updateMobCounts(Entity entity) {
-        if (entity instanceof MobEntity mob && !(mob.isPersistent() || mob.cannotDespawn())) {
+        if (entity.getType().getSpawnGroup() != SpawnGroup.MISC && entity instanceof MobEntity mob && !(mob.isPersistent() || mob.cannotDespawn())) {
             int chunkX = (int) Math.floor(entity.getPos().getX()) >> 4;
             int chunkZ = (int) Math.floor(entity.getPos().getZ()) >> 4;
             int index = entity.getType().getSpawnGroup().ordinal();

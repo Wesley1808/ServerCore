@@ -1,7 +1,8 @@
-package org.provim.servercore.utils.perplayerspawns;
+package org.provim.servercore.utils.patches;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
@@ -213,6 +214,7 @@ public class PooledHashSets<E> {
             return set;
         }
 
+        @NotNull
         @Override
         public Iterator<E> iterator() {
             return this.set.iterator();

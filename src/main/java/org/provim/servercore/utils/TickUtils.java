@@ -34,7 +34,7 @@ public final class TickUtils {
      */
 
     public static void runPerformanceChecks(MinecraftServer server) {
-        if (Config.instance().useDynamicPerformance) {
+        if (Config.instance().runPerformanceChecks) {
             double mspt = server.getTickTime();
             checkViewDistance(mspt);
             checkMobcaps(mspt);
@@ -62,10 +62,6 @@ public final class TickUtils {
 
     public static void setTickDistance(int distance) {
         tickDistance = distance;
-    }
-
-    public static boolean isActive() {
-        return Config.instance().useTickDistance && viewDistance > tickDistance;
     }
 
     /**

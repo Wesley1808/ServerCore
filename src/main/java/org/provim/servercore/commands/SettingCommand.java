@@ -30,8 +30,9 @@ public final class SettingCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal("setting")
                 .requires(src -> src.hasPermissionLevel(2))
-                .then(literal("useDynamicPerformance").then(argument(VALUE, bool()).executes(SettingCommand::useDynamicPerformance)))
+                .then(literal("runPerformanceChecks").then(argument(VALUE, bool()).executes(SettingCommand::runPerformanceChecks)))
                 .then(literal("usePerPlayerSpawns").then(argument(VALUE, bool()).executes(SettingCommand::usePerPlayerSpawns)))
+                .then(literal("slowTrappedVillagers").then(argument(VALUE, bool()).executes(SettingCommand::slowTrappedVillagers)))
                 .then(literal("useTickDistance").then(argument(VALUE, bool()).executes(SettingCommand::useTickDistance)))
                 .then(literal("useEntityLimits").then(argument(VALUE, bool()).executes(SettingCommand::useEntityLimits)))
                 .then(literal("tickDistance").then(argument(VALUE, integer(1, 32)).executes(SettingCommand::setTickDistance)))
@@ -70,9 +71,16 @@ public final class SettingCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int useDynamicPerformance(CommandContext<ServerCommandSource> context) {
+    private static int slowTrappedVillagers(CommandContext<ServerCommandSource> context) {
         var value = getBool(context, VALUE);
-        Config.instance().useDynamicPerformance = value;
+        Config.instance().slowTrappedVillagers = value;
+        context.getSource().sendFeedback(new LiteralText("Trapped villager slowing has been set to " + value).formatted(Formatting.WHITE), false);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int runPerformanceChecks(CommandContext<ServerCommandSource> context) {
+        var value = getBool(context, VALUE);
+        Config.instance().runPerformanceChecks = value;
         context.getSource().sendFeedback(new LiteralText("Dynamic performance checks have been set to " + value).formatted(Formatting.WHITE), false);
         return Command.SINGLE_SUCCESS;
     }

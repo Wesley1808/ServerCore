@@ -81,6 +81,7 @@ public abstract class SpawnHelperMixin {
     /**
      * Replaces the vanilla spawn mechanics with per-player mob spawning.
      * This is not an @Overwrite to keep compatibility with Carpet mod.
+     * When using Carpet mod it is however required to disable lagFreeSpawning.
      *
      * @param world: The world to spawn mobs in
      * @param chunk: The chunk to spawn mobs in
@@ -114,6 +115,12 @@ public abstract class SpawnHelperMixin {
         world.getProfiler().pop();
         ci.cancel();
     }
+
+    /**
+     * [VanillaCopy]
+     * Adds {@param trackEntity} to add to nearby player mob counts.
+     * Optimizes & reduces calls to getBiome(), getSpawnEntries().
+     */
 
     private static void spawnEntitiesInChunk(SpawnGroup spawnGroup, ServerWorld world, WorldChunk chunk, SpawnHelper.Checker checker, SpawnHelper.Runner runner, int maxSpawns, Consumer<Entity> trackEntity) {
         var pos = getSpawnPos(world, chunk);
@@ -196,10 +203,7 @@ public abstract class SpawnHelperMixin {
         return distance;
     }
 
-    /**
-     * Reduces unnecessary calls to getSpawnEntries().
-     */
-
+    // Removes duplicate call to getSpawnEntries().
     private static boolean canSpawn(ServerWorld world, Pool<SpawnSettings.SpawnEntry> spawnEntries, SpawnSettings.SpawnEntry spawnEntry, BlockPos.Mutable pos, double squaredDistance) {
         EntityType<?> entityType = spawnEntry.type;
         if (entityType.getSpawnGroup() == SpawnGroup.MISC) {
@@ -224,6 +228,7 @@ public abstract class SpawnHelperMixin {
         return spawnEntries.getEntries().contains(spawnEntry);
     }
 
+    // Removes duplicate call to getSpawnEntries().
     private static Optional<SpawnSettings.SpawnEntry> pickRandomSpawnEntry(Biome biome, SpawnGroup spawnGroup, Random random, Pool<SpawnSettings.SpawnEntry> spawnEntries) {
         return spawnGroup == SpawnGroup.WATER_AMBIENT && biome.getCategory() == Biome.Category.RIVER && random.nextFloat() < 0.98F ? Optional.empty() : spawnEntries.getOrEmpty(random);
     }

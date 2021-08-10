@@ -6,7 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import org.provim.servercore.interfaces.ServerPlayerEntityInterface;
-import org.provim.servercore.utils.perplayerspawns.PooledHashSets;
+import org.provim.servercore.utils.patches.PooledHashSets;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,6 +30,6 @@ public abstract class ServerPlayerEntityMixin implements ServerPlayerEntityInter
 
     @Inject(method = "<init>", at = @At(value = "RETURN"))
     public void init(MinecraftServer server, ServerWorld world, GameProfile profile, CallbackInfo ci) {
-        cachedSingleMobDistanceMap = new PooledHashSets.PooledObjectLinkedOpenHashSet<>((ServerPlayerEntity) (Object) this);
+        this.cachedSingleMobDistanceMap = new PooledHashSets.PooledObjectLinkedOpenHashSet<>((ServerPlayerEntity) (Object) this);
     }
 }
