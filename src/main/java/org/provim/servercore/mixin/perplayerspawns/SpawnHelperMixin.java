@@ -103,8 +103,8 @@ public abstract class SpawnHelperMixin {
                 difference = (minDiff == Integer.MAX_VALUE) ? 0 : minDiff;
             } else {
                 var currEntityCount = info.getGroupToCount().getInt(spawnGroup);
-                int k1 = spawnGroup.getCapacity() * ((SpawnHelperInfoAccessor) info).getSpawnChunkCount() / SpawnHelperAccessor.getChunkArea();
-                difference = k1 - currEntityCount;
+                int capacity = spawnGroup.getCapacity() * ((SpawnHelperInfoAccessor) info).getSpawnChunkCount() / SpawnHelperAccessor.getChunkArea();
+                difference = capacity - currEntityCount;
             }
 
             if ((spawnAnimals || !spawnGroup.isPeaceful()) && (spawnMonsters || spawnGroup.isPeaceful()) && (rareSpawn || !spawnGroup.isRare()) && difference > 0) {
