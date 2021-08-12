@@ -4,7 +4,6 @@ public class Config {
     protected static Config instance = new Config();
     public boolean perPlayerSpawns = true;
     public boolean noSpawnChunks = true;
-    public boolean stopFrameInventoryIteration = true;
     public boolean useTickDistance = true;
     public double itemMergeRadius = 0.5;
     public boolean slowTrappedVillagers = true;
