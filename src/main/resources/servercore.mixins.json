@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "accessor.ServerChunkManagerAccessor",
+    "accessor.ServerPlayerEntityAccessor",
     "accessor.SpawnHelperAccessor",
     "accessor.SpawnHelperInfoAccessor",
     "accessor.TACSAccessor",
@@ -18,7 +19,9 @@
     "performance.MapStateMixin",
     "performance.MobNavigationMixin",
     "performance.PlayerAdvancementTrackerMixin",
+    "performance.PlayerManagerMixin",
     "performance.ServerChunkManagerMixin",
+    "performance.ServerPlayerEntityMixin",
     "performance.SpawnGroupMixin",
     "performance.TACSEntityTrackerMixin",
     "performance.VillagerEntityMixin",
