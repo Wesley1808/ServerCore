@@ -30,13 +30,13 @@ public final class SettingCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal("setting")
                 .requires(src -> src.hasPermissionLevel(2))
-                .then(literal("runPerformanceChecks").then(argument(VALUE, bool()).executes(SettingCommand::runPerformanceChecks)))
-                .then(literal("usePerPlayerSpawns").then(argument(VALUE, bool()).executes(SettingCommand::usePerPlayerSpawns)))
-                .then(literal("slowTrappedVillagers").then(argument(VALUE, bool()).executes(SettingCommand::slowTrappedVillagers)))
-                .then(literal("useTickDistance").then(argument(VALUE, bool()).executes(SettingCommand::useTickDistance)))
-                .then(literal("useEntityLimits").then(argument(VALUE, bool()).executes(SettingCommand::useEntityLimits)))
-                .then(literal("tickDistance").then(argument(VALUE, integer(1, 32)).executes(SettingCommand::setTickDistance)))
-                .then(literal("viewDistance").then(argument(VALUE, integer(2, 32)).executes(SettingCommand::setViewDistance)))
+                .then(literal("run_dynamic_performance_checks").then(argument(VALUE, bool()).executes(SettingCommand::runPerformanceChecks)))
+                .then(literal("enable_per_player_spawns").then(argument(VALUE, bool()).executes(SettingCommand::usePerPlayerSpawns)))
+                .then(literal("slow_down_trapped_villagers").then(argument(VALUE, bool()).executes(SettingCommand::slowTrappedVillagers)))
+                .then(literal("enable_chunk_tick_distance").then(argument(VALUE, bool()).executes(SettingCommand::useTickDistance)))
+                .then(literal("enable_entity_limits").then(argument(VALUE, bool()).executes(SettingCommand::useEntityLimits)))
+                .then(literal("chunk_tick_distance").then(argument(VALUE, integer(1, 32)).executes(SettingCommand::setTickDistance)))
+                .then(literal("view_distance").then(argument(VALUE, integer(2, 32)).executes(SettingCommand::setViewDistance)))
                 .then(literal("mobcaps").then(argument(VALUE, doubleArg(0.1, 10.0)).executes(SettingCommand::setMobcapModifier)))
                 .then(literal("reload").executes(SettingCommand::reload))
                 .then(literal("save").executes(SettingCommand::save))
@@ -45,8 +45,8 @@ public final class SettingCommand {
 
     private static int setTickDistance(CommandContext<ServerCommandSource> context) {
         var value = getInteger(context, VALUE);
-        TickUtils.setTickDistance(value);
-        context.getSource().sendFeedback(new LiteralText("Tick distance has been set to " + value).formatted(Formatting.WHITE), false);
+        TickUtils.setChunkTickDistance(value);
+        context.getSource().sendFeedback(new LiteralText("Chunk-ticking distance has been set to " + value).formatted(Formatting.WHITE), false);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -73,7 +73,7 @@ public final class SettingCommand {
 
     private static int slowTrappedVillagers(CommandContext<ServerCommandSource> context) {
         var value = getBool(context, VALUE);
-        Config.instance().slowTrappedVillagers = value;
+        Config.instance().lobotomizeTrappedVillagers = value;
         context.getSource().sendFeedback(new LiteralText("Trapped villager slowing has been set to " + value).formatted(Formatting.WHITE), false);
         return Command.SINGLE_SUCCESS;
     }
@@ -87,8 +87,8 @@ public final class SettingCommand {
 
     private static int useTickDistance(CommandContext<ServerCommandSource> context) {
         var value = getBool(context, VALUE);
-        Config.instance().useTickDistance = value;
-        context.getSource().sendFeedback(new LiteralText("No-tick has been set to " + value).formatted(Formatting.WHITE), false);
+        Config.instance().useChunkTickDistance = value;
+        context.getSource().sendFeedback(new LiteralText("Modified chunk-ticking distance has been set to " + value).formatted(Formatting.WHITE), false);
         return Command.SINGLE_SUCCESS;
     }
 

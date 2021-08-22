@@ -20,15 +20,15 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(VillagerEntity.class)
 public abstract class VillagerEntityMixin {
-    private boolean slowed = false;
+    private boolean lobotomized = false;
     private int ticks = 0;
 
     @Redirect(method = "mobTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/brain/Brain;tick(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)V"))
-    private void slowTrappedVillagers(Brain<VillagerEntity> brain, ServerWorld world, LivingEntity entity) {
+    private void lobotomizeTrappedVillagers(Brain<VillagerEntity> brain, ServerWorld world, LivingEntity entity) {
         this.ticks++;
         VillagerEntity villager = (VillagerEntity) (Object) this;
-        if (Config.instance().slowTrappedVillagers && isSlowed(villager)) {
-            if (this.ticks % Config.instance().slowedVillagerTickInterval == 0) {
+        if (Config.instance().lobotomizeTrappedVillagers && isLobotomized(villager)) {
+            if (this.ticks % Config.instance().lobotomizedVillagerTickInterval == 0) {
                 brain.tick(world, villager);
             }
         } else {
@@ -36,12 +36,12 @@ public abstract class VillagerEntityMixin {
         }
     }
 
-    private boolean isSlowed(VillagerEntity villager) {
+    private boolean isLobotomized(VillagerEntity villager) {
         if (this.ticks % 300 == 0) {
-            this.slowed = !canTravel(villager, villager.getBlockPos());
+            this.lobotomized = !canTravel(villager, villager.getBlockPos());
         }
 
-        return this.slowed;
+        return this.lobotomized;
     }
 
     private boolean canTravel(VillagerEntity villager, BlockPos pos) {
@@ -49,7 +49,7 @@ public abstract class VillagerEntityMixin {
     }
 
     private boolean canTravelTo(VillagerEntity villager, BlockPos pos) {
-        // Returns true in case its surrounded by any bed. This way we don't break iron farms.
+        // Returns true in case it's surrounded by any bed. This way we don't break iron farms.
         if (ChunkManager.getStateIfVisible(villager.getEntityWorld(), pos).getBlock() instanceof BedBlock) {
             return true;
         }

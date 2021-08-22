@@ -67,7 +67,7 @@ public abstract class PlayerAdvancementTrackerMixin {
             this.updateDisplay(advancement.getParent(), entryPoint == IterationEntryPoint.ITERATOR ? IterationEntryPoint.PARENT_OF_ITERATOR : IterationEntryPoint.ROOT);
         }
 
-        // If this is true, we've went through a child iteration, entered the parent, processed the parent
+        // If this is true, we've gone through a child iteration, entered the parent, processed the parent
         // and are about to reprocess the children. Stop processing here to prevent O(N^2) processing.
         if (entryPoint == IterationEntryPoint.PARENT_OF_ITERATOR) {
             return;

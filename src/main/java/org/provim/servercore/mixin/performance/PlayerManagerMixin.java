@@ -20,7 +20,7 @@ import java.util.Optional;
 @Mixin(PlayerManager.class)
 public class PlayerManagerMixin {
 
-    // Paper - only move to spawn on first login, otherwise, stay where you are....
+    // Paper - only move to spawn on first login, otherwise, stay where you are...
     @Inject(method = "onPlayerConnect", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/server/network/ServerPlayerEntity;setWorld(Lnet/minecraft/server/world/ServerWorld;)V"))
     private void moveToSpawn(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci, GameProfile gameProfile, UserCache userCache, Optional optional, String string, NbtCompound nbtCompound, RegistryKey registryKey, ServerWorld serverWorld, ServerWorld serverWorld3) {
         if (nbtCompound == null) {

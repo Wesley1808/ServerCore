@@ -2,18 +2,24 @@ package org.provim.servercore.config;
 
 public class Config {
     protected static Config instance = new Config();
-    public boolean perPlayerSpawns = true;
-    public boolean noSpawnChunks = true;
-    public boolean useTickDistance = true;
+    public boolean perPlayerSpawns = false;
+    public boolean noSpawnChunks = false;
+    public boolean useChunkTickDistance = false;
     public double itemMergeRadius = 0.5;
-    public boolean slowTrappedVillagers = true;
-    public int slowedVillagerTickInterval = 20;
+
+    // Lobotomize villagers (Purpur)
+    public boolean lobotomizeTrappedVillagers = false;
+    public int lobotomizedVillagerTickInterval = 20;
+
+    // Entity limits
     public boolean useEntityLimits = false;
     public int villagerLimit = 24;
     public int villagerLimitRange = 64;
     public int animalLimit = 32;
     public int animalLimitRange = 64;
-    public boolean runPerformanceChecks = true;
+
+    // Dynamic performance checks
+    public boolean runPerformanceChecks = false;
     public int maxTickDistance = 10;
     public int minTickDistance = 2;
     public int maxViewDistance = 10;

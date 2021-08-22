@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 public final class TickUtils {
     private static final BigDecimal value = new BigDecimal("0.1");
     private static int viewDistance = ServerCore.getServer().getPlayerManager().getViewDistance();
-    private static int tickDistance = viewDistance;
+    private static int chunkTickDistance = viewDistance;
     private static BigDecimal mobcapModifier = new BigDecimal("1.0");
 
     private TickUtils() {
@@ -49,19 +49,19 @@ public final class TickUtils {
      */
 
     private static void checkTickDistance(double mspt) {
-        if (mspt > 40 && tickDistance > Config.instance().minTickDistance) {
-            tickDistance -= 1;
-        } else if (mspt < 30 && tickDistance < Config.instance().maxTickDistance && mobcapModifier.doubleValue() == Config.instance().maxMobcap) {
-            tickDistance += 1;
+        if (mspt > 40 && chunkTickDistance > Config.instance().minTickDistance) {
+            chunkTickDistance -= 1;
+        } else if (mspt < 30 && chunkTickDistance < Config.instance().maxTickDistance && mobcapModifier.doubleValue() == Config.instance().maxMobcap) {
+            chunkTickDistance += 1;
         }
     }
 
-    public static int getTickDistance() {
-        return tickDistance;
+    public static int getChunkTickDistance() {
+        return chunkTickDistance;
     }
 
-    public static void setTickDistance(int distance) {
-        tickDistance = distance;
+    public static void setChunkTickDistance(int distance) {
+        chunkTickDistance = distance;
     }
 
     /**
@@ -71,7 +71,7 @@ public final class TickUtils {
      */
 
     private static void checkMobcaps(double mspt) {
-        if (mspt > 45 && tickDistance == Config.instance().minTickDistance && mobcapModifier.doubleValue() > Config.instance().minMobcap) {
+        if (mspt > 45 && chunkTickDistance == Config.instance().minTickDistance && mobcapModifier.doubleValue() > Config.instance().minMobcap) {
             mobcapModifier = mobcapModifier.subtract(value);
         } else if (mspt < 35 && mobcapModifier.doubleValue() < Config.instance().maxMobcap && viewDistance == Config.instance().maxViewDistance) {
             mobcapModifier = mobcapModifier.add(value);
@@ -118,12 +118,12 @@ public final class TickUtils {
      */
 
     public static boolean shouldTick(ChunkPos pos, ServerWorld world) {
-        if (tickDistance >= viewDistance) {
+        if (chunkTickDistance >= viewDistance) {
             return true;
         }
 
         for (ServerPlayerEntity player : world.getPlayers()) {
-            if (player.interactionManager.getGameMode() != GameMode.SPECTATOR && player.getChunkPos().getChebyshevDistance(pos) <= tickDistance) {
+            if (player.interactionManager.getGameMode() != GameMode.SPECTATOR && player.getChunkPos().getChebyshevDistance(pos) <= chunkTickDistance) {
                 return true;
             }
         }
@@ -160,6 +160,6 @@ public final class TickUtils {
         double ms = server.getTickTime();
         var mspt = String.format("%.1f", ms);
         var tps = String.format("%.1f", ms != 0 ? Math.min((1000 / ms), 20) : 20);
-        return new LiteralText(String.format("§3TPS: §a%s §3MSPT: §a%s\n§3Online: §a%d\n§3Tick distance: §a%d\n§3View distance: §a%d\n§3Mobcap multiplier: §a%s", tps, mspt, server.getCurrentPlayerCount(), tickDistance, viewDistance, String.format("%.1f", mobcapModifier.doubleValue())));
+        return new LiteralText(String.format("§8- TPS: §a%s §8MSPT: §a%s\n§8- Online: §a%d\n§8- View distance: §a%d\n§8- Mobcap multiplier: §a%s\n§8- Chunk-Tick distance: §a%d", tps, mspt, server.getCurrentPlayerCount(), viewDistance, String.format("%.1f", mobcapModifier.doubleValue()), chunkTickDistance));
     }
 }
