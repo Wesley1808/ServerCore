@@ -1,5 +1,5 @@
 # ServerCore
-A fabric mod that aims to optimize & add multiplayer features for the minecraft server.\
+A fabric mod that aims to optimize & add multiplayer features to the minecraft server.\
 This includes some ports of PaperMC (and forks) patches.
 
 **Warning!**\

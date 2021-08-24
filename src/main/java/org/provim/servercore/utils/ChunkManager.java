@@ -46,19 +46,19 @@ public final class ChunkManager {
 
     public static Chunk getChunkIfVisible(WorldView world, BlockPos pos) {
         final ChunkHolder holder = getChunkHolder(world, pos);
-        return holder != null ? holder.getAccessibleFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null) : null;
+        return isChunkVisible(holder) ? holder.getCurrentChunk() : null;
     }
 
     /**
-     * Returns a boolean that decides whether or not the chunk at {@param pos} in {@param world} is visible.
+     * Returns a boolean that decides whether the chunk at {@param pos} in {@param world} is visible.
      */
 
     public static boolean isChunkVisible(WorldView world, BlockPos pos) {
-        return world instanceof ServerWorld serverWorld && isChunkVisible(serverWorld.getChunkManager(), pos.getX() >> 4, pos.getZ() >> 4);
+        return isChunkVisible(getChunkHolder(world, pos));
     }
 
-    public static boolean isChunkVisible(ServerChunkManager manager, int x, int z) {
-        return manager.isTickingFutureReady(ChunkPos.toLong(x, z));
+    public static boolean isChunkVisible(ChunkHolder holder) {
+        return holder != null && holder.isAccessible();
     }
 
     /**
