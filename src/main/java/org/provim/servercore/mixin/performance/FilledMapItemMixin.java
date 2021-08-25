@@ -18,7 +18,7 @@ public abstract class FilledMapItemMixin {
 
     @Redirect(method = "updateColors", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getWorldChunk(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/chunk/WorldChunk;"))
     private WorldChunk onlyUpdateIfLoaded(World world, BlockPos pos) {
-        return (WorldChunk) ChunkManager.getChunkIfVisible(world, pos);
+        return ChunkManager.getChunkIfVisible(world, pos) instanceof WorldChunk worldChunk ? worldChunk : null;
     }
 
     @Redirect(method = "updateColors", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/WorldChunk;isEmpty()Z"))
