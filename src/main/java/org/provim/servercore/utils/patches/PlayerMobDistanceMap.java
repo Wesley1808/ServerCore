@@ -82,7 +82,11 @@ public final class PlayerMobDistanceMap {
 
     private void removePlayerFrom(final ServerPlayerEntity player, final int chunkX, final int chunkZ) {
         this.playerMap.compute(ChunkPos.toLong(chunkX, chunkZ), (final Long keyInMap, final PooledHashSets.PooledObjectLinkedOpenHashSet<ServerPlayerEntity> players) -> {
-            return PlayerMobDistanceMap.this.pooledHashSets.findMapWithout(players, player); // rets null instead of an empty map
+            if (players == null) { // Fix NPE (Most likely caused by player invalidation).
+                return ((ServerPlayerEntityInterface) player).getCachedSingleMobDistanceMap();
+            } else {
+                return PlayerMobDistanceMap.this.pooledHashSets.findMapWithout(players, player);
+            }
         });
     }
 

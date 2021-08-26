@@ -2,16 +2,23 @@ package org.provim.servercore.mixin.event;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldGenerationProgressListener;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.World;
 import org.provim.servercore.ServerCore;
 import org.provim.servercore.config.Config;
 import org.provim.servercore.config.ConfigHandler;
+import org.provim.servercore.interfaces.TACSInterface;
 import org.provim.servercore.utils.TickUtils;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 @Mixin(MinecraftServer.class)
@@ -19,6 +26,10 @@ public abstract class MinecraftServerMixin {
 
     @Shadow
     private int ticks;
+
+    @Shadow
+    @Final
+    private Map<RegistryKey<World>, ServerWorld> worlds;
 
     /**
      * [Server Tick Event]
@@ -39,6 +50,17 @@ public abstract class MinecraftServerMixin {
     private void onSetupServer(CallbackInfo info) {
         ServerCore.setServer((MinecraftServer) (Object) this);
         ConfigHandler.load();
+    }
+
+    /**
+     * [Server Save Event]
+     */
+
+    @Inject(method = "save", at = @At(value = "HEAD"))
+    private void onSave(boolean suppressLogs, boolean flush, boolean force, CallbackInfoReturnable<Boolean> cir) {
+        for (ServerWorld world : this.worlds.values()) {
+            ((TACSInterface) world.getChunkManager().threadedAnvilChunkStorage).invalidatePlayers();
+        }
     }
 
     /**

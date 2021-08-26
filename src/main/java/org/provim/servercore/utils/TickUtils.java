@@ -15,6 +15,7 @@ import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 import org.provim.servercore.ServerCore;
 import org.provim.servercore.config.Config;
+import org.provim.servercore.config.MessageConfig;
 
 import java.math.BigDecimal;
 
@@ -110,11 +111,11 @@ public final class TickUtils {
     }
 
     /**
-     * Decides whether or not a chunk should tick.
+     * Decides whether a chunk should tick.
      *
      * @param pos:   The position of the chunk
      * @param world: The world that is ticking chunks
-     * @return Boolean: whether or not the chunk should tick.
+     * @return Boolean: whether the chunk should tick.
      */
 
     public static boolean shouldTick(ChunkPos pos, ServerWorld world) {
@@ -140,7 +141,7 @@ public final class TickUtils {
      * @param pos:   The position of the entity
      * @param limit: The entity limit
      * @param range: The range of the limit
-     * @return Boolean: if there are more entities of the same type than the limit, within the specified range.
+     * @return Boolean: if there are more entities of the same type as the limit, within the specified range.
      */
 
     public static boolean checkForEntities(EntityType<?> type, World world, BlockPos pos, int limit, int range) {
@@ -160,6 +161,6 @@ public final class TickUtils {
         double ms = server.getTickTime();
         var mspt = String.format("%.1f", ms);
         var tps = String.format("%.1f", ms != 0 ? Math.min((1000 / ms), 20) : 20);
-        return new LiteralText(String.format("§8- §3TPS: §a%s §3MSPT: §a%s\n§8- §3Online: §a%d\n§8- §3View distance: §a%d\n§8- §3Mobcap multiplier: §a%s\n§8- §3Chunk-Tick distance: §a%d", tps, mspt, server.getCurrentPlayerCount(), viewDistance, String.format("%.1f", mobcapModifier.doubleValue()), chunkTickDistance));
+        return new LiteralText(String.format(MessageConfig.instance().performance, tps, mspt, server.getCurrentPlayerCount(), viewDistance, String.format("%.1f", mobcapModifier.doubleValue()), chunkTickDistance));
     }
 }

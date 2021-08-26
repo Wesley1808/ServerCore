@@ -6,7 +6,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.SpawnHelper;
-import net.minecraft.world.chunk.WorldChunk;
 import org.jetbrains.annotations.Nullable;
 import org.provim.servercore.config.Config;
 import org.provim.servercore.mixin.accessor.TACSAccessor;
@@ -21,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 @Mixin(ServerChunkManager.class)
@@ -57,13 +55,13 @@ public abstract class ServerChunkManagerMixin {
             if (this.count++ % 20 == 0) {
                 // Add active chunks
                 for (ChunkHolder holder : chunkStorage.getChunkHolders().values()) {
-                    Optional<WorldChunk> optional = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left();
-                    if (optional.isPresent()) {
+                    var chunk = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null);
+                    if (chunk != null) {
                         if (TickUtils.shouldTick(holder.getPos(), world)) {
                             this.active.add(holder);
                         } else {
                             // Sends block updates to clients from inactive chunks.
-                            holder.flushUpdates(optional.get());
+                            holder.flushUpdates(chunk);
                         }
                     }
                 }

@@ -8,6 +8,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 import org.provim.servercore.config.Config;
 import org.provim.servercore.config.ConfigHandler;
+import org.provim.servercore.utils.PermissionUtils;
 import org.provim.servercore.utils.TickUtils;
 
 import java.math.BigDecimal;
@@ -28,8 +29,7 @@ public final class SettingCommand {
     }
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal("setting")
-                .requires(src -> src.hasPermissionLevel(2))
+        dispatcher.register(literal("servercore").requires(src -> PermissionUtils.perm(src, PermissionUtils.COMMAND_SETTINGS, 2))
                 .then(literal("run_dynamic_performance_checks").then(argument(VALUE, bool()).executes(SettingCommand::runPerformanceChecks)))
                 .then(literal("enable_per_player_spawns").then(argument(VALUE, bool()).executes(SettingCommand::usePerPlayerSpawns)))
                 .then(literal("slow_down_trapped_villagers").then(argument(VALUE, bool()).executes(SettingCommand::slowTrappedVillagers)))

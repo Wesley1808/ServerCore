@@ -11,6 +11,7 @@ import net.minecraft.text.LiteralText;
 import org.provim.servercore.config.Config;
 import org.provim.servercore.interfaces.ServerPlayerEntityInterface;
 import org.provim.servercore.mixin.accessor.SpawnHelperAccessor;
+import org.provim.servercore.utils.PermissionUtils;
 import org.provim.servercore.utils.TickUtils;
 
 import static net.minecraft.server.command.CommandManager.literal;
@@ -21,9 +22,9 @@ public final class InfoCommand {
     }
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal("info")
-                .then(literal("mobcaps").executes(InfoCommand::mobcaps))
-                .then(literal("tps").requires(src -> src.hasPermissionLevel(2)).executes(InfoCommand::performanceReport))
+        dispatcher.register(literal("mobcaps").executes(InfoCommand::mobcaps));
+        dispatcher.register(literal("sc").requires(src -> PermissionUtils.perm(src, PermissionUtils.COMMAND_INFO, 2))
+                .then(literal("tps").executes(InfoCommand::performanceReport))
         );
     }
 

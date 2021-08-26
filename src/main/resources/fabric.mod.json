@@ -3,7 +3,7 @@
   "id": "servercore-fabric",
   "version": "${version}",
   "name": "ServerCore-Fabric",
-  "description": "",
+  "description": "A fabric mod that aims to optimize & add multiplayer features to the minecraft server.",
   "authors": [],
   "contact": {},
   "license": "MIT",

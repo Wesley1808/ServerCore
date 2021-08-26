@@ -12,4 +12,6 @@ public interface TACSInterface {
     void updateMobCounts(Entity entity);
 
     int getMobCountNear(ServerPlayerEntity player, SpawnGroup spawnGroup);
+
+    void invalidatePlayers();
 }

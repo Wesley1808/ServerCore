@@ -1,15 +1,24 @@
 package org.provim.servercore.mixin.perplayerspawns;
 
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.GravityField;
 import net.minecraft.world.SpawnHelper;
+import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.chunk.ChunkManager;
 import org.provim.servercore.config.Config;
 import org.provim.servercore.interfaces.ServerPlayerEntityInterface;
 import org.provim.servercore.interfaces.TACSInterface;
+import org.provim.servercore.mixin.accessor.SpawnHelperAccessor;
+import org.provim.servercore.mixin.accessor.SpawnHelperInfoAccessor;
 import org.provim.servercore.utils.patches.PlayerMobDistanceMap;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -50,20 +59,36 @@ public abstract class ServerChunkManagerMixin extends ChunkManager {
                 Arrays.fill(((ServerPlayerEntityInterface) player).getMobCounts(), 0);
             }
 
-            spawnHelperInfo = setupSpawn(spawningChunkCount, entities, true, chunkSource);
+            spawnHelperInfo = setupSpawn(spawningChunkCount, entities, chunkSource, true);
         } else {
-            spawnHelperInfo = setupSpawn(spawningChunkCount, entities, false, chunkSource);
+            spawnHelperInfo = setupSpawn(spawningChunkCount, entities, chunkSource, false);
         }
         return spawnHelperInfo;
     }
 
-    private SpawnHelper.Info setupSpawn(int spawningChunkCount, Iterable<Entity> entities, boolean countMobs, SpawnHelper.ChunkSource chunkSource) {
-        if (countMobs) {
-            TACSInterface chunkStorage = (TACSInterface) world.getChunkManager().threadedAnvilChunkStorage;
-            for (Entity entity : entities) {
-                chunkStorage.updateMobCounts(entity);
+    private SpawnHelper.Info setupSpawn(int spawningChunkCount, Iterable<Entity> entities, SpawnHelper.ChunkSource chunkSource, boolean countMobs) {
+        TACSInterface chunkStorage = (TACSInterface) this.world.getChunkManager().threadedAnvilChunkStorage;
+        Object2IntOpenHashMap<SpawnGroup> groupToCount = new Object2IntOpenHashMap<>();
+        GravityField gravityField = new GravityField();
+
+        for (Entity entity : entities) {
+            SpawnGroup group = entity.getType().getSpawnGroup();
+            if (group != SpawnGroup.MISC && entity instanceof MobEntity mob && !(mob.isPersistent() || mob.cannotDespawn())) {
+                BlockPos pos = entity.getBlockPos();
+                long l = ChunkPos.toLong(pos.getX() >> 4, pos.getZ() >> 4);
+                chunkSource.query(l, chunk -> {
+                    SpawnSettings.SpawnDensity spawnDensity = SpawnHelperAccessor.getBiome(pos, chunk).getSpawnSettings().getSpawnDensity(entity.getType());
+                    if (spawnDensity != null) {
+                        gravityField.addPoint(entity.getBlockPos(), spawnDensity.getMass());
+                    }
+
+                    groupToCount.addTo(group, 1);
+                    if (countMobs) {
+                        chunkStorage.updateMobCounts(entity);
+                    }
+                });
             }
         }
-        return SpawnHelper.setupSpawn(spawningChunkCount, entities, chunkSource);
+        return SpawnHelperInfoAccessor.init(spawningChunkCount, groupToCount, gravityField);
     }
 }

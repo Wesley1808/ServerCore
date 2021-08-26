@@ -14,7 +14,6 @@ import java.util.Random;
 
 @Mixin(EggEntity.class)
 abstract class EggEntityMixin extends ThrownItemEntity {
-
     protected EggEntityMixin(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
     }
