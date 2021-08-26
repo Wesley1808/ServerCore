@@ -88,7 +88,7 @@ public abstract class SpawnHelperMixin {
      * @param info:  The spawn info
      */
 
-    @Inject(method = "spawn", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "spawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;push(Ljava/lang/String;)V", ordinal = 0), cancellable = true)
     private static void spawn(ServerWorld world, WorldChunk chunk, SpawnHelper.Info info, boolean spawnAnimals, boolean spawnMonsters, boolean rareSpawn, CallbackInfo ci) {
         world.getProfiler().push("spawner");
         SpawnHelperInfoAccessor spawnInfo = (SpawnHelperInfoAccessor) info;
