@@ -5,6 +5,7 @@ import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
+import org.objectweb.asm.Opcodes;
 import org.provim.servercore.ServerCore;
 import org.provim.servercore.config.Config;
 import org.provim.servercore.config.ConfigHandler;
@@ -15,6 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -77,5 +79,10 @@ public abstract class MinecraftServerMixin {
         if (Config.instance().noSpawnChunks) {
             ci.cancel();
         }
+    }
+
+    @Redirect(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/server/MinecraftServer;ticks:I", ordinal = 1))
+    public int modifyAutoSaveInterval(MinecraftServer minecraftServer) {
+        return this.ticks % (Config.instance().autoSaveInterval * 1200) == 0 ? 6000 : -1;
     }
 }

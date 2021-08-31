@@ -6,6 +6,7 @@ public class Config {
     public boolean noSpawnChunks = false;
     public boolean useChunkTickDistance = false;
     public double itemMergeRadius = 0.5;
+    public int autoSaveInterval = 5;
 
     // Lobotomize villagers (Purpur)
     public boolean lobotomizeTrappedVillagers = false;
