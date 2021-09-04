@@ -5,6 +5,8 @@ public class Config {
     public boolean perPlayerSpawns = false;
     public boolean noSpawnChunks = false;
     public boolean useChunkTickDistance = false;
+    public boolean fastXpMerging = false;
+    public double xpMergeRadius = 0.5;
     public double itemMergeRadius = 0.5;
     public int autoSaveInterval = 5;
 

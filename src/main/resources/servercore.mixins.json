@@ -14,6 +14,7 @@
     "limits.AnimalEntityMixin",
     "limits.EggEntityMixin",
     "limits.VillagerBreedTaskMixin",
+    "performance.ExperienceOrbEntityMixin",
     "performance.FilledMapItemMixin",
     "performance.ItemEntityMixin",
     "performance.MapStateMixin",
