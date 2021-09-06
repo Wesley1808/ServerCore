@@ -4,6 +4,7 @@
   "package": "org.provim.servercore.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "accessor.ExperienceOrbEntityAccessor",
     "accessor.ServerChunkManagerAccessor",
     "accessor.ServerPlayerEntityAccessor",
     "accessor.SpawnHelperAccessor",

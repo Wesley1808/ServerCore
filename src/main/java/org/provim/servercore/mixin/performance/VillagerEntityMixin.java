@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class VillagerEntityMixin extends MerchantEntity {
     private boolean lobotomized = false;
 
-    public VillagerEntityMixin(EntityType<? extends MerchantEntity> entityType, World world) {
+    protected VillagerEntityMixin(EntityType<? extends MerchantEntity> entityType, World world) {
         super(entityType, world);
     }
 

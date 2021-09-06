@@ -1,46 +1,58 @@
 package org.provim.servercore.mixin.performance;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.util.math.Box;
-import org.objectweb.asm.Opcodes;
+import net.minecraft.world.World;
 import org.provim.servercore.config.Config;
+import org.provim.servercore.mixin.accessor.ExperienceOrbEntityAccessor;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ExperienceOrbEntity.class)
-public class ExperienceOrbEntityMixin {
+public abstract class ExperienceOrbEntityMixin extends Entity {
     @Shadow
     private int amount;
 
     @Shadow
     private int pickingCount;
 
-    /**
-     * Allows experience orbs without the same value to merge.
-     */
+    @Shadow
+    private int orbAge;
 
-    @Redirect(method = "isMergeable(Lnet/minecraft/entity/ExperienceOrbEntity;II)Z", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, ordinal = 0, target = "Lnet/minecraft/entity/ExperienceOrbEntity;amount:I"))
-    private static int isMergeable(ExperienceOrbEntity other, ExperienceOrbEntity orb, int seed, int amount) {
-        if (Config.instance().fastXpMerging) {
-            return amount;
-        } else {
-            return orb.getExperienceAmount();
-        }
+    protected ExperienceOrbEntityMixin(EntityType<?> type, World world) {
+        super(type, world);
     }
 
     /**
-     * Fast experience pickup speed.
+     * @author Wesley1808
+     * @reason Allows experience orbs without the same value to merge.
      */
 
-    @Redirect(method = "merge", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, ordinal = 0, target = "Lnet/minecraft/entity/ExperienceOrbEntity;pickingCount:I"))
-    private void merge(ExperienceOrbEntity orb, int value) {
+    @Overwrite
+    private static boolean isMergeable(ExperienceOrbEntity orb, int seed, int amount) {
+        boolean bl = !orb.isRemoved() && (orb.getId() - seed) % 40 == 0;
+        return Config.instance().fastXpMerging ? bl : bl && orb.getExperienceAmount() == amount;
+    }
+
+    /**
+     * @author Wesley1808
+     * @reason Correctly merge experience orbs with different values.
+     */
+
+    @Overwrite
+    private void merge(ExperienceOrbEntity other) {
         if (Config.instance().fastXpMerging) {
-            this.amount += orb.getExperienceAmount();
+            this.amount += other.getExperienceAmount();
         } else {
-            this.pickingCount = value;
+            this.pickingCount += ((ExperienceOrbEntityAccessor) other).getPickingCount();
         }
+        this.orbAge = Math.min(this.orbAge, ((ExperienceOrbEntityAccessor) other).getOrbAge());
+        other.discard();
     }
 
     /**

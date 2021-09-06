@@ -25,10 +25,6 @@ public final class PlayerMobDistanceMap {
     private final PooledHashSets<ServerPlayerEntity> pooledHashSets = new PooledHashSets<>();
     private int viewDistance;
 
-    public Map<ServerPlayerEntity, ChunkPos> getPlayers() {
-        return players;
-    }
-
     public Long2ObjectOpenHashMap<PooledHashSets.PooledObjectLinkedOpenHashSet<ServerPlayerEntity>> getPlayerMap() {
         return this.playerMap;
     }
