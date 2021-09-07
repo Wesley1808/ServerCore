@@ -22,6 +22,7 @@ import org.provim.servercore.config.Config;
 import org.provim.servercore.interfaces.TACSInterface;
 import org.provim.servercore.mixin.accessor.SpawnHelperAccessor;
 import org.provim.servercore.mixin.accessor.SpawnHelperInfoAccessor;
+import org.provim.servercore.utils.ChunkManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -149,7 +150,7 @@ public abstract class SpawnHelperMixin {
                         double distance = getDistanceToClosestPlayer(world, x, y, z);
 
                         if (distance != Double.MAX_VALUE) {
-                            if (isAcceptableSpawnPosition(world, chunk, mutable, distance)) {
+                            if (ChunkManager.isChunkVisible(world, mutable) && isAcceptableSpawnPosition(world, chunk, mutable, distance)) {
                                 var biome = getBiomeDirectly(mutable, chunk);
                                 Pool<SpawnSettings.SpawnEntry> spawnEntries = getSpawnEntries(world, structureAccessor, chunkGenerator, spawnGroup, mutable, biome);
                                 Optional<SpawnSettings.SpawnEntry> optional = pickRandomSpawnEntry(biome, spawnGroup, world.random, spawnEntries);
