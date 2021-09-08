@@ -32,7 +32,7 @@ public final class SettingCommand {
                 .then(literal("dynamic_performance").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 1, "Dynamic performance checks have"))))
                 .then(literal("per_player_spawns").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 2, "Per player spawns has"))))
                 .then(literal("lobotomize_villagers").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 3, "Villager lobotomizing has"))))
-                .then(literal("no_chunk_tick").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 4, "Chunk-ticking distance has"))))
+                .then(literal("no_chunk_tick_distance").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 4, "Chunk-ticking distance has"))))
                 .then(literal("entity_limits").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 5, "Entity limits have"))))
                 .then(literal("fast_xp_merging").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 6, "Fast XP merging has"))))
                 .then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 32)).executes(context -> setChunkDistance(context.getSource(), getInteger(context, VALUE), 1, "Chunk-tick"))))

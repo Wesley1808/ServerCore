@@ -18,7 +18,7 @@ public final class FeatureConfig {
         this.perPlayerSpawns = toml.getBoolean("per_player_spawns", false);
         this.disableSpawnChunks = toml.getBoolean("disable_spawn_chunks", false);
         this.fastXpMerging = toml.getBoolean("fast_xp_merging", false);
-        this.noChunkTick = toml.getBoolean("no_chunk_tick", false);
+        this.noChunkTick = toml.getBoolean("no_chunk_tick_distance", false);
         this.lobotomizeVillagers = toml.getBoolean("lobotomize_villagers", false);
         this.lobotomizedTickInterval = Math.toIntExact(toml.getLong("lobotomized_tick_interval", 20L));
         this.autoSaveInterval = Math.toIntExact(toml.getLong("autosave_interval_minutes", 5L));

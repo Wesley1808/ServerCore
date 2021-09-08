@@ -32,21 +32,22 @@ public final class Config {
     }
 
     public static void load() {
-        validateFile();
+        if (!CONFIG_FILE.exists()) {
+            createDefaultConfig();
+        }
+
         toml = toml.read(CONFIG_FILE);
         featureConfig = new FeatureConfig(toml);
         dynamicConfig = new DynamicConfig(toml);
         entityConfig = new EntityConfig(toml);
     }
 
-    private static void validateFile() {
-        if (!CONFIG_FILE.exists()) {
-            try {
-                Files.copy(Objects.requireNonNull(Config.class.getResourceAsStream("/config/servercore.toml")), CONFIG_FILE.toPath());
-            } catch (IOException e) {
-                ServerCore.getLogger().error("Failed to create config.", e);
-                throw new RuntimeException();
-            }
+    private static void createDefaultConfig() {
+        try {
+            Files.copy(Objects.requireNonNull(Config.class.getResourceAsStream("/config/servercore.toml")), CONFIG_FILE.toPath());
+        } catch (IOException e) {
+            ServerCore.getLogger().error("Failed to create default config.", e);
+            throw new RuntimeException();
         }
     }
 }

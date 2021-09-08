@@ -5,7 +5,7 @@
   per_player_spawns = false
   disable_spawn_chunks = false
   fast_xp_merging = false
-  no_chunk_tick = false
+  no_chunk_tick_distance = false
   lobotomize_villagers = false
   lobotomized_tick_interval = 20
   autosave_interval_minutes = 5
@@ -23,8 +23,8 @@
 # Modifies mobcaps, no-chunk-tick and viewdistance depending on the MSPT.
 [dynamic]
   enabled = false
-  max_tick_distance = 10
-  min_tick_distance = 2
+  max_chunk_tick_distance = 10
+  min_chunk_tick_distance = 2
   max_view_distance = 10
   min_view_distance = 2
   max_mobcap = 1.0
