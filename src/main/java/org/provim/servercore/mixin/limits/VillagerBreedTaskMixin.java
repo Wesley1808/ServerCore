@@ -20,7 +20,7 @@ public class VillagerBreedTaskMixin {
 
     @Redirect(method = "keepRunning", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/VillagerEntity;squaredDistanceTo(Lnet/minecraft/entity/Entity;)D"))
     public double cancelBreeding(VillagerEntity villagerEntity, Entity entity) {
-        if (TickUtils.checkForEntities(villagerEntity, Config.instance().villagerLimit, Config.instance().villagerLimitRange)) {
+        if (TickUtils.checkForEntities(villagerEntity, Config.getEntityConfig().villagerCount, Config.getEntityConfig().villagerRange)) {
             ((VillagerEntity) entity).setBreedingAge(6000);
             villagerEntity.setBreedingAge(6000);
             return 10;

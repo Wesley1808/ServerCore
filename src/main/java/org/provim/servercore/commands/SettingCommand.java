@@ -7,7 +7,6 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 import org.provim.servercore.config.Config;
-import org.provim.servercore.config.ConfigHandler;
 import org.provim.servercore.utils.PermissionUtils;
 import org.provim.servercore.utils.TickUtils;
 
@@ -30,10 +29,10 @@ public final class SettingCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal("servercore").requires(src -> PermissionUtils.perm(src, PermissionUtils.COMMAND_SETTINGS, 2))
-                .then(literal("run_dynamic_performance_checks").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 1, "Dynamic performance checks have"))))
+                .then(literal("dynamic_performance").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 1, "Dynamic performance checks have"))))
                 .then(literal("per_player_spawns").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 2, "Per player spawns has"))))
-                .then(literal("lobotomize_trapped_villagers").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 3, "Villager lobotomizing has"))))
-                .then(literal("enable_chunk_tick_distance").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 4, "Chunk-ticking distance has"))))
+                .then(literal("lobotomize_villagers").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 3, "Villager lobotomizing has"))))
+                .then(literal("no_chunk_tick").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 4, "Chunk-ticking distance has"))))
                 .then(literal("entity_limits").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 5, "Entity limits have"))))
                 .then(literal("fast_xp_merging").then(argument(VALUE, bool()).executes(context -> setEnabled(context.getSource(), getBool(context, VALUE), 6, "Fast XP merging has"))))
                 .then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 32)).executes(context -> setChunkDistance(context.getSource(), getInteger(context, VALUE), 1, "Chunk-tick"))))
@@ -42,18 +41,17 @@ public final class SettingCommand {
                 .then(literal("xp_merge_radius").then(argument(VALUE, doubleArg(0.5, 10)).executes(context -> setMergeRadius(context.getSource(), getDouble(context, VALUE), 2, "XP"))))
                 .then(literal("mobcaps").then(argument(VALUE, doubleArg(0.1, 10.0)).executes(context -> setMobcapModifier(context.getSource(), getDouble(context, VALUE)))))
                 .then(literal("reload").executes(SettingCommand::reload))
-                .then(literal("save").executes(SettingCommand::save))
         );
     }
 
     private static int setEnabled(ServerCommandSource source, boolean value, int id, String setting) {
         switch (id) {
-            case 1 -> Config.instance().runPerformanceChecks = value;
-            case 2 -> Config.instance().perPlayerSpawns = value;
-            case 3 -> Config.instance().lobotomizeTrappedVillagers = value;
-            case 4 -> Config.instance().useChunkTickDistance = value;
-            case 5 -> Config.instance().useEntityLimits = value;
-            case 6 -> Config.instance().fastXpMerging = value;
+            case 1 -> Config.getDynamicConfig().enabled = value;
+            case 2 -> Config.getFeatureConfig().perPlayerSpawns = value;
+            case 3 -> Config.getFeatureConfig().lobotomizeVillagers = value;
+            case 4 -> Config.getFeatureConfig().noChunkTick = value;
+            case 5 -> Config.getEntityConfig().enabled = value;
+            case 6 -> Config.getFeatureConfig().fastXpMerging = value;
         }
 
         source.sendFeedback(new LiteralText(String.format("%s been set to %b", setting, value)), false);
@@ -72,8 +70,8 @@ public final class SettingCommand {
 
     private static int setMergeRadius(ServerCommandSource source, double radius, int id, String type) {
         switch (id) {
-            case 1 -> Config.instance().itemMergeRadius = radius;
-            case 2 -> Config.instance().xpMergeRadius = radius;
+            case 1 -> Config.getFeatureConfig().itemMergeRadius = radius;
+            case 2 -> Config.getFeatureConfig().xpMergeRadius = radius;
         }
 
         source.sendFeedback(new LiteralText(String.format("%s merge radius has been set to %.1f", type, radius)), false);
@@ -86,14 +84,8 @@ public final class SettingCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int save(CommandContext<ServerCommandSource> context) {
-        ConfigHandler.save();
-        context.getSource().sendFeedback(new LiteralText("Config saved!").formatted(Formatting.GREEN), false);
-        return Command.SINGLE_SUCCESS;
-    }
-
     private static int reload(CommandContext<ServerCommandSource> context) {
-        ConfigHandler.load();
+        Config.load();
         context.getSource().sendFeedback(new LiteralText("Config reloaded!").formatted(Formatting.GREEN), false);
         return Command.SINGLE_SUCCESS;
     }

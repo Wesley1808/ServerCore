@@ -51,7 +51,7 @@ public abstract class ServerChunkManagerMixin {
     @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V", ordinal = 0))
     private <T> void onlyTickActiveChunks(List<ChunkHolder> list, Consumer<? super T> action) {
         var chunkStorage = (TACSAccessor) this.threadedAnvilChunkStorage;
-        if (Config.instance().useChunkTickDistance) {
+        if (Config.getFeatureConfig().noChunkTick) {
             if (this.count++ % 20 == 0) {
                 // Add active chunks
                 for (ChunkHolder holder : chunkStorage.getChunkHolders().values()) {
@@ -74,7 +74,7 @@ public abstract class ServerChunkManagerMixin {
         long time = this.world.getTime() - this.lastMobSpawningTime;
         var rules = this.world.getGameRules();
         boolean rareSpawn = this.world.getLevelProperties().getTime() % 400L == 0L;
-        for (ChunkHolder holder : Config.instance().useChunkTickDistance ? this.active : chunkStorage.getChunkHolders().values()) {
+        for (ChunkHolder holder : Config.getFeatureConfig().noChunkTick ? this.active : chunkStorage.getChunkHolders().values()) {
             var chunk = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null);
             if (chunk != null) {
                 var pos = chunk.getPos();

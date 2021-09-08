@@ -96,7 +96,7 @@ public abstract class SpawnHelperMixin {
         TACSInterface chunkStorage = (TACSInterface) world.getChunkManager().threadedAnvilChunkStorage;
         for (SpawnGroup spawnGroup : SPAWNABLE_GROUPS) {
             int difference;
-            if (Config.instance().perPlayerSpawns) {
+            if (Config.getFeatureConfig().perPlayerSpawns) {
                 int minDiff = Integer.MAX_VALUE;
                 for (ServerPlayerEntity player : chunkStorage.getPlayerMobDistanceMap().getPlayersInRange(chunk.getPos())) {
                     minDiff = Math.min(spawnGroup.getCapacity() - chunkStorage.getMobCountNear(player, spawnGroup), minDiff);
@@ -109,7 +109,7 @@ public abstract class SpawnHelperMixin {
             }
 
             if ((spawnAnimals || !spawnGroup.isPeaceful()) && (spawnMonsters || spawnGroup.isPeaceful()) && (rareSpawn || !spawnGroup.isRare()) && difference > 0) {
-                spawnEntitiesInChunk(spawnGroup, world, chunk, spawnInfo::check, spawnInfo::runMob, difference, Config.instance().perPlayerSpawns ? chunkStorage::updateMobCounts : null);
+                spawnEntitiesInChunk(spawnGroup, world, chunk, spawnInfo::check, spawnInfo::runMob, difference, Config.getFeatureConfig().perPlayerSpawns ? chunkStorage::updateMobCounts : null);
             }
         }
 

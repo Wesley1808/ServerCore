@@ -21,6 +21,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modImplementation 'me.lucko:fabric-permissions-api:0.1-SNAPSHOT'
+    implementation(include("com.moandjiezana.toml:toml4j:${project.toml_version}"))
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
 }

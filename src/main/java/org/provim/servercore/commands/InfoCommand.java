@@ -31,7 +31,7 @@ public final class InfoCommand {
     private static int mobcaps(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().getPlayer();
         LiteralText text = new LiteralText("");
-        if (Config.instance().perPlayerSpawns) {
+        if (Config.getFeatureConfig().perPlayerSpawns) {
             text.append(String.format("§3Player Mobcaps (§a%.1f§3)", TickUtils.getModifier()));
             ServerPlayerEntityInterface playerInf = (ServerPlayerEntityInterface) player;
             for (SpawnGroup group : SpawnGroup.values()) {

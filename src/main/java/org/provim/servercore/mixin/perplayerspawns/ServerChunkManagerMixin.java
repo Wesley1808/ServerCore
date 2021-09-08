@@ -48,7 +48,7 @@ public abstract class ServerChunkManagerMixin extends ChunkManager {
     private SpawnHelper.Info updateSpawnHelper(int spawningChunkCount, Iterable<Entity> entities, SpawnHelper.ChunkSource chunkSource) {
         SpawnHelper.Info spawnHelperInfo;
         PlayerMobDistanceMap distanceMap = ((TACSInterface) threadedAnvilChunkStorage).getPlayerMobDistanceMap();
-        if (distanceMap != null && Config.instance().perPlayerSpawns) {
+        if (distanceMap != null && Config.getFeatureConfig().perPlayerSpawns) {
             // Update distance map -> by using a constant 10 as view distance we prevent the situations where:
             // 1 - No mobs will spawn because there's another player with mobs 500 blocks away (High view distance).
             // 2 - There will be 140 mobs in a small area because there's another player 50 blocks away (Low view distance).

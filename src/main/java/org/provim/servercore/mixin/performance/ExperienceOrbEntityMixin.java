@@ -36,7 +36,7 @@ public abstract class ExperienceOrbEntityMixin extends Entity {
     @Overwrite
     private static boolean isMergeable(ExperienceOrbEntity orb, int seed, int amount) {
         boolean bl = !orb.isRemoved() && (orb.getId() - seed) % 40 == 0;
-        return Config.instance().fastXpMerging ? bl : bl && orb.getExperienceAmount() == amount;
+        return Config.getFeatureConfig().fastXpMerging ? bl : bl && orb.getExperienceAmount() == amount;
     }
 
     /**
@@ -46,7 +46,7 @@ public abstract class ExperienceOrbEntityMixin extends Entity {
 
     @Overwrite
     private void merge(ExperienceOrbEntity other) {
-        if (Config.instance().fastXpMerging) {
+        if (Config.getFeatureConfig().fastXpMerging) {
             this.amount += other.getExperienceAmount();
         } else {
             this.pickingCount += ((ExperienceOrbEntityAccessor) other).getPickingCount();
@@ -61,6 +61,6 @@ public abstract class ExperienceOrbEntityMixin extends Entity {
 
     @Redirect(method = "expensiveUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Box;expand(D)Lnet/minecraft/util/math/Box;"))
     private Box setMergeRadius(Box box, double value) {
-        return box.expand(Config.instance().xpMergeRadius);
+        return box.expand(Config.getFeatureConfig().xpMergeRadius);
     }
 }

@@ -1,36 +1,52 @@
 package org.provim.servercore.config;
 
-public class Config {
-    protected static Config instance = new Config();
-    public boolean perPlayerSpawns = false;
-    public boolean noSpawnChunks = false;
-    public boolean useChunkTickDistance = false;
-    public boolean fastXpMerging = false;
-    public double xpMergeRadius = 0.5;
-    public double itemMergeRadius = 0.5;
-    public int autoSaveInterval = 5;
+import com.moandjiezana.toml.Toml;
+import net.fabricmc.loader.api.FabricLoader;
+import org.provim.servercore.ServerCore;
 
-    // Lobotomize villagers (Purpur)
-    public boolean lobotomizeTrappedVillagers = false;
-    public int lobotomizedVillagerTickInterval = 20;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Objects;
 
-    // Entity limits
-    public boolean useEntityLimits = false;
-    public int villagerLimit = 24;
-    public int villagerLimitRange = 64;
-    public int animalLimit = 32;
-    public int animalLimitRange = 64;
+public final class Config {
+    private static final File CONFIG_FILE = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml").toFile();
+    private static FeatureConfig featureConfig;
+    private static DynamicConfig dynamicConfig;
+    private static EntityConfig entityConfig;
+    private static Toml toml = new Toml();
 
-    // Dynamic performance checks
-    public boolean runPerformanceChecks = false;
-    public int maxTickDistance = 10;
-    public int minTickDistance = 2;
-    public int maxViewDistance = 10;
-    public int minViewDistance = 2;
-    public double maxMobcap = 1.0;
-    public double minMobcap = 0.3;
+    private Config() {
+    }
 
-    public static Config instance() {
-        return instance;
+    public static FeatureConfig getFeatureConfig() {
+        return featureConfig;
+    }
+
+    public static DynamicConfig getDynamicConfig() {
+        return dynamicConfig;
+    }
+
+    public static EntityConfig getEntityConfig() {
+        return entityConfig;
+    }
+
+    public static void load() {
+        validateFile();
+        toml = toml.read(CONFIG_FILE);
+        featureConfig = new FeatureConfig(toml);
+        dynamicConfig = new DynamicConfig(toml);
+        entityConfig = new EntityConfig(toml);
+    }
+
+    private static void validateFile() {
+        if (!CONFIG_FILE.exists()) {
+            try {
+                Files.copy(Objects.requireNonNull(Config.class.getResourceAsStream("/config/servercore.toml")), CONFIG_FILE.toPath());
+            } catch (IOException e) {
+                ServerCore.getLogger().error("Failed to create config.", e);
+                throw new RuntimeException();
+            }
+        }
     }
 }
