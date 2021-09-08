@@ -5,7 +5,7 @@
   per_player_spawns = false
   disable_spawn_chunks = false
   fast_xp_merging = false
-  no_chunk_tick_distance = false
+  enable_chunk_tick_distance = false
   lobotomize_villagers = false
   lobotomized_tick_interval = 20
   autosave_interval_minutes = 5
