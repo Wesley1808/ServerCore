@@ -55,7 +55,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 
     private boolean canTravelTo(BlockPos pos) {
         // Returns true in case it's surrounded by any bed. This way we don't break iron farms.
-        if (ChunkManager.getStateIfVisible(this.getEntityWorld(), pos).getBlock() instanceof BedBlock) {
+        if (ChunkManager.getStateIfLoaded(this.getEntityWorld(), pos).getBlock() instanceof BedBlock) {
             return true;
         }
 

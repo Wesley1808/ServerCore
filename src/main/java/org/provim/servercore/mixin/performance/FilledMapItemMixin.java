@@ -18,11 +18,11 @@ public abstract class FilledMapItemMixin {
 
     @Redirect(method = "updateColors", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getWorldChunk(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/chunk/WorldChunk;"))
     private WorldChunk onlyUpdateIfLoaded(World world, BlockPos pos) {
-        return ChunkManager.getChunkIfVisible(world, pos) instanceof WorldChunk worldChunk ? worldChunk : null;
+        return ChunkManager.getChunkIfLoaded(world, pos);
     }
 
     @Redirect(method = "updateColors", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/WorldChunk;isEmpty()Z"))
-    private boolean checkNull(WorldChunk worldChunk) {
+    private boolean validateNotNull(WorldChunk worldChunk) {
         return worldChunk == null || worldChunk.isEmpty();
     }
 }

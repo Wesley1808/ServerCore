@@ -150,7 +150,7 @@ public abstract class SpawnHelperMixin {
                         double distance = getDistanceToClosestPlayer(world, x, y, z);
 
                         if (distance != Double.MAX_VALUE) {
-                            if (ChunkManager.isChunkVisible(world, mutable) && isAcceptableSpawnPosition(world, chunk, mutable, distance)) {
+                            if (ChunkManager.isChunkLoaded(world, mutable) && isAcceptableSpawnPosition(world, chunk, mutable, distance)) {
                                 var biome = getBiomeDirectly(mutable, chunk);
                                 Pool<SpawnSettings.SpawnEntry> spawnEntries = getSpawnEntries(world, structureAccessor, chunkGenerator, spawnGroup, mutable, biome);
                                 Optional<SpawnSettings.SpawnEntry> optional = pickRandomSpawnEntry(biome, spawnGroup, world.random, spawnEntries);

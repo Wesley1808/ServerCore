@@ -15,6 +15,6 @@ public class MobNavigationMixin {
     // Don't load chunks for pathfinding.
     @Redirect(method = "findPathTo(Lnet/minecraft/util/math/BlockPos;I)Lnet/minecraft/entity/ai/pathing/Path;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;"))
     private BlockState onlyPathfindIfLoaded(World world, BlockPos pos) {
-        return ChunkManager.getStateIfVisible(world, pos);
+        return ChunkManager.getStateIfLoaded(world, pos);
     }
 }
