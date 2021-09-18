@@ -8,8 +8,8 @@
     "accessor.ServerChunkManagerAccessor",
     "accessor.ServerPlayerEntityAccessor",
     "accessor.SpawnHelperAccessor",
-    "accessor.SpawnHelperInfoAccessor",
     "accessor.TACSAccessor",
+    "fixes.PassiveEntityMixin",
     "event.CommandManagerMixin",
     "event.MinecraftServerMixin",
     "limits.AnimalEntityMixin",
@@ -24,16 +24,11 @@
     "performance.PlayerManagerMixin",
     "performance.ServerChunkManagerMixin",
     "performance.ServerPlayerEntityMixin",
+    "performance.SpawnDensityCapperMixin",
     "performance.SpawnGroupMixin",
+    "performance.SpawnHelperMixin",
     "performance.TACSEntityTrackerMixin",
-    "performance.VillagerEntityMixin",
-    "perplayerspawns.PassiveEntityMixin",
-    "perplayerspawns.ServerChunkManagerMixin",
-    "perplayerspawns.ServerPlayerEntityMixin",
-    "perplayerspawns.SpawnHelperMixin",
-    "perplayerspawns.ThreadedAnvilChunkStorageMixin"
-  ],
-  "client": [
+    "performance.VillagerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

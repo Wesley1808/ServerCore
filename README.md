@@ -7,7 +7,6 @@ Some changes might be detectable by very complex redstone machines.\
 Some changes are still WIP and may be unstable in specific situations.
 
 **Current features:**
-- Per player mobspawning (port of PaperMC's implementation).
 - Dynamic performance checks (changes settings depending on the mspt).
 - Adjustable chunk-ticking distance - Allows for having high render distances at low costs.
 - Adjustable mobcaps, item / xp merge radius & entity breeding limits.
@@ -19,7 +18,7 @@ Some changes are still WIP and may be unstable in specific situations.
 
 **Commands:**
 - /servercore <name> <value> - Allows for modifying settings ingame.
-- /mobcaps - Displays current mobcaps, supports both per-player and global.
+- /mobcaps - Displays current global mobcaps.
 - /sc tps - Gives information about the current settings.
 
 **Known incompatibilities:**

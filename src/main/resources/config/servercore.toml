@@ -2,7 +2,6 @@
 
 # Lets you enable / disable certain features and modify them.
 [features]
-  per_player_spawns = false
   disable_spawn_chunks = false
   fast_xp_merging = false
   enable_chunk_tick_distance = false

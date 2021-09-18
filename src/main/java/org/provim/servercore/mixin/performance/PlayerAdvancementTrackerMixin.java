@@ -3,7 +3,6 @@ package org.provim.servercore.mixin.performance;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.PlayerAdvancementTracker;
-import org.provim.servercore.utils.patches.IterationEntryPoint;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,6 +20,9 @@ import java.util.Set;
 
 @Mixin(PlayerAdvancementTracker.class)
 public abstract class PlayerAdvancementTrackerMixin {
+    private static final int PARENT_OF_ITERATOR = 2;
+    private static final int ITERATOR = 1;
+    private static final int ROOT = 0;
 
     @Shadow
     @Final
@@ -43,11 +45,11 @@ public abstract class PlayerAdvancementTrackerMixin {
 
     @Inject(method = "updateDisplay", at = @At("HEAD"), cancellable = true)
     private void updateDisplay(Advancement advancement, CallbackInfo ci) {
-        this.updateDisplay(advancement, IterationEntryPoint.ROOT);
+        this.updateDisplay(advancement, ROOT);
         ci.cancel();
     }
 
-    private void updateDisplay(Advancement advancement, IterationEntryPoint entryPoint) {
+    private void updateDisplay(Advancement advancement, int entryPoint) {
         boolean bl = this.canSee(advancement);
         boolean bl2 = this.visibleAdvancements.contains(advancement);
         if (bl && !bl2) {
@@ -64,17 +66,17 @@ public abstract class PlayerAdvancementTrackerMixin {
         if (bl != bl2 && advancement.getParent() != null) {
             // Paper - If we're not coming from an iterator consider this to be a root entry, otherwise
             // market that we're entering from the parent of an iterator.
-            this.updateDisplay(advancement.getParent(), entryPoint == IterationEntryPoint.ITERATOR ? IterationEntryPoint.PARENT_OF_ITERATOR : IterationEntryPoint.ROOT);
+            this.updateDisplay(advancement.getParent(), entryPoint == ITERATOR ? PARENT_OF_ITERATOR : ROOT);
         }
 
         // If this is true, we've gone through a child iteration, entered the parent, processed the parent
         // and are about to reprocess the children. Stop processing here to prevent O(N^2) processing.
-        if (entryPoint == IterationEntryPoint.PARENT_OF_ITERATOR) {
+        if (entryPoint == PARENT_OF_ITERATOR) {
             return;
         }
 
         for (Advancement child : advancement.getChildren()) {
-            this.updateDisplay(child, IterationEntryPoint.ITERATOR);
+            this.updateDisplay(child, ITERATOR);
         }
     }
 }

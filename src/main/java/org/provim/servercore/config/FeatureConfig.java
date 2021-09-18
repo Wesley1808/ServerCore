@@ -3,7 +3,6 @@ package org.provim.servercore.config;
 import com.moandjiezana.toml.Toml;
 
 public final class FeatureConfig {
-    public boolean perPlayerSpawns;
     public boolean disableSpawnChunks;
     public boolean fastXpMerging;
     public boolean useChunkTickDistance;
@@ -15,7 +14,6 @@ public final class FeatureConfig {
 
     public FeatureConfig(Toml defaultToml) {
         Toml toml = defaultToml.getTable("features");
-        this.perPlayerSpawns = toml.getBoolean("per_player_spawns", false);
         this.disableSpawnChunks = toml.getBoolean("disable_spawn_chunks", false);
         this.fastXpMerging = toml.getBoolean("fast_xp_merging", false);
         this.useChunkTickDistance = toml.getBoolean("enable_chunk_tick_distance", false);

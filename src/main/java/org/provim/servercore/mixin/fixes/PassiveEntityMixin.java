@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.perplayerspawns;
+package org.provim.servercore.mixin.fixes;
 
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(PassiveEntity.class)
 public abstract class PassiveEntityMixin extends MobEntity {
-
     protected PassiveEntityMixin(EntityType<? extends MobEntity> entityType, World world) {
         super(entityType, world);
     }
