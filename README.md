@@ -18,7 +18,7 @@ Some changes are still WIP and may be unstable in specific situations.
 
 **Commands:**
 - /servercore <name> <value> - Allows for modifying settings ingame.
-- /mobcaps - Displays current global mobcaps.
+- /mobcaps - Displays the current per-player mobcap for the user.
 - /sc tps - Gives information about the current settings.
 
 **Known incompatibilities:**
@@ -31,7 +31,6 @@ The config file can be found at `<server_dir>/config/servercore.toml`
 
 # Lets you enable / disable certain features and modify them.
 [features]
-  per_player_spawns = false
   disable_spawn_chunks = false
   fast_xp_merging = false
   enable_chunk_tick_distance = false

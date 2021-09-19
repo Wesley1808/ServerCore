@@ -11,8 +11,8 @@ sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version as Object
-group = project.maven_group as Object
+version = String.format("%s-%s", project.mod_version, project.minecraft_version) as String
+group = project.maven_group as String
 
 loom {
     accessWidenerPath = file("src/main/resources/servercore.accesswidener")
