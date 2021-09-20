@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CommandManager.class)
-public class CommandManagerMixin {
+public abstract class CommandManagerMixin {
     @Shadow
     @Final
     private CommandDispatcher<ServerCommandSource> dispatcher;

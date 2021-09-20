@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(ItemEntity.class)
-public class ItemEntityMixin {
+public abstract class ItemEntityMixin {
 
     /**
      * Merges item entities from a set range.

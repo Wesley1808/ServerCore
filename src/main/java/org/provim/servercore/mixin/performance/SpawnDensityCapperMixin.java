@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(SpawnDensityCapper.class)
-public class SpawnDensityCapperMixin {
+public abstract class SpawnDensityCapperMixin {
 
     @Shadow
     @Final

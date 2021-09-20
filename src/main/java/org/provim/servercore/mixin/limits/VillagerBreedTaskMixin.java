@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(VillagerBreedTask.class)
-public class VillagerBreedTaskMixin {
+public abstract class VillagerBreedTaskMixin {
 
     /**
      * Cancels villager breeding if there are too many villagers in the surrounding area.

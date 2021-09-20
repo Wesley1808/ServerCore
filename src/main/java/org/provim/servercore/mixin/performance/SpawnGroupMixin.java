@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SpawnGroup.class)
-public class SpawnGroupMixin {
+public abstract class SpawnGroupMixin {
 
     @Shadow
     @Final

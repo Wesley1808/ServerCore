@@ -1,6 +1,7 @@
 package org.provim.servercore.mixin.performance;
 
 import net.minecraft.block.BedBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Brain;
@@ -55,7 +56,8 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 
     private boolean canTravelTo(BlockPos pos) {
         // Returns true in case it's surrounded by any bed. This way we don't break iron farms.
-        if (ChunkManager.getStateIfLoaded(this.getEntityWorld(), pos).getBlock() instanceof BedBlock) {
+        final BlockState state = ChunkManager.getStateIfLoaded(this.world, pos);
+        if (state == null || state.getBlock() instanceof BedBlock) {
             return true;
         }
 
