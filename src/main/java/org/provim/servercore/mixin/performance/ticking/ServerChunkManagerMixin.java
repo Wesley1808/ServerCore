@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.performance;
+package org.provim.servercore.mixin.performance.ticking;
 
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import net.minecraft.server.world.ChunkHolder;

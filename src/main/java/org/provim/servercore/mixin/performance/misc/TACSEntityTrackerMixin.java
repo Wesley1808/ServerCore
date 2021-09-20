@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.performance;
+package org.provim.servercore.mixin.performance.misc;
 
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;

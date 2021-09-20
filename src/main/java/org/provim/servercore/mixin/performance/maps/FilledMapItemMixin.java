@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.performance;
+package org.provim.servercore.mixin.performance.maps;
 
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.util.math.BlockPos;

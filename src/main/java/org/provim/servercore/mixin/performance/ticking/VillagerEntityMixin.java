@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.performance;
+package org.provim.servercore.mixin.performance.ticking;
 
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;

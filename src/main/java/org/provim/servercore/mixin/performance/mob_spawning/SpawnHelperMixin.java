@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.performance;
+package org.provim.servercore.mixin.performance.mob_spawning;
 
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -34,7 +34,6 @@ public abstract class SpawnHelperMixin {
     @Redirect(method = "spawnEntitiesInChunk(Lnet/minecraft/entity/SpawnGroup;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/chunk/Chunk;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/SpawnHelper$Checker;Lnet/minecraft/world/SpawnHelper$Runner;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/SpawnHelper;isAcceptableSpawnPosition(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/chunk/Chunk;Lnet/minecraft/util/math/BlockPos$Mutable;D)Z"))
     private static boolean onlySpawnIfLoaded(ServerWorld world, Chunk chunk, BlockPos.Mutable pos, double squaredDistance) {
         return isAcceptableSpawnPosition(world, chunk, pos, squaredDistance) && (cachedChunk = ChunkManager.getChunkIfLoaded(world, pos)) != null;
-
     }
 
     // Fast biome lookups.

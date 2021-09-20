@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.performance;
+package org.provim.servercore.mixin.performance.mob_spawning;
 
 import net.minecraft.entity.SpawnGroup;
 import org.provim.servercore.utils.TickUtils;

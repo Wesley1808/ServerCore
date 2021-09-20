@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.performance;
+package org.provim.servercore.mixin.performance.merging;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;

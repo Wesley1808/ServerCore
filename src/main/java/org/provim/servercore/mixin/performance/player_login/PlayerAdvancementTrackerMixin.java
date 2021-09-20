@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.performance;
+package org.provim.servercore.mixin.performance.player_login;
 
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementProgress;

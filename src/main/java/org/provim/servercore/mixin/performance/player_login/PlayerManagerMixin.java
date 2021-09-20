@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.performance;
+package org.provim.servercore.mixin.performance.player_login;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.NbtCompound;

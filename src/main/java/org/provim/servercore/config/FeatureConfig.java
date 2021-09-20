@@ -5,6 +5,7 @@ import com.moandjiezana.toml.Toml;
 public final class FeatureConfig {
     public boolean disableSpawnChunks;
     public boolean fastXpMerging;
+    public boolean usePlayerMobDistanceMap;
     public boolean useChunkTickDistance;
     public boolean lobotomizeVillagers;
     public int lobotomizedTickInterval;
@@ -16,6 +17,7 @@ public final class FeatureConfig {
         Toml toml = defaultToml.getTable("features");
         this.disableSpawnChunks = toml.getBoolean("disable_spawn_chunks", false);
         this.fastXpMerging = toml.getBoolean("fast_xp_merging", false);
+        this.usePlayerMobDistanceMap = toml.getBoolean("enable_player_mob_distance_map", false);
         this.useChunkTickDistance = toml.getBoolean("enable_chunk_tick_distance", false);
         this.lobotomizeVillagers = toml.getBoolean("lobotomize_villagers", false);
         this.lobotomizedTickInterval = Math.toIntExact(toml.getLong("lobotomized_tick_interval", 20L));

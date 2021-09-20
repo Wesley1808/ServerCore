@@ -2,6 +2,7 @@ package org.provim.servercore.mixin.accessor;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import net.minecraft.server.world.ChunkHolder;
+import net.minecraft.server.world.PlayerChunkWatchingManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.util.math.ChunkPos;
@@ -14,6 +15,9 @@ public interface TACSAccessor {
 
     @Accessor("chunkHolders")
     Long2ObjectLinkedOpenHashMap<ChunkHolder> getChunkHolders();
+
+    @Accessor("playerChunkWatchingManager")
+    PlayerChunkWatchingManager getPlayerChunkWatchingManager();
 
     @Accessor("world")
     ServerWorld getWorld();
