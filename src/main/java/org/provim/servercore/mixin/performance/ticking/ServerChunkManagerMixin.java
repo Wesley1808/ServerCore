@@ -53,7 +53,7 @@ public abstract class ServerChunkManagerMixin {
     @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V", ordinal = 0))
     private <T> void onlyTickActiveChunks(List<ChunkHolder> list, Consumer<? super T> action) {
         final TACSAccessor chunkStorage = (TACSAccessor) this.threadedAnvilChunkStorage;
-        if (Config.getFeatureConfig().useChunkTickDistance) {
+        if (TickUtils.shouldUseActiveChunks()) {
             if (this.count++ % 20 == 0) { // Updates active chunks once a second.
                 // Add active chunks
                 for (ChunkHolder holder : chunkStorage.getChunkHolders().values()) {
@@ -78,7 +78,7 @@ public abstract class ServerChunkManagerMixin {
         final long timeDifference = time - this.lastMobSpawningTime;
         this.lastMobSpawningTime = time;
 
-        for (ChunkHolder holder : Config.getFeatureConfig().useChunkTickDistance ? this.active : chunkStorage.getChunkHolders().values()) {
+        for (ChunkHolder holder : TickUtils.shouldUseActiveChunks() ? this.active : chunkStorage.getChunkHolders().values()) {
             final WorldChunk chunk = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null);
             if (chunk != null) {
                 final ChunkPos pos = chunk.getPos();

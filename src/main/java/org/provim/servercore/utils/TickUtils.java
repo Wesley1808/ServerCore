@@ -11,18 +11,21 @@ import net.minecraft.text.MutableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 import org.provim.servercore.ServerCore;
 import org.provim.servercore.config.Config;
+import org.provim.servercore.config.DynamicConfig;
 
 import java.math.BigDecimal;
 
 public final class TickUtils {
-    private static final BigDecimal value = new BigDecimal("0.1");
-    private static int viewDistance = Config.getDynamicConfig().maxViewDistance;
-    private static int chunkTickDistance = Config.getDynamicConfig().maxTickDistance;
-    private static BigDecimal mobcapModifier = new BigDecimal("1.0");
+    private static final BigDecimal VALUE = new BigDecimal("0.1");
+    private static int viewDistance = ServerCore.getServer().getPlayerManager().getViewDistance();
+    private static int simulationDistance = viewDistance;
+    private static int chunkTickDistance = viewDistance;
+    private static BigDecimal mobcapModifier = new BigDecimal(String.valueOf(Config.getDynamicConfig().maxMobcap));
 
     private TickUtils() {
     }
@@ -34,79 +37,96 @@ public final class TickUtils {
      */
 
     public static void runPerformanceChecks(MinecraftServer server) {
-        if (Config.getDynamicConfig().enabled) {
-            double mspt = server.getTickTime();
-            checkViewDistance(mspt);
-            checkMobcaps(mspt);
-            checkTickDistance(mspt);
+        final DynamicConfig dynamic = Config.getDynamicConfig();
+        if (dynamic.enabled) {
+            final double mspt = MathHelper.average(server.lastTickLengths) * 1.0E-6D;
+            checkViewDistance(dynamic, mspt);
+            checkSimulationDistance(dynamic, mspt);
+            checkMobcaps(dynamic, mspt);
+            checkChunkTickDistance(dynamic, mspt);
         }
     }
 
     /**
      * Modifies the tick distance based on the MSPT.
-     *
-     * @param mspt: The current MSPT
      */
 
-    private static void checkTickDistance(double mspt) {
-        if (mspt > 40 && chunkTickDistance > Config.getDynamicConfig().minTickDistance) {
-            chunkTickDistance -= 1;
-        } else if (mspt < 30 && chunkTickDistance < Config.getDynamicConfig().maxTickDistance && mobcapModifier.doubleValue() == Config.getDynamicConfig().maxMobcap) {
-            chunkTickDistance += 1;
+    private static void checkChunkTickDistance(DynamicConfig dynamic, double mspt) {
+        if (mspt > 40 && chunkTickDistance > dynamic.minChunkTickDistance) {
+            chunkTickDistance--;
+        } else if (mspt < 30 && chunkTickDistance < dynamic.maxChunkTickDistance && mobcapModifier.doubleValue() == dynamic.maxMobcap) {
+            chunkTickDistance++;
         }
-    }
-
-    public static int getChunkTickDistance() {
-        return chunkTickDistance;
-    }
-
-    public static void setChunkTickDistance(int distance) {
-        chunkTickDistance = distance;
     }
 
     /**
      * Modifies the mobcaps based on the MSPT.
-     *
-     * @param mspt: The current MSPT
      */
 
-    private static void checkMobcaps(double mspt) {
-        if (mspt > 45 && chunkTickDistance == Config.getDynamicConfig().minTickDistance && mobcapModifier.doubleValue() > Config.getDynamicConfig().minMobcap) {
-            mobcapModifier = mobcapModifier.subtract(value);
-        } else if (mspt < 35 && mobcapModifier.doubleValue() < Config.getDynamicConfig().maxMobcap && viewDistance == Config.getDynamicConfig().maxViewDistance) {
-            mobcapModifier = mobcapModifier.add(value);
+    private static void checkMobcaps(DynamicConfig dynamic, double mspt) {
+        if (mspt > 45 && mobcapModifier.doubleValue() > dynamic.minMobcap && chunkTickDistance == dynamic.minChunkTickDistance) {
+            mobcapModifier = mobcapModifier.subtract(VALUE);
+        } else if (mspt < 35 && mobcapModifier.doubleValue() < dynamic.maxMobcap && simulationDistance == dynamic.maxSimulationDistance) {
+            mobcapModifier = mobcapModifier.add(VALUE);
         }
     }
 
-    public static double getModifier() {
-        return mobcapModifier.doubleValue();
+    /**
+     * Modifies the simulation distance based on the MSPT.
+     */
+
+    private static void checkSimulationDistance(DynamicConfig dynamic, double mspt) {
+        if (mspt > 45 && simulationDistance > dynamic.maxSimulationDistance && mobcapModifier.doubleValue() == dynamic.minMobcap) {
+            setSimulationDistance(simulationDistance - 1);
+        } else if (mspt < 35 && simulationDistance < dynamic.maxSimulationDistance && viewDistance == dynamic.maxViewDistance) {
+            setSimulationDistance(simulationDistance + 1);
+        }
+    }
+
+    /**
+     * Modifies the view distance based on the MSPT.
+     */
+
+    private static void checkViewDistance(DynamicConfig dynamic, double mspt) {
+        if (mspt > 45 && viewDistance > dynamic.minViewDistance && simulationDistance == dynamic.minSimulationDistance) {
+            setViewDistance(viewDistance - 1);
+        } else if (mspt < 35 && viewDistance < dynamic.maxViewDistance) {
+            setViewDistance(viewDistance + 1);
+        }
+    }
+
+    public static void setSimulationDistance(int distance) {
+        ServerCore.getServer().getPlayerManager().method_38650(distance);
+        simulationDistance = distance;
+    }
+
+    public static void setViewDistance(int distance) {
+        ServerCore.getServer().getPlayerManager().setViewDistance(distance);
+        viewDistance = distance;
     }
 
     public static void setModifier(BigDecimal modifier) {
         mobcapModifier = modifier;
     }
 
-    /**
-     * Modifies the view distance based on the MSPT.
-     *
-     * @param mspt: The current MSPT
-     */
-
-    private static void checkViewDistance(double mspt) {
-        if (mspt > 45 && mobcapModifier.doubleValue() == Config.getDynamicConfig().minMobcap && viewDistance > Config.getDynamicConfig().minViewDistance) {
-            setViewDistance(viewDistance - 1);
-        } else if (mspt < 35 && viewDistance < Config.getDynamicConfig().maxViewDistance) {
-            setViewDistance(viewDistance + 1);
-        }
+    public static void setChunkTickDistance(int distance) {
+        chunkTickDistance = distance;
     }
 
     public static int getViewDistance() {
         return viewDistance;
     }
 
-    public static void setViewDistance(int distance) {
-        ServerCore.getServer().getPlayerManager().setViewDistance(distance);
-        viewDistance = distance;
+    public static int getSimulationDistance() {
+        return simulationDistance;
+    }
+
+    public static double getModifier() {
+        return mobcapModifier.doubleValue();
+    }
+
+    public static int getChunkTickDistance() {
+        return chunkTickDistance;
     }
 
     /**
@@ -118,10 +138,6 @@ public final class TickUtils {
      */
 
     public static boolean shouldTick(ChunkPos pos, ServerWorld world) {
-        if (chunkTickDistance >= viewDistance) {
-            return true;
-        }
-
         for (ServerPlayerEntity player : world.getPlayers()) {
             if (player.interactionManager.getGameMode() != GameMode.SPECTATOR && player.getChunkPos().getChebyshevDistance(pos) <= chunkTickDistance) {
                 return true;
@@ -129,6 +145,10 @@ public final class TickUtils {
         }
 
         return false;
+    }
+
+    public static boolean shouldUseActiveChunks() {
+        return chunkTickDistance >= viewDistance;
     }
 
     /**
@@ -160,6 +180,6 @@ public final class TickUtils {
         double ms = server.getTickTime();
         var mspt = String.format("%.1f", ms);
         var tps = String.format("%.1f", ms != 0 ? Math.min((1000 / ms), 20) : 20);
-        return new LiteralText(String.format("§8- §3TPS: §a%s §3MSPT: §a%s\n§8- §3Online: §a%d\n§8- §3View distance: §a%d\n§8- §3Mobcap multiplier: §a%s\n§8- §3Chunk-tick distance: §a%d", tps, mspt, server.getCurrentPlayerCount(), viewDistance, String.format("%.1f", mobcapModifier.doubleValue()), chunkTickDistance));
+        return new LiteralText(String.format("§8- §3TPS: §a%s §3MSPT: §a%s\n§8- §3Online: §a%d\n§8- §3View distance: §a%d\n§8- §3Mobcap multiplier: §a%s\n§8- §3Simulation distance: §a%d\n§8- §3Chunk-tick distance: §a%d", tps, mspt, server.getCurrentPlayerCount(), viewDistance, String.format("%.1f", getModifier()), simulationDistance, chunkTickDistance));
     }
 }

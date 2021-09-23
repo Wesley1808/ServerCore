@@ -9,9 +9,6 @@
     # Optimizes vanilla's per-player mobspawning by using PaperMC's PlayerMobDistanceMap.
     # Note: this might slightly increase memory usage.
     use_distance_map = false
-    # Allows ServerCore to modify the distance the server will perform chunk ticks at.
-    # Chunk ticks include randomticks and mobspawning.
-    enable_chunk_tick_distance = false
     # Makes villagers tick less often if they are stuck in a 1x1 space.
     # The tick interval decides the interval between villager ticks when lobotomized.
     lobotomize_villagers = false
@@ -31,17 +28,18 @@
     villager_range = 64
     animal_range = 64
 
-[dynamic] # Modifies mobcaps, no-chunk-tick and viewdistance depending on the MSPT.
+[dynamic] # Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT.
     enabled = false
-    # Chunk-tick-distance = distance in which chunks will tick.
-    # Default: 8 -> Any higher values will not have any effect.
+    # The maximum and minimum permitted values.
+    # Chunk tick distance = distance in which random ticks and mobspawning can happen.
     max_chunk_tick_distance = 8
     min_chunk_tick_distance = 2
-    # View-distance = distance in which the world will render.
-    # Default: 10
+    # Simulation distance = distance in which the world will tick, similar to no-tick-vd.
+    max_simulation_distance = 10
+    min_simulation_distance = 2
+    # View distance = distance in which the world will render.
     max_view_distance = 10
     min_view_distance = 2
     # Mobcap = global multiplier that decides the percentage of the mobcap to be used.
-    # Default: 1.0
     max_mobcap = 1.0
     min_mobcap = 0.3

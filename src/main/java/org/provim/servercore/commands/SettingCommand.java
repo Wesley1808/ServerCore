@@ -31,11 +31,11 @@ public final class SettingCommand {
         dispatcher.register(literal("servercore").requires(src -> PermissionUtils.perm(src, PermissionUtils.COMMAND_SETTINGS, 2))
                 .then(literal("dynamic_performance").then(argument(VALUE, bool()).executes(context -> modifyBoolean(context.getSource(), getBool(context, VALUE), 1, "Dynamic performance checks have"))))
                 .then(literal("lobotomize_villagers").then(argument(VALUE, bool()).executes(context -> modifyBoolean(context.getSource(), getBool(context, VALUE), 2, "Villager lobotomizing has"))))
-                .then(literal("enable_chunk_tick_distance").then(argument(VALUE, bool()).executes(context -> modifyBoolean(context.getSource(), getBool(context, VALUE), 3, "Chunk-ticking distance has"))))
-                .then(literal("entity_limits").then(argument(VALUE, bool()).executes(context -> modifyBoolean(context.getSource(), getBool(context, VALUE), 4, "Entity limits have"))))
-                .then(literal("fast_xp_merging").then(argument(VALUE, bool()).executes(context -> modifyBoolean(context.getSource(), getBool(context, VALUE), 5, "Fast XP merging has"))))
+                .then(literal("entity_limits").then(argument(VALUE, bool()).executes(context -> modifyBoolean(context.getSource(), getBool(context, VALUE), 3, "Entity limits have"))))
+                .then(literal("fast_xp_merging").then(argument(VALUE, bool()).executes(context -> modifyBoolean(context.getSource(), getBool(context, VALUE), 4, "Fast XP merging has"))))
                 .then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 32)).executes(context -> modifyInt(context.getSource(), getInteger(context, VALUE), 1, "Chunk-tick distance has"))))
                 .then(literal("view_distance").then(argument(VALUE, integer(2, 32)).executes(context -> modifyInt(context.getSource(), getInteger(context, VALUE), 2, "View distance has"))))
+                .then(literal("simulation_distance").then(argument(VALUE, integer(2, 32)).executes(context -> modifyInt(context.getSource(), getInteger(context, VALUE), 3, "Simulation distance has"))))
                 .then(literal("item_merge_radius").then(argument(VALUE, doubleArg(0.5, 10)).executes(context -> modifyDouble(context.getSource(), getDouble(context, VALUE), 1, "Item merge radius has"))))
                 .then(literal("xp_merge_radius").then(argument(VALUE, doubleArg(0.5, 10)).executes(context -> modifyDouble(context.getSource(), getDouble(context, VALUE), 2, "XP merge radius has"))))
                 .then(literal("mobcaps").then(argument(VALUE, doubleArg(0.1, 10.0)).executes(context -> modifyDouble(context.getSource(), getDouble(context, VALUE), 3, "Mobcaps have"))))
@@ -47,9 +47,8 @@ public final class SettingCommand {
         switch (id) {
             case 1 -> Config.getDynamicConfig().enabled = value;
             case 2 -> Config.getFeatureConfig().lobotomizeVillagers = value;
-            case 3 -> Config.getFeatureConfig().useChunkTickDistance = value;
-            case 4 -> Config.getEntityConfig().enabled = value;
-            case 5 -> Config.getFeatureConfig().fastXpMerging = value;
+            case 3 -> Config.getEntityConfig().enabled = value;
+            case 4 -> Config.getFeatureConfig().fastXpMerging = value;
         }
 
         source.sendFeedback(new LiteralText(String.format("%s been set to %b", setting, value)), false);
@@ -60,6 +59,7 @@ public final class SettingCommand {
         switch (id) {
             case 1 -> TickUtils.setChunkTickDistance(value);
             case 2 -> TickUtils.setViewDistance(value);
+            case 3 -> TickUtils.setSimulationDistance(value);
         }
 
         source.sendFeedback(new LiteralText(String.format("%s been set to %d", type, value)), false);
