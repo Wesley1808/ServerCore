@@ -1,4 +1,4 @@
-package org.provim.servercore.utils;
+package org.provim.servercore.utils.data_structures;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;

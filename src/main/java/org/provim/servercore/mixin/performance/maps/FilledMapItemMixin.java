@@ -12,10 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(FilledMapItem.class)
 public abstract class FilledMapItemMixin {
 
-    /**
-     * Stop maps from loading chunks.
-     */
-
+    // Stop maps from loading chunks.
     @Redirect(method = "updateColors", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getWorldChunk(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/chunk/WorldChunk;"))
     private WorldChunk onlyUpdateIfLoaded(World world, BlockPos pos) {
         return ChunkManager.getChunkIfLoaded(world, pos);

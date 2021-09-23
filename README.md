@@ -33,9 +33,8 @@ The config file can be found at `<server_dir>/config/servercore.toml`
     # This will also allow players to pickup xp much faster.
     fast_xp_merging = false
     # Optimizes vanilla's per-player mobspawning by using PaperMC's PlayerMobDistanceMap.
-    # Note: vanilla's algorithm may outperform this if the playercount is very low.
-    # Therefore this is mostly recommended for servers with more than 10 players.
-    enable_player_mob_distance_map = false
+    # Note: this might slightly increase memory usage.
+    use_distance_map = false
     # Allows ServerCore to modify the distance the server will perform chunk ticks at.
     # Chunk ticks include randomticks and mobspawning.
     enable_chunk_tick_distance = false

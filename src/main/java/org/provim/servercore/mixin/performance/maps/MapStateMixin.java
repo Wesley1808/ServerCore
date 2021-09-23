@@ -21,7 +21,7 @@ public abstract class MapStateMixin {
      *
      * @param playerInventory: The inventory from a PlayerEntity
      * @param stack:           The ItemStack its looking for
-     * @return Boolean: whether player icons should be tracked by item frames.
+     * @return Boolean: whether moving player icons should be tracked by item frames.
      */
 
     @Redirect(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;contains(Lnet/minecraft/item/ItemStack;)Z"))
