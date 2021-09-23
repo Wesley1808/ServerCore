@@ -2,11 +2,12 @@ package org.provim.servercore.utils;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.ChunkSectionPos;
 import org.provim.servercore.interfaces.IServerPlayerEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public final class PlayerMobDistanceMap {
 
     private static final PooledHashSets.PooledObjectLinkedOpenHashSet<ServerPlayerEntity> EMPTY_SET = new PooledHashSets.PooledObjectLinkedOpenHashSet<>();
 
-    private final Object2ObjectOpenHashMap<ServerPlayerEntity, ChunkPos> players = new Object2ObjectOpenHashMap<>();
+    private final Object2ObjectOpenHashMap<ServerPlayerEntity, ChunkSectionPos> players = new Object2ObjectOpenHashMap<>();
     // we use linked for better iteration.
     private final Long2ObjectOpenHashMap<PooledHashSets.PooledObjectLinkedOpenHashSet<ServerPlayerEntity>> playerMap = new Long2ObjectOpenHashMap<>(32, 0.5f);
 
@@ -33,7 +34,7 @@ public final class PlayerMobDistanceMap {
     }
 
     public void update(final List<ServerPlayerEntity> currentPlayers, final int newViewDistance) {
-        final List<ServerPlayerEntity> gone = new ArrayList<>(this.players.keySet());
+        final ObjectLinkedOpenHashSet<ServerPlayerEntity> gone = new ObjectLinkedOpenHashSet<>(this.players.keySet());
 
         final int oldViewDistance = this.viewDistance;
         this.viewDistance = newViewDistance;
@@ -42,8 +43,8 @@ public final class PlayerMobDistanceMap {
             if (!player.isSpectator()) {
                 gone.remove(player);
 
-                final ChunkPos newPosition = player.getChunkPos();
-                final ChunkPos oldPosition = this.players.put(player, newPosition);
+                final ChunkSectionPos newPosition = player.getWatchedSection();
+                final ChunkSectionPos oldPosition = this.players.put(player, newPosition);
 
                 if (oldPosition == null) {
                     this.addNewPlayer(player, newPosition, newViewDistance);
@@ -54,7 +55,7 @@ public final class PlayerMobDistanceMap {
         }
 
         for (final ServerPlayerEntity player : gone) {
-            final ChunkPos oldPosition = this.players.remove(player);
+            final ChunkSectionPos oldPosition = this.players.remove(player);
             if (oldPosition != null) {
                 this.removePlayer(player, oldPosition, oldViewDistance);
             }
@@ -81,11 +82,11 @@ public final class PlayerMobDistanceMap {
         });
     }
 
-    private void updatePlayer(final ServerPlayerEntity player, final ChunkPos oldPosition, final ChunkPos newPosition, final int oldViewDistance, final int newViewDistance) {
-        final int toX = newPosition.x;
-        final int toZ = newPosition.z;
-        final int fromX = oldPosition.x;
-        final int fromZ = oldPosition.z;
+    private void updatePlayer(final ServerPlayerEntity player, final ChunkSectionPos oldPosition, final ChunkSectionPos newPosition, final int oldViewDistance, final int newViewDistance) {
+        final int toX = newPosition.getX();
+        final int toZ = newPosition.getZ();
+        final int fromX = oldPosition.getX();
+        final int fromZ = oldPosition.getZ();
 
         final int dx = toX - fromX;
         final int dz = toZ - fromZ;
@@ -191,9 +192,9 @@ public final class PlayerMobDistanceMap {
         }
     }
 
-    private void removePlayer(final ServerPlayerEntity player, final ChunkPos position, final int viewDistance) {
-        final int x = position.x;
-        final int z = position.z;
+    private void removePlayer(final ServerPlayerEntity player, final ChunkSectionPos position, final int viewDistance) {
+        final int x = position.getX();
+        final int z = position.getZ();
 
         for (int xoff = -viewDistance; xoff <= viewDistance; ++xoff) {
             for (int zoff = -viewDistance; zoff <= viewDistance; ++zoff) {
@@ -202,9 +203,9 @@ public final class PlayerMobDistanceMap {
         }
     }
 
-    private void addNewPlayer(final ServerPlayerEntity player, final ChunkPos position, final int viewDistance) {
-        final int x = position.x;
-        final int z = position.z;
+    private void addNewPlayer(final ServerPlayerEntity player, final ChunkSectionPos position, final int viewDistance) {
+        final int x = position.getX();
+        final int z = position.getZ();
 
         for (int xoff = -viewDistance; xoff <= viewDistance; ++xoff) {
             for (int zoff = -viewDistance; zoff <= viewDistance; ++zoff) {

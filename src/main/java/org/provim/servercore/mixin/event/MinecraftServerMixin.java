@@ -25,7 +25,7 @@ public abstract class MinecraftServerMixin {
      * [Server Tick Event]
      */
 
-    @Inject(at = @At("TAIL"), method = "tick")
+    @Inject(method = "tick", at = @At("TAIL"))
     private void onTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
         if (this.ticks % 300 == 0) {
             TickUtils.runPerformanceChecks((MinecraftServer) (Object) this);
@@ -36,13 +36,13 @@ public abstract class MinecraftServerMixin {
      * [Server Startup Event]
      */
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setupServer()Z"), method = "runServer")
+    @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setupServer()Z"))
     private void onSetupServer(CallbackInfo info) {
         ServerCore.setServer((MinecraftServer) (Object) this);
         Config.load();
     }
 
-    @Inject(at = @At("HEAD"), method = "prepareStartRegion", cancellable = true)
+    @Inject(method = "prepareStartRegion", at = @At("HEAD"), cancellable = true)
     private void disableSpawnChunks(WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci) {
         if (Config.getFeatureConfig().disableSpawnChunks) {
             ci.cancel();

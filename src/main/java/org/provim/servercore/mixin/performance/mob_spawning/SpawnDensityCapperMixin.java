@@ -49,11 +49,11 @@ public abstract class SpawnDensityCapperMixin {
 
     @Redirect(method = "canSpawn", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
     private Iterator<ServerPlayerEntity> usePlayerMobDistanceMap$1(List<ServerPlayerEntity> list, SpawnGroup spawnGroup, ChunkPos chunkPos) {
-        return Config.getFeatureConfig().usePlayerMobDistanceMap ? ((IThreadedAnvilChunkStorage) this.threadedAnvilChunkStorage).getPlayerMobDistanceMap().getPlayersInRange(chunkPos).iterator() : list.listIterator();
+        return Config.getFeatureConfig().usePlayerMobDistanceMap ? ((IThreadedAnvilChunkStorage) this.threadedAnvilChunkStorage).getDistanceMap().getPlayersInRange(chunkPos).iterator() : list.listIterator();
     }
 
     @Redirect(method = "increaseDensity", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
     private Iterator<ServerPlayerEntity> usePlayerMobDistanceMap$2(List<ServerPlayerEntity> list, ChunkPos chunkPos, SpawnGroup spawnGroup) {
-        return Config.getFeatureConfig().usePlayerMobDistanceMap ? ((IThreadedAnvilChunkStorage) this.threadedAnvilChunkStorage).getPlayerMobDistanceMap().getPlayersInRange(chunkPos).iterator() : list.listIterator();
+        return Config.getFeatureConfig().usePlayerMobDistanceMap ? ((IThreadedAnvilChunkStorage) this.threadedAnvilChunkStorage).getDistanceMap().getPlayersInRange(chunkPos).iterator() : list.listIterator();
     }
 }

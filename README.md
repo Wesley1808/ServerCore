@@ -21,9 +21,6 @@ Some changes are still WIP and may be unstable in specific situations.
 - /mobcaps - Displays the current per-player mobcap for the user.
 - /sc tps - Gives information about the current settings.
 
-**Known incompatibilities:**
-- /carpet lagFreeSpawning (from Carpet mod). -> If you want to use carpet, make sure this setting is set to false.
-
 Most features are disabled by default and can be found in the config.\
 The config file can be found at `<server_dir>/config/servercore.toml`
 ```toml

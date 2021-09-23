@@ -16,10 +16,7 @@ public abstract class SpawnGroupMixin {
     @Final
     private int capacity;
 
-    /**
-     * Modifies the capacity of the mobcap.
-     */
-
+    // Modifies the capacity of the mobcap.
     @Inject(method = "getCapacity", at = @At("TAIL"), cancellable = true)
     private void modifyCapacity(CallbackInfoReturnable<Integer> cir) {
         cir.setReturnValue((int) (this.capacity * TickUtils.getModifier()));
