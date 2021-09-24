@@ -42,8 +42,8 @@ The config file can be found at `<server_dir>/config/servercore.toml`
     # The amount of minutes in between auto-save intervals when /save-on is active.
     autosave_interval_minutes = 5
     # Decides the radius in blocks that items / xp will merge at.
-    xp_merge_radius = 0.5
     item_merge_radius = 0.5
+    xp_merge_radius = 0.5
 
 [entity_limits] # Stops animals / villagers from breeding if there are too many of the same type nearby.
     enabled = false
@@ -53,12 +53,12 @@ The config file can be found at `<server_dir>/config/servercore.toml`
     # Range = the range it will check for entities of the same type.
     villager_range = 64
     animal_range = 64
-    
+
 [dynamic] # Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT.
     enabled = false
     # The maximum and minimum permitted values.
     # Chunk tick distance = distance in which random ticks and mobspawning can happen.
-    max_chunk_tick_distance = 8
+    max_chunk_tick_distance = 10
     min_chunk_tick_distance = 2
     # Simulation distance = distance in which the world will tick, similar to no-tick-vd.
     max_simulation_distance = 10
@@ -69,6 +69,14 @@ The config file can be found at `<server_dir>/config/servercore.toml`
     # Mobcap = global multiplier that decides the percentage of the mobcap to be used.
     max_mobcap = 1.0
     min_mobcap = 0.3
+
+[messages] # Allows you to modify the way some of the messages are formatted. Use the § symbol for color codes.
+    # The title for the /mobcaps command.
+    # Arguments: The current global mobcap modifier (%.1f).
+    mobcap_title = "§3Per Player Mobcaps (§a%.1f§3)"
+    # The content for the /mobcaps command. This is displayed for every existing spawngroup.
+    # Arguments: The name of the spawngroup, the current mobcount near the player and the total capacity.
+    mobcap_spawngroup = "§8- §3%s: §a%d §8/ §a%d"
 ```
 
 # Setup

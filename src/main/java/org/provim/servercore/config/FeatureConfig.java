@@ -13,7 +13,7 @@ public final class FeatureConfig {
     public double itemMergeRadius;
 
     public FeatureConfig(Toml defaultToml) {
-        Toml toml = defaultToml.getTable("features");
+        final Toml toml = defaultToml.getTable("features");
         this.disableSpawnChunks = toml.getBoolean("disable_spawn_chunks", false);
         this.fastXpMerging = toml.getBoolean("fast_xp_merging", false);
         this.useDistanceMap = toml.getBoolean("use_distance_map", false);

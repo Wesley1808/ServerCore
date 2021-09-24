@@ -9,6 +9,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.world.SpawnDensityCapper;
+import org.provim.servercore.config.Config;
 import org.provim.servercore.mixin.accessor.SpawnHelperInfoAccessor;
 import org.provim.servercore.utils.PermissionUtils;
 import org.provim.servercore.utils.TickUtils;
@@ -29,13 +30,13 @@ public final class InfoCommand {
 
     private static int mobcaps(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().getPlayer();
-        LiteralText text = new LiteralText(String.format("§3Per Player Mobcaps (§a%.1f§3)", TickUtils.getModifier()));
+        LiteralText text = new LiteralText(String.format(Config.getMessageConfig().mobcapTitle, TickUtils.getModifier()));
 
         SpawnHelperInfoAccessor info = (SpawnHelperInfoAccessor) player.getWorld().getChunkManager().getSpawnInfo();
         if (info != null) {
             SpawnDensityCapper.DensityCap densityCap = info.getDensityCapper().playersToDensityCap.computeIfAbsent(player, p -> new SpawnDensityCapper.DensityCap());
             for (SpawnGroup group : SpawnGroup.values()) {
-                text.append(new LiteralText(String.format("\n§8- §3%s: §a%d §8/ §a%d", group.getName(), densityCap.spawnGroupsToDensity.getOrDefault(group, 0), group.getCapacity())));
+                text.append("\n").append(new LiteralText(String.format(Config.getMessageConfig().mobcapSpawnGroup, group.getName(), densityCap.spawnGroupsToDensity.getOrDefault(group, 0), group.getCapacity())));
             }
         }
 

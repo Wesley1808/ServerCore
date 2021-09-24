@@ -11,12 +11,17 @@ import java.util.Objects;
 
 public final class Config {
     private static final File CONFIG_FILE = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml").toFile();
+    private static MessageConfig messageConfig;
     private static FeatureConfig featureConfig;
     private static DynamicConfig dynamicConfig;
     private static EntityConfig entityConfig;
     private static Toml toml = new Toml();
 
     private Config() {
+    }
+
+    public static MessageConfig getMessageConfig() {
+        return messageConfig;
     }
 
     public static FeatureConfig getFeatureConfig() {
@@ -37,6 +42,7 @@ public final class Config {
         }
 
         toml = toml.read(CONFIG_FILE);
+        messageConfig = new MessageConfig(toml);
         featureConfig = new FeatureConfig(toml);
         dynamicConfig = new DynamicConfig(toml);
         entityConfig = new EntityConfig(toml);
