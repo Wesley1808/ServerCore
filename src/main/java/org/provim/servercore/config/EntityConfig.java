@@ -9,8 +9,7 @@ public final class EntityConfig {
     public int animalCount;
     public int animalRange;
 
-    public EntityConfig(Toml defaultToml) {
-        final Toml toml = defaultToml.getTable("entity_limits");
+    public EntityConfig(Toml toml) {
         this.enabled = toml.getBoolean("enabled", false);
         this.villagerCount = Math.toIntExact(toml.getLong("villager_count", 24L));
         this.villagerRange = Math.toIntExact(toml.getLong("villager_range", 64L));

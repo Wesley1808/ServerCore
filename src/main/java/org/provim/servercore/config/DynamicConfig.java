@@ -13,8 +13,7 @@ public final class DynamicConfig {
     public double maxMobcap;
     public double minMobcap;
 
-    public DynamicConfig(Toml defaultToml) {
-        final Toml toml = defaultToml.getTable("dynamic");
+    public DynamicConfig(Toml toml) {
         this.enabled = toml.getBoolean("enabled", false);
         this.maxChunkTickDistance = Math.toIntExact(toml.getLong("max_chunk_tick_distance", 10L));
         this.minChunkTickDistance = Math.toIntExact(toml.getLong("min_chunk_tick_distance", 2L));

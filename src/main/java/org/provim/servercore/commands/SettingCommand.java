@@ -78,8 +78,8 @@ public final class SettingCommand {
     }
 
     private static int reload(CommandContext<ServerCommandSource> context) {
-        context.getSource().sendFeedback(new LiteralText("Config reloaded!").formatted(Formatting.GREEN), false);
         Config.load();
+        context.getSource().sendFeedback(new LiteralText("Config reloaded!").formatted(Formatting.GREEN), false);
         return Command.SINGLE_SUCCESS;
     }
 }

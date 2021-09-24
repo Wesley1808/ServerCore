@@ -95,9 +95,8 @@ public final class TickUtils {
         }
     }
 
-    public static void setSimulationDistance(int distance) {
-        ServerCore.getServer().getPlayerManager().method_38650(distance);
-        simulationDistance = distance;
+    public static int getViewDistance() {
+        return viewDistance;
     }
 
     public static void setViewDistance(int distance) {
@@ -105,28 +104,29 @@ public final class TickUtils {
         viewDistance = distance;
     }
 
-    public static void setModifier(BigDecimal modifier) {
-        mobcapModifier = modifier;
-    }
-
-    public static void setChunkTickDistance(int distance) {
-        chunkTickDistance = distance;
-    }
-
-    public static int getViewDistance() {
-        return viewDistance;
-    }
-
     public static int getSimulationDistance() {
         return simulationDistance;
+    }
+
+    public static void setSimulationDistance(int distance) {
+        ServerCore.getServer().getPlayerManager().method_38650(distance);
+        simulationDistance = distance;
     }
 
     public static double getModifier() {
         return mobcapModifier.doubleValue();
     }
 
+    public static void setModifier(BigDecimal modifier) {
+        mobcapModifier = modifier;
+    }
+
     public static int getChunkTickDistance() {
         return chunkTickDistance;
+    }
+
+    public static void setChunkTickDistance(int distance) {
+        chunkTickDistance = distance;
     }
 
     /**

@@ -8,6 +8,11 @@
   "contact": {},
   "license": "MIT",
   "environment": "server",
+  "entrypoints": {
+    "server": [
+      "org.provim.servercore.ServerCore"
+    ]
+  },
   "mixins": [
     "servercore.mixins.json"
   ],

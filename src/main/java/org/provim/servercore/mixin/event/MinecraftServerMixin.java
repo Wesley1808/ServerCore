@@ -39,7 +39,6 @@ public abstract class MinecraftServerMixin {
     @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setupServer()Z"))
     private void onSetupServer(CallbackInfo info) {
         ServerCore.setServer((MinecraftServer) (Object) this);
-        Config.load();
     }
 
     @Inject(method = "prepareStartRegion", at = @At("HEAD"), cancellable = true)

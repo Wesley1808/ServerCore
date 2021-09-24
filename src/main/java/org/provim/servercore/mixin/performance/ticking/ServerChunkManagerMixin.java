@@ -10,7 +10,6 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.chunk.WorldChunk;
 import org.jetbrains.annotations.Nullable;
-import org.provim.servercore.config.Config;
 import org.provim.servercore.mixin.accessor.TACSAccessor;
 import org.provim.servercore.utils.TickUtils;
 import org.spongepowered.asm.mixin.Final;
