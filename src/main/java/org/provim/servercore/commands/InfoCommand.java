@@ -9,7 +9,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import org.provim.servercore.config.Config;
-import org.provim.servercore.interfaces.ServerPlayerEntityInterface;
+import org.provim.servercore.interfaces.IServerPlayerEntity;
 import org.provim.servercore.mixin.accessor.SpawnHelperAccessor;
 import org.provim.servercore.utils.PermissionUtils;
 import org.provim.servercore.utils.TickUtils;
@@ -32,8 +32,8 @@ public final class InfoCommand {
         ServerPlayerEntity player = context.getSource().getPlayer();
         LiteralText text = new LiteralText("");
         if (Config.getFeatureConfig().perPlayerSpawns) {
-            text.append(String.format("§3Player Mobcaps (§a%.1f§3)", TickUtils.getModifier()));
-            ServerPlayerEntityInterface playerInf = (ServerPlayerEntityInterface) player;
+            text.append(String.format("§3Per Player Mobcaps (§a%.1f§3)", TickUtils.getModifier()));
+            IServerPlayerEntity playerInf = (IServerPlayerEntity) player;
             for (SpawnGroup group : SpawnGroup.values()) {
                 text.append(new LiteralText(String.format("\n§3%s: §a%d §8/ §a%d", group.getName(), playerInf.getMobCounts()[group.ordinal()], group.getCapacity())));
             }

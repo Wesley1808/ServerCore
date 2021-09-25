@@ -19,7 +19,7 @@ import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import org.jetbrains.annotations.Nullable;
 import org.provim.servercore.config.Config;
-import org.provim.servercore.interfaces.TACSInterface;
+import org.provim.servercore.interfaces.IThreadedAnvilChunkStorage;
 import org.provim.servercore.mixin.accessor.SpawnHelperAccessor;
 import org.provim.servercore.mixin.accessor.SpawnHelperInfoAccessor;
 import org.provim.servercore.utils.ChunkManager;
@@ -93,12 +93,12 @@ public abstract class SpawnHelperMixin {
     private static void spawn(ServerWorld world, WorldChunk chunk, SpawnHelper.Info info, boolean spawnAnimals, boolean spawnMonsters, boolean rareSpawn, CallbackInfo ci) {
         world.getProfiler().push("spawner");
         SpawnHelperInfoAccessor spawnInfo = (SpawnHelperInfoAccessor) info;
-        TACSInterface chunkStorage = (TACSInterface) world.getChunkManager().threadedAnvilChunkStorage;
+        IThreadedAnvilChunkStorage chunkStorage = (IThreadedAnvilChunkStorage) world.getChunkManager().threadedAnvilChunkStorage;
         for (SpawnGroup spawnGroup : SPAWNABLE_GROUPS) {
             int difference;
             if (Config.getFeatureConfig().perPlayerSpawns) {
                 int minDiff = Integer.MAX_VALUE;
-                for (ServerPlayerEntity player : chunkStorage.getPlayerMobDistanceMap().getPlayersInRange(chunk.getPos())) {
+                for (ServerPlayerEntity player : chunkStorage.getDistanceMap().getPlayersInRange(chunk.getPos())) {
                     minDiff = Math.min(spawnGroup.getCapacity() - chunkStorage.getMobCountNear(player, spawnGroup), minDiff);
                 }
                 difference = (minDiff == Integer.MAX_VALUE) ? 0 : minDiff;

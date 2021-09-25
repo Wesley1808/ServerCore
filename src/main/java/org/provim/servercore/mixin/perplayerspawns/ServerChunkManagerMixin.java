@@ -15,8 +15,8 @@ import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.chunk.ChunkManager;
 import org.provim.servercore.config.Config;
-import org.provim.servercore.interfaces.ServerPlayerEntityInterface;
-import org.provim.servercore.interfaces.TACSInterface;
+import org.provim.servercore.interfaces.IServerPlayerEntity;
+import org.provim.servercore.interfaces.IThreadedAnvilChunkStorage;
 import org.provim.servercore.mixin.accessor.SpawnHelperAccessor;
 import org.provim.servercore.mixin.accessor.SpawnHelperInfoAccessor;
 import org.provim.servercore.utils.patches.PlayerMobDistanceMap;
@@ -47,7 +47,7 @@ public abstract class ServerChunkManagerMixin extends ChunkManager {
     @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/SpawnHelper;setupSpawn(ILjava/lang/Iterable;Lnet/minecraft/world/SpawnHelper$ChunkSource;)Lnet/minecraft/world/SpawnHelper$Info;"))
     private SpawnHelper.Info updateSpawnHelper(int spawningChunkCount, Iterable<Entity> entities, SpawnHelper.ChunkSource chunkSource) {
         SpawnHelper.Info spawnHelperInfo;
-        PlayerMobDistanceMap distanceMap = ((TACSInterface) threadedAnvilChunkStorage).getPlayerMobDistanceMap();
+        PlayerMobDistanceMap distanceMap = ((IThreadedAnvilChunkStorage) threadedAnvilChunkStorage).getDistanceMap();
         if (distanceMap != null && Config.getFeatureConfig().perPlayerSpawns) {
             // Update distance map -> by using a constant 10 as view distance we prevent the situations where:
             // 1 - No mobs will spawn because there's another player with mobs 500 blocks away (High view distance).
@@ -56,7 +56,7 @@ public abstract class ServerChunkManagerMixin extends ChunkManager {
             distanceMap.update(this.world.getPlayers(), 10);
             // Re-set mob counts
             for (ServerPlayerEntity player : this.world.getPlayers()) {
-                Arrays.fill(((ServerPlayerEntityInterface) player).getMobCounts(), 0);
+                Arrays.fill(((IServerPlayerEntity) player).getMobCounts(), 0);
             }
 
             spawnHelperInfo = setupSpawn(spawningChunkCount, entities, chunkSource, true);
@@ -67,7 +67,7 @@ public abstract class ServerChunkManagerMixin extends ChunkManager {
     }
 
     private SpawnHelper.Info setupSpawn(int spawningChunkCount, Iterable<Entity> entities, SpawnHelper.ChunkSource chunkSource, boolean countMobs) {
-        TACSInterface chunkStorage = (TACSInterface) this.world.getChunkManager().threadedAnvilChunkStorage;
+        IThreadedAnvilChunkStorage chunkStorage = (IThreadedAnvilChunkStorage) this.world.getChunkManager().threadedAnvilChunkStorage;
         Object2IntOpenHashMap<SpawnGroup> groupToCount = new Object2IntOpenHashMap<>();
         GravityField gravityField = new GravityField();
 

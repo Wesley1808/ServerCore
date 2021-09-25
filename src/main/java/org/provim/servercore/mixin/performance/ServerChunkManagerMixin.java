@@ -1,11 +1,14 @@
 package org.provim.servercore.mixin.performance;
 
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.SpawnHelper;
+import net.minecraft.world.chunk.WorldChunk;
 import org.jetbrains.annotations.Nullable;
 import org.provim.servercore.config.Config;
 import org.provim.servercore.mixin.accessor.TACSAccessor;
@@ -18,14 +21,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
 
 @Mixin(ServerChunkManager.class)
 public abstract class ServerChunkManagerMixin {
     @Unique
-    private final HashSet<ChunkHolder> active = new HashSet<>();
+    private final ObjectLinkedOpenHashSet<ChunkHolder> active = new ObjectLinkedOpenHashSet<>();
     @Shadow
     @Final
     public ThreadedAnvilChunkStorage threadedAnvilChunkStorage;
@@ -50,14 +52,14 @@ public abstract class ServerChunkManagerMixin {
 
     @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V", ordinal = 0))
     private <T> void onlyTickActiveChunks(List<ChunkHolder> list, Consumer<? super T> action) {
-        var chunkStorage = (TACSAccessor) this.threadedAnvilChunkStorage;
+        final TACSAccessor chunkStorage = (TACSAccessor) this.threadedAnvilChunkStorage;
         if (Config.getFeatureConfig().useChunkTickDistance) {
-            if (this.count++ % 20 == 0) {
+            if (this.count++ % 20 == 0) { // Updates active chunks once a second.
                 // Add active chunks
                 for (ChunkHolder holder : chunkStorage.getChunkHolders().values()) {
-                    var chunk = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null);
+                    final WorldChunk chunk = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null);
                     if (chunk != null) {
-                        if (TickUtils.shouldTick(holder.getPos(), world)) {
+                        if (TickUtils.shouldTick(holder.getPos(), this.world)) {
                             this.active.add(holder);
                         } else {
                             // Sends block updates to clients from inactive chunks.
@@ -67,27 +69,27 @@ public abstract class ServerChunkManagerMixin {
                 }
 
                 // Remove inactive chunks
-                this.active.removeIf(holder -> holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickUtils.shouldTick(holder.getPos(), world));
+                this.active.removeIf(holder -> holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickUtils.shouldTick(holder.getPos(), this.world));
             }
         }
 
-        long time = this.world.getTime() - this.lastMobSpawningTime;
-        var rules = this.world.getGameRules();
-        boolean rareSpawn = this.world.getLevelProperties().getTime() % 400L == 0L;
+        final boolean rareSpawn = this.world.getLevelProperties().getTime() % 400L == 0L;
+        final long time = this.world.getTime();
+        final long timeDifference = time - this.lastMobSpawningTime;
+        this.lastMobSpawningTime = time;
+
         for (ChunkHolder holder : Config.getFeatureConfig().useChunkTickDistance ? this.active : chunkStorage.getChunkHolders().values()) {
-            var chunk = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null);
+            final WorldChunk chunk = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null);
             if (chunk != null) {
-                var pos = chunk.getPos();
+                final ChunkPos pos = chunk.getPos();
                 if (this.world.method_37115(pos) && !chunkStorage.tooFarFromPlayersToSpawnMobs(pos)) {
-                    chunk.setInhabitedTime(chunk.getInhabitedTime() + time);
-                    if (rules.getBoolean(GameRules.DO_MOB_SPAWNING) && (this.spawnMonsters || this.spawnAnimals) && this.world.getWorldBorder().contains(pos)) {
+                    chunk.setInhabitedTime(chunk.getInhabitedTime() + timeDifference);
+                    if (this.world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING) && (this.spawnMonsters || this.spawnAnimals) && this.world.getWorldBorder().contains(pos)) {
                         SpawnHelper.spawn(this.world, chunk, this.spawnInfo, this.spawnAnimals, this.spawnMonsters, rareSpawn);
                     }
-                    this.world.tickChunk(chunk, rules.getInt(GameRules.RANDOM_TICK_SPEED));
+                    this.world.tickChunk(chunk, this.world.getGameRules().getInt(GameRules.RANDOM_TICK_SPEED));
                 }
-                this.world.getProfiler().push("broadcast");
                 holder.flushUpdates(chunk);
-                this.world.getProfiler().pop();
             }
         }
     }

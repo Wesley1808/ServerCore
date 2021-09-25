@@ -4,11 +4,10 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.ChunkPos;
-import org.provim.servercore.interfaces.ServerPlayerEntityInterface;
+import org.provim.servercore.interfaces.IServerPlayerEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Spottedleaf
@@ -69,7 +68,7 @@ public final class PlayerMobDistanceMap {
     private void addPlayerTo(final ServerPlayerEntity player, final int chunkX, final int chunkZ) {
         this.playerMap.compute(ChunkPos.toLong(chunkX, chunkZ), (final Long key, final PooledHashSets.PooledObjectLinkedOpenHashSet<ServerPlayerEntity> players) -> {
             if (players == null) {
-                return ((ServerPlayerEntityInterface) player).getCachedSingleMobDistanceMap();
+                return ((IServerPlayerEntity) player).getCachedSingleMobDistanceMap();
             } else {
                 return PlayerMobDistanceMap.this.pooledHashSets.findMapWith(players, player);
             }
@@ -79,7 +78,7 @@ public final class PlayerMobDistanceMap {
     private void removePlayerFrom(final ServerPlayerEntity player, final int chunkX, final int chunkZ) {
         this.playerMap.compute(ChunkPos.toLong(chunkX, chunkZ), (final Long keyInMap, final PooledHashSets.PooledObjectLinkedOpenHashSet<ServerPlayerEntity> players) -> {
             if (players == null) { // Fix NPE (Most likely caused by player invalidation).
-                return ((ServerPlayerEntityInterface) player).getCachedSingleMobDistanceMap();
+                return ((IServerPlayerEntity) player).getCachedSingleMobDistanceMap();
             } else {
                 return PlayerMobDistanceMap.this.pooledHashSets.findMapWithout(players, player);
             }

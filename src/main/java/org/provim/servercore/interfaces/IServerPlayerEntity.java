@@ -3,7 +3,7 @@ package org.provim.servercore.interfaces;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.provim.servercore.utils.patches.PooledHashSets;
 
-public interface ServerPlayerEntityInterface {
+public interface IServerPlayerEntity {
 
     PooledHashSets.PooledObjectLinkedOpenHashSet<ServerPlayerEntity> getCachedSingleMobDistanceMap();
 
