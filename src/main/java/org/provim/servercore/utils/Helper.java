@@ -15,11 +15,6 @@ public final class Helper {
     private Helper() {
     }
 
-    // Avoid stream allocations.
-    public static boolean isTooFarFromPlayerToSpawnMobs(TACSAccessor chunkStorage, ChunkPos pos) {
-        return Helper.getNearbyWatchingPlayers(chunkStorage, pos).isEmpty();
-    }
-
     public static List<ServerPlayerEntity> getNearbyPlayers(ServerWorld world, ChunkPos pos) {
         final ChunkTicketManager manager = ChunkManager.getTicketManager(world);
         if (manager == null || !manager.method_20800(pos.toLong())) {
