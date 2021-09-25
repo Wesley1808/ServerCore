@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.performance.alloc;
+package org.provim.servercore.mixin.performance.misc;
 
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(targets = "net.minecraft.server.world.ThreadedAnvilChunkStorage$EntityTracker")
 public abstract class TACSEntityTrackerMixin {
 
-    // Avoid stream code.
+    // Avoid stream allocations.
     @Redirect(method = "getMaxTrackDistance()I", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;getPassengersDeep()Ljava/lang/Iterable;"))
     private Iterable<Entity> getMaxTrackDistance(Entity entity) {
         return entity.getPassengerList();

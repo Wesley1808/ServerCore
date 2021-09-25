@@ -43,8 +43,7 @@ public abstract class SpawnDensityCapperMixin {
         }
 
         // Optimizes vanilla code by getting rid of stream allocations.
-        final TACSAccessor chunkStorage = (TACSAccessor) this.threadedAnvilChunkStorage;
-        return this.chunkPosToMobSpawnablePlayers.computeIfAbsent(pos.toLong(), l -> Helper.getNearbyPlayers(chunkStorage.getWorld(), pos, chunkStorage.getPlayerChunkWatchingManager().watchingPlayers.keySet()));
+        return this.chunkPosToMobSpawnablePlayers.computeIfAbsent(pos.toLong(), l -> Helper.getNearbyWatchingPlayers((TACSAccessor) this.threadedAnvilChunkStorage, pos));
     }
 
     @Redirect(method = "canSpawn", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))

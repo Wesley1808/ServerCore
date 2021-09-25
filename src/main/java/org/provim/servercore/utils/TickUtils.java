@@ -148,7 +148,7 @@ public final class TickUtils {
     }
 
     public static boolean shouldUseActiveChunks() {
-        return chunkTickDistance >= viewDistance;
+        return chunkTickDistance >= Math.min(8, simulationDistance);
     }
 
     /**

@@ -11,6 +11,7 @@ import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.chunk.WorldChunk;
 import org.jetbrains.annotations.Nullable;
 import org.provim.servercore.mixin.accessor.TACSAccessor;
+import org.provim.servercore.utils.Helper;
 import org.provim.servercore.utils.TickUtils;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -81,7 +82,7 @@ public abstract class ServerChunkManagerMixin {
             final WorldChunk chunk = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null);
             if (chunk != null) {
                 final ChunkPos pos = chunk.getPos();
-                if (this.world.method_37115(pos) && !chunkStorage.tooFarFromPlayersToSpawnMobs(pos)) {
+                if (this.world.method_37115(pos) && !Helper.isTooFarFromPlayerToSpawnMobs(chunkStorage, pos)) {
                     chunk.setInhabitedTime(chunk.getInhabitedTime() + timeDifference);
                     if (this.world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING) && (this.spawnMonsters || this.spawnAnimals) && this.world.getWorldBorder().contains(pos)) {
                         SpawnHelper.spawn(this.world, chunk, this.spawnInfo, this.spawnAnimals, this.spawnMonsters, rareSpawn);
