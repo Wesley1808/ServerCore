@@ -60,7 +60,7 @@ The config file can be found at `<server_dir>/config/servercore.toml`
     villager_range = 64
     animal_range = 64
 
-[dynamic] # Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT.
+[dynamic] # Modifies mobcaps, no-chunk-tick and view-distance depending on the MSPT.
     enabled = false
     # The maximum and minimum permitted values.
     # Chunk tick distance = distance in which random ticks and mobspawning can happen.
