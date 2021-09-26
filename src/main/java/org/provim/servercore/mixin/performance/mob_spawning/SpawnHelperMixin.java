@@ -38,6 +38,12 @@ public abstract class SpawnHelperMixin {
         return isAcceptableSpawnPosition(world, chunk, pos, squaredDistance) && (cachedChunk = ChunkManager.getChunkIfLoaded(world, pos)) != null;
     }
 
+    // Fast blockstate lookup.
+    @Redirect(method = "shouldUseNetherFortressSpawns", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;"))
+    private static BlockState fastBlockStateLookup(ServerWorld serverWorld, BlockPos pos) {
+        return cachedChunk.getBlockState(pos);
+    }
+
     // Fast biome lookups.
     @Redirect(method = "getSpawnEntries", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getBiome(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome;"))
     private static Biome fastBiomeLookup$1(ServerWorld serverWorld, BlockPos pos) {
