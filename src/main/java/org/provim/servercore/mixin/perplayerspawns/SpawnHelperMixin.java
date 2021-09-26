@@ -1,23 +1,21 @@
 package org.provim.servercore.mixin.perplayerspawns;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.collection.Pool;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.GameMode;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import org.jetbrains.annotations.Nullable;
 import org.provim.servercore.config.Config;
 import org.provim.servercore.interfaces.IThreadedAnvilChunkStorage;
 import org.provim.servercore.mixin.accessor.SpawnHelperAccessor;
@@ -26,8 +24,10 @@ import org.provim.servercore.utils.ChunkManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
@@ -36,6 +36,8 @@ import java.util.function.Consumer;
 
 @Mixin(SpawnHelper.class)
 public abstract class SpawnHelperMixin {
+    @Unique
+    private static Chunk cachedChunk;
 
     @Shadow
     @Final
@@ -46,12 +48,12 @@ public abstract class SpawnHelperMixin {
 
     @Shadow
     private static BlockPos getSpawnPos(World world, WorldChunk worldChunk) {
-        return null;
+        throw new AssertionError();
     }
 
     @Shadow
     private static boolean isAcceptableSpawnPosition(ServerWorld serverWorld, Chunk chunk, BlockPos.Mutable mutable, double d) {
-        return false;
+        throw new AssertionError();
     }
 
     @Shadow
@@ -60,23 +62,23 @@ public abstract class SpawnHelperMixin {
     }
 
     @Shadow
-    public static boolean canSpawn(SpawnRestriction.Location location, WorldView world, BlockPos pos, @Nullable EntityType<?> entityType) {
-        return false;
-    }
-
-    @Shadow
     static Biome getBiomeDirectly(BlockPos pos, Chunk chunk) {
-        return null;
+        throw new AssertionError();
     }
 
     @Shadow
     private static boolean isValidSpawn(ServerWorld world, MobEntity entity, double squaredDistance) {
-        return false;
+        throw new AssertionError();
     }
 
     @Shadow
-    private static Pool<SpawnSettings.SpawnEntry> getSpawnEntries(ServerWorld world, StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, SpawnGroup spawnGroup, BlockPos pos, @Nullable Biome biome) {
-        return null;
+    private static boolean canSpawn(ServerWorld world, SpawnGroup group, StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, SpawnSettings.SpawnEntry spawnEntry, BlockPos.Mutable pos, double squaredDistance) {
+        throw new AssertionError();
+    }
+
+    @Shadow
+    private static Optional<SpawnSettings.SpawnEntry> pickRandomSpawnEntry(ServerWorld world, StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, SpawnGroup spawnGroup, Random random, BlockPos pos) {
+        throw new AssertionError();
     }
 
     /**
@@ -119,59 +121,61 @@ public abstract class SpawnHelperMixin {
 
     /**
      * [VanillaCopy]
-     * Adds {@param trackEntity} to add to nearby player mob counts.
-     * Optimizes & reduces calls to getBiome(), getSpawnEntries().
+     * Adds {@param trackEntity} and {@param maxSpawns}.
+     * Stops spawn attempts in unloaded chunks and
+     * caches that chunk for faster biome lookups.
      */
 
-    private static void spawnEntitiesInChunk(SpawnGroup spawnGroup, ServerWorld world, WorldChunk chunk, SpawnHelper.Checker checker, SpawnHelper.Runner runner, int maxSpawns, Consumer<Entity> trackEntity) {
-        var pos = getSpawnPos(world, chunk);
-        if (pos.getY() >= world.getBottomY() + 1) {
-            var chunkGenerator = world.getChunkManager().getChunkGenerator();
-            var structureAccessor = world.getStructureAccessor();
-            int y = pos.getY();
-            var spawns = 0;
-            var blockState = chunk.getBlockState(pos);
-            if (blockState != null && !blockState.isSolidBlock(chunk, pos)) {
-                var mutable = new BlockPos.Mutable();
-                for (var i = 0; i < 3; i++) {
+    private static void spawnEntitiesInChunk(SpawnGroup group, ServerWorld world, WorldChunk chunk, SpawnHelper.Checker checker, SpawnHelper.Runner runner, int maxSpawns, Consumer<Entity> trackEntity) {
+        BlockPos pos = getSpawnPos(world, chunk);
+        int i = pos.getY();
+        if (i >= world.getBottomY() + 1) {
+            StructureAccessor structureAccessor = world.getStructureAccessor();
+            ChunkGenerator chunkGenerator = world.getChunkManager().getChunkGenerator();
+            BlockState blockState = chunk.getBlockState(pos);
+            if (!blockState.isSolidBlock(chunk, pos)) {
+                BlockPos.Mutable mutable = new BlockPos.Mutable();
+                int j = 0;
+
+                for (int k = 0; k < 3; ++k) {
                     int l = pos.getX();
                     int m = pos.getZ();
-                    SpawnSettings.SpawnEntry spawnEntry;
+                    SpawnSettings.SpawnEntry spawnEntry = null;
                     EntityData entityData = null;
                     int o = MathHelper.ceil(world.random.nextFloat() * 4.0F);
-                    var p = 0;
+                    int p = 0;
 
-                    for (var j = 0; j < o; ++j) {
+                    for (int q = 0; q < o; ++q) {
                         l += world.random.nextInt(6) - world.random.nextInt(6);
                         m += world.random.nextInt(6) - world.random.nextInt(6);
-                        mutable.set(l, y, m);
-                        double x = l + 0.5D;
-                        double z = m + 0.5D;
-                        double distance = getDistanceToClosestPlayer(world, x, y, z);
+                        mutable.set(l, i, m);
+                        double d = l + 0.5D;
+                        double e = m + 0.5D;
+                        PlayerEntity playerEntity = world.getClosestPlayer(d, i, e, -1.0D, false);
+                        if (playerEntity != null) {
+                            double f = playerEntity.squaredDistanceTo(d, i, e);
+                            if (isAcceptableSpawnPosition(world, chunk, mutable, f) && (cachedChunk = ChunkManager.getChunkIfLoaded(world, mutable)) != null) {
+                                if (spawnEntry == null) {
+                                    Optional<SpawnSettings.SpawnEntry> optional = pickRandomSpawnEntry(world, structureAccessor, chunkGenerator, group, world.random, mutable);
+                                    if (optional.isEmpty()) {
+                                        break;
+                                    }
 
-                        if (distance != Double.MAX_VALUE) {
-                            if (ChunkManager.isChunkLoaded(world, mutable) && isAcceptableSpawnPosition(world, chunk, mutable, distance)) {
-                                var biome = getBiomeDirectly(mutable, chunk);
-                                Pool<SpawnSettings.SpawnEntry> spawnEntries = getSpawnEntries(world, structureAccessor, chunkGenerator, spawnGroup, mutable, biome);
-                                Optional<SpawnSettings.SpawnEntry> optional = pickRandomSpawnEntry(biome, spawnGroup, world.random, spawnEntries);
-                                if (optional.isEmpty()) {
-                                    break;
+                                    spawnEntry = optional.get();
+                                    o = spawnEntry.minGroupSize + world.random.nextInt(1 + spawnEntry.maxGroupSize - spawnEntry.minGroupSize);
                                 }
 
-                                spawnEntry = optional.get();
-                                o = spawnEntry.minGroupSize + world.random.nextInt(1 + spawnEntry.maxGroupSize - spawnEntry.minGroupSize);
-
-                                if (canSpawn(world, spawnEntries, spawnEntry, mutable, distance) && checker.test(spawnEntry.type, mutable, chunk)) {
-                                    var mobEntity = createMob(world, spawnEntry.type);
+                                if (canSpawn(world, group, structureAccessor, chunkGenerator, spawnEntry, mutable, f) && checker.test(spawnEntry.type, mutable, chunk)) {
+                                    MobEntity mobEntity = createMob(world, spawnEntry.type);
                                     if (mobEntity == null) {
                                         return;
                                     }
 
-                                    mobEntity.refreshPositionAndAngles(x, y, z, world.random.nextFloat() * 360.0F, 0.0F);
-                                    if (isValidSpawn(world, mobEntity, distance)) {
+                                    mobEntity.refreshPositionAndAngles(d, i, e, world.random.nextFloat() * 360.0F, 0.0F);
+                                    if (isValidSpawn(world, mobEntity, f)) {
                                         entityData = mobEntity.initialize(world, world.getLocalDifficulty(mobEntity.getBlockPos()), SpawnReason.NATURAL, entityData, null);
-                                        spawns++;
-                                        p++;
+                                        ++j;
+                                        ++p;
                                         world.spawnEntityAndPassengers(mobEntity);
                                         runner.run(mobEntity, chunk);
 
@@ -179,7 +183,7 @@ public abstract class SpawnHelperMixin {
                                             trackEntity.accept(mobEntity);
                                         }
 
-                                        if (spawns >= mobEntity.getLimitPerChunk() || spawns >= maxSpawns) {
+                                        if (j >= mobEntity.getLimitPerChunk() || j >= maxSpawns) {
                                             return;
                                         }
 
@@ -196,41 +200,20 @@ public abstract class SpawnHelperMixin {
         }
     }
 
-    private static double getDistanceToClosestPlayer(ServerWorld world, double x, double y, double z) {
-        double distance = Double.MAX_VALUE;
-        for (ServerPlayerEntity player : world.getPlayers()) {
-            distance = player.interactionManager.getGameMode() != GameMode.SPECTATOR ? Math.min(distance, player.squaredDistanceTo(x, y, z)) : distance;
-        }
-        return distance;
+    // Use cached chunk.
+    @Redirect(method = "getSpawnEntries", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;"))
+    private static BlockState useCachedChunk(ServerWorld serverWorld, BlockPos pos) {
+        return cachedChunk.getBlockState(pos);
     }
 
-    // Removes duplicate call to getSpawnEntries().
-    private static boolean canSpawn(ServerWorld world, Pool<SpawnSettings.SpawnEntry> spawnEntries, SpawnSettings.SpawnEntry spawnEntry, BlockPos.Mutable pos, double squaredDistance) {
-        EntityType<?> entityType = spawnEntry.type;
-        if (entityType.getSpawnGroup() == SpawnGroup.MISC) {
-            return false;
-        } else if (!entityType.isSpawnableFarFromPlayer() && squaredDistance > (entityType.getSpawnGroup().getImmediateDespawnRange() * entityType.getSpawnGroup().getImmediateDespawnRange())) {
-            return false;
-        } else if (entityType.isSummonable() && containsSpawnEntry(spawnEntries, spawnEntry)) {
-            var location = SpawnRestriction.getLocation(entityType);
-            if (!canSpawn(location, world, pos, entityType)) {
-                return false;
-            } else if (!SpawnRestriction.canSpawn(entityType, world, SpawnReason.NATURAL, pos, world.random)) {
-                return false;
-            } else {
-                return world.isSpaceEmpty(entityType.createSimpleBoundingBox(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D));
-            }
-        } else {
-            return false;
-        }
+    // Fast biome lookups.
+    @Redirect(method = "getSpawnEntries", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getBiome(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome;"))
+    private static Biome fastBiomeLookup$1(ServerWorld serverWorld, BlockPos pos) {
+        return getBiomeDirectly(pos, cachedChunk);
     }
 
-    private static boolean containsSpawnEntry(Pool<SpawnSettings.SpawnEntry> spawnEntries, SpawnSettings.SpawnEntry spawnEntry) {
-        return spawnEntries.getEntries().contains(spawnEntry);
-    }
-
-    // Removes duplicate call to getSpawnEntries().
-    private static Optional<SpawnSettings.SpawnEntry> pickRandomSpawnEntry(Biome biome, SpawnGroup spawnGroup, Random random, Pool<SpawnSettings.SpawnEntry> spawnEntries) {
-        return spawnGroup == SpawnGroup.WATER_AMBIENT && biome.getCategory() == Biome.Category.RIVER && random.nextFloat() < 0.98F ? Optional.empty() : spawnEntries.getOrEmpty(random);
+    @Redirect(method = "pickRandomSpawnEntry", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getBiome(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome;"))
+    private static Biome fastBiomeLookup$2(ServerWorld serverWorld, BlockPos pos) {
+        return getBiomeDirectly(pos, cachedChunk);
     }
 }
