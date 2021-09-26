@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
 @Mixin(ThreadedAnvilChunkStorage.class)
-public abstract class ThreadedAnvilChunkStorageMixin implements IThreadedAnvilChunkStorage {
+public class ThreadedAnvilChunkStorageMixin implements IThreadedAnvilChunkStorage {
     @Shadow
     @Final
     ServerWorld world;
@@ -58,5 +58,10 @@ public abstract class ThreadedAnvilChunkStorageMixin implements IThreadedAnvilCh
     @Override
     public int getMobCountNear(ServerPlayerEntity player, SpawnGroup group) {
         return ((IServerPlayerEntity) player).getMobCounts()[group.ordinal()];
+    }
+
+    @Override
+    public PlayerMobDistanceMap getDistanceMap() {
+        return this.distanceMap;
     }
 }
