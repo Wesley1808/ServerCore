@@ -5,7 +5,7 @@ import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.world.GameRules;
 import org.provim.servercore.config.Config;
 import org.provim.servercore.interfaces.IThreadedAnvilChunkStorage;
-import org.provim.servercore.utils.data_structures.PlayerMobDistanceMap;
+import org.provim.servercore.utils.data.PlayerMobDistanceMap;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

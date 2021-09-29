@@ -109,7 +109,7 @@ public final class TickUtils {
     }
 
     public static void setSimulationDistance(int distance) {
-        ServerCore.getServer().getPlayerManager().method_38650(distance);
+        ServerCore.getServer().getPlayerManager().setSimulationDistance(distance);
         simulationDistance = distance;
     }
 
@@ -137,7 +137,11 @@ public final class TickUtils {
      * @return Boolean: whether the chunk should tick.
      */
 
-    public static boolean shouldTick(ChunkPos pos, ServerWorld world) {
+    public static boolean shouldTickChunk(ChunkPos pos, ServerWorld world) {
+        if (chunkTickDistance >= viewDistance) {
+            return true;
+        }
+
         for (ServerPlayerEntity player : world.getPlayers()) {
             if (player.interactionManager.getGameMode() != GameMode.SPECTATOR && player.getChunkPos().getChebyshevDistance(pos) <= chunkTickDistance) {
                 return true;
@@ -145,10 +149,6 @@ public final class TickUtils {
         }
 
         return false;
-    }
-
-    public static boolean shouldUseActiveChunks() {
-        return chunkTickDistance >= Math.min(8, simulationDistance);
     }
 
     /**

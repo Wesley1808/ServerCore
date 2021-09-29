@@ -22,7 +22,10 @@ public final class InfoCommand {
     }
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal("mobcaps").executes(InfoCommand::mobcaps));
+        if (Config.getCommandConfig().commandMobcaps) {
+            dispatcher.register(literal("mobcaps").executes(InfoCommand::mobcaps));
+        }
+
         dispatcher.register(literal("sc").requires(src -> PermissionUtils.perm(src, PermissionUtils.COMMAND_INFO, 2))
                 .then(literal("tps").executes(InfoCommand::performanceReport))
         );
@@ -30,13 +33,13 @@ public final class InfoCommand {
 
     private static int mobcaps(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().getPlayer();
-        LiteralText text = new LiteralText(String.format(Config.getMessageConfig().mobcapTitle, TickUtils.getModifier()));
+        LiteralText text = new LiteralText(String.format(Config.getCommandConfig().mobcapTitle, TickUtils.getModifier()));
 
         SpawnHelperInfoAccessor info = (SpawnHelperInfoAccessor) player.getWorld().getChunkManager().getSpawnInfo();
         if (info != null) {
             SpawnDensityCapper.DensityCap densityCap = info.getDensityCapper().playersToDensityCap.computeIfAbsent(player, p -> new SpawnDensityCapper.DensityCap());
             for (SpawnGroup group : SpawnGroup.values()) {
-                text.append("\n").append(new LiteralText(String.format(Config.getMessageConfig().mobcapSpawnGroup, group.getName(), densityCap.spawnGroupsToDensity.getOrDefault(group, 0), group.getCapacity())));
+                text.append("\n").append(new LiteralText(String.format(Config.getCommandConfig().mobcapSpawnGroup, group.getName(), densityCap.spawnGroupsToDensity.getOrDefault(group, 0), group.getCapacity())));
             }
         }
 

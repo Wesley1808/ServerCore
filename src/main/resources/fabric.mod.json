@@ -4,7 +4,7 @@
   "version": "${version}",
   "name": "ServerCore-Fabric",
   "description": "A fabric mod that aims to optimize & add multiplayer features to the minecraft server.",
-  "authors": [],
+  "authors": ["Wesley1808"],
   "contact": {},
   "license": "MIT",
   "environment": "server",
@@ -18,7 +18,7 @@
   ],
   "accessWidener": "servercore.accesswidener",
   "depends": {
-    "fabricloader": ">=0.11.6",
+    "fabricloader": ">=0.11.7",
     "minecraft": "^1.17.1"
   }
 }

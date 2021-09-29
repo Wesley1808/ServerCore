@@ -70,7 +70,9 @@ The config file can be found at `<server_dir>/config/servercore.toml`
     max_mobcap = 1.0
     min_mobcap = 0.3
 
-[messages] # Allows you to modify the way some of the messages are formatted. Use the § symbol for color codes.
+[commands] # Allows you to disable specific commands and modify the way some of them are formatted.
+    # Enables / disables the /mobcaps command.
+    command_mobcaps = true
     # The title for the /mobcaps command.
     # Arguments: The current global mobcap modifier (%.1f).
     mobcap_title = "§3Per Player Mobcaps (§a%.1f§3)"

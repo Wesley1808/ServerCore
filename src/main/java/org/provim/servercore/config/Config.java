@@ -11,8 +11,8 @@ import java.util.Objects;
 
 public final class Config {
     private static final File CONFIG_FILE = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml").toFile();
-    private static final String[] TABLES = {"messages", "features", "dynamic", "entity_limits"};
-    private static MessageConfig messageConfig;
+    private static final String[] TABLES = {"commands", "features", "dynamic", "entity_limits"};
+    private static CommandConfig commandConfig;
     private static FeatureConfig featureConfig;
     private static DynamicConfig dynamicConfig;
     private static EntityConfig entityConfig;
@@ -21,8 +21,8 @@ public final class Config {
     private Config() {
     }
 
-    public static MessageConfig getMessageConfig() {
-        return messageConfig;
+    public static CommandConfig getCommandConfig() {
+        return commandConfig;
     }
 
     public static FeatureConfig getFeatureConfig() {
@@ -45,7 +45,7 @@ public final class Config {
         toml = toml.read(CONFIG_FILE);
         Config.validateToml();
 
-        messageConfig = new MessageConfig(toml.getTable(TABLES[0]));
+        commandConfig = new CommandConfig(toml.getTable(TABLES[0]));
         featureConfig = new FeatureConfig(toml.getTable(TABLES[1]));
         dynamicConfig = new DynamicConfig(toml.getTable(TABLES[2]));
         entityConfig = new EntityConfig(toml.getTable(TABLES[3]));
