@@ -56,7 +56,7 @@ public abstract class ServerChunkManagerMixin {
 
     // Only flush active chunks.
     @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V", ordinal = 0))
-    private void flushActiveChunks(List<?> list, Consumer<? super ServerChunkManager.class__6635> action) {
+    private void flushActiveChunks(List<?> list, Consumer<ServerChunkManager.class__6635> action) {
         this.active.forEach(action);
     }
 
