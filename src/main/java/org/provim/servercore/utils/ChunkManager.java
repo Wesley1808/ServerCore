@@ -42,7 +42,7 @@ public final class ChunkManager {
     }
 
     public static boolean isChunkLoaded(ChunkHolder holder) {
-        return holder != null && holder.isAccessible();
+        return holder != null && holder.getAccessibleFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isPresent();
     }
 
     /**

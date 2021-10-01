@@ -81,9 +81,8 @@ public abstract class ServerChunkManagerMixin {
                     }
                 }
             }
-
             // Remove inactive chunks
-            this.active.removeIf(lv -> lv.holder().getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickUtils.shouldTickChunk(lv.holder().getPos(), this.world));
+            this.active.removeIf(lv -> lv.comp_142().getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickUtils.shouldTickChunk(lv.comp_142().getPos(), this.world));
         }
     }
 }
