@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 public abstract class ServerChunkManagerMixin {
 
     @Unique
-    private final ObjectLinkedOpenHashSet<ServerChunkManager.class__6635> active = new ObjectLinkedOpenHashSet<>();
+    private final ObjectLinkedOpenHashSet<ServerChunkManager.class_6635> active = new ObjectLinkedOpenHashSet<>();
 
     @Shadow
     @Final
@@ -56,7 +56,7 @@ public abstract class ServerChunkManagerMixin {
 
     // Only flush active chunks.
     @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V", ordinal = 0))
-    private void flushActiveChunks(List<?> list, Consumer<ServerChunkManager.class__6635> action) {
+    private void flushActiveChunks(List<?> list, Consumer<ServerChunkManager.class_6635> action) {
         this.active.forEach(action);
     }
 
@@ -74,7 +74,7 @@ public abstract class ServerChunkManagerMixin {
                 final WorldChunk chunk = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null);
                 if (chunk != null) {
                     if (TickUtils.shouldTickChunk(holder.getPos(), this.world)) {
-                        this.active.add(new ServerChunkManager.class__6635(chunk, holder));
+                        this.active.add(new ServerChunkManager.class_6635(chunk, holder));
                     } else {
                         // Sends clients block updates from inactive chunks.
                         holder.flushUpdates(chunk);
@@ -82,7 +82,7 @@ public abstract class ServerChunkManagerMixin {
                 }
             }
             // Remove inactive chunks
-            this.active.removeIf(lv -> lv.comp_142().getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickUtils.shouldTickChunk(lv.comp_142().getPos(), this.world));
+            this.active.removeIf(lv -> lv.holder().getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickUtils.shouldTickChunk(lv.holder().getPos(), this.world));
         }
     }
 }
