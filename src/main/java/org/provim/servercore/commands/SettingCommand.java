@@ -40,6 +40,7 @@ public final class SettingCommand {
                 .then(literal("xp_merge_radius").then(argument(VALUE, doubleArg(0.5, 10)).executes(context -> modifyDouble(context.getSource(), getDouble(context, VALUE), 2, "XP merge radius has"))))
                 .then(literal("mobcaps").then(argument(VALUE, doubleArg(0.1, 10.0)).executes(context -> modifyDouble(context.getSource(), getDouble(context, VALUE), 3, "Mobcaps have"))))
                 .then(literal("reload").executes(SettingCommand::reload))
+                .then(literal("save").executes(SettingCommand::save))
         );
     }
 
@@ -80,6 +81,12 @@ public final class SettingCommand {
     private static int reload(CommandContext<ServerCommandSource> context) {
         Config.load();
         context.getSource().sendFeedback(new LiteralText("Config reloaded!").formatted(Formatting.GREEN), false);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int save(CommandContext<ServerCommandSource> context) {
+        Config.save(true);
+        context.getSource().sendFeedback(new LiteralText("Config saved!").formatted(Formatting.GREEN), false);
         return Command.SINGLE_SUCCESS;
     }
 }

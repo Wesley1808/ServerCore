@@ -41,8 +41,8 @@ public final class TickUtils {
         if (dynamic.enabled) {
             final double mspt = MathHelper.average(server.lastTickLengths) * 1.0E-6D;
             checkViewDistance(dynamic, mspt);
-            checkSimulationDistance(dynamic, mspt);
             checkMobcaps(dynamic, mspt);
+            checkSimulationDistance(dynamic, mspt);
             checkChunkTickDistance(dynamic, mspt);
         }
     }
@@ -54,20 +54,8 @@ public final class TickUtils {
     private static void checkChunkTickDistance(DynamicConfig dynamic, double mspt) {
         if (mspt > 40 && chunkTickDistance > dynamic.minChunkTickDistance) {
             chunkTickDistance--;
-        } else if (mspt < 30 && chunkTickDistance < dynamic.maxChunkTickDistance && mobcapModifier.doubleValue() == dynamic.maxMobcap) {
+        } else if (mspt < 30 && chunkTickDistance < dynamic.maxChunkTickDistance && simulationDistance == dynamic.maxSimulationDistance) {
             chunkTickDistance++;
-        }
-    }
-
-    /**
-     * Modifies the mobcaps based on the MSPT.
-     */
-
-    private static void checkMobcaps(DynamicConfig dynamic, double mspt) {
-        if (mspt > 45 && mobcapModifier.doubleValue() > dynamic.minMobcap && chunkTickDistance == dynamic.minChunkTickDistance) {
-            mobcapModifier = mobcapModifier.subtract(VALUE);
-        } else if (mspt < 35 && mobcapModifier.doubleValue() < dynamic.maxMobcap && simulationDistance == dynamic.maxSimulationDistance) {
-            mobcapModifier = mobcapModifier.add(VALUE);
         }
     }
 
@@ -76,10 +64,22 @@ public final class TickUtils {
      */
 
     private static void checkSimulationDistance(DynamicConfig dynamic, double mspt) {
-        if (mspt > 45 && simulationDistance > dynamic.maxSimulationDistance && mobcapModifier.doubleValue() == dynamic.minMobcap) {
+        if (mspt > 45 && simulationDistance > dynamic.maxSimulationDistance && chunkTickDistance == dynamic.minChunkTickDistance) {
             setSimulationDistance(simulationDistance - 1);
-        } else if (mspt < 35 && simulationDistance < dynamic.maxSimulationDistance && viewDistance == dynamic.maxViewDistance) {
+        } else if (mspt < 35 && simulationDistance < dynamic.maxSimulationDistance && mobcapModifier.doubleValue() == dynamic.maxMobcap) {
             setSimulationDistance(simulationDistance + 1);
+        }
+    }
+
+    /**
+     * Modifies the mobcaps based on the MSPT.
+     */
+
+    private static void checkMobcaps(DynamicConfig dynamic, double mspt) {
+        if (mspt > 45 && mobcapModifier.doubleValue() > dynamic.minMobcap && simulationDistance == dynamic.minSimulationDistance) {
+            mobcapModifier = mobcapModifier.subtract(VALUE);
+        } else if (mspt < 35 && mobcapModifier.doubleValue() < dynamic.maxMobcap && viewDistance == dynamic.maxViewDistance) {
+            mobcapModifier = mobcapModifier.add(VALUE);
         }
     }
 
@@ -88,7 +88,7 @@ public final class TickUtils {
      */
 
     private static void checkViewDistance(DynamicConfig dynamic, double mspt) {
-        if (mspt > 45 && viewDistance > dynamic.minViewDistance && simulationDistance == dynamic.minSimulationDistance) {
+        if (mspt > 45 && viewDistance > dynamic.minViewDistance && mobcapModifier.doubleValue() == dynamic.minMobcap) {
             setViewDistance(viewDistance - 1);
         } else if (mspt < 35 && viewDistance < dynamic.maxViewDistance) {
             setViewDistance(viewDistance + 1);
@@ -176,10 +176,10 @@ public final class TickUtils {
     }
 
     public static MutableText createPerformanceReport() {
-        MinecraftServer server = ServerCore.getServer();
-        double ms = server.getTickTime();
-        var mspt = String.format("%.1f", ms);
-        var tps = String.format("%.1f", ms != 0 ? Math.min((1000 / ms), 20) : 20);
+        final MinecraftServer server = ServerCore.getServer();
+        final double ms = MathHelper.average(server.lastTickLengths) * 1.0E-6D;
+        final String mspt = String.format("%.1f", ms);
+        final String tps = String.format("%.1f", ms != 0 ? Math.min((1000 / ms), 20) : 20);
         return new LiteralText(String.format("§8- §3TPS: §a%s §3MSPT: §a%s\n§8- §3Online: §a%d\n§8- §3View distance: §a%d\n§8- §3Mobcap multiplier: §a%s\n§8- §3Simulation distance: §a%d\n§8- §3Chunk-tick distance: §a%d", tps, mspt, server.getCurrentPlayerCount(), viewDistance, String.format("%.1f", getModifier()), simulationDistance, chunkTickDistance));
     }
 }

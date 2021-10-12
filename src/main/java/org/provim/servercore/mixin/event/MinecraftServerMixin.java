@@ -41,6 +41,16 @@ public abstract class MinecraftServerMixin {
         ServerCore.setServer((MinecraftServer) (Object) this);
     }
 
+    /**
+     * [Server Shutdown Event]
+     */
+
+    @Inject(method = "shutdown", at = @At("HEAD"))
+    private void beforeShutdownServer(CallbackInfo info) {
+        Config.save(true);
+        Config.close();
+    }
+
     @Inject(method = "prepareStartRegion", at = @At("HEAD"), cancellable = true)
     private void disableSpawnChunks(WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci) {
         if (Config.getFeatureConfig().disableSpawnChunks) {
