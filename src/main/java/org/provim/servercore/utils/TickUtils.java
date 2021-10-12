@@ -41,8 +41,8 @@ public final class TickUtils {
         if (dynamic.enabled) {
             final double mspt = MathHelper.average(server.lastTickLengths) * 1.0E-6D;
             checkViewDistance(dynamic, mspt);
-            checkMobcaps(dynamic, mspt);
             checkSimulationDistance(dynamic, mspt);
+            checkMobcaps(dynamic, mspt);
             checkChunkTickDistance(dynamic, mspt);
         }
     }
@@ -54,20 +54,8 @@ public final class TickUtils {
     private static void checkChunkTickDistance(DynamicConfig dynamic, double mspt) {
         if (mspt > 40 && chunkTickDistance > dynamic.minChunkTickDistance) {
             chunkTickDistance--;
-        } else if (mspt < 30 && chunkTickDistance < dynamic.maxChunkTickDistance && simulationDistance == dynamic.maxSimulationDistance) {
+        } else if (mspt < 30 && chunkTickDistance < dynamic.maxChunkTickDistance && mobcapModifier.doubleValue() == dynamic.maxMobcap) {
             chunkTickDistance++;
-        }
-    }
-
-    /**
-     * Modifies the simulation distance based on the MSPT.
-     */
-
-    private static void checkSimulationDistance(DynamicConfig dynamic, double mspt) {
-        if (mspt > 45 && simulationDistance > dynamic.maxSimulationDistance && chunkTickDistance == dynamic.minChunkTickDistance) {
-            setSimulationDistance(simulationDistance - 1);
-        } else if (mspt < 35 && simulationDistance < dynamic.maxSimulationDistance && mobcapModifier.doubleValue() == dynamic.maxMobcap) {
-            setSimulationDistance(simulationDistance + 1);
         }
     }
 
@@ -76,10 +64,22 @@ public final class TickUtils {
      */
 
     private static void checkMobcaps(DynamicConfig dynamic, double mspt) {
-        if (mspt > 45 && mobcapModifier.doubleValue() > dynamic.minMobcap && simulationDistance == dynamic.minSimulationDistance) {
+        if (mspt > 45 && mobcapModifier.doubleValue() > dynamic.minMobcap && chunkTickDistance == dynamic.minChunkTickDistance) {
             mobcapModifier = mobcapModifier.subtract(VALUE);
-        } else if (mspt < 35 && mobcapModifier.doubleValue() < dynamic.maxMobcap && viewDistance == dynamic.maxViewDistance) {
+        } else if (mspt < 35 && mobcapModifier.doubleValue() < dynamic.maxMobcap && simulationDistance == dynamic.maxSimulationDistance) {
             mobcapModifier = mobcapModifier.add(VALUE);
+        }
+    }
+
+    /**
+     * Modifies the simulation distance based on the MSPT.
+     */
+
+    private static void checkSimulationDistance(DynamicConfig dynamic, double mspt) {
+        if (mspt > 45 && simulationDistance > dynamic.maxSimulationDistance && mobcapModifier.doubleValue() == dynamic.minMobcap) {
+            setSimulationDistance(simulationDistance - 1);
+        } else if (mspt < 35 && simulationDistance < dynamic.maxSimulationDistance && viewDistance == dynamic.maxViewDistance) {
+            setSimulationDistance(simulationDistance + 1);
         }
     }
 
@@ -88,7 +88,7 @@ public final class TickUtils {
      */
 
     private static void checkViewDistance(DynamicConfig dynamic, double mspt) {
-        if (mspt > 45 && viewDistance > dynamic.minViewDistance && mobcapModifier.doubleValue() == dynamic.minMobcap) {
+        if (mspt > 45 && viewDistance > dynamic.minViewDistance && simulationDistance == dynamic.minSimulationDistance) {
             setViewDistance(viewDistance - 1);
         } else if (mspt < 35 && viewDistance < dynamic.maxViewDistance) {
             setViewDistance(viewDistance + 1);
