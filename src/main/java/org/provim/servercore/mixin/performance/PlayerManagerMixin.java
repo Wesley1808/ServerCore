@@ -17,6 +17,11 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Optional;
 
+/**
+ * From: PaperMC (Don-t-move-existing-players-to-world-spawn.patch)
+ * License: GPL-3.0 (licenses/GPL.md)
+ */
+
 @Mixin(PlayerManager.class)
 public class PlayerManagerMixin {
 

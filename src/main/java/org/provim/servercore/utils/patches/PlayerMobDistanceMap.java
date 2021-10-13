@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * From: PaperMC (implement-optional-per-player-mob-spawns.patch)
+ * License: GPL-3.0 (licenses/GPL.md)
+ *
  * @author Spottedleaf
  */
 

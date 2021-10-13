@@ -6,6 +6,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+/**
+ * From: PaperMC (Don-t-move-existing-players-to-world-spawn.patch)
+ * License: GPL-3.0 (licenses/GPL.md)
+ */
+
 @Mixin(ServerPlayerEntity.class)
 public class ServerPlayerEntityMixin {
 

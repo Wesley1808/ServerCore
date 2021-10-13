@@ -34,6 +34,11 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
 
+/**
+ * From: PaperMC (implement-optional-per-player-mob-spawns.patch)
+ * License: GPL-3.0 (licenses/GPL.md)
+ */
+
 @Mixin(SpawnHelper.class)
 public abstract class SpawnHelperMixin {
     @Unique

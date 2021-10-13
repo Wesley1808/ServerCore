@@ -18,6 +18,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * From: PaperMC (implement-optional-per-player-mob-spawns.patch)
+ * License: GPL-3.0 (licenses/GPL.md)
+ */
 
 @Mixin(ThreadedAnvilChunkStorage.class)
 public class ThreadedAnvilChunkStorageMixin implements IThreadedAnvilChunkStorage {
