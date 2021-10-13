@@ -33,8 +33,8 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
     @Redirect(method = "mobTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/brain/Brain;tick(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)V"))
     private void lobotomizeTrappedVillagers(Brain<VillagerEntity> brain, ServerWorld world, LivingEntity entity) {
         VillagerEntity villager = (VillagerEntity) (Object) this;
-        if (Config.getFeatureConfig().lobotomizeVillagers && isLobotomized()) {
-            if (this.age % Config.getFeatureConfig().lobotomizedTickInterval == 0) {
+        if (Config.FEATURE_CONFIG.lobotomizeVillagers.get() && isLobotomized()) {
+            if (this.age % Config.FEATURE_CONFIG.lobotomizedTickInterval.get() == 0) {
                 brain.tick(world, villager);
             }
         } else {

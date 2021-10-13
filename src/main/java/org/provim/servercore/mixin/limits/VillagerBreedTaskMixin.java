@@ -18,9 +18,9 @@ public abstract class VillagerBreedTaskMixin {
      * @return Double: distance to other villager.
      */
 
-    @Redirect(method = "keepRunning", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/VillagerEntity;squaredDistanceTo(Lnet/minecraft/entity/Entity;)D"))
+    @Redirect(method = "keepRunning*", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/VillagerEntity;squaredDistanceTo(Lnet/minecraft/entity/Entity;)D"))
     public double cancelBreeding(VillagerEntity villagerEntity, Entity entity) {
-        if (TickUtils.checkForEntities(villagerEntity, Config.getEntityConfig().villagerCount, Config.getEntityConfig().villagerRange)) {
+        if (TickUtils.checkForEntities(villagerEntity, Config.ENTITY_CONFIG.villagerCount.get(), Config.ENTITY_CONFIG.villagerRange.get())) {
             ((VillagerEntity) entity).setBreedingAge(6000);
             villagerEntity.setBreedingAge(6000);
             return 10;

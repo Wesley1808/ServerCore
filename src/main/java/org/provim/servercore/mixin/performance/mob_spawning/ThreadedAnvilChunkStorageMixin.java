@@ -22,7 +22,7 @@ public abstract class ThreadedAnvilChunkStorageMixin implements IThreadedAnvilCh
 
     @Inject(method = "save(Z)V", at = @At("TAIL"))
     private void resetDistanceMap(boolean flush, CallbackInfo ci) {
-        if (Config.getFeatureConfig().useDistanceMap && this.world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)) {
+        if (Config.FEATURE_CONFIG.useDistanceMap.get() && this.world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)) {
             // Resets the PlayerMobDistanceMap whenever the worlds save.
             // The PlayerMobDistanceMap may rarely fail to remove a player object from the HashSet.
             // This causes areas affected by this to be unable to spawn any mobs.

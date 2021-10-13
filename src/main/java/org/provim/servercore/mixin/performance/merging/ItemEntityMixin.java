@@ -18,7 +18,7 @@ public abstract class ItemEntityMixin {
 
     @ModifyArgs(method = "tryMerge()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Box;expand(DDD)Lnet/minecraft/util/math/Box;"))
     private void setMergeRadius(Args args) {
-        double mergeRadius = Config.getFeatureConfig().itemMergeRadius;
+        double mergeRadius = Config.FEATURE_CONFIG.itemMergeRadius.get();
         args.set(0, mergeRadius);
         args.set(2, mergeRadius);
     }

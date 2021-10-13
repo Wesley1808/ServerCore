@@ -5,17 +5,18 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import org.provim.servercore.ServerCore;
 
+import java.lang.reflect.Field;
 import java.nio.file.Path;
+import java.util.function.BiConsumer;
 
 public final class Config {
+    public static final CommandConfig COMMAND_CONFIG = new CommandConfig();
+    public static final FeatureConfig FEATURE_CONFIG = new FeatureConfig();
+    public static final DynamicConfig DYNAMIC_CONFIG = new DynamicConfig();
+    public static final EntityConfig ENTITY_CONFIG = new EntityConfig();
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml");
     private static final CommentedFileConfig CONFIG = CommentedFileConfig.builder(CONFIG_PATH).preserveInsertionOrder().sync().build();
     private static final String[] TABLES = {"features", "dynamic", "entity_limits", "commands"};
-
-    private static CommandConfig commandConfig;
-    private static FeatureConfig featureConfig;
-    private static DynamicConfig dynamicConfig;
-    private static EntityConfig entityConfig;
 
     static {
         // Required to generate the config with the correct order.
@@ -26,16 +27,10 @@ public final class Config {
         CONFIG.load();
         boolean modified = Config.validate();
 
-        try {
-            featureConfig = new FeatureConfig(CONFIG.get(TABLES[0]));
-            dynamicConfig = new DynamicConfig(CONFIG.get(TABLES[1]));
-            entityConfig = new EntityConfig(CONFIG.get(TABLES[2]));
-            commandConfig = new CommandConfig(CONFIG.get(TABLES[3]));
-        } catch (Exception ex) {
-            ServerCore.getLogger().fatal("[ServerCore] Found invalid config entries! Fix these or reset the config.");
-            CONFIG.close();
-            throw ex;
-        }
+        Config.load(CONFIG.get(TABLES[0]), FEATURE_CONFIG);
+        Config.load(CONFIG.get(TABLES[1]), DYNAMIC_CONFIG);
+        Config.load(CONFIG.get(TABLES[2]), ENTITY_CONFIG);
+        Config.load(CONFIG.get(TABLES[3]), COMMAND_CONFIG);
 
         if (modified) Config.save(false);
     }
@@ -44,16 +39,16 @@ public final class Config {
         if (validate) Config.validate();
 
         CONFIG.setComment(TABLES[0], " Lets you enable / disable certain features and modify them.");
-        featureConfig.save(CONFIG.get(TABLES[0]));
+        Config.save(CONFIG.get(TABLES[0]), FEATURE_CONFIG);
 
         CONFIG.setComment(TABLES[1], " Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT.");
-        dynamicConfig.save(CONFIG.get(TABLES[1]));
+        Config.save(CONFIG.get(TABLES[1]), DYNAMIC_CONFIG);
 
         CONFIG.setComment(TABLES[2], " Stops animals / villagers from breeding if there are too many of the same type nearby.");
-        entityConfig.save(CONFIG.get(TABLES[2]));
+        Config.save(CONFIG.get(TABLES[2]), ENTITY_CONFIG);
 
         CONFIG.setComment(TABLES[3], " Allows you to disable specific commands and modify the way some of them are formatted.");
-        commandConfig.save(CONFIG.get(TABLES[3]));
+        Config.save(CONFIG.get(TABLES[3]), COMMAND_CONFIG);
 
         CONFIG.save();
     }
@@ -74,19 +69,44 @@ public final class Config {
         return modified;
     }
 
-    public static CommandConfig getCommandConfig() {
-        return commandConfig;
+    private static void load(CommentedConfig config, Object obj) {
+        try {
+            Config.forEachField(obj, (key, entry) -> {
+                final Object defaultValue = entry.getDefault();
+                final Object value = config.getOrElse(key, defaultValue);
+                entry.set(value.getClass().equals(defaultValue.getClass()) ? value : defaultValue);
+                config.setComment(key, entry.getComment());
+            });
+        } catch (Exception ex) {
+            ServerCore.getLogger().error("[ServerCore] Exception was thrown whilst loading configs!", ex);
+        }
     }
 
-    public static FeatureConfig getFeatureConfig() {
-        return featureConfig;
+    private static void save(CommentedConfig config, Object obj) {
+        try {
+            Config.forEachField(obj, (key, entry) -> config.set(key, entry.get()));
+        } catch (Exception ex) {
+            ServerCore.getLogger().error("[ServerCore] Exception was thrown whilst saving configs!", ex);
+        }
     }
 
-    public static DynamicConfig getDynamicConfig() {
-        return dynamicConfig;
+    @SuppressWarnings("unchecked")
+    private static <T> void forEachField(Object obj, BiConsumer<String, ConfigEntry<T>> consumer) throws IllegalAccessException {
+        for (Field field : obj.getClass().getFields()) {
+            if (field.get(obj) instanceof ConfigEntry entry) {
+                consumer.accept(Config.getName(field.getName()), entry);
+            }
+        }
     }
 
-    public static EntityConfig getEntityConfig() {
-        return entityConfig;
+    // Converts field names into config names.
+    // Example: maxViewDistance -> max_view_distance.
+    private static String getName(String name) {
+        for (char c : name.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                name = name.replace(String.valueOf(c), "_" + Character.toLowerCase(c));
+            }
+        }
+        return name;
     }
 }

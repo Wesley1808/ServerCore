@@ -32,7 +32,7 @@ public abstract class ServerChunkManagerMixin {
 
     @Inject(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/SpawnHelper;setupSpawn(ILjava/lang/Iterable;Lnet/minecraft/world/SpawnHelper$ChunkSource;Lnet/minecraft/world/SpawnDensityCapper;)Lnet/minecraft/world/SpawnHelper$Info;"))
     private void updateDistanceMap(CallbackInfo ci) {
-        if (Config.getFeatureConfig().useDistanceMap && (this.spawnAnimals || this.spawnMonsters) && this.world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)) {
+        if (Config.FEATURE_CONFIG.useDistanceMap.get() && (this.spawnAnimals || this.spawnMonsters) && this.world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)) {
             // Update distance map -> by using a constant 10 as view distance we prevent the situations where:
             // 1 - No mobs will spawn because there's another player with mobs 500 blocks away (High view distance).
             // 2 - There will be 140 mobs in a small area because there's another player 50 blocks away (Low view distance).

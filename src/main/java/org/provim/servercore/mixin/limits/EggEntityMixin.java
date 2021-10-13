@@ -26,7 +26,7 @@ public abstract class EggEntityMixin extends ThrownItemEntity {
 
     @Redirect(method = "onCollision", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I", ordinal = 0))
     public int shouldSpawn(Random random, int bound) {
-        if (TickUtils.checkForEntities(EntityType.CHICKEN, this.world, this.getBlockPos(), Config.getEntityConfig().animalCount, Config.getEntityConfig().animalRange)) {
+        if (TickUtils.checkForEntities(EntityType.CHICKEN, this.world, this.getBlockPos(), Config.ENTITY_CONFIG.animalCount.get(), Config.ENTITY_CONFIG.animalRange.get())) {
             return 1;
         } else {
             return random.nextInt(8);

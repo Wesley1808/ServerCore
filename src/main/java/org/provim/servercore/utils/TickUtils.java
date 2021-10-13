@@ -25,7 +25,7 @@ public final class TickUtils {
     private static int viewDistance = ServerCore.getServer().getPlayerManager().getViewDistance();
     private static int simulationDistance = viewDistance;
     private static int chunkTickDistance = viewDistance;
-    private static BigDecimal mobcapModifier = new BigDecimal(String.valueOf(Config.getDynamicConfig().maxMobcap));
+    private static BigDecimal mobcapModifier = new BigDecimal(String.valueOf(Config.DYNAMIC_CONFIG.maxMobcap.get()));
 
     private TickUtils() {
     }
@@ -37,8 +37,8 @@ public final class TickUtils {
      */
 
     public static void runPerformanceChecks(MinecraftServer server) {
-        final DynamicConfig dynamic = Config.getDynamicConfig();
-        if (dynamic.enabled) {
+        final DynamicConfig dynamic = Config.DYNAMIC_CONFIG;
+        if (dynamic.enabled.get()) {
             final double mspt = MathHelper.average(server.lastTickLengths) * 1.0E-6D;
             checkViewDistance(dynamic, mspt);
             checkSimulationDistance(dynamic, mspt);
@@ -52,9 +52,9 @@ public final class TickUtils {
      */
 
     private static void checkChunkTickDistance(DynamicConfig dynamic, double mspt) {
-        if (mspt > 40 && chunkTickDistance > dynamic.minChunkTickDistance) {
+        if (mspt > 40 && chunkTickDistance > dynamic.minChunkTickDistance.get()) {
             chunkTickDistance--;
-        } else if (mspt < 30 && chunkTickDistance < dynamic.maxChunkTickDistance && mobcapModifier.doubleValue() == dynamic.maxMobcap) {
+        } else if (mspt < 30 && chunkTickDistance < dynamic.maxChunkTickDistance.get() && mobcapModifier.doubleValue() == dynamic.maxMobcap.get()) {
             chunkTickDistance++;
         }
     }
@@ -64,9 +64,9 @@ public final class TickUtils {
      */
 
     private static void checkMobcaps(DynamicConfig dynamic, double mspt) {
-        if (mspt > 45 && mobcapModifier.doubleValue() > dynamic.minMobcap && chunkTickDistance == dynamic.minChunkTickDistance) {
+        if (mspt > 45 && mobcapModifier.doubleValue() > dynamic.minMobcap.get() && chunkTickDistance == dynamic.minChunkTickDistance.get()) {
             mobcapModifier = mobcapModifier.subtract(VALUE);
-        } else if (mspt < 35 && mobcapModifier.doubleValue() < dynamic.maxMobcap && simulationDistance == dynamic.maxSimulationDistance) {
+        } else if (mspt < 35 && mobcapModifier.doubleValue() < dynamic.maxMobcap.get() && simulationDistance == dynamic.maxSimulationDistance.get()) {
             mobcapModifier = mobcapModifier.add(VALUE);
         }
     }
@@ -76,9 +76,9 @@ public final class TickUtils {
      */
 
     private static void checkSimulationDistance(DynamicConfig dynamic, double mspt) {
-        if (mspt > 45 && simulationDistance > dynamic.maxSimulationDistance && mobcapModifier.doubleValue() == dynamic.minMobcap) {
+        if (mspt > 45 && simulationDistance > dynamic.maxSimulationDistance.get() && mobcapModifier.doubleValue() == dynamic.minMobcap.get()) {
             setSimulationDistance(simulationDistance - 1);
-        } else if (mspt < 35 && simulationDistance < dynamic.maxSimulationDistance && viewDistance == dynamic.maxViewDistance) {
+        } else if (mspt < 35 && simulationDistance < dynamic.maxSimulationDistance.get() && viewDistance == dynamic.maxViewDistance.get()) {
             setSimulationDistance(simulationDistance + 1);
         }
     }
@@ -88,9 +88,9 @@ public final class TickUtils {
      */
 
     private static void checkViewDistance(DynamicConfig dynamic, double mspt) {
-        if (mspt > 45 && viewDistance > dynamic.minViewDistance && simulationDistance == dynamic.minSimulationDistance) {
+        if (mspt > 45 && viewDistance > dynamic.minViewDistance.get() && simulationDistance == dynamic.minSimulationDistance.get()) {
             setViewDistance(viewDistance - 1);
-        } else if (mspt < 35 && viewDistance < dynamic.maxViewDistance) {
+        } else if (mspt < 35 && viewDistance < dynamic.maxViewDistance.get()) {
             setViewDistance(viewDistance + 1);
         }
     }
@@ -164,7 +164,7 @@ public final class TickUtils {
      */
 
     public static boolean checkForEntities(EntityType<?> type, World world, BlockPos pos, int limit, int range) {
-        if (Config.getEntityConfig().enabled) {
+        if (Config.ENTITY_CONFIG.enabled.get()) {
             return limit <= world.getEntitiesByType(type, new Box(pos.mutableCopy().add(range, range, range), pos.mutableCopy().add(-range, -range, -range)), EntityPredicates.EXCEPT_SPECTATOR).size();
         } else {
             return false;

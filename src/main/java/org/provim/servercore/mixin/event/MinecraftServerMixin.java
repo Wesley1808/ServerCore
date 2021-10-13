@@ -53,13 +53,13 @@ public abstract class MinecraftServerMixin {
 
     @Inject(method = "prepareStartRegion", at = @At("HEAD"), cancellable = true)
     private void disableSpawnChunks(WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci) {
-        if (Config.getFeatureConfig().disableSpawnChunks) {
+        if (Config.FEATURE_CONFIG.disableSpawnChunks.get()) {
             ci.cancel();
         }
     }
 
     @Redirect(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/server/MinecraftServer;ticks:I", ordinal = 1))
     public int modifyAutoSaveInterval(MinecraftServer minecraftServer) {
-        return this.ticks % (Config.getFeatureConfig().autoSaveInterval * 1200) == 0 ? 6000 : -1;
+        return this.ticks % (Config.FEATURE_CONFIG.autoSaveInterval.get() * 1200) == 0 ? 6000 : -1;
     }
 }

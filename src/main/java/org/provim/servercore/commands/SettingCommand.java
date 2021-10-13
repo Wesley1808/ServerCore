@@ -46,10 +46,10 @@ public final class SettingCommand {
 
     private static int modifyBoolean(ServerCommandSource source, boolean value, int id, String setting) {
         switch (id) {
-            case 1 -> Config.getDynamicConfig().enabled = value;
-            case 2 -> Config.getFeatureConfig().lobotomizeVillagers = value;
-            case 3 -> Config.getEntityConfig().enabled = value;
-            case 4 -> Config.getFeatureConfig().fastXpMerging = value;
+            case 1 -> Config.DYNAMIC_CONFIG.enabled.set(value);
+            case 2 -> Config.FEATURE_CONFIG.lobotomizeVillagers.set(value);
+            case 3 -> Config.ENTITY_CONFIG.enabled.set(value);
+            case 4 -> Config.FEATURE_CONFIG.fastXpMerging.set(value);
         }
 
         source.sendFeedback(new LiteralText(String.format("%s been set to %b", setting, value)), false);
@@ -69,8 +69,8 @@ public final class SettingCommand {
 
     private static int modifyDouble(ServerCommandSource source, double value, int id, String type) {
         switch (id) {
-            case 1 -> Config.getFeatureConfig().itemMergeRadius = value;
-            case 2 -> Config.getFeatureConfig().xpMergeRadius = value;
+            case 1 -> Config.FEATURE_CONFIG.itemMergeRadius.set(value);
+            case 2 -> Config.FEATURE_CONFIG.xpMergeRadius.set(value);
             case 3 -> TickUtils.setModifier(BigDecimal.valueOf(value));
         }
 

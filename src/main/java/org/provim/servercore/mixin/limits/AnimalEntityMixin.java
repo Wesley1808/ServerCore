@@ -28,7 +28,7 @@ public abstract class AnimalEntityMixin extends PassiveEntity {
 
     @Inject(method = "breed", at = @At(value = "HEAD"), cancellable = true)
     public void cancelBreeding(ServerWorld world, AnimalEntity other, CallbackInfo ci) {
-        if (TickUtils.checkForEntities(this, Config.getEntityConfig().animalCount, Config.getEntityConfig().animalRange)) {
+        if (TickUtils.checkForEntities(this, Config.ENTITY_CONFIG.animalCount.get(), Config.ENTITY_CONFIG.animalRange.get())) {
             this.setBreedingAge(6000);
             other.setBreedingAge(6000);
             this.resetLoveTicks();
