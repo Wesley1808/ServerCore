@@ -14,6 +14,7 @@ public final class Config {
     public static final FeatureConfig FEATURE_CONFIG = new FeatureConfig();
     public static final DynamicConfig DYNAMIC_CONFIG = new DynamicConfig();
     public static final EntityConfig ENTITY_CONFIG = new EntityConfig();
+
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml");
     private static final CommentedFileConfig CONFIG = CommentedFileConfig.builder(CONFIG_PATH).preserveInsertionOrder().sync().build();
     private static final String[] TABLES = {"features", "dynamic", "entity_limits", "commands"};
@@ -25,7 +26,7 @@ public final class Config {
 
     public static void load() {
         CONFIG.load();
-        boolean modified = Config.validate();
+        boolean modified = Config.validateTables();
 
         Config.load(CONFIG.get(TABLES[0]), FEATURE_CONFIG);
         Config.load(CONFIG.get(TABLES[1]), DYNAMIC_CONFIG);
@@ -36,7 +37,7 @@ public final class Config {
     }
 
     public static void save(boolean validate) {
-        if (validate) Config.validate();
+        if (validate) Config.validateTables();
 
         CONFIG.setComment(TABLES[0], " Lets you enable / disable certain features and modify them.");
         Config.save(CONFIG.get(TABLES[0]), FEATURE_CONFIG);
@@ -57,7 +58,7 @@ public final class Config {
         CONFIG.close();
     }
 
-    private static boolean validate() {
+    private static boolean validateTables() {
         boolean modified = false;
         for (String table : TABLES) {
             if (!CONFIG.contains(table)) {
@@ -71,10 +72,8 @@ public final class Config {
 
     private static void load(CommentedConfig config, Object obj) {
         try {
-            Config.forEachField(obj, (key, entry) -> {
-                final Object defaultValue = entry.getDefault();
-                final Object value = config.getOrElse(key, defaultValue);
-                entry.set(value.getClass().equals(defaultValue.getClass()) ? value : defaultValue);
+            Config.forEachEntry(obj, (key, entry) -> {
+                entry.set(config.getOrElse(key, entry.getDefault()));
                 config.setComment(key, entry.getComment());
             });
         } catch (Exception ex) {
@@ -84,14 +83,14 @@ public final class Config {
 
     private static void save(CommentedConfig config, Object obj) {
         try {
-            Config.forEachField(obj, (key, entry) -> config.set(key, entry.get()));
+            Config.forEachEntry(obj, (key, entry) -> config.set(key, entry.get()));
         } catch (Exception ex) {
             ServerCore.getLogger().error("[ServerCore] Exception was thrown whilst saving configs!", ex);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> void forEachField(Object obj, BiConsumer<String, ConfigEntry<T>> consumer) throws IllegalAccessException {
+    private static <T> void forEachEntry(Object obj, BiConsumer<String, ConfigEntry<T>> consumer) throws IllegalAccessException {
         for (Field field : obj.getClass().getFields()) {
             if (field.get(obj) instanceof ConfigEntry entry) {
                 consumer.accept(Config.getName(field.getName()), entry);

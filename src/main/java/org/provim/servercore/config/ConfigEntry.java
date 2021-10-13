@@ -15,10 +15,6 @@ public final class ConfigEntry<T> {
         this.comment = null;
     }
 
-    public void set(T value) {
-        this.value = value;
-    }
-
     public T get() {
         return this.value;
     }
@@ -29,5 +25,17 @@ public final class ConfigEntry<T> {
 
     public T getDefault() {
         return this.defaultValue;
+    }
+
+    public void set(T value) {
+        this.value = this.validate(value) ? value : this.getFallbackValue();
+    }
+
+    private boolean validate(T value) {
+        return this.defaultValue.getClass() == value.getClass();
+    }
+
+    private T getFallbackValue() {
+        return this.value != null ? this.value : this.defaultValue;
     }
 }
