@@ -74,7 +74,6 @@ public final class Config {
         try {
             Config.forEachEntry(obj, (key, entry) -> {
                 entry.set(config.getOrElse(key, entry.getDefault()));
-                config.setComment(key, entry.getComment());
             });
         } catch (Exception ex) {
             ServerCore.getLogger().error("[ServerCore] Exception was thrown whilst loading configs!", ex);
@@ -83,7 +82,11 @@ public final class Config {
 
     private static void save(CommentedConfig config, Object obj) {
         try {
-            Config.forEachEntry(obj, (key, entry) -> config.set(key, entry.get()));
+            config.clear();
+            Config.forEachEntry(obj, (key, entry) -> {
+                config.set(key, entry.get());
+                config.setComment(key, entry.getComment());
+            });
         } catch (Exception ex) {
             ServerCore.getLogger().error("[ServerCore] Exception was thrown whilst saving configs!", ex);
         }
