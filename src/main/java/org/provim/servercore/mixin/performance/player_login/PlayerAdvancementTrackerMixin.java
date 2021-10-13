@@ -14,8 +14,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * From: PaperMC
- * https://github.com/PaperMC/Paper/blob/master/patches/server/0491-Optimize-the-advancement-data-player-iteration-to-be.patch
+ * From: PaperMC (Optimize-the-advancement-data-player-iteration-to-be.patch)
+ * License: GPL-3.0 (licenses/GPL.md)
  */
 
 @Mixin(PlayerAdvancementTracker.class)

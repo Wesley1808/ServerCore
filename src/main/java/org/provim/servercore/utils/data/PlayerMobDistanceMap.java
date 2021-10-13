@@ -11,6 +11,9 @@ import org.provim.servercore.interfaces.IServerPlayerEntity;
 import java.util.List;
 
 /**
+ * From: PaperMC (implement-optional-per-player-mob-spawns.patch)
+ * License: GPL-3.0 (licenses/GPL.md)
+ *
  * @author Spottedleaf
  */
 

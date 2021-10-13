@@ -32,7 +32,6 @@ The config file can be found at `<server_dir>/config/servercore.toml`
     # This will also allow players to pickup xp much faster.
     fast_xp_merging = false
     # (Default = false) Optimizes vanilla's per-player mobspawning by using PaperMC's PlayerMobDistanceMap.
-    # Note: this might slightly increase memory usage.
     use_distance_map = false
     # (Default = false) Makes villagers tick less often if they are stuck in a 1x1 space.
     lobotomize_villagers = false
@@ -89,3 +88,8 @@ The config file can be found at `<server_dir>/config/servercore.toml`
 2. Select the topmost workflow run.
 3. Download "ServerCore" from below **Artifacts**.
 4. Unzip the file and grab the .jar file **without** -dev or -sources.
+
+# License
+ServerCore includes ports of patches from repositories such as PaperMC and Purpur.\
+If a file uses the GPL-3.0 license it will be stated at the top of the file.\
+All other files are licensed under MIT.

@@ -18,8 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 /**
- * Inspired by: Purpur
- * https://github.com/pl3xgaming/Purpur/blob/ver/1.17.1/patches/server/0133-Lobotomize-stuck-villagers.patch
+ * From: Purpur (Lobotomize-stuck-villagers.patch)
  */
 
 @Mixin(VillagerEntity.class)
