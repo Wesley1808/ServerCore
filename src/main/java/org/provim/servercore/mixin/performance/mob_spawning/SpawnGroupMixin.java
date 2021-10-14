@@ -1,7 +1,7 @@
 package org.provim.servercore.mixin.performance.mob_spawning;
 
 import net.minecraft.entity.SpawnGroup;
-import org.provim.servercore.utils.TickUtils;
+import org.provim.servercore.utils.TickManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,8 +17,8 @@ public abstract class SpawnGroupMixin {
     private int capacity;
 
     // Modifies the capacity of the mobcap.
-    @Inject(method = "getCapacity", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "getCapacity", at = @At("HEAD"), cancellable = true)
     private void modifyCapacity(CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue((int) (this.capacity * TickUtils.getModifier()));
+        cir.setReturnValue((int) (this.capacity * TickManager.getModifier()));
     }
 }

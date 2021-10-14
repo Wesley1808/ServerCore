@@ -2,8 +2,7 @@ package org.provim.servercore.utils;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.server.world.ChunkHolder;
-import net.minecraft.server.world.ChunkTicketManager;
+import net.minecraft.server.world.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -51,13 +50,5 @@ public final class ChunkManager {
 
     public static ChunkHolder getChunkHolder(World world, BlockPos pos) {
         return world.getChunkManager() instanceof ServerChunkManagerAccessor manager ? manager.getHolder(ChunkPos.toLong(pos.getX() >> 4, pos.getZ() >> 4)) : null;
-    }
-
-    /**
-     * Returns the ChunkTicketManager from {@param world}.
-     */
-
-    public static ChunkTicketManager getTicketManager(World world) {
-        return world.getChunkManager() instanceof ServerChunkManagerAccessor manager ? manager.getTicketManager() : null;
     }
 }

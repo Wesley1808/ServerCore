@@ -18,7 +18,7 @@ public final class Config {
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml");
     private static final GenericBuilder<CommentedConfig, CommentedFileConfig> BUILDER = CommentedFileConfig.builder(CONFIG_PATH).preserveInsertionOrder().sync();
 
-    private static final Config.Table[] TABLES = {
+    private static final Table[] TABLES = {
             new Table(FeatureConfig.class, "features", " Lets you enable / disable certain features and modify them."),
             new Table(DynamicConfig.class, "dynamic", " Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT."),
             new Table(EntityConfig.class, "entity_limits", " Stops animals / villagers from breeding if there are too many of the same type nearby."),
@@ -26,7 +26,7 @@ public final class Config {
     };
 
     static {
-        // Required to generate the object with the correct order.
+        // Required to generate the config with the correct order.
         System.setProperty("nightconfig.preserveInsertionOrder", "true");
     }
 
@@ -35,7 +35,7 @@ public final class Config {
         config.load();
 
         for (Table table : TABLES) {
-            Config.validate(table.key, config);
+            Config.validate(table, config);
             Config.loadEntries(config.get(table.key), table.clazz);
         }
 
@@ -46,7 +46,7 @@ public final class Config {
         CommentedFileConfig config = BUILDER.build();
 
         for (Table table : TABLES) {
-            Config.validate(table.key, config);
+            Config.validate(table, config);
             Config.saveEntries(config.get(table.key), table.clazz);
             config.setComment(table.key, table.comment);
         }
@@ -56,9 +56,9 @@ public final class Config {
     }
 
     // Creates table when missing.
-    private static void validate(String key, CommentedFileConfig config) {
-        if (!config.contains(key)) {
-            config.add(key, CommentedConfig.inMemory());
+    private static void validate(Table table, CommentedFileConfig config) {
+        if (!config.contains(table.key)) {
+            config.add(table.key, CommentedConfig.inMemory());
         }
     }
 

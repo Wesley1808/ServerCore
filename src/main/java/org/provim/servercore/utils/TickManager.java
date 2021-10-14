@@ -20,14 +20,14 @@ import org.provim.servercore.config.tables.EntityConfig;
 
 import java.math.BigDecimal;
 
-public final class TickUtils {
+public final class TickManager {
     private static final BigDecimal VALUE = new BigDecimal("0.1");
     private static int viewDistance = ServerCore.getServer().getPlayerManager().getViewDistance();
     private static int simulationDistance = viewDistance;
     private static int chunkTickDistance = viewDistance;
     private static BigDecimal mobcapModifier = new BigDecimal(String.valueOf(DynamicConfig.MAX_MOBCAP.get()));
 
-    private TickUtils() {
+    private TickManager() {
     }
 
     /**

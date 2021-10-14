@@ -12,7 +12,7 @@ import net.minecraft.world.SpawnDensityCapper;
 import org.provim.servercore.config.tables.CommandConfig;
 import org.provim.servercore.mixin.accessor.SpawnHelperInfoAccessor;
 import org.provim.servercore.utils.PermissionUtils;
-import org.provim.servercore.utils.TickUtils;
+import org.provim.servercore.utils.TickManager;
 
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -33,7 +33,7 @@ public final class InfoCommand {
 
     private static int mobcaps(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().getPlayer();
-        LiteralText text = new LiteralText(String.format(CommandConfig.MOBCAP_TITLE.get(), TickUtils.getModifier()));
+        LiteralText text = new LiteralText(String.format(CommandConfig.MOBCAP_TITLE.get(), TickManager.getModifier()));
 
         SpawnHelperInfoAccessor info = (SpawnHelperInfoAccessor) player.getWorld().getChunkManager().getSpawnInfo();
         if (info != null) {
@@ -48,7 +48,7 @@ public final class InfoCommand {
     }
 
     private static int performanceReport(CommandContext<ServerCommandSource> context) {
-        context.getSource().sendFeedback(TickUtils.createPerformanceReport(), false);
+        context.getSource().sendFeedback(TickManager.createPerformanceReport(), false);
         return Command.SINGLE_SUCCESS;
     }
 }

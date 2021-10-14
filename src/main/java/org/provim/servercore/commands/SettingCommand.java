@@ -11,7 +11,7 @@ import org.provim.servercore.config.tables.DynamicConfig;
 import org.provim.servercore.config.tables.EntityConfig;
 import org.provim.servercore.config.tables.FeatureConfig;
 import org.provim.servercore.utils.PermissionUtils;
-import org.provim.servercore.utils.TickUtils;
+import org.provim.servercore.utils.TickManager;
 
 import java.math.BigDecimal;
 
@@ -61,9 +61,9 @@ public final class SettingCommand {
 
     private static int modifyInt(ServerCommandSource source, int value, int id, String type) {
         switch (id) {
-            case 1 -> TickUtils.setChunkTickDistance(value);
-            case 2 -> TickUtils.setViewDistance(value);
-            case 3 -> TickUtils.setSimulationDistance(value);
+            case 1 -> TickManager.setChunkTickDistance(value);
+            case 2 -> TickManager.setViewDistance(value);
+            case 3 -> TickManager.setSimulationDistance(value);
         }
 
         source.sendFeedback(new LiteralText(String.format("%s been set to %d", type, value)), false);
@@ -74,7 +74,7 @@ public final class SettingCommand {
         switch (id) {
             case 1 -> FeatureConfig.ITEM_MERGE_RADIUS.set(value);
             case 2 -> FeatureConfig.XP_MERGE_RADIUS.set(value);
-            case 3 -> TickUtils.setModifier(BigDecimal.valueOf(value));
+            case 3 -> TickManager.setModifier(BigDecimal.valueOf(value));
         }
 
         source.sendFeedback(new LiteralText(String.format("%s been set to %.1f", type, value)), false);

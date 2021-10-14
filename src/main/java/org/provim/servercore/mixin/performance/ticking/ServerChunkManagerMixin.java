@@ -4,9 +4,10 @@ import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.world.chunk.WorldChunk;
 import org.provim.servercore.ServerCore;
-import org.provim.servercore.utils.TickUtils;
+import org.provim.servercore.utils.TickManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -73,7 +74,7 @@ public abstract class ServerChunkManagerMixin {
             for (ChunkHolder holder : holders) {
                 final WorldChunk chunk = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null);
                 if (chunk != null) {
-                    if (TickUtils.shouldTickChunk(holder.getPos(), this.world)) {
+                    if (TickManager.shouldTickChunk(holder.getPos(), this.world)) {
                         this.active.add(new ServerChunkManager.class_6635(chunk, holder));
                     } else {
                         // Sends clients block updates from inactive chunks.
@@ -82,7 +83,7 @@ public abstract class ServerChunkManagerMixin {
                 }
             }
             // Remove inactive chunks
-            this.active.removeIf(lv -> lv.holder().getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickUtils.shouldTickChunk(lv.holder().getPos(), this.world));
+            this.active.removeIf(lv -> lv.holder().getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickManager.shouldTickChunk(lv.holder().getPos(), this.world));
         }
     }
 }
