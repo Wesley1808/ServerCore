@@ -5,7 +5,7 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
-import org.provim.servercore.config.Config;
+import org.provim.servercore.config.tables.EntityConfig;
 import org.provim.servercore.utils.TickUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,7 +28,7 @@ public abstract class AnimalEntityMixin extends PassiveEntity {
 
     @Inject(method = "breed", at = @At(value = "HEAD"), cancellable = true)
     public void cancelBreeding(ServerWorld world, AnimalEntity other, CallbackInfo ci) {
-        if (TickUtils.checkForEntities(this, Config.ENTITY_CONFIG.animalCount.get(), Config.ENTITY_CONFIG.animalRange.get())) {
+        if (TickUtils.checkForEntities(this, EntityConfig.ANIMAL_COUNT.get(), EntityConfig.ANIMAL_RANGE.get())) {
             this.setBreedingAge(6000);
             other.setBreedingAge(6000);
             this.resetLoveTicks();

@@ -5,6 +5,7 @@ import net.minecraft.server.WorldGenerationProgressListener;
 import org.objectweb.asm.Opcodes;
 import org.provim.servercore.ServerCore;
 import org.provim.servercore.config.Config;
+import org.provim.servercore.config.tables.FeatureConfig;
 import org.provim.servercore.utils.TickUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -47,19 +48,18 @@ public abstract class MinecraftServerMixin {
 
     @Inject(method = "shutdown", at = @At("HEAD"))
     private void beforeShutdownServer(CallbackInfo info) {
-        Config.save(true);
-        Config.close();
+        Config.save();
     }
 
     @Inject(method = "prepareStartRegion", at = @At("HEAD"), cancellable = true)
     private void disableSpawnChunks(WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci) {
-        if (Config.FEATURE_CONFIG.disableSpawnChunks.get()) {
+        if (FeatureConfig.DISABLE_SPAWN_CHUNKS.get()) {
             ci.cancel();
         }
     }
 
     @Redirect(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/server/MinecraftServer;ticks:I", ordinal = 1))
     public int modifyAutoSaveInterval(MinecraftServer minecraftServer) {
-        return this.ticks % (Config.FEATURE_CONFIG.autoSaveInterval.get() * 1200) == 0 ? 6000 : -1;
+        return this.ticks % (FeatureConfig.AUTO_SAVE_INTERVAL.get() * 1200) == 0 ? 6000 : -1;
     }
 }

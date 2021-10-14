@@ -7,6 +7,9 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 import org.provim.servercore.config.Config;
+import org.provim.servercore.config.tables.DynamicConfig;
+import org.provim.servercore.config.tables.EntityConfig;
+import org.provim.servercore.config.tables.FeatureConfig;
 import org.provim.servercore.utils.PermissionUtils;
 import org.provim.servercore.utils.TickUtils;
 
@@ -46,10 +49,10 @@ public final class SettingCommand {
 
     private static int modifyBoolean(ServerCommandSource source, boolean value, int id, String setting) {
         switch (id) {
-            case 1 -> Config.DYNAMIC_CONFIG.enabled.set(value);
-            case 2 -> Config.FEATURE_CONFIG.lobotomizeVillagers.set(value);
-            case 3 -> Config.ENTITY_CONFIG.enabled.set(value);
-            case 4 -> Config.FEATURE_CONFIG.fastXpMerging.set(value);
+            case 1 -> DynamicConfig.ENABLED.set(value);
+            case 2 -> FeatureConfig.LOBOTOMIZE_VILLAGERS.set(value);
+            case 3 -> EntityConfig.ENABLED.set(value);
+            case 4 -> FeatureConfig.FAST_XP_MERGING.set(value);
         }
 
         source.sendFeedback(new LiteralText(String.format("%s been set to %b", setting, value)), false);
@@ -69,8 +72,8 @@ public final class SettingCommand {
 
     private static int modifyDouble(ServerCommandSource source, double value, int id, String type) {
         switch (id) {
-            case 1 -> Config.FEATURE_CONFIG.itemMergeRadius.set(value);
-            case 2 -> Config.FEATURE_CONFIG.xpMergeRadius.set(value);
+            case 1 -> FeatureConfig.ITEM_MERGE_RADIUS.set(value);
+            case 2 -> FeatureConfig.XP_MERGE_RADIUS.set(value);
             case 3 -> TickUtils.setModifier(BigDecimal.valueOf(value));
         }
 
@@ -85,7 +88,7 @@ public final class SettingCommand {
     }
 
     private static int save(CommandContext<ServerCommandSource> context) {
-        Config.save(true);
+        Config.save();
         context.getSource().sendFeedback(new LiteralText("Config saved!").formatted(Formatting.GREEN), false);
         return Command.SINGLE_SUCCESS;
     }

@@ -9,7 +9,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.world.SpawnDensityCapper;
-import org.provim.servercore.config.Config;
+import org.provim.servercore.config.tables.CommandConfig;
 import org.provim.servercore.mixin.accessor.SpawnHelperInfoAccessor;
 import org.provim.servercore.utils.PermissionUtils;
 import org.provim.servercore.utils.TickUtils;
@@ -22,7 +22,7 @@ public final class InfoCommand {
     }
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        if (Config.COMMAND_CONFIG.commandMobcaps.get()) {
+        if (CommandConfig.COMMAND_MOBCAPS.get()) {
             dispatcher.register(literal("mobcaps").executes(InfoCommand::mobcaps));
         }
 
@@ -33,13 +33,13 @@ public final class InfoCommand {
 
     private static int mobcaps(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().getPlayer();
-        LiteralText text = new LiteralText(String.format(Config.COMMAND_CONFIG.mobcapTitle.get(), TickUtils.getModifier()));
+        LiteralText text = new LiteralText(String.format(CommandConfig.MOBCAP_TITLE.get(), TickUtils.getModifier()));
 
         SpawnHelperInfoAccessor info = (SpawnHelperInfoAccessor) player.getWorld().getChunkManager().getSpawnInfo();
         if (info != null) {
             SpawnDensityCapper.DensityCap densityCap = info.getDensityCapper().playersToDensityCap.computeIfAbsent(player, p -> new SpawnDensityCapper.DensityCap());
             for (SpawnGroup group : SpawnGroup.values()) {
-                text.append("\n").append(new LiteralText(String.format(Config.COMMAND_CONFIG.mobcapSpawnGroup.get(), group.getName(), densityCap.spawnGroupsToDensity.getOrDefault(group, 0), group.getCapacity())));
+                text.append("\n").append(new LiteralText(String.format(CommandConfig.MOBCAP_SPAWN_GROUP.get(), group.getName(), densityCap.spawnGroupsToDensity.getOrDefault(group, 0), group.getCapacity())));
             }
         }
 

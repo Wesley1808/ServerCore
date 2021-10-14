@@ -3,7 +3,7 @@ package org.provim.servercore.mixin.performance.mob_spawning;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.world.GameRules;
-import org.provim.servercore.config.Config;
+import org.provim.servercore.config.tables.FeatureConfig;
 import org.provim.servercore.interfaces.IThreadedAnvilChunkStorage;
 import org.provim.servercore.utils.data.PlayerMobDistanceMap;
 import org.spongepowered.asm.mixin.Final;
@@ -22,7 +22,7 @@ public abstract class ThreadedAnvilChunkStorageMixin implements IThreadedAnvilCh
 
     @Inject(method = "save(Z)V", at = @At("TAIL"))
     private void resetDistanceMap(boolean flush, CallbackInfo ci) {
-        if (Config.FEATURE_CONFIG.useDistanceMap.get() && this.world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)) {
+        if (FeatureConfig.USE_DISTANCE_MAP.get() && this.world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)) {
             // Resets the PlayerMobDistanceMap whenever the worlds save.
             // The PlayerMobDistanceMap may rarely fail to remove a player object from the HashSet.
             // This causes areas affected by this to be unable to spawn any mobs.

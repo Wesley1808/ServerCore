@@ -15,8 +15,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 import org.provim.servercore.ServerCore;
-import org.provim.servercore.config.Config;
-import org.provim.servercore.config.DynamicConfig;
+import org.provim.servercore.config.tables.DynamicConfig;
+import org.provim.servercore.config.tables.EntityConfig;
 
 import java.math.BigDecimal;
 
@@ -25,7 +25,7 @@ public final class TickUtils {
     private static int viewDistance = ServerCore.getServer().getPlayerManager().getViewDistance();
     private static int simulationDistance = viewDistance;
     private static int chunkTickDistance = viewDistance;
-    private static BigDecimal mobcapModifier = new BigDecimal(String.valueOf(Config.DYNAMIC_CONFIG.maxMobcap.get()));
+    private static BigDecimal mobcapModifier = new BigDecimal(String.valueOf(DynamicConfig.MAX_MOBCAP.get()));
 
     private TickUtils() {
     }
@@ -37,13 +37,12 @@ public final class TickUtils {
      */
 
     public static void runPerformanceChecks(MinecraftServer server) {
-        final DynamicConfig dynamic = Config.DYNAMIC_CONFIG;
-        if (dynamic.enabled.get()) {
+        if (DynamicConfig.ENABLED.get()) {
             final double mspt = MathHelper.average(server.lastTickLengths) * 1.0E-6D;
-            checkViewDistance(dynamic, mspt);
-            checkSimulationDistance(dynamic, mspt);
-            checkMobcaps(dynamic, mspt);
-            checkChunkTickDistance(dynamic, mspt);
+            checkViewDistance(mspt);
+            checkSimulationDistance(mspt);
+            checkMobcaps(mspt);
+            checkChunkTickDistance(mspt);
         }
     }
 
@@ -51,10 +50,10 @@ public final class TickUtils {
      * Modifies the tick distance based on the MSPT.
      */
 
-    private static void checkChunkTickDistance(DynamicConfig dynamic, double mspt) {
-        if (mspt > 40 && chunkTickDistance > dynamic.minChunkTickDistance.get()) {
+    private static void checkChunkTickDistance(double mspt) {
+        if (mspt > 40 && chunkTickDistance > DynamicConfig.MIN_CHUNK_TICK_DISTANCE.get()) {
             chunkTickDistance--;
-        } else if (mspt < 30 && chunkTickDistance < dynamic.maxChunkTickDistance.get() && mobcapModifier.doubleValue() == dynamic.maxMobcap.get()) {
+        } else if (mspt < 30 && chunkTickDistance < DynamicConfig.MAX_CHUNK_TICK_DISTANCE.get() && mobcapModifier.doubleValue() == DynamicConfig.MAX_MOBCAP.get()) {
             chunkTickDistance++;
         }
     }
@@ -63,10 +62,10 @@ public final class TickUtils {
      * Modifies the mobcaps based on the MSPT.
      */
 
-    private static void checkMobcaps(DynamicConfig dynamic, double mspt) {
-        if (mspt > 45 && mobcapModifier.doubleValue() > dynamic.minMobcap.get() && chunkTickDistance == dynamic.minChunkTickDistance.get()) {
+    private static void checkMobcaps(double mspt) {
+        if (mspt > 45 && mobcapModifier.doubleValue() > DynamicConfig.MIN_MOBCAP.get() && chunkTickDistance == DynamicConfig.MIN_CHUNK_TICK_DISTANCE.get()) {
             mobcapModifier = mobcapModifier.subtract(VALUE);
-        } else if (mspt < 35 && mobcapModifier.doubleValue() < dynamic.maxMobcap.get() && simulationDistance == dynamic.maxSimulationDistance.get()) {
+        } else if (mspt < 35 && mobcapModifier.doubleValue() < DynamicConfig.MAX_MOBCAP.get() && simulationDistance == DynamicConfig.MAX_SIMULATION_DISTANCE.get()) {
             mobcapModifier = mobcapModifier.add(VALUE);
         }
     }
@@ -75,10 +74,10 @@ public final class TickUtils {
      * Modifies the simulation distance based on the MSPT.
      */
 
-    private static void checkSimulationDistance(DynamicConfig dynamic, double mspt) {
-        if (mspt > 45 && simulationDistance > dynamic.maxSimulationDistance.get() && mobcapModifier.doubleValue() == dynamic.minMobcap.get()) {
+    private static void checkSimulationDistance(double mspt) {
+        if (mspt > 45 && simulationDistance > DynamicConfig.MAX_SIMULATION_DISTANCE.get() && mobcapModifier.doubleValue() == DynamicConfig.MIN_MOBCAP.get()) {
             setSimulationDistance(simulationDistance - 1);
-        } else if (mspt < 35 && simulationDistance < dynamic.maxSimulationDistance.get() && viewDistance == dynamic.maxViewDistance.get()) {
+        } else if (mspt < 35 && simulationDistance < DynamicConfig.MAX_SIMULATION_DISTANCE.get() && viewDistance == DynamicConfig.MAX_VIEW_DISTANCE.get()) {
             setSimulationDistance(simulationDistance + 1);
         }
     }
@@ -87,10 +86,10 @@ public final class TickUtils {
      * Modifies the view distance based on the MSPT.
      */
 
-    private static void checkViewDistance(DynamicConfig dynamic, double mspt) {
-        if (mspt > 45 && viewDistance > dynamic.minViewDistance.get() && simulationDistance == dynamic.minSimulationDistance.get()) {
+    private static void checkViewDistance(double mspt) {
+        if (mspt > 45 && viewDistance > DynamicConfig.MIN_VIEW_DISTANCE.get() && simulationDistance == DynamicConfig.MIN_SIMULATION_DISTANCE.get()) {
             setViewDistance(viewDistance - 1);
-        } else if (mspt < 35 && viewDistance < dynamic.maxViewDistance.get()) {
+        } else if (mspt < 35 && viewDistance < DynamicConfig.MAX_VIEW_DISTANCE.get()) {
             setViewDistance(viewDistance + 1);
         }
     }
@@ -164,7 +163,7 @@ public final class TickUtils {
      */
 
     public static boolean checkForEntities(EntityType<?> type, World world, BlockPos pos, int limit, int range) {
-        if (Config.ENTITY_CONFIG.enabled.get()) {
+        if (EntityConfig.ENABLED.get()) {
             return limit <= world.getEntitiesByType(type, new Box(pos.mutableCopy().add(range, range, range), pos.mutableCopy().add(-range, -range, -range)), EntityPredicates.EXCEPT_SPECTATOR).size();
         } else {
             return false;

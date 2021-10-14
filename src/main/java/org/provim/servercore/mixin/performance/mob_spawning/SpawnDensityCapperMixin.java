@@ -1,21 +1,20 @@
 package org.provim.servercore.mixin.performance.mob_spawning;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.SpawnDensityCapper;
-import org.provim.servercore.config.Config;
+import org.provim.servercore.config.tables.FeatureConfig;
 import org.provim.servercore.interfaces.IThreadedAnvilChunkStorage;
-import org.provim.servercore.mixin.accessor.TACSAccessor;
-import org.provim.servercore.utils.Helper;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -27,32 +26,26 @@ public abstract class SpawnDensityCapperMixin {
     @Final
     private ThreadedAnvilChunkStorage threadedAnvilChunkStorage;
 
-    @Shadow
-    @Final
-    private Long2ObjectMap<List<ServerPlayerEntity>> chunkPosToMobSpawnablePlayers;
+    @Unique
+    private boolean useDistanceMap;
 
-    /**
-     * @author Wesley1808
-     * @reason Use PlayerMobDistanceMap instead of Mojang's default implementation.
-     */
-
-    @Overwrite
-    private List<ServerPlayerEntity> getMobSpawnablePlayers(ChunkPos pos) {
-        if (Config.FEATURE_CONFIG.useDistanceMap.get()) {
-            return List.of(); // Return empty list as we won't be using it.
+    @Inject(method = "getMobSpawnablePlayers", at = @At("HEAD"))
+    private void getMobSpawnablePlayers(ChunkPos chunkPos, CallbackInfoReturnable<List<ServerPlayerEntity>> cir) {
+        if (FeatureConfig.USE_DISTANCE_MAP.get()) {
+            cir.setReturnValue(null); // Return nothing as we won't be using it.
+            this.useDistanceMap = true;
+        } else {
+            this.useDistanceMap = false;
         }
-
-        // Optimizes vanilla code by getting rid of stream allocations.
-        return this.chunkPosToMobSpawnablePlayers.computeIfAbsent(pos.toLong(), l -> Helper.getNearbyWatchingPlayers((TACSAccessor) this.threadedAnvilChunkStorage, pos));
     }
 
     @Redirect(method = "canSpawn", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
     private Iterator<ServerPlayerEntity> useDistanceMap$1(List<ServerPlayerEntity> list, SpawnGroup spawnGroup, ChunkPos chunkPos) {
-        return Config.FEATURE_CONFIG.useDistanceMap.get() ? ((IThreadedAnvilChunkStorage) this.threadedAnvilChunkStorage).getDistanceMap().getPlayersInRange(chunkPos).iterator() : list.listIterator();
+        return this.useDistanceMap ? ((IThreadedAnvilChunkStorage) this.threadedAnvilChunkStorage).getDistanceMap().getPlayersInRange(chunkPos).iterator() : list.listIterator();
     }
 
     @Redirect(method = "increaseDensity", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
     private Iterator<ServerPlayerEntity> useDistanceMap$2(List<ServerPlayerEntity> list, ChunkPos chunkPos, SpawnGroup spawnGroup) {
-        return Config.FEATURE_CONFIG.useDistanceMap.get() ? ((IThreadedAnvilChunkStorage) this.threadedAnvilChunkStorage).getDistanceMap().getPlayersInRange(chunkPos).iterator() : list.listIterator();
+        return this.useDistanceMap ? ((IThreadedAnvilChunkStorage) this.threadedAnvilChunkStorage).getDistanceMap().getPlayersInRange(chunkPos).iterator() : list.listIterator();
     }
 }

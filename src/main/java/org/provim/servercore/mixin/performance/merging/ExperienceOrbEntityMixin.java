@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
-import org.provim.servercore.config.Config;
+import org.provim.servercore.config.tables.FeatureConfig;
 import org.provim.servercore.mixin.accessor.ExperienceOrbEntityAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -36,7 +36,7 @@ public abstract class ExperienceOrbEntityMixin extends Entity {
     @Overwrite
     private static boolean isMergeable(ExperienceOrbEntity orb, int seed, int amount) {
         boolean bl = !orb.isRemoved() && (orb.getId() - seed) % 40 == 0;
-        return Config.FEATURE_CONFIG.fastXpMerging.get() ? bl : bl && orb.getExperienceAmount() == amount;
+        return FeatureConfig.FAST_XP_MERGING.get() ? bl : bl && orb.getExperienceAmount() == amount;
     }
 
     /**
@@ -46,7 +46,7 @@ public abstract class ExperienceOrbEntityMixin extends Entity {
 
     @Overwrite
     private void merge(ExperienceOrbEntity other) {
-        if (Config.FEATURE_CONFIG.fastXpMerging.get()) {
+        if (FeatureConfig.FAST_XP_MERGING.get()) {
             this.amount += other.getExperienceAmount();
         } else {
             this.pickingCount += ((ExperienceOrbEntityAccessor) other).getPickingCount();
@@ -61,6 +61,6 @@ public abstract class ExperienceOrbEntityMixin extends Entity {
 
     @Redirect(method = "expensiveUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Box;expand(D)Lnet/minecraft/util/math/Box;"))
     private Box setMergeRadius(Box box, double value) {
-        return box.expand(Config.FEATURE_CONFIG.xpMergeRadius.get());
+        return box.expand(FeatureConfig.XP_MERGE_RADIUS.get());
     }
 }
