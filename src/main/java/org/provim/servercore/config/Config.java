@@ -15,15 +15,15 @@ import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
 public final class Config {
-    private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml");
-    private static final GenericBuilder<CommentedConfig, CommentedFileConfig> BUILDER = CommentedFileConfig.builder(CONFIG_PATH).preserveInsertionOrder().sync();
-
-    private static final Table[] TABLES = {
+    public static final Table[] TABLES = {
             new Table(FeatureConfig.class, "features", " Lets you enable / disable certain features and modify them."),
             new Table(DynamicConfig.class, "dynamic", " Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT."),
             new Table(EntityConfig.class, "entity_limits", " Stops animals / villagers from breeding if there are too many of the same type nearby."),
             new Table(CommandConfig.class, "commands", " Allows you to disable specific commands and modify the way some of them are formatted.")
     };
+
+    private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml");
+    private static final GenericBuilder<CommentedConfig, CommentedFileConfig> BUILDER = CommentedFileConfig.builder(CONFIG_PATH).preserveInsertionOrder().sync();
 
     static {
         // Required to generate the config with the correct order.
@@ -64,7 +64,7 @@ public final class Config {
 
     private static void loadEntries(CommentedConfig config, Class<?> clazz) {
         try {
-            Config.forEachEntry(clazz, (key, entry) -> entry.set(config.getOrElse(key, entry.getDefault())));
+            Config.forEachEntry(clazz, (field, entry) -> entry.set(config.getOrElse(field.getName().toLowerCase(), entry.getDefault())));
         } catch (Exception ex) {
             ServerCore.getLogger().error("[ServerCore] Exception was thrown whilst loading configs!", ex);
         }
@@ -73,7 +73,8 @@ public final class Config {
     private static void saveEntries(CommentedConfig config, Class<?> clazz) {
         try {
             config.clear();
-            Config.forEachEntry(clazz, (key, entry) -> {
+            Config.forEachEntry(clazz, (field, entry) -> {
+                final String key = field.getName().toLowerCase();
                 config.set(key, entry.get());
                 config.setComment(key, entry.getComment());
             });
@@ -83,14 +84,14 @@ public final class Config {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> void forEachEntry(Class<?> clazz, BiConsumer<String, ConfigEntry<T>> consumer) throws IllegalAccessException {
+    public static <T> void forEachEntry(Class<?> clazz, BiConsumer<Field, ConfigEntry<T>> consumer) throws IllegalAccessException {
         for (Field field : clazz.getFields()) {
             if (field.get(clazz) instanceof ConfigEntry entry) {
-                consumer.accept(field.getName().toLowerCase(), entry);
+                consumer.accept(field, entry);
             }
         }
     }
 
-    private static record Table(Class<?> clazz, String key, String comment) {
+    public static record Table(Class<?> clazz, String key, String comment) {
     }
 }

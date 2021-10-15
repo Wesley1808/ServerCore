@@ -44,8 +44,19 @@ public final class ConfigEntry<T> {
         return this.defaultValue;
     }
 
-    public void set(T value) {
-        this.value = this.validate(value) ? value : this.getFallbackValue();
+    public Class<?> getType() {
+        return this.defaultValue.getClass();
+    }
+
+
+    public boolean set(T value) {
+        if (this.validate(value)) {
+            this.value = value;
+            return true;
+        } else {
+            this.value = this.getFallbackValue();
+            return false;
+        }
     }
 
     private boolean validate(T value) {

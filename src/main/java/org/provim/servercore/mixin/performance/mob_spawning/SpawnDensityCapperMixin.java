@@ -34,11 +34,15 @@ public abstract class SpawnDensityCapperMixin {
 
     @Redirect(method = "canSpawn", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
     private Iterator<ServerPlayerEntity> useDistanceMap$1(List<ServerPlayerEntity> list, SpawnGroup spawnGroup, ChunkPos chunkPos) {
-        return FeatureConfig.USE_DISTANCE_MAP.get() ? ((IThreadedAnvilChunkStorage) this.threadedAnvilChunkStorage).getDistanceMap().getPlayersInRange(chunkPos).iterator() : list.listIterator();
+        return this.getPlayerIterator(list, chunkPos);
     }
 
     @Redirect(method = "increaseDensity", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
     private Iterator<ServerPlayerEntity> useDistanceMap$2(List<ServerPlayerEntity> list, ChunkPos chunkPos, SpawnGroup spawnGroup) {
-        return FeatureConfig.USE_DISTANCE_MAP.get() ? ((IThreadedAnvilChunkStorage) this.threadedAnvilChunkStorage).getDistanceMap().getPlayersInRange(chunkPos).iterator() : list.listIterator();
+        return this.getPlayerIterator(list, chunkPos);
+    }
+
+    private Iterator<ServerPlayerEntity> getPlayerIterator(List<ServerPlayerEntity> list, ChunkPos chunkPos) {
+        return list == null ? ((IThreadedAnvilChunkStorage) this.threadedAnvilChunkStorage).getDistanceMap().getPlayersInRange(chunkPos).iterator() : list.listIterator();
     }
 }
