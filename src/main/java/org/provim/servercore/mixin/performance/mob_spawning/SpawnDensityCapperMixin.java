@@ -25,7 +25,7 @@ public abstract class SpawnDensityCapperMixin {
     @Final
     private ThreadedAnvilChunkStorage threadedAnvilChunkStorage;
 
-    @Inject(method = "getMobSpawnablePlayers", at = @At("HEAD"))
+    @Inject(method = "getMobSpawnablePlayers", at = @At("HEAD"), cancellable = true)
     private void getMobSpawnablePlayers(ChunkPos chunkPos, CallbackInfoReturnable<List<ServerPlayerEntity>> cir) {
         if (FeatureConfig.USE_DISTANCE_MAP.get()) {
             cir.setReturnValue(null); // Return nothing as we won't be using it.

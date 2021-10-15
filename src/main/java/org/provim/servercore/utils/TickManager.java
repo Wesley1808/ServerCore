@@ -2,6 +2,7 @@ package org.provim.servercore.utils;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -118,6 +119,10 @@ public final class TickManager {
 
     public static void setModifier(BigDecimal modifier) {
         mobcapModifier = modifier;
+    }
+
+    public static int getMobcap(SpawnGroup group) {
+        return (int) (group.getCapacity() * mobcapModifier.doubleValue());
     }
 
     public static int getChunkTickDistance() {

@@ -39,7 +39,7 @@ public final class InfoCommand {
         if (info != null) {
             SpawnDensityCapper.DensityCap densityCap = info.getDensityCapper().playersToDensityCap.computeIfAbsent(player, p -> new SpawnDensityCapper.DensityCap());
             for (SpawnGroup group : SpawnGroup.values()) {
-                text.append("\n").append(new LiteralText(String.format(CommandConfig.MOBCAP_SPAWN_GROUP.get(), group.getName(), densityCap.spawnGroupsToDensity.getOrDefault(group, 0), group.getCapacity())));
+                text.append("\n").append(new LiteralText(String.format(CommandConfig.MOBCAP_SPAWN_GROUP.get(), group.getName(), densityCap.spawnGroupsToDensity.getOrDefault(group, 0), TickManager.getMobcap(group))));
             }
         }
 
