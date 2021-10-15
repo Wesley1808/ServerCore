@@ -24,7 +24,6 @@
     "performance.mob_spawning.ServerPlayerEntityMixin",
     "performance.mob_spawning.SpawnDensityCapperMixin",
     "performance.mob_spawning.DensityCapMixin",
-    "performance.mob_spawning.SpawnGroupMixin",
     "performance.mob_spawning.SpawnHelperMixin",
     "performance.mob_spawning.ThreadedAnvilChunkStorageMixin",
     "performance.player_login.PlayerAdvancementTrackerMixin",
