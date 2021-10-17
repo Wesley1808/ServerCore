@@ -152,7 +152,7 @@ public final class SettingCommand {
     private static Type getTypeFor(String key, ConfigEntry entry) {
         return switch (entry.getType().getSimpleName()) {
             case "Boolean" -> new Type(bool(), ctx -> modifyBoolean(key, entry, getBool(ctx, VALUE), ctx.getSource()));
-            case "Integer" -> new Type(longArg(), ctx -> modifyInt(key, entry, (int) getLong(ctx, VALUE), ctx.getSource()));
+            case "Integer" -> new Type(longArg(Integer.MIN_VALUE, Integer.MAX_VALUE), ctx -> modifyInt(key, entry, (int) getLong(ctx, VALUE), ctx.getSource()));
             case "Double" -> new Type(doubleArg(), ctx -> modifyDouble(key, entry, getDouble(ctx, VALUE), ctx.getSource()));
             case "String" -> new Type(greedyString(), ctx -> modifyString(key, entry, getString(ctx, VALUE), ctx.getSource()));
             default -> throw new IllegalStateException("Unsupported type: " + entry.getType().getSimpleName());
