@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.map.MapState;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import org.provim.servercore.utils.data.EmptyPlayerInventory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,14 +20,12 @@ public abstract class MapStateMixin {
     /**
      * Cancels inventory iteration from Maps in Item Frames to save performance.
      *
-     * @param playerInventory: The inventory from a PlayerEntity
-     * @param stack:           The ItemStack its looking for
      * @return Boolean: whether moving player icons should be tracked by item frames.
      */
 
-    @Redirect(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;contains(Lnet/minecraft/item/ItemStack;)Z"))
-    private boolean stopInvIteration(PlayerInventory playerInventory, ItemStack stack) {
-        return !stack.isInFrame() && playerInventory.contains(stack);
+    @Redirect(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getInventory()Lnet/minecraft/entity/player/PlayerInventory;"))
+    private PlayerInventory stopInvIteration(PlayerEntity instance, PlayerEntity player, ItemStack stack) {
+        return stack.isInFrame() ? EmptyPlayerInventory.getOrCreate(instance) : instance.getInventory();
     }
 
     // Fixes potential bugs with blinking (moving) player icons on player held maps.
