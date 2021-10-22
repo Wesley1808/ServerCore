@@ -41,7 +41,6 @@ public final class SettingCommand {
         registerConfigs(builder);
         registerSettings(builder);
 
-
         builder.then(literal("reload").executes(SettingCommand::reload));
         builder.then(literal("save").executes(SettingCommand::save));
         dispatcher.register(builder);
@@ -54,9 +53,11 @@ public final class SettingCommand {
                 Config.forEachEntry(table.clazz(), (field, entry) -> {
                     final String key = field.getName().toLowerCase();
                     final Type type = getTypeFor(key, entry);
-                    child.then(literal(key).then(argument(VALUE, type.argumentType)
-                            .executes(type.function::apply)
-                            .suggests((ctx, suggestionsBuilder) -> suggestionsBuilder.suggest(getSuggestion(entry.get())).buildFuture()))
+                    child.then(literal(key)
+                            .executes(ctx -> sendInfo(ctx.getSource(), key, entry))
+                            .then(argument(VALUE, type.argumentType)
+                                    .executes(type.function::apply)
+                                    .suggests((ctx, suggestionsBuilder) -> suggestionsBuilder.suggest(asString(entry.get())).suggest(asString(entry.getDefault())).buildFuture()))
                     );
                 });
             } catch (Exception ex) {
@@ -76,9 +77,24 @@ public final class SettingCommand {
         builder.then(settings);
     }
 
+    private static <T> int sendInfo(ServerCommandSource source, String key, ConfigEntry<T> entry) {
+        final StringBuilder builder = new StringBuilder("§7");
+        if (entry.getComment() != null) {
+            builder.append(entry.getComment());
+        } else {
+            builder.append(key);
+        }
+
+        builder.append("\n§3Current value: §a").append(asString(entry.get()));
+        builder.append("\n§3Default value: §a").append(asString(entry.getDefault()));
+        builder.append("\n§3Type: §a").append(entry.getType().getSimpleName());
+        source.sendFeedback(new LiteralText(builder.toString()), false);
+        return Command.SINGLE_SUCCESS;
+    }
+
     private static int modifyBoolean(String key, ConfigEntry<Boolean> entry, boolean value, ServerCommandSource source) {
         if (entry.set(value)) {
-            source.sendFeedback(new LiteralText(String.format("%s has been set to %b", key, value)), false);
+            source.sendFeedback(new LiteralText(String.format("§a%s §3has been set to §a%b", key, value)), false);
         } else {
             source.sendError(new LiteralText(String.format("%s cannot be set to %b!", key, value)));
         }
@@ -88,7 +104,7 @@ public final class SettingCommand {
 
     private static int modifyInt(String key, ConfigEntry<Integer> entry, int value, ServerCommandSource source) {
         if (entry.set(value)) {
-            source.sendFeedback(new LiteralText(String.format("%s has been set to %d", key, value)), false);
+            source.sendFeedback(new LiteralText(String.format("§a%s §3has been set to §a%d", key, value)), false);
         } else {
             source.sendError(new LiteralText(String.format("%s cannot be set to %d!", key, value)));
         }
@@ -98,7 +114,7 @@ public final class SettingCommand {
 
     private static int modifyDouble(String key, ConfigEntry<Double> entry, double value, ServerCommandSource source) {
         if (entry.set(value)) {
-            source.sendFeedback(new LiteralText(String.format("%s has been set to %.1f", key, value)), false);
+            source.sendFeedback(new LiteralText(String.format("§a%s §3has been set to §a%.1f", key, value)), false);
         } else {
             source.sendError(new LiteralText(String.format("%s cannot be set to %.1f!", key, value)));
         }
@@ -109,7 +125,7 @@ public final class SettingCommand {
     private static int modifyString(String key, ConfigEntry<String> entry, String value, ServerCommandSource source) {
         value = formatString(value);
         if (entry.set(value)) {
-            source.sendFeedback(new LiteralText(String.format("%s has been set to %s", key, value)), false);
+            source.sendFeedback(new LiteralText(String.format("§a%s §3has been set to §a%s", key, value)), false);
         } else {
             source.sendError(new LiteralText(String.format("%s cannot be set to %s!", key, value)));
         }
@@ -124,7 +140,7 @@ public final class SettingCommand {
             case 3 -> TickManager.setSimulationDistance(value);
         }
 
-        source.sendFeedback(new LiteralText(String.format("%s been set to %d", message, value)), false);
+        source.sendFeedback(new LiteralText(String.format("§a%s §3been set to §a%d", message, value)), false);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -133,7 +149,7 @@ public final class SettingCommand {
             case 1 -> TickManager.setModifier(BigDecimal.valueOf(value));
         }
 
-        source.sendFeedback(new LiteralText(String.format("%s been set to %.1f", message, value)), false);
+        source.sendFeedback(new LiteralText(String.format("§a%s §3been set to §a%.1f", message, value)), false);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -159,7 +175,7 @@ public final class SettingCommand {
         };
     }
 
-    private static String getSuggestion(Object obj) {
+    private static String asString(Object obj) {
         if (obj instanceof String string) {
             return string.replace("§", "&");
         }

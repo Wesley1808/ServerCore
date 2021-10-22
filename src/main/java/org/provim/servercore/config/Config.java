@@ -16,10 +16,10 @@ import java.util.function.BiConsumer;
 
 public final class Config {
     public static final Table[] TABLES = {
-            new Table(FeatureConfig.class, "features", " Lets you enable / disable certain features and modify them."),
-            new Table(DynamicConfig.class, "dynamic", " Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT."),
-            new Table(EntityConfig.class, "entity_limits", " Stops animals / villagers from breeding if there are too many of the same type nearby."),
-            new Table(CommandConfig.class, "commands", " Allows you to disable specific commands and modify the way some of them are formatted.")
+            new Table(FeatureConfig.class, "features", "Lets you enable / disable certain features and modify them."),
+            new Table(DynamicConfig.class, "dynamic", "Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT."),
+            new Table(EntityConfig.class, "entity_limits", "Stops animals / villagers from breeding if there are too many of the same type nearby."),
+            new Table(CommandConfig.class, "commands", "Allows you to disable specific commands and modify the way some of them are formatted.")
     };
 
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml");
@@ -48,7 +48,7 @@ public final class Config {
         for (Table table : TABLES) {
             Config.validate(table, config);
             Config.saveEntries(config.get(table.key), table.clazz);
-            config.setComment(table.key, table.comment);
+            config.setComment(table.key, " " + table.comment);
         }
 
         config.save();
@@ -75,8 +75,11 @@ public final class Config {
             config.clear();
             Config.forEachEntry(clazz, (field, entry) -> {
                 final String key = field.getName().toLowerCase();
+                final String comment = entry.getComment();
                 config.set(key, entry.get());
-                config.setComment(key, entry.getComment());
+                if (comment != null) {
+                    config.setComment(key, " " + comment);
+                }
             });
         } catch (Exception ex) {
             ServerCore.getLogger().error("[ServerCore] Exception was thrown whilst saving configs!", ex);

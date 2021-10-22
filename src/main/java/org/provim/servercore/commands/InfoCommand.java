@@ -27,19 +27,24 @@ public final class InfoCommand {
         }
 
         dispatcher.register(literal("sc").requires(src -> PermissionUtils.perm(src, PermissionUtils.COMMAND_INFO, 2))
-                .then(literal("tps").executes(InfoCommand::performanceReport))
+                .then(literal("status").executes(InfoCommand::status))
         );
     }
 
     private static int mobcaps(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().getPlayer();
-        LiteralText text = new LiteralText(String.format(CommandConfig.MOBCAP_TITLE.get(), TickManager.getModifier()));
+        LiteralText text = new LiteralText(CommandConfig.MOBCAP_TITLE.get().replace("%MODIFIER%", TickManager.getModifierAsString()));
 
         SpawnHelperInfoAccessor info = (SpawnHelperInfoAccessor) player.getWorld().getChunkManager().getSpawnInfo();
         if (info != null) {
             SpawnDensityCapper.DensityCap densityCap = info.getDensityCapper().playersToDensityCap.computeIfAbsent(player, p -> new SpawnDensityCapper.DensityCap());
             for (SpawnGroup group : SpawnGroup.values()) {
-                text.append("\n").append(new LiteralText(String.format(CommandConfig.MOBCAP_SPAWN_GROUP.get(), group.getName(), densityCap.spawnGroupsToDensity.getOrDefault(group, 0), TickManager.getMobcap(group))));
+                String message = CommandConfig.MOBCAP_SPAWN_GROUP.get()
+                        .replace("%NAME%", group.getName())
+                        .replace("%CURRENT%", String.valueOf(densityCap.spawnGroupsToDensity.getOrDefault(group, 0)))
+                        .replace("%CAPACITY%", String.valueOf(TickManager.getMobcap(group)));
+
+                text.append("\n").append(new LiteralText(message));
             }
         }
 
@@ -47,8 +52,8 @@ public final class InfoCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int performanceReport(CommandContext<ServerCommandSource> context) {
-        context.getSource().sendFeedback(TickManager.createPerformanceReport(), false);
+    private static int status(CommandContext<ServerCommandSource> context) {
+        context.getSource().sendFeedback(TickManager.createStatusReport(), false);
         return Command.SINGLE_SUCCESS;
     }
 }
