@@ -5,10 +5,8 @@ import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.PlayerAdvancementTracker;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
 import java.util.Set;
@@ -43,10 +41,14 @@ public abstract class PlayerAdvancementTrackerMixin {
     @Shadow
     protected abstract boolean canSee(Advancement advancement);
 
-    @Inject(method = "updateDisplay", at = @At("HEAD"), cancellable = true)
-    private void updateDisplay(Advancement advancement, CallbackInfo ci) {
+    /**
+     * @author Wyatt Childers
+     * @reason Optimize the advancement data player iteration to be O(N) rather than O(N^2)
+     */
+
+    @Overwrite
+    private void updateDisplay(Advancement advancement) {
         this.updateDisplay(advancement, ROOT);
-        ci.cancel();
     }
 
     private void updateDisplay(Advancement advancement, int entryPoint) {

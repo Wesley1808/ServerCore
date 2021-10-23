@@ -5,10 +5,7 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.file.GenericBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import org.provim.servercore.ServerCore;
-import org.provim.servercore.config.tables.CommandConfig;
-import org.provim.servercore.config.tables.DynamicConfig;
-import org.provim.servercore.config.tables.EntityConfig;
-import org.provim.servercore.config.tables.FeatureConfig;
+import org.provim.servercore.config.tables.*;
 
 import java.lang.reflect.Field;
 import java.nio.file.Path;
@@ -19,7 +16,8 @@ public final class Config {
             new Table(FeatureConfig.class, "features", "Lets you enable / disable certain features and modify them."),
             new Table(DynamicConfig.class, "dynamic", "Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT."),
             new Table(EntityConfig.class, "entity_limits", "Stops animals / villagers from breeding if there are too many of the same type nearby."),
-            new Table(CommandConfig.class, "commands", "Allows you to disable specific commands and modify the way some of them are formatted.")
+            new Table(CommandConfig.class, "commands", "Allows you to disable specific commands and modify the way some of them are formatted."),
+            new Table(ActivationRangeConfig.class, "activation_range", "Stops entities from ticking if they are too far away.")
     };
 
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml");

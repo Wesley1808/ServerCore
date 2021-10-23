@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.chunk.WorldChunk;
 import org.provim.servercore.ServerCore;
 import org.provim.servercore.utils.TickManager;
 import org.spongepowered.asm.mixin.Final;
@@ -69,20 +68,19 @@ public abstract class ServerChunkManagerMixin {
     private void updateActiveChunks(Iterable<ChunkHolder> holders) {
         // Updates active chunks once a second.
         if (ServerCore.getServer().getTicks() % 20 == 0) {
+            // Clear cached chunks
+            this.active.clear();
             // Add active chunks
             for (ChunkHolder holder : holders) {
-                final WorldChunk chunk = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null);
-                if (chunk != null) {
+                holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().ifPresent(chunk -> {
                     if (TickManager.shouldTickChunk(holder.getPos(), this.world)) {
                         this.active.add(new ServerChunkManager.ChunkWithHolder(chunk, holder));
                     } else {
                         // Sends clients block updates from inactive chunks.
                         holder.flushUpdates(chunk);
                     }
-                }
+                });
             }
-            // Remove inactive chunks
-            this.active.removeIf(pair -> pair.holder().getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickManager.shouldTickChunk(pair.holder().getPos(), this.world));
         }
     }
 }

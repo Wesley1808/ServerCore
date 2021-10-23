@@ -27,6 +27,6 @@ public abstract class ServerPlayerEntityMixin implements IServerPlayerEntity {
 
     @Override
     public PooledHashSets.PooledObjectLinkedOpenHashSet<ServerPlayerEntity> getCachedSingleMobDistanceMap() {
-        return cachedSingleMobDistanceMap;
+        return this.cachedSingleMobDistanceMap;
     }
 }

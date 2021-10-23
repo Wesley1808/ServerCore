@@ -1,5 +1,7 @@
 package org.provim.servercore.config;
 
+import org.provim.servercore.ServerCore;
+
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -54,7 +56,7 @@ public final class ConfigEntry<T> {
         final T oldValue = this.value;
         final boolean modified = this.modify(value);
 
-        if (this.onChanged != null && oldValue != this.value) {
+        if (this.onChanged != null && oldValue != this.value && ServerCore.getServer() != null) {
             this.onChanged.accept(this.value);
         }
 

@@ -11,9 +11,13 @@ import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.provim.servercore.config.tables.ActivationRangeConfig;
 import org.provim.servercore.config.tables.FeatureConfig;
+import org.provim.servercore.interfaces.InactiveEntity;
 import org.provim.servercore.utils.ChunkManager;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
@@ -22,15 +26,20 @@ import org.spongepowered.asm.mixin.injection.Redirect;
  */
 
 @Mixin(VillagerEntity.class)
-public abstract class VillagerEntityMixin extends MerchantEntity {
+public abstract class VillagerEntityMixin extends MerchantEntity implements InactiveEntity {
+    @Unique
     private boolean lobotomized = false;
 
     protected VillagerEntityMixin(EntityType<? extends MerchantEntity> entityType, World world) {
         super(entityType, world);
     }
 
+    @Shadow
+    @Override
+    protected abstract void mobTick();
+
     @Redirect(method = "mobTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/brain/Brain;tick(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)V"))
-    private void lobotomizeTrappedVillagers(Brain<VillagerEntity> brain, ServerWorld world, LivingEntity entity) {
+    private void tickBrain(Brain<VillagerEntity> brain, ServerWorld world, LivingEntity entity) {
         VillagerEntity villager = (VillagerEntity) (Object) this;
         if (FeatureConfig.LOBOTOMIZE_VILLAGERS.get() && isLobotomized()) {
             if (this.age % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0) {
@@ -62,5 +71,24 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 
         Path path = this.getNavigation().findPathTo(pos, 0);
         return path != null && path.reachesTarget();
+    }
+
+    @Override
+    public void inactiveTick() {
+        if (this.getHeadRollingTimeLeft() > 0) {
+            this.setHeadRollingTimeLeft(this.getHeadRollingTimeLeft() - 1);
+        }
+
+        if (ActivationRangeConfig.VILLAGER_TICK_ALWAYS.get()) {
+            this.mobTick();
+        }
+
+        ++this.despawnCounter;
+        int i = this.getBreedingAge();
+        if (i < 0) {
+            this.setBreedingAge(i + 1);
+        } else if (i > 0) {
+            this.setBreedingAge(i - 1);
+        }
     }
 }
