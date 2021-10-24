@@ -76,7 +76,7 @@ public final class Config {
                 final String comment = entry.getComment();
                 config.set(key, entry.get());
                 if (comment != null) {
-                    config.setComment(key, " " + comment);
+                    config.setComment(key, " " + comment.replace("\n", "\n "));
                 }
             });
         } catch (Exception ex) {

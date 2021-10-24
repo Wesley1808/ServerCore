@@ -1,4 +1,4 @@
-package org.provim.servercore.utils;
+package org.provim.servercore.utils.activation_range;
 
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Activity;

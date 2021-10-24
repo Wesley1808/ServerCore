@@ -6,7 +6,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import org.provim.servercore.config.tables.ActivationRangeConfig;
 import org.provim.servercore.interfaces.InactiveEntity;
-import org.provim.servercore.utils.EntityActivationRange;
+import org.provim.servercore.utils.activation_range.EntityActivationRange;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

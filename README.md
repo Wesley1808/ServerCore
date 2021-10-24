@@ -26,19 +26,19 @@ The config file can be found at `<server_dir>/config/servercore.toml`
 ```toml
 # Lets you enable / disable certain features and modify them.
 [features]
-    # (Default = false) Stops the server from loading spawn chunks.
-    disable_spawn_chunks = false
+    # (Default = true) Stops the server from loading spawn chunks.
+    disable_spawn_chunks = true
+    # (Default = true) Optimizes vanilla's per-player mobspawning by using PaperMC's PlayerMobDistanceMap.
+    use_distance_map = true
     # (Default = false) Allows xp orbs to merge with others that have different experience amounts.
     # This will also allow players to pickup xp much faster.
     fast_xp_merging = false
-    # (Default = false) Optimizes vanilla's per-player mobspawning by using PaperMC's PlayerMobDistanceMap.
-    use_distance_map = false
     # (Default = false) Makes villagers tick less often if they are stuck in a 1x1 space.
     lobotomize_villagers = false
     # (Default = 20) Decides the interval in between villager ticks when lobotomized.
     lobotomized_tick_interval = 20
     # (Default = 5) The amount of minutes in between auto-save intervals when /save-on is active.
-    autosave_interval_minutes = 5
+    auto_save_interval = 5
     # (Default = 0.5) Decides the radius in blocks that items / xp will merge at.
     item_merge_radius = 0.5
     xp_merge_radius = 0.5
@@ -47,6 +47,8 @@ The config file can be found at `<server_dir>/config/servercore.toml`
 [dynamic]
     # (Default = false) Enables this feature.
     enabled = false
+    # (Default = 40) The average MSPT to target.
+    target_mspt = 40
     # (Default = [Max: 10, Min: 2]) Distance in which random ticks and mobspawning can happen.
     max_chunk_tick_distance = 10
     min_chunk_tick_distance = 2
@@ -76,11 +78,67 @@ The config file can be found at `<server_dir>/config/servercore.toml`
     # Enables / disables the /mobcaps command.
     command_mobcaps = true
     # The title for the /mobcaps command.
-    # Arguments: The current global mobcap modifier (%.1f).
-    mobcap_title = "§3Per Player Mobcaps (§a%.1f§3)"
+    mobcap_title = "§3Per Player Mobcaps (§a%MODIFIER%§3)"
     # The content for the /mobcaps command. This is displayed for every existing spawngroup.
-    # Arguments: The name of the spawngroup, the current mobcount near the player and the total capacity.
-    mobcap_spawngroup = "§8- §3%s: §a%d §8/ §a%d"
+    mobcap_spawn_group = "§8- §3%NAME%: §a%CURRENT% §8/ §a%CAPACITY%"
+
+# Stops entities from ticking if they are too far away.
+[activation_range]
+    # (Default = false) Enables this feature.
+    enabled = false
+    # (Default = false) Enables vertical range checks. By default, activation ranges only work horizontally.
+    # This can greatly improve performance on taller worlds, but might break a few very specific ai-based mobfarms.
+    use_vertical_range = false
+    # (Default = false) Allows villagers to tick regardless of the activation range.
+    villager_tick_always = false
+    # (Default = true) Allows villagers to tick regardless of the activation range when panicking.
+    villager_tick_panic = true
+    # (Default = 20) The time in seconds that a villager needs to be inactive for before obtaining work immunity (if it has work tasks).
+    villager_work_immunity_after = 20
+    # (Default = 20) The amount of ticks an inactive villager will wake up for when it has work immunity.
+    villager_work_immunity_for = 20
+    # 
+    # The settings below will only take effect after a restart!
+    # Activation Range = The range an entity is required to be in from a player to tick.
+    # Tick Inactive = if an entity is allowed to tick once per second whilst inactive.
+    # Wakeup Interval = The interval between inactive entity wake ups in seconds.
+    # 
+    # Activation range settings for villagers.
+    villager_activation_range = 16
+    villager_tick_inactive = false
+    villager_wakeup_interval = 30
+    # Activation range settings for monsters.
+    monster_activation_range = 32
+    monster_tick_inactive = true
+    monster_wakeup_interval = 20
+    # Activation range settings for animals.
+    animal_activation_range = 16
+    animal_tick_inactive = false
+    animal_wakeup_interval = 60
+    # Activation range settings for neutral mobs.
+    neutral_activation_range = 24
+    neutral_tick_inactive = false
+    neutral_wakeup_interval = 30
+    # Activation range settings for water mobs.
+    water_activation_range = 16
+    water_tick_inactive = false
+    water_wakeup_interval = 60
+    # Activation range settings for zombies.
+    zombie_activation_range = 16
+    zombie_tick_inactive = true
+    zombie_wakeup_interval = 60
+    # Activation range settings for flying mobs.
+    flying_activation_range = 32
+    flying_tick_inactive = true
+    flying_wakeup_interval = 10
+    # Activation range settings for raider mobs.
+    raider_activation_range = 48
+    raider_tick_inactive = true
+    raider_wakeup_interval = 20
+    # Activation range settings for miscellaneous entities.
+    misc_activation_range = 16
+    misc_tick_inactive = false
+    misc_wakeup_interval = 60
 ```
 
 # Setup
