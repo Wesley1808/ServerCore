@@ -70,10 +70,10 @@ public final class SettingCommand {
 
     private static void registerSettings(LiteralArgumentBuilder<ServerCommandSource> builder) {
         final LiteralArgumentBuilder<ServerCommandSource> settings = literal("settings");
-        settings.then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 32)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 1, "Chunk-tick distance has"))));
-        settings.then(literal("view_distance").then(argument(VALUE, integer(2, 32)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 2, "View distance has"))));
-        settings.then(literal("simulation_distance").then(argument(VALUE, integer(2, 32)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 3, "Simulation distance has"))));
-        settings.then(literal("mobcaps").then(argument(VALUE, doubleArg(0.1, 10.0)).executes(ctx -> modifyDouble(ctx.getSource(), getDouble(ctx, VALUE), 1, "Mobcaps have"))));
+        settings.then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 32)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 1, "Chunk-tick distance"))));
+        settings.then(literal("view_distance").then(argument(VALUE, integer(2, 32)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 2, "View distance"))));
+        settings.then(literal("simulation_distance").then(argument(VALUE, integer(2, 32)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 3, "Simulation distance"))));
+        settings.then(literal("mobcaps").then(argument(VALUE, doubleArg(0.1, 10.0)).executes(ctx -> modifyDouble(ctx.getSource(), getDouble(ctx, VALUE), 1, "Mobcap multiplier"))));
         builder.then(settings);
     }
 
@@ -133,23 +133,23 @@ public final class SettingCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int modifyInt(ServerCommandSource source, int value, int id, String message) {
+    private static int modifyInt(ServerCommandSource source, int value, int id, String setting) {
         switch (id) {
             case 1 -> TickManager.setChunkTickDistance(value);
             case 2 -> TickManager.setViewDistance(value);
             case 3 -> TickManager.setSimulationDistance(value);
         }
 
-        source.sendFeedback(new LiteralText(String.format("§a%s §3been set to §a%d", message, value)), false);
+        source.sendFeedback(new LiteralText(String.format("§a%s §3has been set to §a%d", setting, value)), false);
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int modifyDouble(ServerCommandSource source, double value, int id, String message) {
+    private static int modifyDouble(ServerCommandSource source, double value, int id, String setting) {
         switch (id) {
             case 1 -> TickManager.setModifier(BigDecimal.valueOf(value));
         }
 
-        source.sendFeedback(new LiteralText(String.format("§a%s §3been set to §a%.1f", message, value)), false);
+        source.sendFeedback(new LiteralText(String.format("§a%s §3has been set to §a%.1f", setting, value)), false);
         return Command.SINGLE_SUCCESS;
     }
 
