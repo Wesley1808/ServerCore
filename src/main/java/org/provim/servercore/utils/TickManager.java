@@ -71,7 +71,7 @@ public final class TickManager {
 
     // Modifies simulation distance
     private static void checkSimulationDistance(double mspt, double upperBound, double lowerBound) {
-        if (mspt > upperBound && simulationDistance > DynamicConfig.MAX_SIMULATION_DISTANCE.get() && mobcapModifier.doubleValue() <= DynamicConfig.MIN_MOBCAP.get()) {
+        if (mspt > upperBound && simulationDistance > DynamicConfig.MIN_SIMULATION_DISTANCE.get() && mobcapModifier.doubleValue() <= DynamicConfig.MIN_MOBCAP.get()) {
             setSimulationDistance(simulationDistance - 1);
         } else if (mspt < lowerBound && simulationDistance < DynamicConfig.MAX_SIMULATION_DISTANCE.get() && viewDistance >= DynamicConfig.MAX_VIEW_DISTANCE.get()) {
             setSimulationDistance(simulationDistance + 1);

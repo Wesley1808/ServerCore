@@ -95,12 +95,10 @@ The config file can be found at `<server_dir>/config/servercore.toml`
     villager_work_immunity_after = 20
     # (Default = 20) The amount of ticks an inactive villager will wake up for when it has work immunity.
     villager_work_immunity_for = 20
-    # 
     # The settings below will only take effect after a restart!
     # Activation Range = The range an entity is required to be in from a player to tick.
-    # Tick Inactive = if an entity is allowed to tick once per second whilst inactive.
+    # Tick Inactive = If an entity is allowed to tick once per second whilst inactive.
     # Wakeup Interval = The interval between inactive entity wake ups in seconds.
-    # 
     # Activation range settings for villagers.
     villager_activation_range = 16
     villager_tick_inactive = false
@@ -124,7 +122,7 @@ The config file can be found at `<server_dir>/config/servercore.toml`
     # Activation range settings for zombies.
     zombie_activation_range = 16
     zombie_tick_inactive = true
-    zombie_wakeup_interval = 60
+    zombie_wakeup_interval = 20
     # Activation range settings for flying mobs.
     flying_activation_range = 32
     flying_tick_inactive = true
