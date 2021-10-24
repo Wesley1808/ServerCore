@@ -8,18 +8,16 @@ Some changes are still WIP and may be unstable in specific situations.
 
 **Current features:**
 - Dynamic performance checks (changes settings depending on the mspt).
+- Optional Entity Activation Range - Cancels entity ticks that are too far away from players.
 - Adjustable chunk-ticking distance - Allows for having high render distances at low costs.
 - Adjustable mobcaps, item / xp merge radius & entity breeding limits.
 - Option to slow down tick rates of villagers trapped in 1x1 spaces.
 - Some optimizations and fixes for advancements, maps, entity navigation, chunk ticking and mob spawning.
 
-**Planned features:**
-- Entity Activation Range (Port from Spigot / PaperMC).
-
 **Commands:**
-- /servercore <name> <value> - Allows for modifying settings ingame.
+- /servercore <name> <value> - Allows for modifying config settings ingame.
 - /mobcaps - Displays the current per-player mobcap for the user.
-- /sc tps - Gives information about the current settings.
+- /sc status - Gives information about the current settings.
 
 Most features are disabled by default and can be found in the config.\
 The config file can be found at `<server_dir>/config/servercore.toml`
