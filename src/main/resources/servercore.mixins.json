@@ -8,7 +8,6 @@
     "accessor.ExperienceOrbEntityAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MobEntityAccessor",
-    "accessor.PersistentProjectileEntityAccessor",
     "accessor.ServerChunkManagerAccessor",
     "accessor.ServerPlayerEntityAccessor",
     "accessor.SpawnHelperInfoAccessor",

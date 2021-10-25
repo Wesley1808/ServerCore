@@ -30,7 +30,6 @@ import org.provim.servercore.interfaces.TargetPosition;
 import org.provim.servercore.mixin.accessor.EntityAccessor;
 import org.provim.servercore.mixin.accessor.LivingEntityAccessor;
 import org.provim.servercore.mixin.accessor.MobEntityAccessor;
-import org.provim.servercore.mixin.accessor.PersistentProjectileEntityAccessor;
 
 import java.util.function.Function;
 
@@ -44,6 +43,10 @@ public final class EntityActivationRange {
     private static final double MAX_HEIGHT_ABOVE = getMaxRange(ActivationType::getExtraHeightAbove);
     private static final double MAX_HEIGHT_BELOW = getMaxRange(ActivationType::getExtraHeightBelow);
     private static final int MAX_RANGE = getMaxRange(ActivationType::getActivationRange);
+
+    /**
+     * Puts entities in their corresponding groups / activation types, upon initialization.
+     */
 
     public static ActivationType initializeEntityActivationType(Entity entity) {
         if (entity instanceof RaiderEntity) {
@@ -69,6 +72,13 @@ public final class EntityActivationRange {
         }
     }
 
+    /**
+     * Checks for entity exclusions.
+     * Any entities on this list will always tick, regardless of activation range settings.
+     *
+     * @return Boolean: whether the entity will be excluded from activation range checks.
+     */
+
     public static boolean isExcluded(Entity entity) {
         return ((ActivationTypeEntity) entity).getActivationType().getActivationRange() <= 0
                 || entity instanceof EyeOfEnderEntity
@@ -85,6 +95,10 @@ public final class EntityActivationRange {
                 || entity instanceof EndCrystalEntity
                 || entity instanceof FallingBlockEntity;
     }
+
+    /**
+     * Activates entities in {@param world} that are close enough to players.
+     */
 
     public static void activateEntities(ServerWorld world) {
         int maxRange = Math.min((ServerCore.getServer().getPlayerManager().getViewDistance() << 4) - 8, MAX_RANGE);
@@ -121,6 +135,13 @@ public final class EntityActivationRange {
         }
     }
 
+    /**
+     * Checks for immunities on inactive entities.
+     *
+     * @param entity: The entity to check immunities for
+     * @return Integer: the amount of ticks an entity should be immune for activation range checks.
+     */
+
     public static int checkEntityImmunities(Entity entity) {
         int inactiveWakeUpImmunity = checkInactiveWakeup(entity);
         if (inactiveWakeUpImmunity > -1) {
@@ -144,17 +165,13 @@ public final class EntityActivationRange {
             return 40;
         }
 
-        if (!(entity instanceof ArrowEntity)) {
-            if ((!entity.isOnGround() && !(entity instanceof FlyingEntity))) {
-                return 10;
-            }
-        } else if (!((PersistentProjectileEntityAccessor) entity).isInGround()) {
-            return 1;
+        if ((!entity.isOnGround() && !(entity instanceof FlyingEntity))) {
+            return 20;
         }
 
         // special cases.
         if (entity instanceof LivingEntity livingEntity) {
-            if (livingEntity.isClimbing() || ((LivingEntityAccessor) livingEntity).isJumping() || livingEntity.hurtTime > 0 || !livingEntity.getStatusEffects().isEmpty()) {
+            if (livingEntity.isClimbing() || ((LivingEntityAccessor) livingEntity).isJumping() || !livingEntity.getStatusEffects().isEmpty()) {
                 return 1;
             }
             if (entity instanceof MobEntity mobEntity && mobEntity.getTarget() != null) {
@@ -174,7 +191,7 @@ public final class EntityActivationRange {
                 if (ActivationRangeConfig.VILLAGER_TICK_PANIC.get()) {
                     for (Activity activity : VILLAGER_PANIC_IMMUNITIES) {
                         if (brain.hasActivity(activity)) {
-                            return 20 * 5;
+                            return 100;
                         }
                     }
                 }
@@ -207,6 +224,13 @@ public final class EntityActivationRange {
         return -1;
     }
 
+    /**
+     * Checks if an entity is active. If not, check for immunities once per second.
+     *
+     * @param entity: The ticking entity
+     * @return Boolean: whether the entity should tick.
+     */
+
     public static boolean isActive(Entity entity) {
         if (!ActivationRangeConfig.ENABLED.get()) {
             return true;
@@ -225,10 +249,9 @@ public final class EntityActivationRange {
                 int immunity = checkEntityImmunities(entity);
                 if (immunity >= 0) {
                     activationTypeEntity.setActivatedTick(ticks + immunity);
-                    return true;
                 }
 
-                return activationTypeEntity.getActivationType().shouldTickInactive();
+                return true;
             }
         }
 
@@ -240,6 +263,13 @@ public final class EntityActivationRange {
                 || (entity instanceof LivingEntity living && living.hurtTime > 0)
                 || entity.hasNetherPortalCooldown() || ((EntityAccessor) entity).isInNetherPortal();
     }
+
+    /**
+     * Wakes up inactive entities on a specified interval.
+     *
+     * @param entity: The entity to wake up
+     * @return Integer: the amount of ticks an entity will wake up for.
+     */
 
     private static int checkInactiveWakeup(Entity entity) {
         ActivationTypeEntity activationTypeEntity = (ActivationTypeEntity) entity;
