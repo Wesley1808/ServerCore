@@ -6,7 +6,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.WorldChunk;
 import org.provim.servercore.utils.ChunkManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(SpawnHelper.class)
 public abstract class SpawnHelperMixin {
     @Unique
-    private static WorldChunk cachedChunk;
+    private static Chunk cachedChunk;
 
     private SpawnHelperMixin() {
     }

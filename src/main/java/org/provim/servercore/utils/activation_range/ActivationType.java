@@ -4,6 +4,11 @@ import net.minecraft.util.math.Box;
 
 import static org.provim.servercore.config.tables.ActivationRangeConfig.*;
 
+/**
+ * Partially From: PaperMC (Entity-Activation-Range-2.0.patch)
+ * License: GPL-3.0 (licenses/GPL.md)
+ */
+
 public enum ActivationType {
     VILLAGER(VILLAGER_ACTIVATION_RANGE.get(), VILLAGER_WAKEUP_INTERVAL.get() * 20, 100, 0, 0),
     MONSTER(MONSTER_ACTIVATION_RANGE.get(), MONSTER_WAKEUP_INTERVAL.get() * 20, 100, 96, 0),

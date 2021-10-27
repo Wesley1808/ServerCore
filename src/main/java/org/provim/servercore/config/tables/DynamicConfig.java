@@ -4,7 +4,7 @@ import org.provim.servercore.config.ConfigEntry;
 
 public final class DynamicConfig {
     public static final ConfigEntry<Boolean> ENABLED = new ConfigEntry<>(false, "(Default = false) Enables this feature.");
-    public static final ConfigEntry<Integer> TARGET_MSPT = new ConfigEntry<>(40, i -> i >= 1, "(Default = 40) The average MSPT to target.");
+    public static final ConfigEntry<Integer> TARGET_MSPT = new ConfigEntry<>(35, i -> i >= 1, "(Default = 35) The average MSPT to target.");
     public static final ConfigEntry<Integer> MAX_CHUNK_TICK_DISTANCE = new ConfigEntry<>(10, i -> i >= 1 && i <= 32, "(Default = [Max: 10, Min: 2]) Distance in which random ticks and mobspawning can happen.");
     public static final ConfigEntry<Integer> MIN_CHUNK_TICK_DISTANCE = new ConfigEntry<>(2, i -> i >= 1 && i <= 32);
     public static final ConfigEntry<Integer> MAX_SIMULATION_DISTANCE = new ConfigEntry<>(10, i -> i >= 1 && i <= 32, "(Default = [Max: 10, Min: 2]) Distance in which the world will tick, similar to no-tick-vd.");

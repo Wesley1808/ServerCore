@@ -1,7 +1,7 @@
 package org.provim.servercore.mixin.performance.activation_range;
 
 import net.minecraft.entity.ai.goal.Goal;
-import org.provim.servercore.utils.activation_range.EntityActivationRange;
+import org.provim.servercore.utils.activation_range.ActivationRange;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,6 +17,6 @@ public class GoalMixin {
 
     @Inject(method = "stop", at = @At("HEAD"))
     private void resetTargetPosition(CallbackInfo ci) {
-        EntityActivationRange.resetTargetPosition((Goal) (Object) this);
+        ActivationRange.resetTargetPosition((Goal) (Object) this);
     }
 }

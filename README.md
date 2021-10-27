@@ -45,8 +45,8 @@ The config file can be found at `<server_dir>/config/servercore.toml`
 [dynamic]
     # (Default = false) Enables this feature.
     enabled = false
-    # (Default = 40) The average MSPT to target.
-    target_mspt = 40
+    # (Default = 35) The average MSPT to target.
+    target_mspt = 35
     # (Default = [Max: 10, Min: 2]) Distance in which random ticks and mobspawning can happen.
     max_chunk_tick_distance = 10
     min_chunk_tick_distance = 2

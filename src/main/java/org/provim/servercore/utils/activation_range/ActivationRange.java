@@ -12,7 +12,6 @@ import net.minecraft.entity.decoration.EndCrystalEntity;
 import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.raid.RaiderEntity;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
@@ -38,7 +37,7 @@ import java.util.function.Function;
  * License: GPL-3.0 (licenses/GPL.md)
  */
 
-public final class EntityActivationRange {
+public final class ActivationRange {
     private static final Activity[] VILLAGER_PANIC_IMMUNITIES = {Activity.HIDE, Activity.PRE_RAID, Activity.RAID, Activity.PANIC};
     private static final double MAX_HEIGHT_ABOVE = getMaxRange(ActivationType::getExtraHeightAbove);
     private static final double MAX_HEIGHT_BELOW = getMaxRange(ActivationType::getExtraHeightBelow);

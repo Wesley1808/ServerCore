@@ -74,8 +74,8 @@ public final class ConfigEntry<T> {
     }
 
     private boolean validate(T value) {
-        final boolean isValid = this.defaultValue.getClass() == value.getClass();
-        return this.constraint != null ? isValid && this.constraint.test(value) : isValid;
+        final boolean compatible = this.defaultValue.getClass() == value.getClass();
+        return this.constraint != null ? compatible && this.constraint.test(value) : compatible;
     }
 
     private T getFallbackValue() {
