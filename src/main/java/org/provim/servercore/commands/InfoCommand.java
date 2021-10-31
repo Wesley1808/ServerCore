@@ -9,8 +9,8 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.world.SpawnDensityCapper;
+import net.minecraft.world.SpawnHelper;
 import org.provim.servercore.config.tables.CommandConfig;
-import org.provim.servercore.mixin.accessor.SpawnHelperInfoAccessor;
 import org.provim.servercore.utils.PermissionUtils;
 import org.provim.servercore.utils.TickManager;
 
@@ -35,9 +35,9 @@ public final class InfoCommand {
         ServerPlayerEntity player = context.getSource().getPlayer();
         LiteralText text = new LiteralText(CommandConfig.MOBCAP_TITLE.get().replace("%MODIFIER%", TickManager.getModifierAsString()));
 
-        SpawnHelperInfoAccessor info = (SpawnHelperInfoAccessor) player.getWorld().getChunkManager().getSpawnInfo();
+        SpawnHelper.Info info = player.getWorld().getChunkManager().getSpawnInfo();
         if (info != null) {
-            SpawnDensityCapper.DensityCap densityCap = info.getDensityCapper().playersToDensityCap.computeIfAbsent(player, p -> new SpawnDensityCapper.DensityCap());
+            SpawnDensityCapper.DensityCap densityCap = info.densityCapper.playersToDensityCap.computeIfAbsent(player, p -> new SpawnDensityCapper.DensityCap());
             for (SpawnGroup group : SpawnGroup.values()) {
                 String message = CommandConfig.MOBCAP_SPAWN_GROUP.get()
                         .replace("%NAME%", group.getName())

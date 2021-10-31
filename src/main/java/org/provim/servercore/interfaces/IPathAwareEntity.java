@@ -2,7 +2,7 @@ package org.provim.servercore.interfaces;
 
 import net.minecraft.util.math.BlockPos;
 
-public interface EntityWithTarget {
+public interface IPathAwareEntity {
 
     BlockPos getMovingTarget();
 

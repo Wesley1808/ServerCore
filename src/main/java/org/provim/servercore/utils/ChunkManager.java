@@ -3,11 +3,11 @@ package org.provim.servercore.utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.server.world.ChunkHolder;
+import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.WorldChunk;
-import org.provim.servercore.mixin.accessor.ServerChunkManagerAccessor;
 
 public final class ChunkManager {
 
@@ -49,6 +49,6 @@ public final class ChunkManager {
      */
 
     public static ChunkHolder getChunkHolder(World world, BlockPos pos) {
-        return world.getChunkManager() instanceof ServerChunkManagerAccessor manager ? manager.getHolder(ChunkPos.toLong(pos.getX() >> 4, pos.getZ() >> 4)) : null;
+        return world.getChunkManager() instanceof ServerChunkManager manager ? manager.getChunkHolder(ChunkPos.toLong(pos.getX() >> 4, pos.getZ() >> 4)) : null;
     }
 }

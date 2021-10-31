@@ -11,6 +11,6 @@ public final class DynamicConfig {
     public static final ConfigEntry<Integer> MIN_SIMULATION_DISTANCE = new ConfigEntry<>(2, i -> i >= 1 && i <= 32);
     public static final ConfigEntry<Integer> MAX_VIEW_DISTANCE = new ConfigEntry<>(10, i -> i >= 2 && i <= 32, "(Default = [Max: 10, Min: 2]) Distance in which the world will render.");
     public static final ConfigEntry<Integer> MIN_VIEW_DISTANCE = new ConfigEntry<>(2, i -> i >= 2 && i <= 32);
-    public static final ConfigEntry<Double> MAX_MOBCAP = new ConfigEntry<>(1.0D, d -> d >= 0.1 && d <= 10.0, "(Default = [Max: 1.0, Min: 0.3]) Global multiplier that decides the percentage of the mobcap to be used.");
-    public static final ConfigEntry<Double> MIN_MOBCAP = new ConfigEntry<>(0.3D, d -> d >= 0.1 && d <= 10.0);
+    public static final ConfigEntry<Double> MAX_MOBCAP = new ConfigEntry<>(1.0D, d -> d >= 0.1 && d <= 1.0, "(Default = [Max: 1.0, Min: 0.3]) Global multiplier that decides the percentage of the mobcap to be used.");
+    public static final ConfigEntry<Double> MIN_MOBCAP = new ConfigEntry<>(0.3D, d -> d >= 0.1 && d <= 1.0);
 }

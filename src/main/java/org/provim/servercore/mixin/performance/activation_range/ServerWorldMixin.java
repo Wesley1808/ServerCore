@@ -1,15 +1,11 @@
 package org.provim.servercore.mixin.performance.activation_range;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
-import org.provim.servercore.config.tables.ActivationRangeConfig;
 import org.provim.servercore.interfaces.InactiveEntity;
-import org.provim.servercore.utils.activation_range.ActivationRange;
-import org.spongepowered.asm.mixin.Final;
+import org.provim.servercore.utils.ActivationRange;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -18,36 +14,30 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.BooleanSupplier;
 
 /**
- * From: Spigot (Entity-Activation-Range.patch)
+ * From: PaperMC & Spigot (Entity-Activation-Range.patch)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin {
 
-    @Shadow
-    @Final
-    private MinecraftServer server;
-
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/EntityList;forEach(Ljava/util/function/Consumer;)V"))
     public void activateEntities(BooleanSupplier booleanSupplier, CallbackInfo ci) {
-        if (ActivationRangeConfig.ENABLED.get() && this.server.getTicks() % 20 == 0) {
-            ActivationRange.activateEntities((ServerWorld) (Object) this);
-        }
+        ActivationRange.activateEntities((ServerWorld) (Object) this);
     }
 
-    @Inject(method = "tickEntity", at = @At(value = "HEAD"), cancellable = true)
-    public void shouldTickEntity(Entity entity, CallbackInfo ci) {
-        if (!ActivationRange.isActive(entity)) {
+    @Redirect(method = "tickEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;tick()V"))
+    public void shouldTickEntity(Entity entity) {
+        if (!ActivationRange.checkIfActive(entity)) {
             ((InactiveEntity) entity).inactiveTick();
-            entity.age++;
-            ci.cancel();
+        } else {
+            entity.tick();
         }
     }
 
     @Redirect(method = "tickPassenger", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;tickRiding()V"))
     public void shouldTickPassengers(Entity entity) {
-        if (ActivationRange.isActive(entity)) {
+        if (ActivationRange.checkIfActive(entity)) {
             entity.tickRiding();
         } else {
             entity.setVelocity(Vec3d.ZERO);

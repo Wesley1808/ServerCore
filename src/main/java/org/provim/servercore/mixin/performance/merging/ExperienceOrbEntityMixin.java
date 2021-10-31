@@ -6,7 +6,6 @@ import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import org.provim.servercore.config.tables.FeatureConfig;
-import org.provim.servercore.mixin.accessor.ExperienceOrbEntityAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,13 +15,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ExperienceOrbEntity.class)
 public abstract class ExperienceOrbEntityMixin extends Entity {
     @Shadow
+    public int pickingCount;
+    @Shadow
+    public int orbAge;
+    @Shadow
     private int amount;
-
-    @Shadow
-    private int pickingCount;
-
-    @Shadow
-    private int orbAge;
 
     protected ExperienceOrbEntityMixin(EntityType<?> type, World world) {
         super(type, world);
@@ -49,9 +46,9 @@ public abstract class ExperienceOrbEntityMixin extends Entity {
         if (FeatureConfig.FAST_XP_MERGING.get()) {
             this.amount += other.getExperienceAmount();
         } else {
-            this.pickingCount += ((ExperienceOrbEntityAccessor) other).getPickingCount();
+            this.pickingCount += other.pickingCount;
         }
-        this.orbAge = Math.min(this.orbAge, ((ExperienceOrbEntityAccessor) other).getOrbAge());
+        this.orbAge = Math.min(this.orbAge, other.orbAge);
         other.discard();
     }
 
