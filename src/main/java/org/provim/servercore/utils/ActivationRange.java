@@ -179,7 +179,7 @@ public class ActivationRange {
 
         // quick checks.
         final ActivationType type = activationEntity.getActivationType();
-        if (entity.isTouchingWater() && entity.isPushedByFluids() && (type != ActivationType.WATER && type != ActivationType.ANIMAL && type != ActivationType.VILLAGER && !(entity instanceof BoatEntity))) {
+        if (entity.isTouchingWater() && entity.isPushedByFluids() && !(type == ActivationType.ANIMAL || type == ActivationType.FLYING || type == ActivationType.VILLAGER || type == ActivationType.WATER || entity instanceof BoatEntity)) {
             return 100;
         }
 
@@ -192,7 +192,7 @@ public class ActivationRange {
         }
 
         if (!(entity instanceof PersistentProjectileEntity projectile)) {
-            if (!entity.isOnGround() && !(entity instanceof FlyingEntity)) {
+            if (!entity.isOnGround() && !entity.isTouchingWater() && !(entity instanceof FlyingEntity)) {
                 return 10;
             }
         } else if (!projectile.inGround) {
