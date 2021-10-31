@@ -5,8 +5,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
-import org.provim.servercore.config.Config;
-import org.provim.servercore.mixin.accessor.ExperienceOrbEntityAccessor;
+import org.provim.servercore.config.tables.FeatureConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -36,7 +35,7 @@ public abstract class ExperienceOrbEntityMixin extends Entity {
     @Overwrite
     private static boolean isMergeable(ExperienceOrbEntity orb, int seed, int amount) {
         boolean bl = !orb.isRemoved() && (orb.getId() - seed) % 40 == 0;
-        return Config.getFeatureConfig().fastXpMerging ? bl : bl && orb.getExperienceAmount() == amount;
+        return FeatureConfig.FAST_XP_MERGING.get() ? bl : bl && orb.getExperienceAmount() == amount;
     }
 
     /**
@@ -46,12 +45,12 @@ public abstract class ExperienceOrbEntityMixin extends Entity {
 
     @Overwrite
     private void merge(ExperienceOrbEntity other) {
-        if (Config.getFeatureConfig().fastXpMerging) {
+        if (FeatureConfig.FAST_XP_MERGING.get()) {
             this.amount += other.getExperienceAmount();
         } else {
-            this.pickingCount += ((ExperienceOrbEntityAccessor) other).getPickingCount();
+            this.pickingCount += other.pickingCount;
         }
-        this.orbAge = Math.min(this.orbAge, ((ExperienceOrbEntityAccessor) other).getOrbAge());
+        this.orbAge = Math.min(this.orbAge, other.orbAge);
         other.discard();
     }
 
@@ -61,6 +60,6 @@ public abstract class ExperienceOrbEntityMixin extends Entity {
 
     @Redirect(method = "expensiveUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Box;expand(D)Lnet/minecraft/util/math/Box;"))
     private Box setMergeRadius(Box box, double value) {
-        return box.expand(Config.getFeatureConfig().xpMergeRadius);
+        return box.expand(FeatureConfig.XP_MERGE_RADIUS.get());
     }
 }

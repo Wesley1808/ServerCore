@@ -14,6 +14,10 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
+loom {
+    accessWidener = file("src/main/resources/servercore.accesswidener")
+}
+
 dependencies {
     //to change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -21,9 +25,10 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modImplementation 'me.lucko:fabric-permissions-api:0.1-SNAPSHOT'
-    implementation(include("com.moandjiezana.toml:toml4j:${project.toml_version}"))
-    // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-    // You may need to force-disable transitiveness on them.
+
+    // Night Config
+    implementation(include("com.electronwill.night-config:core:${night_config_version}"))
+    implementation(include("com.electronwill.night-config:toml:${night_config_version}"))
 }
 
 processResources {

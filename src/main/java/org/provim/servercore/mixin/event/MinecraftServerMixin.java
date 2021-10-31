@@ -5,7 +5,8 @@ import net.minecraft.server.WorldGenerationProgressListener;
 import org.objectweb.asm.Opcodes;
 import org.provim.servercore.ServerCore;
 import org.provim.servercore.config.Config;
-import org.provim.servercore.utils.TickUtils;
+import org.provim.servercore.config.tables.FeatureConfig;
+import org.provim.servercore.utils.TickManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,7 +29,7 @@ public abstract class MinecraftServerMixin {
     @Inject(at = @At("TAIL"), method = "tick")
     private void onTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
         if (this.ticks % 300 == 0) {
-            TickUtils.runPerformanceChecks((MinecraftServer) (Object) this);
+            TickManager.runPerformanceChecks((MinecraftServer) (Object) this);
         }
     }
 
@@ -44,13 +45,13 @@ public abstract class MinecraftServerMixin {
 
     @Inject(at = @At("HEAD"), method = "prepareStartRegion", cancellable = true)
     private void disableSpawnChunks(WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci) {
-        if (Config.getFeatureConfig().disableSpawnChunks) {
+        if (FeatureConfig.DISABLE_SPAWN_CHUNKS.get()) {
             ci.cancel();
         }
     }
 
     @Redirect(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/server/MinecraftServer;ticks:I", ordinal = 1))
     public int modifyAutoSaveInterval(MinecraftServer minecraftServer) {
-        return this.ticks % (Config.getFeatureConfig().autoSaveInterval * 1200) == 0 ? 6000 : -1;
+        return this.ticks % (FeatureConfig.AUTO_SAVE_INTERVAL.get() * 1200) == 0 ? 6000 : -1;
     }
 }

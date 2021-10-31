@@ -16,7 +16,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import org.provim.servercore.config.Config;
+import org.provim.servercore.config.tables.FeatureConfig;
 import org.provim.servercore.interfaces.IThreadedAnvilChunkStorage;
 import org.provim.servercore.mixin.accessor.SpawnHelperAccessor;
 import org.provim.servercore.mixin.accessor.SpawnHelperInfoAccessor;
@@ -103,7 +103,7 @@ public abstract class SpawnHelperMixin {
         IThreadedAnvilChunkStorage chunkStorage = (IThreadedAnvilChunkStorage) world.getChunkManager().threadedAnvilChunkStorage;
         for (SpawnGroup spawnGroup : SPAWNABLE_GROUPS) {
             int difference;
-            if (Config.getFeatureConfig().perPlayerSpawns) {
+            if (FeatureConfig.PER_PLAYER_SPAWNS.get()) {
                 int minDiff = Integer.MAX_VALUE;
                 for (ServerPlayerEntity player : chunkStorage.getDistanceMap().getPlayersInRange(chunk.getPos())) {
                     minDiff = Math.min(spawnGroup.getCapacity() - chunkStorage.getMobCountNear(player, spawnGroup), minDiff);
@@ -116,7 +116,7 @@ public abstract class SpawnHelperMixin {
             }
 
             if ((spawnAnimals || !spawnGroup.isPeaceful()) && (spawnMonsters || spawnGroup.isPeaceful()) && (rareSpawn || !spawnGroup.isRare()) && difference > 0) {
-                spawnEntitiesInChunk(spawnGroup, world, chunk, spawnInfo::check, spawnInfo::runMob, difference, Config.getFeatureConfig().perPlayerSpawns ? chunkStorage::updateMobCounts : null);
+                spawnEntitiesInChunk(spawnGroup, world, chunk, spawnInfo::check, spawnInfo::runMob, difference, FeatureConfig.PER_PLAYER_SPAWNS.get() ? chunkStorage::updateMobCounts : null);
             }
         }
 

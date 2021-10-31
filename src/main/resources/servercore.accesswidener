@@ -1,0 +1,20 @@
+accessWidener v1 named
+
+accessible class net/minecraft/world/SpawnDensityCapper$DensityCap
+accessible class net/minecraft/server/world/ServerChunkManager$ChunkWithHolder
+
+accessible method net/minecraft/world/SpawnDensityCapper$DensityCap <init> ()V
+accessible method net/minecraft/server/network/ServerPlayerEntity moveToSpawn (Lnet/minecraft/server/world/ServerWorld;)V
+accessible method net/minecraft/server/world/ServerChunkManager getChunkHolder (J)Lnet/minecraft/server/world/ChunkHolder;
+accessible method net/minecraft/server/world/ServerChunkManager$ChunkWithHolder <init> (Lnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/server/world/ChunkHolder;)V
+
+accessible field net/minecraft/entity/ExperienceOrbEntity orbAge I
+accessible field net/minecraft/entity/ExperienceOrbEntity pickingCount I
+accessible field net/minecraft/entity/LivingEntity jumping Z
+accessible field net/minecraft/entity/Entity inNetherPortal Z
+accessible field net/minecraft/entity/projectile/PersistentProjectileEntity inGround Z
+accessible field net/minecraft/entity/mob/MobEntity holdingEntity Lnet/minecraft/entity/Entity;
+accessible field net/minecraft/entity/mob/MobEntity targetSelector Lnet/minecraft/entity/ai/goal/GoalSelector;
+accessible field net/minecraft/world/SpawnDensityCapper playersToDensityCap Ljava/util/Map;
+accessible field net/minecraft/world/SpawnHelper$Info densityCapper Lnet/minecraft/world/SpawnDensityCapper;
+accessible field net/minecraft/world/SpawnDensityCapper$DensityCap spawnGroupsToDensity Lit/unimi/dsi/fastutil/objects/Object2IntMap;

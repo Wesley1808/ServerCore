@@ -14,7 +14,7 @@ import net.minecraft.util.math.GravityField;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.chunk.ChunkManager;
-import org.provim.servercore.config.Config;
+import org.provim.servercore.config.tables.FeatureConfig;
 import org.provim.servercore.interfaces.IServerPlayerEntity;
 import org.provim.servercore.interfaces.IThreadedAnvilChunkStorage;
 import org.provim.servercore.mixin.accessor.SpawnHelperAccessor;
@@ -52,7 +52,7 @@ public abstract class ServerChunkManagerMixin extends ChunkManager {
     private SpawnHelper.Info updateSpawnHelper(int spawningChunkCount, Iterable<Entity> entities, SpawnHelper.ChunkSource chunkSource) {
         SpawnHelper.Info spawnHelperInfo;
         PlayerMobDistanceMap distanceMap = ((IThreadedAnvilChunkStorage) threadedAnvilChunkStorage).getDistanceMap();
-        if (distanceMap != null && Config.getFeatureConfig().perPlayerSpawns) {
+        if (distanceMap != null && FeatureConfig.PER_PLAYER_SPAWNS.get()) {
             // Update distance map -> by using a constant 10 as view distance we prevent the situations where:
             // 1 - No mobs will spawn because there's another player with mobs 500 blocks away (High view distance).
             // 2 - There will be 140 mobs in a small area because there's another player 50 blocks away (Low view distance).

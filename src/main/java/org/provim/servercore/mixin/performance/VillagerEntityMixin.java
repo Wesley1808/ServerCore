@@ -10,7 +10,7 @@ import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.provim.servercore.config.Config;
+import org.provim.servercore.config.tables.FeatureConfig;
 import org.provim.servercore.utils.ChunkManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,8 +31,8 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
     @Redirect(method = "mobTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/brain/Brain;tick(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)V"))
     private void lobotomizeTrappedVillagers(Brain<VillagerEntity> brain, ServerWorld world, LivingEntity entity) {
         VillagerEntity villager = (VillagerEntity) (Object) this;
-        if (Config.getFeatureConfig().lobotomizeVillagers && isLobotomized()) {
-            if (this.age % Config.getFeatureConfig().lobotomizedTickInterval == 0) {
+        if (FeatureConfig.LOBOTOMIZE_VILLAGERS.get() && isLobotomized()) {
+            if (this.age % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0) {
                 brain.tick(world, villager);
             }
         } else {

@@ -3,8 +3,7 @@
   "minVersion": "0.8",
   "package": "org.provim.servercore.mixin",
   "compatibilityLevel": "JAVA_16",
-  "mixins": [
-    "accessor.ExperienceOrbEntityAccessor",
+  "server": [
     "accessor.ServerChunkManagerAccessor",
     "accessor.ServerPlayerEntityAccessor",
     "accessor.SpawnHelperAccessor",
@@ -27,13 +26,26 @@
     "performance.SpawnGroupMixin",
     "performance.TACSEntityTrackerMixin",
     "performance.VillagerEntityMixin",
+    "performance.activation_range.AreaEffectCloudEntityMixin",
+    "performance.activation_range.ArrowEntityMixin",
+    "performance.activation_range.EntityMixin",
+    "performance.activation_range.GoalSelectorMixin",
+    "performance.activation_range.ItemEntityMixin",
+    "performance.activation_range.LivingEntityMixin",
+    "performance.activation_range.MobEntityMixin",
+    "performance.activation_range.MoveToTargetPosGoalMixin",
+    "performance.activation_range.PassiveEntityMixin",
+    "performance.activation_range.PathAwareEntityMixin",
+    "performance.activation_range.PistonBlockEntityMixin",
+    "performance.activation_range.ServerWorldMixin",
+    "performance.activation_range.SpectralArrowEntityMixin",
+    "performance.activation_range.VillagerEntityMixin",
+    "performance.activation_range.WorldMixin",
     "perplayerspawns.PassiveEntityMixin",
     "perplayerspawns.ServerChunkManagerMixin",
     "perplayerspawns.ServerPlayerEntityMixin",
     "perplayerspawns.SpawnHelperMixin",
     "perplayerspawns.ThreadedAnvilChunkStorageMixin"
-  ],
-  "client": [
   ],
   "injectors": {
     "defaultRequire": 1

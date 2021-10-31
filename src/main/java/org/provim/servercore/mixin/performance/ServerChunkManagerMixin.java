@@ -10,9 +10,9 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.chunk.WorldChunk;
 import org.jetbrains.annotations.Nullable;
-import org.provim.servercore.config.Config;
+import org.provim.servercore.config.tables.FeatureConfig;
 import org.provim.servercore.mixin.accessor.TACSAccessor;
-import org.provim.servercore.utils.TickUtils;
+import org.provim.servercore.utils.TickManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -53,13 +53,13 @@ public abstract class ServerChunkManagerMixin {
     @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V", ordinal = 0))
     private <T> void onlyTickActiveChunks(List<ChunkHolder> list, Consumer<? super T> action) {
         final TACSAccessor chunkStorage = (TACSAccessor) this.threadedAnvilChunkStorage;
-        if (Config.getFeatureConfig().useChunkTickDistance) {
+        if (FeatureConfig.USE_CHUNK_TICK_DISTANCE.get()) {
             if (this.count++ % 20 == 0) { // Updates active chunks once a second.
                 // Add active chunks
                 for (ChunkHolder holder : chunkStorage.getChunkHolders().values()) {
                     final WorldChunk chunk = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null);
                     if (chunk != null) {
-                        if (TickUtils.shouldTick(holder.getPos(), this.world)) {
+                        if (TickManager.shouldTick(holder.getPos(), this.world)) {
                             this.active.add(holder);
                         } else {
                             // Sends block updates to clients from inactive chunks.
@@ -69,7 +69,7 @@ public abstract class ServerChunkManagerMixin {
                 }
 
                 // Remove inactive chunks
-                this.active.removeIf(holder -> holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickUtils.shouldTick(holder.getPos(), this.world));
+                this.active.removeIf(holder -> holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isEmpty() || !TickManager.shouldTick(holder.getPos(), this.world));
             }
         }
 
@@ -78,7 +78,7 @@ public abstract class ServerChunkManagerMixin {
         final long timeDifference = time - this.lastMobSpawningTime;
         this.lastMobSpawningTime = time;
 
-        for (ChunkHolder holder : Config.getFeatureConfig().useChunkTickDistance ? this.active : chunkStorage.getChunkHolders().values()) {
+        for (ChunkHolder holder : FeatureConfig.USE_CHUNK_TICK_DISTANCE.get() ? this.active : chunkStorage.getChunkHolders().values()) {
             final WorldChunk chunk = holder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null);
             if (chunk != null) {
                 final ChunkPos pos = chunk.getPos();
