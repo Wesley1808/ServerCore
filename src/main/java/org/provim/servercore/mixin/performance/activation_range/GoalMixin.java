@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 
 @Mixin(Goal.class)
-public class GoalMixin {
+public abstract class GoalMixin {
 
     @Inject(method = "stop", at = @At("HEAD"))
     private void resetTargetPosition(CallbackInfo ci) {

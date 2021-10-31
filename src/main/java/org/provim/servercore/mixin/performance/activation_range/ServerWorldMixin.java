@@ -18,12 +18,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.BooleanSupplier;
 
 /**
- * From: PaperMC (Entity-Activation-Range-2.0.patch)
+ * From: Spigot (Entity-Activation-Range.patch)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 
 @Mixin(ServerWorld.class)
-public class ServerWorldMixin {
+public abstract class ServerWorldMixin {
 
     @Shadow
     @Final

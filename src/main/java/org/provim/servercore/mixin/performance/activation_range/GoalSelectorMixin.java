@@ -15,7 +15,7 @@ import java.util.Set;
  */
 
 @Mixin(GoalSelector.class)
-public class GoalSelectorMixin implements IGoalSelector {
+public abstract class GoalSelectorMixin implements IGoalSelector {
     @Shadow
     @Final
     private Set<PrioritizedGoal> goals;

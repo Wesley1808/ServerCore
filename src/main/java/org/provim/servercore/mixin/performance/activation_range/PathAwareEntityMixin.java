@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Unique;
  */
 
 @Mixin(PathAwareEntity.class)
-public class PathAwareEntityMixin implements EntityWithTarget {
+public abstract class PathAwareEntityMixin implements EntityWithTarget {
     @Unique
     public BlockPos movingTarget = null;
 

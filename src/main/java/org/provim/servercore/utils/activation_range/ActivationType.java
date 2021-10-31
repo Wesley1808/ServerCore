@@ -5,35 +5,41 @@ import net.minecraft.util.math.Box;
 import static org.provim.servercore.config.tables.ActivationRangeConfig.*;
 
 /**
- * Partially From: PaperMC (Entity-Activation-Range-2.0.patch)
+ * Partially From: Spigot (Entity-Activation-Range.patch)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 
 public enum ActivationType {
-    VILLAGER(VILLAGER_ACTIVATION_RANGE.get(), VILLAGER_WAKEUP_INTERVAL.get() * 20, 100, 0, 0),
-    MONSTER(MONSTER_ACTIVATION_RANGE.get(), MONSTER_WAKEUP_INTERVAL.get() * 20, 100, 96, 0),
-    MONSTER_BELOW(MONSTER_ACTIVATION_RANGE.get(), MONSTER_WAKEUP_INTERVAL.get() * 20, 100, 96, 96),
-    ANIMAL(ANIMAL_ACTIVATION_RANGE.get(), ANIMAL_WAKEUP_INTERVAL.get() * 20, 100, 0, 0),
-    NEUTRAL(NEUTRAL_ACTIVATION_RANGE.get(), NEUTRAL_WAKEUP_INTERVAL.get() * 20, 100, 96, 0),
-    WATER(WATER_ACTIVATION_RANGE.get(), WATER_WAKEUP_INTERVAL.get() * 20, 100, 0, 0),
-    ZOMBIE(ZOMBIE_ACTIVATION_RANGE.get(), ZOMBIE_WAKEUP_INTERVAL.get() * 20, 100, 96, 0),
-    FLYING(FLYING_ACTIVATION_RANGE.get(), FLYING_WAKEUP_INTERVAL.get() * 20, 100, 96, 0),
-    RAIDER(RAIDER_ACTIVATION_RANGE.get(), RAIDER_WAKEUP_INTERVAL.get() * 20, 100, 96, 0),
-    MISC(MISC_ACTIVATION_RANGE.get(), MISC_WAKEUP_INTERVAL.get() * 20, 100, 0, 0);
+    VILLAGER(VILLAGER_ACTIVATION_RANGE.get(), VILLAGER_TICK_INACTIVE.get(), VILLAGER_WAKEUP_INTERVAL.get() * 20, 100, 0, 0),
+    MONSTER(MONSTER_ACTIVATION_RANGE.get(), MONSTER_TICK_INACTIVE.get(), MONSTER_WAKEUP_INTERVAL.get() * 20, 100, 96, 0),
+    MONSTER_BELOW(MONSTER_ACTIVATION_RANGE.get(), MONSTER_TICK_INACTIVE.get(), MONSTER_WAKEUP_INTERVAL.get() * 20, 100, 96, 96),
+    ANIMAL(ANIMAL_ACTIVATION_RANGE.get(), ANIMAL_TICK_INACTIVE.get(), ANIMAL_WAKEUP_INTERVAL.get() * 20, 100, 0, 0),
+    NEUTRAL(NEUTRAL_ACTIVATION_RANGE.get(), NEUTRAL_TICK_INACTIVE.get(), NEUTRAL_WAKEUP_INTERVAL.get() * 20, 100, 96, 0),
+    WATER(WATER_ACTIVATION_RANGE.get(), WATER_TICK_INACTIVE.get(), WATER_WAKEUP_INTERVAL.get() * 20, 100, 0, 0),
+    ZOMBIE(ZOMBIE_ACTIVATION_RANGE.get(), ZOMBIE_TICK_INACTIVE.get(), ZOMBIE_WAKEUP_INTERVAL.get() * 20, 100, 96, 0),
+    FLYING(FLYING_ACTIVATION_RANGE.get(), FLYING_TICK_INACTIVE.get(), FLYING_WAKEUP_INTERVAL.get() * 20, 100, 96, 0),
+    RAIDER(RAIDER_ACTIVATION_RANGE.get(), RAIDER_TICK_INACTIVE.get(), RAIDER_WAKEUP_INTERVAL.get() * 20, 100, 96, 0),
+    MISC(MISC_ACTIVATION_RANGE.get(), MISC_TICK_INACTIVE.get(), MISC_WAKEUP_INTERVAL.get() * 20, 100, 0, 0);
 
     private final int activationRange;
     private final int wakeUpInterval;
     private final int wakeUpFor;
     private final int extraHeightAbove;
     private final int extraHeightBelow;
+    private final boolean shouldTickInactive;
     private Box boundingBox = new Box(0, 0, 0, 0, 0, 0);
 
-    ActivationType(int activationRange, int wakeUpInterval, int wakeUpFor, int extraHeightAbove, int extraHeightBelow) {
+    ActivationType(int activationRange, boolean shouldTickInactive, int wakeUpInterval, int wakeUpFor, int extraHeightAbove, int extraHeightBelow) {
         this.activationRange = activationRange;
+        this.shouldTickInactive = shouldTickInactive;
         this.wakeUpInterval = wakeUpInterval;
         this.wakeUpFor = wakeUpFor;
         this.extraHeightAbove = extraHeightAbove;
         this.extraHeightBelow = extraHeightBelow;
+    }
+
+    public boolean shouldTickInactive() {
+        return this.shouldTickInactive;
     }
 
     public int getActivationRange() {

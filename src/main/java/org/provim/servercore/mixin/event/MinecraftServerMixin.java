@@ -37,9 +37,11 @@ public abstract class MinecraftServerMixin {
      * [Server Startup Event]
      */
 
-    @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setupServer()Z"))
-    private void onSetupServer(CallbackInfo info) {
-        ServerCore.setServer((MinecraftServer) (Object) this);
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setFavicon(Lnet/minecraft/server/ServerMetadata;)V", ordinal = 0), method = "runServer")
+    private void afterSetupServer(CallbackInfo info) {
+        final MinecraftServer server = (MinecraftServer) (Object) this;
+        ServerCore.setServer(server);
+        TickManager.initValues(server);
     }
 
     /**

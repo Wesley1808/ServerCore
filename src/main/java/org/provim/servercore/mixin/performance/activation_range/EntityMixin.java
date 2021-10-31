@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * From: PaperMC (Entity-Activation-Range-2.0.patch)
+ * From: Spigot (Entity-Activation-Range.patch)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 

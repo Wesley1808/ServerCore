@@ -33,9 +33,10 @@ import org.provim.servercore.mixin.accessor.MobEntityAccessor;
 import java.util.function.Function;
 
 /**
- * Partially From: PaperMC (Entity-Activation-Range-2.0.patch)
+ * Partially From: Spigot & PaperMC (Entity-Activation-Range-2.0.patch)
  * License: GPL-3.0 (licenses/GPL.md)
  */
+
 
 public final class ActivationRange {
     private static final Activity[] VILLAGER_PANIC_IMMUNITIES = {Activity.HIDE, Activity.PRE_RAID, Activity.RAID, Activity.PANIC};
@@ -190,7 +191,7 @@ public final class ActivationRange {
                 if (ActivationRangeConfig.VILLAGER_TICK_PANIC.get()) {
                     for (Activity activity : VILLAGER_PANIC_IMMUNITIES) {
                         if (brain.hasActivity(activity)) {
-                            return 100;
+                            return 20 * 5;
                         }
                     }
                 }
@@ -248,9 +249,10 @@ public final class ActivationRange {
                 int immunity = checkEntityImmunities(entity);
                 if (immunity >= 0) {
                     activationTypeEntity.setActivatedTick(ticks + immunity);
+                    return true;
                 }
 
-                return true;
+                return activationTypeEntity.getActivationType().shouldTickInactive();
             }
         }
 

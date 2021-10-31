@@ -23,12 +23,22 @@ import java.math.BigDecimal;
 
 public final class TickManager {
     private static final BigDecimal VALUE = new BigDecimal("0.1");
-    private static int viewDistance = ServerCore.getServer().getPlayerManager().getViewDistance();
-    private static int simulationDistance = viewDistance;
-    private static int chunkTickDistance = viewDistance;
     private static BigDecimal mobcapModifier = new BigDecimal(String.valueOf(DynamicConfig.MAX_MOBCAP.get()));
+    private static boolean updateClients = false;
+    private static int viewDistance;
+    private static int simulationDistance;
+    private static int chunkTickDistance;
+    private static int clientViewDistance;
+
 
     private TickManager() {
+    }
+
+    public static void initValues(MinecraftServer server) {
+        viewDistance = server.getPlayerManager().getViewDistance();
+        simulationDistance = viewDistance;
+        chunkTickDistance = viewDistance;
+        clientViewDistance = viewDistance;
     }
 
     /**
@@ -88,6 +98,9 @@ public final class TickManager {
     }
 
     public static void setViewDistance(int distance) {
+        updateClients = distance > clientViewDistance + 1 || distance < clientViewDistance - 1;
+        if (updateClients) clientViewDistance = distance;
+
         ServerCore.getServer().getPlayerManager().setViewDistance(distance);
         viewDistance = distance;
     }
@@ -111,6 +124,10 @@ public final class TickManager {
 
     public static int getMobcap(SpawnGroup group) {
         return (int) (group.getCapacity() * mobcapModifier.doubleValue());
+    }
+
+    public static boolean shouldUpdateClients() {
+        return updateClients;
     }
 
     /**

@@ -97,33 +97,43 @@ The config file can be found at `<server_dir>/config/servercore.toml`
     villager_work_immunity_for = 20
     # The settings below will only take effect after a restart!
     # Activation Range = The range an entity is required to be in from a player to tick.
+    # Tick Inactive = If an entity is allowed to tick once per second whilst inactive.
     # Wakeup Interval = The interval between inactive entity wake ups in seconds.
     # Activation range settings for villagers.
     villager_activation_range = 16
+    villager_tick_inactive = true
     villager_wakeup_interval = 30
     # Activation range settings for monsters.
     monster_activation_range = 32
+    monster_tick_inactive = true
     monster_wakeup_interval = 20
     # Activation range settings for animals.
     animal_activation_range = 16
+    animal_tick_inactive = true
     animal_wakeup_interval = 60
     # Activation range settings for neutral mobs.
     neutral_activation_range = 24
+    neutral_tick_inactive = true
     neutral_wakeup_interval = 30
     # Activation range settings for water mobs.
     water_activation_range = 16
+    water_tick_inactive = true
     water_wakeup_interval = 60
     # Activation range settings for zombies.
     zombie_activation_range = 16
+    zombie_tick_inactive = true
     zombie_wakeup_interval = 20
     # Activation range settings for flying mobs.
     flying_activation_range = 32
+    flying_tick_inactive = true
     flying_wakeup_interval = 10
     # Activation range settings for raider mobs.
     raider_activation_range = 48
+    raider_tick_inactive = true
     raider_wakeup_interval = 20
     # Activation range settings for miscellaneous entities.
     misc_activation_range = 16
+    misc_tick_inactive = true
     misc_wakeup_interval = 60
 ```
 
