@@ -8,11 +8,18 @@ import org.provim.servercore.interfaces.InactiveEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+/**
+ * From: Spigot (Entity-Activation-Range.patch)
+ * License: GPL-3.0 (licenses/GPL.md)
+ */
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin extends Entity implements InactiveEntity {
     @Shadow
     private int itemAge;
+
+    @Shadow
+    private int pickupDelay;
 
     private ItemEntityMixin(EntityType<?> entityType, World world) {
         super(entityType, world);
@@ -20,6 +27,10 @@ public abstract class ItemEntityMixin extends Entity implements InactiveEntity {
 
     @Override
     public void inactiveTick() {
+        if (this.pickupDelay > 0 && this.pickupDelay != 32767) {
+            this.pickupDelay--;
+        }
+
         if (this.itemAge != -32768) {
             this.itemAge++;
         }

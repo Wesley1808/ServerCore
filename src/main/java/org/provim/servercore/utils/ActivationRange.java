@@ -114,9 +114,13 @@ public class ActivationRange {
             info.setRemainingVillagers(Math.min(info.getRemainingVillagers() + 1, VILLAGER_WAKEUP_MAX.get()));
             info.setRemainingMonsters(Math.min(info.getRemainingMonsters() + 1, MONSTER_WAKEUP_MAX.get()));
             info.setRemainingFlying(Math.min(info.getRemainingFlying() + 1, FLYING_WAKEUP_MAX.get()));
-            maxRange = Math.min((ServerCore.getServer().getPlayerManager().getViewDistance() << 4) - 8, maxRange);
 
-            for (ServerPlayerEntity player : world.getPlayers(player -> !player.isSpectator())) {
+            maxRange = Math.min((ServerCore.getServer().getPlayerManager().getViewDistance() << 4) - 8, maxRange);
+            for (ServerPlayerEntity player : world.getPlayers()) {
+                if (player.isSpectator()) {
+                    continue;
+                }
+
                 Box maxBB;
                 if (USE_VERTICAL_RANGE.get()) {
                     maxBB = player.getBoundingBox().expand(maxRange, 96, maxRange);
@@ -360,14 +364,14 @@ public class ActivationRange {
 
     public enum ActivationType {
         VILLAGER(VILLAGER_ACTIVATION_RANGE::get, VILLAGER_TICK_INACTIVE::get),
-        ZOMBIE(ZOMBIE_ACTIVATION_RANGE::get, ZOMBIE_TICK_INACTIVE::get, true),
-        MONSTER(MONSTER_ACTIVATION_RANGE::get, MONSTER_TICK_INACTIVE::get, true),
+        ZOMBIE(ZOMBIE_ACTIVATION_RANGE::get, ZOMBIE_TICK_INACTIVE::get, true, false),
+        MONSTER(MONSTER_ACTIVATION_RANGE::get, MONSTER_TICK_INACTIVE::get, true, false),
         MONSTER_BELOW(MONSTER_ACTIVATION_RANGE::get, MONSTER_TICK_INACTIVE::get, true, true),
         NEUTRAL(NEUTRAL_ACTIVATION_RANGE::get, NEUTRAL_TICK_INACTIVE::get),
         ANIMAL(ANIMAL_ACTIVATION_RANGE::get, ANIMAL_TICK_INACTIVE::get),
         WATER(WATER_ACTIVATION_RANGE::get, WATER_TICK_INACTIVE::get),
-        FLYING(FLYING_ACTIVATION_RANGE::get, FLYING_TICK_INACTIVE::get, true),
-        RAIDER(RAIDER_ACTIVATION_RANGE::get, RAIDER_TICK_INACTIVE::get, true),
+        FLYING(FLYING_ACTIVATION_RANGE::get, FLYING_TICK_INACTIVE::get, true, false),
+        RAIDER(RAIDER_ACTIVATION_RANGE::get, RAIDER_TICK_INACTIVE::get, true, false),
         MISC(MISC_ACTIVATION_RANGE::get, MISC_TICK_INACTIVE::get);
 
         private final IntSupplier activationRange;
@@ -383,12 +387,8 @@ public class ActivationRange {
             this.extraHeightDown = extraHeightDown;
         }
 
-        ActivationType(IntSupplier activationRange, BooleanSupplier tickInactive, boolean extraHeightUp) {
-            this(activationRange, tickInactive, extraHeightUp, false);
-        }
-
         ActivationType(IntSupplier activationRange, BooleanSupplier tickInactive) {
-            this(activationRange, tickInactive, false);
+            this(activationRange, tickInactive, false, false);
         }
     }
 }
