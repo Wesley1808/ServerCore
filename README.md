@@ -6,6 +6,10 @@ This includes:
 
 - Several configurable features that can heavily reduce lag, but have a slight impact on gameplay depending on the configuration.
 
+Note:
+- Some of the above patches & optimizations use algorithms that might make that 0.01% difference from vanilla to boost performance. 
+- If any of these changes are easily noticeable ingame, it is considered a bug.
+
 ## Features
 **Entity Activation Range**
 + A very configurable and optional feature that allows you to drastically cut down on the amount of entities that have to be processed on the server.

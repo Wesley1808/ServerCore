@@ -187,10 +187,10 @@ public class ActivationRange {
             return 100;
         }
 
-        // ServerCore - Properly handle moving items.
-        if (entity instanceof ItemEntity) {
+        // ServerCore - Immunize moving items & xp orbs.
+        if (entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity) {
             final Vec3d velocity = entity.getVelocity();
-            if (velocity.x != 0 || velocity.z != 0) {
+            if (velocity.x != 0 || velocity.z != 0 || velocity.y > 0) {
                 return 20;
             }
         }
@@ -215,9 +215,9 @@ public class ActivationRange {
 
             if (entity instanceof BeeEntity bee) {
                 BlockPos movingTarget = ((IPathAwareEntity) bee).getMovingTarget();
-                if (bee.getAngryAt() != null ||
-                        (bee.getHivePos() != null && bee.getHivePos().equals(movingTarget)) ||
-                        (bee.getFlowerPos() != null && bee.getFlowerPos().equals(movingTarget))
+                if (bee.getAngryAt() != null
+                        || (bee.getHivePos() != null && bee.getHivePos().equals(movingTarget))
+                        || (bee.getFlowerPos() != null && bee.getFlowerPos().equals(movingTarget))
                 ) {
                     return 20;
                 }
