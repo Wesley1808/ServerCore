@@ -29,7 +29,7 @@ public abstract class MoveToTargetPosGoalMixin extends Goal {
 
     @Inject(method = "findTargetPos", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/ai/goal/MoveToTargetPosGoal;targetPos:Lnet/minecraft/util/math/BlockPos;"), locals = LocalCapture.CAPTURE_FAILHARD)
     public void setTargetPos(CallbackInfoReturnable<Boolean> cir, int var1, int var2, BlockPos var3, BlockPos.Mutable mutable, int var5, int var6, int var7, int var8) {
-        this.setTargetPosition(mutable.mutableCopy());
+        this.setTargetPosition(mutable.toImmutable());
     }
 
     private void setTargetPosition(BlockPos pos) {

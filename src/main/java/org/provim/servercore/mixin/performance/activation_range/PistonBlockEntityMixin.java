@@ -27,7 +27,7 @@ import java.util.List;
 public abstract class PistonBlockEntityMixin {
 
     @Inject(method = "pushEntities", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/entity/Entity;setVelocity(DDD)V"))
-    private static void onPistonPush(World world, BlockPos pos, float f, PistonBlockEntity blockEntity, CallbackInfo ci, Direction direction, double d, VoxelShape voxelShape, Box box, List list, List list2, boolean bl, Iterator var12, Entity entity) {
+    private static void onPushEntity(World world, BlockPos pos, float f, PistonBlockEntity blockEntity, CallbackInfo ci, Direction direction, double d, VoxelShape voxelShape, Box box, List list, List list2, boolean bl, Iterator var12, Entity entity) {
         final int ticks = ServerCore.getServer().getTicks() + 10;
         final ActivationEntity activationEntity = (ActivationEntity) entity;
         activationEntity.setActivatedTick(Math.max(activationEntity.getActivatedTick(), ticks));

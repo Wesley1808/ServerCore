@@ -18,6 +18,7 @@ import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.entity.raid.RaiderEntity;
 import net.minecraft.entity.vehicle.BoatEntity;
+import net.minecraft.entity.vehicle.HopperMinecartEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -95,7 +96,12 @@ public class ActivationRange {
                 || entity instanceof EndCrystalEntity
                 || entity instanceof FireworkRocketEntity
                 || entity instanceof EyeOfEnderEntity
-                || entity instanceof TridentEntity;
+                || entity instanceof TridentEntity
+
+                // ServerCore
+                || entity instanceof GhastEntity
+                || entity instanceof HopperMinecartEntity;
+
     }
 
     /**
@@ -114,9 +120,13 @@ public class ActivationRange {
             info.setRemainingVillagers(Math.min(info.getRemainingVillagers() + 1, VILLAGER_WAKEUP_MAX.get()));
             info.setRemainingMonsters(Math.min(info.getRemainingMonsters() + 1, MONSTER_WAKEUP_MAX.get()));
             info.setRemainingFlying(Math.min(info.getRemainingFlying() + 1, FLYING_WAKEUP_MAX.get()));
-            maxRange = Math.min((ServerCore.getServer().getPlayerManager().getViewDistance() << 4) - 8, maxRange);
 
-            for (ServerPlayerEntity player : world.getPlayers(player -> !player.isSpectator())) {
+            maxRange = Math.min((ServerCore.getServer().getPlayerManager().getViewDistance() << 4) - 8, maxRange);
+            for (ServerPlayerEntity player : world.getPlayers()) {
+                if (player.isSpectator()) {
+                    continue;
+                }
+
                 Box maxBB;
                 if (USE_VERTICAL_RANGE.get()) {
                     maxBB = player.getBoundingBox().expand(maxRange, 96, maxRange);
@@ -179,14 +189,14 @@ public class ActivationRange {
 
         // quick checks.
         final ActivationType type = activationEntity.getActivationType();
-        if (entity.isTouchingWater() && !(type == ActivationType.ANIMAL || type == ActivationType.FLYING || type == ActivationType.VILLAGER || type == ActivationType.WATER || entity instanceof BoatEntity)) {
+        if (entity.isTouchingWater() && entity.isPushedByFluids() && !(type == ActivationType.ANIMAL || type == ActivationType.FLYING || type == ActivationType.VILLAGER || type == ActivationType.WATER || entity instanceof BoatEntity)) {
             return 100;
         }
 
-        // ServerCore - Properly handle moving items.
-        if (entity instanceof ItemEntity) {
+        // ServerCore - Immunize moving items & xp orbs.
+        if (entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity) {
             final Vec3d velocity = entity.getVelocity();
-            if (velocity.x != 0 || velocity.z != 0) {
+            if (velocity.x != 0 || velocity.z != 0 || velocity.y > 0) {
                 return 20;
             }
         }
@@ -201,7 +211,7 @@ public class ActivationRange {
 
         // special cases.
         if (entity instanceof LivingEntity living) {
-            if (living.isClimbing() || living.jumping || living.hurtTime > 0 || !living.getActiveStatusEffects().isEmpty()) {
+            if (living.jumping || !living.getActiveStatusEffects().isEmpty() || living.isClimbing()) {
                 return 1;
             }
 
@@ -211,9 +221,9 @@ public class ActivationRange {
 
             if (entity instanceof BeeEntity bee) {
                 BlockPos movingTarget = ((IPathAwareEntity) bee).getMovingTarget();
-                if (bee.getAngryAt() != null ||
-                        (bee.getHivePos() != null && bee.getHivePos().equals(movingTarget)) ||
-                        (bee.getFlowerPos() != null && bee.getFlowerPos().equals(movingTarget))
+                if (bee.getAngryAt() != null
+                        || (bee.getHivePos() != null && bee.getHivePos().equals(movingTarget))
+                        || (bee.getFlowerPos() != null && bee.getFlowerPos().equals(movingTarget))
                 ) {
                     return 20;
                 }
@@ -270,47 +280,47 @@ public class ActivationRange {
      */
 
     public static boolean checkIfActive(Entity entity) {
-        if (!ENABLED.get()) {
-            return true;
-        }
-
-        if (entity instanceof VillagerEntity && entity.isTouchingWater()) {
-            // Debug
-            entity.isTouchingWater();
-        }
-
         final ActivationEntity activationEntity = (ActivationEntity) entity;
-        if (activationEntity.isExcluded() || entity.inNetherPortal || entity.hasNetherPortalCooldown()) {
-            return true;
-        }
-
-        if (entity instanceof MobEntity mob && mob.holdingEntity instanceof PlayerEntity) {
+        if (shouldTick(entity, activationEntity)) {
             return true;
         }
 
         final int currentTick = ServerCore.getServer().getTicks();
-        int activatedTick = activationEntity.getActivatedTick();
-        boolean active = activatedTick >= currentTick;
+        final boolean active = activationEntity.getActivatedTick() >= currentTick;
         activationEntity.setTemporarilyActive(false);
 
         if (!active) {
             if ((currentTick - activationEntity.getActivatedTick() - 1) % 20 == 0) {
-                // Check immunities every 20 ticks.
-                final int immunity = checkEntityImmunities(entity);
-                if (immunity >= 0) {
-                    activationEntity.setActivatedTick(currentTick + immunity);
-                    return true;
-                }
+                // Check immunities every 20 inactive ticks.
+                if (checkIfImmune(entity, currentTick)) return true;
 
                 final boolean shouldTickInactive = activationEntity.getActivationType().tickInactive.getAsBoolean();
                 activationEntity.setTemporarilyActive(shouldTickInactive);
                 return shouldTickInactive;
             }
-            // Add a little performance juice to active entities. Skip 1/4 if not immune.
-        } else if (entity.age % 4 == 0 && checkEntityImmunities(entity) < 0) {
-            return false;
+            // Spigot - Add a little performance juice to active entities. Skip 1/4 if not immune.
+        } else if (entity.age % 4 == 0) {
+            // ServerCore - If immune, increase activated ticks.
+            return checkIfImmune(entity, currentTick);
         }
         return active;
+    }
+
+    private static boolean shouldTick(Entity entity, ActivationEntity activationEntity) {
+        return !ENABLED.get() || activationEntity.isExcluded() || entity.inNetherPortal || entity.hasNetherPortalCooldown()
+                || (entity.age < 200 && activationEntity.getActivationType() == ActivationType.MISC) // New misc entities
+                || (entity instanceof MobEntity mob && mob.holdingEntity instanceof PlayerEntity) // Player leashed mobs
+                || (entity instanceof LivingEntity living && living.hurtTime > 0); // Attacked mobs
+    }
+
+    private static boolean checkIfImmune(Entity entity, int currentTick) {
+        final ActivationEntity activationEntity = (ActivationEntity) entity;
+        final int immunity = checkEntityImmunities(entity);
+        if (immunity >= 0) {
+            activationEntity.setActivatedTick(currentTick + immunity);
+            return true;
+        }
+        return false;
     }
 
     private static int checkInactiveWakeup(Entity entity) {
@@ -366,14 +376,14 @@ public class ActivationRange {
 
     public enum ActivationType {
         VILLAGER(VILLAGER_ACTIVATION_RANGE::get, VILLAGER_TICK_INACTIVE::get),
-        ZOMBIE(ZOMBIE_ACTIVATION_RANGE::get, ZOMBIE_TICK_INACTIVE::get, true),
-        MONSTER(MONSTER_ACTIVATION_RANGE::get, MONSTER_TICK_INACTIVE::get, true),
+        ZOMBIE(ZOMBIE_ACTIVATION_RANGE::get, ZOMBIE_TICK_INACTIVE::get, true, false),
+        MONSTER(MONSTER_ACTIVATION_RANGE::get, MONSTER_TICK_INACTIVE::get, true, false),
         MONSTER_BELOW(MONSTER_ACTIVATION_RANGE::get, MONSTER_TICK_INACTIVE::get, true, true),
         NEUTRAL(NEUTRAL_ACTIVATION_RANGE::get, NEUTRAL_TICK_INACTIVE::get),
         ANIMAL(ANIMAL_ACTIVATION_RANGE::get, ANIMAL_TICK_INACTIVE::get),
         WATER(WATER_ACTIVATION_RANGE::get, WATER_TICK_INACTIVE::get),
-        FLYING(FLYING_ACTIVATION_RANGE::get, FLYING_TICK_INACTIVE::get, true),
-        RAIDER(RAIDER_ACTIVATION_RANGE::get, RAIDER_TICK_INACTIVE::get, true),
+        FLYING(FLYING_ACTIVATION_RANGE::get, FLYING_TICK_INACTIVE::get, true, false),
+        RAIDER(RAIDER_ACTIVATION_RANGE::get, RAIDER_TICK_INACTIVE::get, true, false),
         MISC(MISC_ACTIVATION_RANGE::get, MISC_TICK_INACTIVE::get);
 
         private final IntSupplier activationRange;
@@ -389,12 +399,8 @@ public class ActivationRange {
             this.extraHeightDown = extraHeightDown;
         }
 
-        ActivationType(IntSupplier activationRange, BooleanSupplier tickInactive, boolean extraHeightUp) {
-            this(activationRange, tickInactive, extraHeightUp, false);
-        }
-
         ActivationType(IntSupplier activationRange, BooleanSupplier tickInactive) {
-            this(activationRange, tickInactive, false);
+            this(activationRange, tickInactive, false, false);
         }
     }
 }
