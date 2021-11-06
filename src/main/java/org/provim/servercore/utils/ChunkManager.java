@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.WorldChunk;
+import org.jetbrains.annotations.Nullable;
 
 public final class ChunkManager {
 
@@ -18,6 +19,7 @@ public final class ChunkManager {
      * Returns the BlockState at {@param pos} in {@param world} if the position is loaded.
      */
 
+    @Nullable
     public static BlockState getStateIfLoaded(World world, BlockPos pos) {
         final WorldChunk chunk = getChunkIfLoaded(world, pos);
         return chunk != null ? chunk.getBlockState(pos) : Blocks.VOID_AIR.getDefaultState();
@@ -27,6 +29,7 @@ public final class ChunkManager {
      * Returns the chunk at {@param pos} in {@param world} if the position is loaded.
      */
 
+    @Nullable
     public static WorldChunk getChunkIfLoaded(World world, BlockPos pos) {
         final ChunkHolder holder = getChunkHolder(world, pos);
         return holder != null ? holder.getAccessibleFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null) : null;
@@ -48,6 +51,7 @@ public final class ChunkManager {
      * Returns the ChunkHolder at {@param pos} in {@param world} if the location is loaded.
      */
 
+    @Nullable
     public static ChunkHolder getChunkHolder(World world, BlockPos pos) {
         return world.getChunkManager() instanceof ServerChunkManager manager ? manager.getChunkHolder(ChunkPos.toLong(pos.getX() >> 4, pos.getZ() >> 4)) : null;
     }

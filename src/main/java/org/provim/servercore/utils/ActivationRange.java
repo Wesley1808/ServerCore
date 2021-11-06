@@ -18,6 +18,7 @@ import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.entity.raid.RaiderEntity;
 import net.minecraft.entity.vehicle.BoatEntity;
+import net.minecraft.entity.vehicle.HopperMinecartEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -95,7 +96,12 @@ public class ActivationRange {
                 || entity instanceof EndCrystalEntity
                 || entity instanceof FireworkRocketEntity
                 || entity instanceof EyeOfEnderEntity
-                || entity instanceof TridentEntity;
+                || entity instanceof TridentEntity
+
+                // ServerCore
+                || entity instanceof GhastEntity
+                || entity instanceof HopperMinecartEntity;
+
     }
 
     /**
@@ -205,7 +211,7 @@ public class ActivationRange {
 
         // special cases.
         if (entity instanceof LivingEntity living) {
-            if (living.isClimbing() || living.jumping || living.hurtTime > 0 || !living.getActiveStatusEffects().isEmpty()) {
+            if (living.jumping || !living.getActiveStatusEffects().isEmpty() || living.isClimbing()) {
                 return 1;
             }
 
@@ -274,41 +280,47 @@ public class ActivationRange {
      */
 
     public static boolean checkIfActive(Entity entity) {
-        if (!ENABLED.get()) {
-            return true;
-        }
-
         final ActivationEntity activationEntity = (ActivationEntity) entity;
-        if (activationEntity.isExcluded() || entity.inNetherPortal || entity.hasNetherPortalCooldown()) {
-            return true;
-        }
-
-        if (entity instanceof MobEntity mob && mob.holdingEntity instanceof PlayerEntity) {
+        if (shouldTick(entity, activationEntity)) {
             return true;
         }
 
         final int currentTick = ServerCore.getServer().getTicks();
-        boolean active = activationEntity.getActivatedTick() >= currentTick;
+        final boolean active = activationEntity.getActivatedTick() >= currentTick;
         activationEntity.setTemporarilyActive(false);
 
         if (!active) {
             if ((currentTick - activationEntity.getActivatedTick() - 1) % 20 == 0) {
-                // Check immunities every 20 ticks.
-                final int immunity = checkEntityImmunities(entity);
-                if (immunity >= 0) {
-                    activationEntity.setActivatedTick(currentTick + immunity);
-                    return true;
-                }
+                // Check immunities every 20 inactive ticks.
+                if (checkIfImmune(entity, currentTick)) return true;
 
                 final boolean shouldTickInactive = activationEntity.getActivationType().tickInactive.getAsBoolean();
                 activationEntity.setTemporarilyActive(shouldTickInactive);
                 return shouldTickInactive;
             }
-            // Add a little performance juice to active entities. Skip 1/4 if not immune.
-        } else if (entity.age % 4 == 0 && checkEntityImmunities(entity) < 0) {
-            return false;
+            // Spigot - Add a little performance juice to active entities. Skip 1/4 if not immune.
+        } else if (entity.age % 4 == 0) {
+            // ServerCore - If immune, increase activated ticks.
+            return checkIfImmune(entity, currentTick);
         }
         return active;
+    }
+
+    private static boolean shouldTick(Entity entity, ActivationEntity activationEntity) {
+        return !ENABLED.get() || activationEntity.isExcluded() || entity.inNetherPortal || entity.hasNetherPortalCooldown()
+                || (entity.age < 200 && activationEntity.getActivationType() == ActivationType.MISC) // New misc entities
+                || (entity instanceof MobEntity mob && mob.holdingEntity instanceof PlayerEntity) // Player leashed mobs
+                || (entity instanceof LivingEntity living && living.hurtTime > 0); // Attacked mobs
+    }
+
+    private static boolean checkIfImmune(Entity entity, int currentTick) {
+        final ActivationEntity activationEntity = (ActivationEntity) entity;
+        final int immunity = checkEntityImmunities(entity);
+        if (immunity >= 0) {
+            activationEntity.setActivatedTick(currentTick + immunity);
+            return true;
+        }
+        return false;
     }
 
     private static int checkInactiveWakeup(Entity entity) {

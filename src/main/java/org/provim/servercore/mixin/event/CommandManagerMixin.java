@@ -23,7 +23,7 @@ public abstract class CommandManagerMixin {
      * Registers custom commands.
      */
 
-    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/CommandDispatcher;findAmbiguities(Lcom/mojang/brigadier/AmbiguityConsumer;)V"))
+    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/CommandDispatcher;findAmbiguities(Lcom/mojang/brigadier/AmbiguityConsumer;)V", remap = false))
     private void register(CommandManager.RegistrationEnvironment environment, CallbackInfo ci) {
         SettingCommand.register(dispatcher);
         InfoCommand.register(dispatcher);
