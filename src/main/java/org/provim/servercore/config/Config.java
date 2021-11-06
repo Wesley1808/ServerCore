@@ -62,7 +62,13 @@ public final class Config {
 
     private static void loadEntries(CommentedConfig config, Class<?> clazz) {
         try {
-            Config.forEachEntry(clazz, (field, entry) -> entry.set(config.getOrElse(field.getName().toLowerCase(), entry.getDefault())));
+            Config.forEachEntry(clazz, (field, entry) -> {
+                final String key = field.getName().toLowerCase();
+                final Object value = config.getOrElse(key, entry.getDefault());
+                if (!entry.set(value)) {
+                    ServerCore.getLogger().error("[ServerCore] Invalid config entry found! {} = {}", key, value);
+                }
+            });
         } catch (Exception ex) {
             ServerCore.getLogger().error("[ServerCore] Exception was thrown whilst loading configs!", ex);
         }
