@@ -6,7 +6,6 @@
   "server": [
     "event.CommandManagerMixin",
     "event.MinecraftServerMixin",
-    "event.PlayerManagerMixin",
     "limits.AnimalEntityMixin",
     "limits.EggEntityMixin",
     "limits.VillagerBreedTaskMixin",

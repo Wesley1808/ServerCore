@@ -24,11 +24,9 @@ import java.math.BigDecimal;
 public final class TickManager {
     private static final BigDecimal VALUE = new BigDecimal("0.1");
     private static BigDecimal mobcapModifier = new BigDecimal(String.valueOf(DynamicConfig.MAX_MOBCAP.get()));
-    private static boolean updateClients = false;
     private static int viewDistance;
     private static int simulationDistance;
     private static int chunkTickDistance;
-    private static int clientViewDistance;
 
 
     private TickManager() {
@@ -38,7 +36,6 @@ public final class TickManager {
         viewDistance = server.getPlayerManager().getViewDistance();
         simulationDistance = viewDistance;
         chunkTickDistance = viewDistance;
-        clientViewDistance = viewDistance;
     }
 
     /**
@@ -52,7 +49,7 @@ public final class TickManager {
             final double mspt = MathHelper.average(server.lastTickLengths) * 1.0E-6D;
             final double targetMspt = DynamicConfig.TARGET_MSPT.get();
             final double upperBound = targetMspt + 5;
-            final double lowerBound = targetMspt - 5;
+            final double lowerBound = Math.max(targetMspt - 5, 2);
 
             checkViewDistance(mspt, upperBound, lowerBound);
             checkSimulationDistance(mspt, upperBound, lowerBound);
@@ -98,9 +95,6 @@ public final class TickManager {
     }
 
     public static void setViewDistance(int distance) {
-        updateClients = distance > clientViewDistance + 1 || distance < clientViewDistance - 1;
-        if (updateClients) clientViewDistance = distance;
-
         ServerCore.getServer().getPlayerManager().setViewDistance(distance);
         viewDistance = distance;
     }
@@ -124,10 +118,6 @@ public final class TickManager {
 
     public static int getMobcap(SpawnGroup group) {
         return (int) (group.getCapacity() * mobcapModifier.doubleValue());
-    }
-
-    public static boolean shouldUpdateClients() {
-        return updateClients;
     }
 
     /**

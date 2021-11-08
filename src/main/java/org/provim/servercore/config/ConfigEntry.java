@@ -7,20 +7,14 @@ import java.util.function.Predicate;
 
 public final class ConfigEntry<T> {
     private final Predicate<T> constraint;
-    private final Consumer<T> onChanged;
     private final T defaultValue;
     private final String comment;
     private T value;
 
-    public ConfigEntry(T defaultValue, Predicate<T> constraint, Consumer<T> onChanged, String comment) {
+    public ConfigEntry(T defaultValue, Predicate<T> constraint, String comment) {
         this.defaultValue = defaultValue;
         this.constraint = constraint;
-        this.onChanged = onChanged;
         this.comment = comment;
-    }
-
-    public ConfigEntry(T defaultValue, Predicate<T> constraint, String comment) {
-        this(defaultValue, constraint, null, comment);
     }
 
     public ConfigEntry(T defaultValue, Predicate<T> constraint) {
@@ -51,19 +45,7 @@ public final class ConfigEntry<T> {
         return this.defaultValue.getClass();
     }
 
-
     public boolean set(T value) {
-        final T oldValue = this.value;
-        final boolean modified = this.modify(value);
-
-        if (this.onChanged != null && oldValue != this.value && ServerCore.getServer() != null) {
-            this.onChanged.accept(this.value);
-        }
-
-        return modified;
-    }
-
-    private boolean modify(T value) {
         if (this.validate(value)) {
             this.value = value;
             return true;
