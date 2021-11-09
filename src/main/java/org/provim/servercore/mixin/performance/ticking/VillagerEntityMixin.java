@@ -27,9 +27,6 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
     @Unique
     private boolean lobotomized = false;
 
-    @Unique // Don't use Entity.age because Activation Range skips 1/4 entity ticks.
-    private int tickCount = 0;
-
     private VillagerEntityMixin(EntityType<? extends MerchantEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -38,7 +35,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
     private void shouldTickBrain(Brain<VillagerEntity> brain, ServerWorld world, LivingEntity entity) {
         VillagerEntity villager = (VillagerEntity) (Object) this;
         if (FeatureConfig.LOBOTOMIZE_VILLAGERS.get() && isLobotomized()) {
-            if (this.tickCount % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0) {
+            if (this.age % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0) {
                 brain.tick(world, villager);
             }
         } else {
@@ -47,7 +44,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
     }
 
     private boolean isLobotomized() {
-        if (++this.tickCount % 300 == 0) {
+        if (this.age % 300 == 0) {
             this.lobotomized = !canTravel(this.getBlockPos());
         }
 

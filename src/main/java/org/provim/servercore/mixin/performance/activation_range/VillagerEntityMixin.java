@@ -35,11 +35,11 @@ public abstract class VillagerEntityMixin extends MerchantEntity implements Inac
         }
 
         if (ActivationRangeConfig.VILLAGER_TICK_ALWAYS.get()) {
+            this.age++;
             this.mobTick();
         }
 
         this.decayGossip();
-
         this.despawnCounter++;
         ActivationRange.updateBreedingAge(this);
         ActivationRange.updateGoalSelectors(this.goalSelector, this.targetSelector);

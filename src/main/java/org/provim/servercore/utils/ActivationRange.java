@@ -299,7 +299,7 @@ public class ActivationRange {
                 return shouldTickInactive;
             }
             // Spigot - Add a little performance juice to active entities. Skip 1/4 if not immune.
-        } else if (entity.age % 4 == 0) {
+        } else if (activationEntity.getTickCount() % 4 == 0) {
             // ServerCore - If immune, increase activated ticks.
             return checkIfImmune(entity, currentTick);
         }

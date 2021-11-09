@@ -17,4 +17,8 @@ public interface ActivationEntity {
     void setActivatedImmunityTick(int activatedImmunityTick);
 
     void setTemporarilyActive(boolean active);
+
+    int getTickCount();
+
+    void incTickCount();
 }

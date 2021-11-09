@@ -25,21 +25,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
-
     @Shadow
     public World world;
-    @Unique
-    private int activatedTick = Integer.MIN_VALUE;
-    @Unique
-    private int activatedImmunityTick = Integer.MIN_VALUE;
-    @Unique
-    private boolean isTemporarilyActive = false;
-    @Unique
-    private ActivationRange.ActivationType activationType;
-    @Unique
-    private boolean excluded = false;
+
     @Shadow
     private Vec3d velocity;
+
+    @Unique
+    private int activatedTick = Integer.MIN_VALUE;
+
+    @Unique
+    private int activatedImmunityTick = Integer.MIN_VALUE;
+
+    @Unique
+    private boolean isTemporarilyActive = false;
+
+    @Unique
+    private ActivationRange.ActivationType activationType;
+
+    @Unique
+    private boolean excluded = false;
+
+    @Unique
+    private int tickCount;
 
     @Shadow
     public abstract void setVelocity(Vec3d velocity);
@@ -100,6 +108,16 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
     @Override
     public void setTemporarilyActive(boolean active) {
         this.isTemporarilyActive = active;
+    }
+
+    @Override
+    public int getTickCount() {
+        return this.tickCount;
+    }
+
+    @Override
+    public void incTickCount() {
+        this.tickCount++;
     }
 
     @Override

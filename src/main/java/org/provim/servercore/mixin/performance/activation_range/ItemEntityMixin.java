@@ -7,8 +7,6 @@ import net.minecraft.world.World;
 import org.provim.servercore.interfaces.InactiveEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 /**
  * From: Spigot (Entity-Activation-Range.patch)
@@ -25,12 +23,6 @@ public abstract class ItemEntityMixin extends Entity implements InactiveEntity {
 
     private ItemEntityMixin(EntityType<?> entityType, World world) {
         super(entityType, world);
-    }
-
-    // ServerCore - Fixes items not always falling to the ground.
-    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ItemEntity;getId()I"))
-    private int redirectId(ItemEntity item) {
-        return 1;
     }
 
     @Override
