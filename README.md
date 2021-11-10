@@ -1,48 +1,74 @@
 # ServerCore
-A fabric mod that aims to optimize the minecraft server.\
-\
-This includes:
-- Several patches & optimizations to improve performance and reduce lagspikes, which *shouldn't* make any noticeable changes during gameplay.
+
+A fabric mod that aims to optimize the minecraft server.
+
+#### This includes:
+
+- Several patches & optimizations to improve performance and reduce lagspikes, which shouldn't make any noticeable changes during gameplay.
+
 
 - Several configurable features that can heavily reduce lag, but have a slight impact on gameplay depending on the configuration.
 
-Note:
-- Some of the above patches & optimizations use algorithms that might make that 0.01% difference from vanilla to boost performance. 
-- If any of these changes are easily noticeable ingame, it is considered a bug.
+### Warning
+>Some of the above optimizations use algorithms that may alter vanilla mechanics in the slightest.\
+>These patches should all have an on/off switch in the config. If one does not, feel free to report it.
 
 ## Features
-**Entity Activation Range**
-+ A very configurable and optional feature that allows you to drastically cut down on the amount of entities that have to be processed on the server.
-- This is a port based off of Spigot's and PaperMC's implementation, with extra features.
 
-**Per player spawns - (1.17, part of vanilla in 1.18)**
-+ A feature that makes mob spawns work per-player, rather than globally.
-- This prevents the situation where one player hoards the entire mobcap, and nobody else gets to see any hostile mobs.
+#### Entity Activation Range
 
-**Chunk ticking distance**
-+ A setting that allows you to reduce the distance at which chunks can tick (mob spawns & random ticks).
-- This allows for higher viewdistances at lower costs.
+A very configurable and optional feature that allows you to drastically cut down on the amount of entities that have to
+be processed on the server.\
+This is a port based off of Spigot's and PaperMC's implementation, with extra features.
 
-**Dynamic performance checks**
-+ Allows the server to automatically adjust the current settings depending on the MSPT and config.
-- These include: Chunk-tick distance, View distance, Simulation distance (1.18) & mobcaps.
+___
 
-**Villager lobotomization**
-+ Allows the server to cut down on villager lag from large trading halls, by slowing down the tick rate of villagers stuck in 1x1 spaces.
+#### Per player spawns - (1.17, part of vanilla in 1.18)
 
+A feature that makes mob spawns work per-player, rather than globally.\
+This prevents the situation where one player hoards the entire mobcap, and nobody else gets to see any hostile mobs.
+
+___
+
+#### Chunk ticking distance
+
+A setting that allows you to reduce the distance at which chunks can tick (mob spawns & random ticks).\
+This allows for higher viewdistances at lower costs.
+
+___
+
+#### Dynamic performance checks
+
+Allows the server to automatically adjust the current settings depending on the MSPT and config.\
+These include: Chunk-tick distance, View distance, Simulation distance (1.18) & mobcaps.
+
+___
+
+#### Villager lobotomization
+
+Allows the server to cut down on villager lag from large trading halls, by slowing down the tick rate of villagers stuck
+in 1x1 spaces.
+\
+\
 **- And more!**
+## Known Incompatibilities
+
+**Carpet:** `/carpet lagFreeSpawning` - 1.17.1 only
+
 ## Commands & Configuration
 
-**Commands:**
+### Commands
+
 - /servercore - Allows for modifying settings & configs ingame.
+
 - /mobcaps - Displays current mobcaps, supports both per-player and global.
+
 - /sc status - Gives information about the current settings.
 
-**Config:**
-\
+___
+### Config
 Most features are disabled by default and can be found in the config.\
-The config file can be found at `<server_dir>/config/servercore.toml`
-
+The config file can be found at `/config/servercore.toml`
 ```toml
 # Lets you enable / disable certain features and modify them.
 [features]
@@ -157,17 +183,7 @@ The config file can be found at `<server_dir>/config/servercore.toml`
 	misc_activation_range = 16
 	misc_tick_inactive = true
 ```
-## Known Incompatibilities
-- /carpet lagFreeSpawning (from Carpet mod).\
-  If you want to use Carpet, make sure this setting is set to false. (Only in 1.17.1)
-
-## Setup
-1. Navigate to https://github.com/Wesley1808/ServerCore-Fabric/actions
-2. Select the topmost workflow run.
-3. Download "ServerCore" from below **Artifacts**.
-4. Unzip the file and grab the .jar file **without** -dev or -sources.
-
 ## License
+
 ServerCore includes ports of patches from repositories such as PaperMC and Purpur.\
-If a file uses the GPL-3.0 license it will be stated at the top of the file.
-All other files are licensed under MIT.
+If a file uses the GPL-3.0 license it will be stated at the top of the file. All other files are licensed under MIT.

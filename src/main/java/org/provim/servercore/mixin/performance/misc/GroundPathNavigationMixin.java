@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(GroundPathNavigation.class)
-public abstract class MobNavigationMixin extends PathNavigation {
-    private MobNavigationMixin(Mob mob, Level level) {
+public abstract class GroundPathNavigationMixin extends PathNavigation {
+    private GroundPathNavigationMixin(Mob mob, Level level) {
         super(mob, level);
     }
 

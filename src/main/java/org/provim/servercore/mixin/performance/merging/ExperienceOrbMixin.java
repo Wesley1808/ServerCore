@@ -31,6 +31,7 @@ public abstract class ExperienceOrbMixin extends Entity {
      * @author Wesley1808
      * @reason Allows experience orbs without the same value to merge.
      */
+
     @Overwrite
     private static boolean canMerge(ExperienceOrb orb, int seed, int amount) {
         boolean bl = !orb.isRemoved() && (orb.getId() - seed) % 40 == 0;
@@ -41,6 +42,7 @@ public abstract class ExperienceOrbMixin extends Entity {
      * @author Wesley1808
      * @reason Correctly merge experience orbs with different values.
      */
+
     @Overwrite
     private void merge(ExperienceOrb other) {
         if (FeatureConfig.FAST_XP_MERGING.get()) {

@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ChunkMap.TrackedEntity.class)
-public abstract class TACSEntityTrackerMixin {
+public abstract class TrackedEntityMixin {
 
     // Avoid stream allocations.
     @Redirect(method = "getEffectiveRange", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getIndirectPassengers()Ljava/lang/Iterable;"))

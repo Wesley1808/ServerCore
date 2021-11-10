@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.ChunkPos;
@@ -155,7 +156,7 @@ public final class TickManager {
 
     public static boolean checkForEntities(EntityType<?> type, Level level, BlockPos pos, int limit, int range) {
         if (EntityConfig.ENABLED.get()) {
-            return limit <= level.getEntities(type, new AABB(pos.mutable().offset(range, range, range), pos.mutable().offset(-range, -range, -range)), entity -> !entity.isSpectator()).size();
+            return limit <= level.getEntities(type, new AABB(pos.mutable().offset(range, range, range), pos.mutable().offset(-range, -range, -range)), EntitySelector.NO_SPECTATORS).size();
         } else {
             return false;
         }
