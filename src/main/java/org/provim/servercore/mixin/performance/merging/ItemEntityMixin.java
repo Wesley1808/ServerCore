@@ -1,6 +1,6 @@
 package org.provim.servercore.mixin.performance.merging;
 
-import net.minecraft.entity.ItemEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import org.provim.servercore.config.tables.FeatureConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,7 +16,7 @@ public abstract class ItemEntityMixin {
      * @param args: The values that decide the merging range.
      */
 
-    @ModifyArgs(method = "tryMerge()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Box;expand(DDD)Lnet/minecraft/util/math/Box;"))
+    @ModifyArgs(method = "mergeWithNeighbours", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/AABB;inflate(DDD)Lnet/minecraft/world/phys/AABB;"))
     private void setMergeRadius(Args args) {
         double mergeRadius = FeatureConfig.ITEM_MERGE_RADIUS.get();
         args.set(0, mergeRadius);

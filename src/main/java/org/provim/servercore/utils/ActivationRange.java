@@ -1,34 +1,42 @@
 package org.provim.servercore.utils;
 
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.brain.Activity;
-import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.ai.goal.GoalSelector;
-import net.minecraft.entity.boss.WitherEntity;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.boss.dragon.EnderDragonPart;
-import net.minecraft.entity.decoration.EndCrystalEntity;
-import net.minecraft.entity.mob.*;
-import net.minecraft.entity.passive.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.FireballEntity;
-import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.TridentEntity;
-import net.minecraft.entity.projectile.thrown.ThrownEntity;
-import net.minecraft.entity.raid.RaiderEntity;
-import net.minecraft.entity.vehicle.BoatEntity;
-import net.minecraft.entity.vehicle.HopperMinecartEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.goal.GoalSelector;
+import net.minecraft.world.entity.ambient.AmbientCreature;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.animal.horse.Llama;
+import net.minecraft.world.entity.boss.EnderDragonPart;
+import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.Ghast;
+import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.monster.hoglin.Hoglin;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.*;
+import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.entity.vehicle.MinecartHopper;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.provim.servercore.ServerCore;
 import org.provim.servercore.interfaces.ActivationEntity;
 import org.provim.servercore.interfaces.IGoalSelector;
-import org.provim.servercore.interfaces.IPathAwareEntity;
-import org.provim.servercore.interfaces.IWorld;
+import org.provim.servercore.interfaces.ILevel;
+import org.provim.servercore.interfaces.IPathFinderMob;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.IntSupplier;
@@ -53,23 +61,23 @@ public class ActivationRange {
      */
 
     public static ActivationType initializeEntityActivationType(Entity entity) {
-        if (entity instanceof RaiderEntity) {
+        if (entity instanceof Raider) {
             return ActivationType.RAIDER;
-        } else if (entity instanceof WaterCreatureEntity) {
+        } else if (entity instanceof WaterAnimal) {
             return ActivationType.WATER;
-        } else if (entity instanceof VillagerEntity) {
+        } else if (entity instanceof Villager) {
             return ActivationType.VILLAGER;
         } else if (entity.getType() == EntityType.ZOMBIE || entity.getType() == EntityType.HUSK) {
             return ActivationType.ZOMBIE;
-        } else if (entity instanceof CreeperEntity || entity instanceof SlimeEntity || entity instanceof Hoglin) {
+        } else if (entity instanceof Creeper || entity instanceof Slime || entity instanceof Hoglin) {
             return ActivationType.MONSTER_BELOW;
-        } else if (entity instanceof FlyingEntity) {
+        } else if (entity instanceof FlyingMob) {
             return ActivationType.FLYING;
-        } else if (entity instanceof Monster) {
+        } else if (entity instanceof Enemy) {
             return ActivationType.MONSTER;
-        } else if (entity instanceof PassiveEntity || entity instanceof AmbientEntity) {
+        } else if (entity instanceof AgeableMob || entity instanceof AmbientCreature) {
             return ActivationType.ANIMAL;
-        } else if (entity instanceof PathAwareEntity) {
+        } else if (entity instanceof PathfinderMob) {
             return ActivationType.NEUTRAL;
         } else {
             return ActivationType.MISC;
@@ -85,22 +93,22 @@ public class ActivationRange {
 
     public static boolean isExcluded(Entity entity) {
         return (((ActivationEntity) entity).getActivationType().activationRange.getAsInt() <= 0)
-                || entity instanceof PlayerEntity
-                || entity instanceof ThrownEntity
-                || entity instanceof EnderDragonEntity
+                || entity instanceof Player
+                || entity instanceof ThrowableItemProjectile
+                || entity instanceof EnderDragon
                 || entity instanceof EnderDragonPart
-                || entity instanceof WitherEntity
-                || entity instanceof FireballEntity
-                || entity instanceof LightningEntity
-                || entity instanceof TntEntity
-                || entity instanceof EndCrystalEntity
+                || entity instanceof WitherBoss
+                || entity instanceof Fireball
+                || entity instanceof LightningBolt
+                || entity instanceof PrimedTnt
+                || entity instanceof EndCrystal
                 || entity instanceof FireworkRocketEntity
-                || entity instanceof EyeOfEnderEntity
-                || entity instanceof TridentEntity
+                || entity instanceof EyeOfEnder
+                || entity instanceof ThrownTrident
 
                 // ServerCore
-                || entity instanceof GhastEntity
-                || entity instanceof HopperMinecartEntity;
+                || entity instanceof Ghast
+                || entity instanceof MinecartHopper;
 
     }
 
@@ -108,42 +116,42 @@ public class ActivationRange {
      * Activates entities in {@param world} that are close enough to players.
      */
 
-    public static void activateEntities(ServerWorld world) {
-        if (ENABLED.get() && ServerCore.getServer().getTicks() % 20 == 0) {
+    public static void activateEntities(ServerLevel level) {
+        if (ENABLED.get() && ServerCore.getServer().getTickCount() % 20 == 0) {
             int maxRange = Integer.MIN_VALUE;
             for (ActivationType type : ActivationType.values()) {
                 maxRange = Math.max(type.activationRange.getAsInt(), maxRange);
             }
 
-            IWorld info = (IWorld) world;
+            ILevel info = (ILevel) level;
             info.setRemainingAnimals(Math.min(info.getRemainingAnimals() + 1, ANIMAL_WAKEUP_MAX.get()));
             info.setRemainingVillagers(Math.min(info.getRemainingVillagers() + 1, VILLAGER_WAKEUP_MAX.get()));
             info.setRemainingMonsters(Math.min(info.getRemainingMonsters() + 1, MONSTER_WAKEUP_MAX.get()));
             info.setRemainingFlying(Math.min(info.getRemainingFlying() + 1, FLYING_WAKEUP_MAX.get()));
 
-            maxRange = Math.min((ServerCore.getServer().getPlayerManager().getViewDistance() << 4) - 8, maxRange);
-            for (ServerPlayerEntity player : world.getPlayers()) {
+            maxRange = Math.min((ServerCore.getServer().getPlayerList().getViewDistance() << 4) - 8, maxRange);
+            for (ServerPlayer player : level.players()) {
                 if (player.isSpectator()) {
                     continue;
                 }
 
-                Box maxBB;
+                AABB maxBB;
                 if (USE_VERTICAL_RANGE.get()) {
-                    maxBB = player.getBoundingBox().expand(maxRange, 96, maxRange);
+                    maxBB = player.getBoundingBox().inflate(maxRange, 96, maxRange);
                     for (ActivationType type : ActivationType.values()) {
-                        type.boundingBox = player.getBoundingBox().expand(type.activationRange.getAsInt());
-                        if (type.extraHeightUp) type.boundingBox.stretch(0, 96, 0);
-                        if (type.extraHeightDown) type.boundingBox.stretch(0, -96, 0);
+                        type.boundingBox = player.getBoundingBox().inflate(type.activationRange.getAsInt());
+                        if (type.extraHeightUp) type.boundingBox.expandTowards(0, 96, 0);
+                        if (type.extraHeightDown) type.boundingBox.expandTowards(0, -96, 0);
                     }
                 } else {
-                    maxBB = player.getBoundingBox().expand(maxRange, 256, maxRange);
+                    maxBB = player.getBoundingBox().inflate(maxRange, 256, maxRange);
                     for (ActivationType type : ActivationType.values()) {
                         final int range = type.activationRange.getAsInt();
-                        type.boundingBox = player.getBoundingBox().expand(range, 256, range);
+                        type.boundingBox = player.getBoundingBox().inflate(range, 256, range);
                     }
                 }
 
-                for (Entity entity : world.getOtherEntities(player, maxBB)) {
+                for (Entity entity : level.getEntities(player, maxBB)) {
                     activateEntity(entity);
                 }
             }
@@ -152,7 +160,7 @@ public class ActivationRange {
 
     private static void activateEntity(Entity entity) {
         final ActivationEntity activationEntity = (ActivationEntity) entity;
-        final int currentTick = ServerCore.getServer().getTicks();
+        final int currentTick = ServerCore.getServer().getTickCount();
 
         if (currentTick > activationEntity.getActivatedTick()) {
             if (activationEntity.isExcluded() || activationEntity.getActivationType().boundingBox.intersects(entity.getBoundingBox())) {
@@ -174,12 +182,12 @@ public class ActivationRange {
             return inactiveWakeUpImmunity;
         }
 
-        if (entity.getFireTicks() > 0) {
+        if (entity.getRemainingFireTicks() > 0) {
             return 2;
         }
 
         final ActivationEntity activationEntity = (ActivationEntity) entity;
-        if (activationEntity.getActivatedImmunityTick() >= ServerCore.getServer().getTicks()) {
+        if (activationEntity.getActivatedImmunityTick() >= ServerCore.getServer().getTickCount()) {
             return 1;
         }
 
@@ -189,20 +197,20 @@ public class ActivationRange {
 
         // quick checks.
         final ActivationType type = activationEntity.getActivationType();
-        if (entity.isTouchingWater() && entity.isPushedByFluids() && !(type == ActivationType.ANIMAL || type == ActivationType.FLYING || type == ActivationType.VILLAGER || type == ActivationType.WATER || entity instanceof BoatEntity)) {
+        if (entity.isInWater() && entity.isPushedByFluid() && !(type == ActivationType.ANIMAL || type == ActivationType.FLYING || type == ActivationType.VILLAGER || type == ActivationType.WATER || entity instanceof Boat)) {
             return 100;
         }
 
         // ServerCore - Immunize moving items & xp orbs.
-        if (entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity) {
-            final Vec3d velocity = entity.getVelocity();
-            if (velocity.x != 0 || velocity.z != 0 || velocity.y > 0) {
+        if (entity instanceof ItemEntity || entity instanceof ExperienceOrb) {
+            final Vec3 movement = entity.getDeltaMovement();
+            if (movement.x != 0 || movement.z != 0 || movement.y > 0) {
                 return 20;
             }
         }
 
-        if (!(entity instanceof PersistentProjectileEntity projectile)) {
-            if (!entity.isOnGround() && !entity.isTouchingWater() && !(entity instanceof FlyingEntity)) {
+        if (!(entity instanceof AbstractArrow projectile)) {
+            if (!entity.isOnGround() && !entity.isInWater() && !(entity instanceof FlyingMob)) {
                 return 10;
             }
         } else if (!projectile.inGround) {
@@ -211,61 +219,61 @@ public class ActivationRange {
 
         // special cases.
         if (entity instanceof LivingEntity living) {
-            if (living.jumping || !living.getActiveStatusEffects().isEmpty() || living.isClimbing()) {
+            if (living.jumping || !living.getActiveEffects().isEmpty() || living.onClimbable()) {
                 return 1;
             }
 
-            if (entity instanceof MobEntity mob && mob.getTarget() != null) {
+            if (entity instanceof Mob mob && mob.getTarget() != null) {
                 return 20;
             }
 
-            if (entity instanceof BeeEntity bee) {
-                BlockPos movingTarget = ((IPathAwareEntity) bee).getMovingTarget();
-                if (bee.getAngryAt() != null
+            if (entity instanceof Bee bee) {
+                BlockPos movingTarget = ((IPathFinderMob) bee).getMovingTarget();
+                if (bee.isAngry()
                         || (bee.getHivePos() != null && bee.getHivePos().equals(movingTarget))
-                        || (bee.getFlowerPos() != null && bee.getFlowerPos().equals(movingTarget))
+                        || (bee.getSavedFlowerPos() != null && bee.getSavedFlowerPos().equals(movingTarget))
                 ) {
                     return 20;
                 }
             }
 
-            if (entity instanceof VillagerEntity villager) {
-                Brain<VillagerEntity> brain = villager.getBrain();
+            if (entity instanceof Villager villager) {
+                Brain<Villager> brain = villager.getBrain();
 
                 if (VILLAGER_TICK_PANIC.get()) {
                     for (Activity activity : VILLAGER_PANIC_IMMUNITIES) {
-                        if (brain.hasActivity(activity)) {
+                        if (brain.isActive(activity)) {
                             return 20 * 5;
                         }
                     }
                 }
 
                 final int immunityAfter = VILLAGER_WORK_IMMUNITY_AFTER.get();
-                if (immunityAfter > 0 && (ServerCore.getServer().getTicks() - activationEntity.getActivatedTick()) >= immunityAfter) {
-                    if (brain.hasActivity(Activity.WORK)) {
+                if (immunityAfter > 0 && (ServerCore.getServer().getTickCount() - activationEntity.getActivatedTick()) >= immunityAfter) {
+                    if (brain.isActive(Activity.WORK)) {
                         return VILLAGER_WORK_IMMUNITY_FOR.get();
                     }
                 }
             }
 
-            if (entity instanceof LlamaEntity llama && llama.isFollowing()) {
+            if (entity instanceof Llama llama && llama.inCaravan()) {
                 return 1;
             }
 
-            if (entity instanceof AnimalEntity animal) {
+            if (entity instanceof Animal animal) {
                 if (animal.isBaby() || animal.isInLove()) {
                     return 5;
                 }
-                if (entity instanceof SheepEntity sheep && sheep.isSheared()) {
+                if (entity instanceof Sheep sheep && sheep.isSheared()) {
                     return 1;
                 }
             }
 
-            if (entity instanceof CreeperEntity creeper && creeper.isIgnited()) {
+            if (entity instanceof Creeper creeper && creeper.isIgnited()) {
                 return 20;
             }
 
-            if (entity instanceof MobEntity mob && ((IGoalSelector) mob.targetSelector).hasTasks()) {
+            if (entity instanceof Mob mob && ((IGoalSelector) mob.targetSelector).hasTasks()) {
                 return 0;
             }
         }
@@ -285,7 +293,7 @@ public class ActivationRange {
             return true;
         }
 
-        final int currentTick = ServerCore.getServer().getTicks();
+        final int currentTick = ServerCore.getServer().getTickCount();
         final boolean active = activationEntity.getActivatedTick() >= currentTick;
         activationEntity.setTemporarilyActive(false);
 
@@ -299,7 +307,7 @@ public class ActivationRange {
                 return shouldTickInactive;
             }
             // Spigot - Add a little performance juice to active entities. Skip 1/4 if not immune.
-        } else if (activationEntity.getTickCount() % 4 == 0) {
+        } else if (activationEntity.getFullTickCount() % 4 == 0) {
             // ServerCore - If immune, increase activated ticks.
             return checkIfImmune(entity, currentTick);
         }
@@ -307,9 +315,9 @@ public class ActivationRange {
     }
 
     private static boolean shouldTick(Entity entity, ActivationEntity activationEntity) {
-        return !ENABLED.get() || activationEntity.isExcluded() || entity.inNetherPortal || entity.hasNetherPortalCooldown()
-                || (entity.age < 200 && activationEntity.getActivationType() == ActivationType.MISC) // New misc entities
-                || (entity instanceof MobEntity mob && mob.holdingEntity instanceof PlayerEntity) // Player leashed mobs
+        return !ENABLED.get() || activationEntity.isExcluded() || entity.isInsidePortal || entity.isOnPortalCooldown()
+                || (entity.tickCount < 200 && activationEntity.getActivationType() == ActivationType.MISC) // New misc entities
+                || (entity instanceof Mob mob && mob.leashHolder instanceof Player) // Player leashed mobs
                 || (entity instanceof LivingEntity living && living.hurtTime > 0); // Attacked mobs
     }
 
@@ -326,8 +334,8 @@ public class ActivationRange {
     private static int checkInactiveWakeup(Entity entity) {
         final ActivationEntity activationEntity = (ActivationEntity) entity;
         final ActivationType type = activationEntity.getActivationType();
-        final IWorld info = (IWorld) entity.world;
-        long inactiveFor = ServerCore.getServer().getTicks() - activationEntity.getActivatedTick();
+        final ILevel info = (ILevel) entity.level;
+        long inactiveFor = ServerCore.getServer().getTickCount() - activationEntity.getActivatedTick();
 
         if (type == ActivationType.VILLAGER) {
             if (inactiveFor > VILLAGER_WAKEUP_INTERVAL.get() * 20 && info.getRemainingVillagers() > 0) {
@@ -353,13 +361,13 @@ public class ActivationRange {
         return -1;
     }
 
-    // Updates breeding age for passive entities.
-    public static void updateBreedingAge(PassiveEntity passive) {
-        final int age = passive.getBreedingAge();
+    // Updates breeding age for age-able entities.
+    public static void updateAge(AgeableMob mob) {
+        final int age = mob.getAge();
         if (age < 0) {
-            passive.setBreedingAge(age + 1);
+            mob.setAge(age + 1);
         } else if (age > 0) {
-            passive.setBreedingAge(age - 1);
+            mob.setAge(age - 1);
         }
     }
 
@@ -390,7 +398,7 @@ public class ActivationRange {
         private final BooleanSupplier tickInactive;
         private final boolean extraHeightUp;
         private final boolean extraHeightDown;
-        private Box boundingBox = new Box(0, 0, 0, 0, 0, 0);
+        private AABB boundingBox = new AABB(0, 0, 0, 0, 0, 0);
 
         ActivationType(IntSupplier activationRange, BooleanSupplier tickInactive, boolean extraHeightUp, boolean extraHeightDown) {
             this.activationRange = activationRange;

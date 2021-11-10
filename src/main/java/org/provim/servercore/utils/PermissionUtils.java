@@ -2,9 +2,9 @@ package org.provim.servercore.utils;
 
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public final class PermissionUtils {
     public static final String COMMAND_INFO = "servercore.command.sc";
@@ -23,15 +23,15 @@ public final class PermissionUtils {
      * @return Boolean: whether the player can use certain commands.
      */
 
-    public static boolean perm(ServerCommandSource src, String perm, int level) {
-        return LOADED ? Permissions.check(src, perm, level) : src.hasPermissionLevel(level);
+    public static boolean perm(CommandSourceStack src, String perm, int level) {
+        return LOADED ? Permissions.check(src, perm, level) : src.hasPermission(level);
     }
 
-    public static boolean perm(ServerPlayerEntity src, String perm) {
-        return LOADED ? Permissions.check(src, perm, 2) : src.hasPermissionLevel(2);
+    public static boolean perm(ServerPlayer src, String perm) {
+        return LOADED ? Permissions.check(src, perm, 2) : src.hasPermissions(2);
     }
 
-    public static boolean perm(PlayerEntity src, String perm) {
-        return LOADED ? Permissions.check(src, perm, 2) : src.hasPermissionLevel(2);
+    public static boolean perm(Player src, String perm) {
+        return LOADED ? Permissions.check(src, perm, 2) : src.hasPermissions(2);
     }
 }

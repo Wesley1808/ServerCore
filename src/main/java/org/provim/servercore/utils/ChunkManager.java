@@ -1,58 +1,55 @@
 package org.provim.servercore.utils;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.server.world.ChunkHolder;
-import net.minecraft.server.world.ServerChunkManager;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 
 public final class ChunkManager {
 
-    private ChunkManager() {
-    }
-
     /**
-     * Returns the BlockState at {@param pos} in {@param world} if the position is loaded.
+     * Returns the BlockState at {@param pos} in {@param level} if the position is loaded.
      */
 
     @Nullable
-    public static BlockState getStateIfLoaded(World world, BlockPos pos) {
-        final WorldChunk chunk = getChunkIfLoaded(world, pos);
-        return chunk != null ? chunk.getBlockState(pos) : Blocks.VOID_AIR.getDefaultState();
+    public static BlockState getStateIfLoaded(Level level, BlockPos pos) {
+        final LevelChunk chunk = getChunkIfLoaded(level, pos);
+        return chunk != null ? chunk.getBlockState(pos) : Blocks.VOID_AIR.defaultBlockState();
     }
 
     /**
-     * Returns the chunk at {@param pos} in {@param world} if the position is loaded.
+     * Returns the chunk at {@param pos} in {@param level} if the position is loaded.
      */
 
     @Nullable
-    public static WorldChunk getChunkIfLoaded(World world, BlockPos pos) {
-        final ChunkHolder holder = getChunkHolder(world, pos);
-        return holder != null ? holder.getAccessibleFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().orElse(null) : null;
+    public static LevelChunk getChunkIfLoaded(Level level, BlockPos pos) {
+        final ChunkHolder holder = getChunkHolder(level, pos);
+        return holder != null ? holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left().orElse(null) : null;
     }
 
     /**
-     * Returns a boolean that decides whether the chunk at {@param pos} in {@param world} is loaded.
+     * Returns a boolean that decides whether the chunk at {@param pos} in {@param level} is loaded.
      */
 
-    public static boolean isChunkLoaded(World world, BlockPos pos) {
-        return isChunkLoaded(getChunkHolder(world, pos));
+    public static boolean isChunkLoaded(Level level, BlockPos pos) {
+        return isChunkLoaded(getChunkHolder(level, pos));
     }
 
     public static boolean isChunkLoaded(ChunkHolder holder) {
-        return holder != null && holder.getAccessibleFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left().isPresent();
+        return holder != null && holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left().isPresent();
     }
 
     /**
-     * Returns the ChunkHolder at {@param pos} in {@param world} if the location is loaded.
+     * Returns the ChunkHolder at {@param pos} in {@param level} if the location is loaded.
      */
 
     @Nullable
-    public static ChunkHolder getChunkHolder(World world, BlockPos pos) {
-        return world.getChunkManager() instanceof ServerChunkManager manager ? manager.getChunkHolder(ChunkPos.toLong(pos.getX() >> 4, pos.getZ() >> 4)) : null;
+    public static ChunkHolder getChunkHolder(Level level, BlockPos pos) {
+        return level.getChunkSource() instanceof ServerChunkCache chunkCache ? chunkCache.getVisibleChunkIfPresent(ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4)) : null;
     }
 }

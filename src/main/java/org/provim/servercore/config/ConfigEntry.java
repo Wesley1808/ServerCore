@@ -1,8 +1,5 @@
 package org.provim.servercore.config;
 
-import org.provim.servercore.ServerCore;
-
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public final class ConfigEntry<T> {

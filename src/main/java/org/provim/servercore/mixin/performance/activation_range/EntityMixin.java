@@ -1,12 +1,12 @@
 package org.provim.servercore.mixin.performance.activation_range;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.vehicle.AbstractMinecartEntity;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.provim.servercore.ServerCore;
 import org.provim.servercore.interfaces.ActivationEntity;
 import org.provim.servercore.interfaces.InactiveEntity;
@@ -26,52 +26,45 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Entity.class)
 public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
     @Shadow
-    public World world;
-
+    public Level level;
     @Shadow
-    private Vec3d velocity;
-
+    private Vec3 deltaMovement;
     @Unique
     private int activatedTick = Integer.MIN_VALUE;
-
     @Unique
     private int activatedImmunityTick = Integer.MIN_VALUE;
-
     @Unique
     private boolean isTemporarilyActive = false;
-
     @Unique
     private ActivationRange.ActivationType activationType;
-
     @Unique
     private boolean excluded = false;
-
     @Unique
-    private int tickCount;
+    private int fullTickCount;
 
     @Shadow
-    public abstract void setVelocity(Vec3d velocity);
+    public abstract void setDeltaMovement(Vec3 vec3);
 
     @Inject(method = "<init>", at = @At(value = "RETURN"))
-    public void setupActivationStates(EntityType<?> entityType, World world, CallbackInfo ci) {
+    public void setupActivationStates(EntityType<?> type, Level level, CallbackInfo ci) {
         final Entity entity = (Entity) (Object) this;
         this.activationType = ActivationRange.initializeEntityActivationType(entity);
-        this.excluded = world != null && ActivationRange.isExcluded(entity);
+        this.excluded = level != null && ActivationRange.isExcluded(entity);
     }
 
-    @Inject(method = "move", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/entity/Entity;adjustMovementForPiston(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;"))
-    public void onPistonMove(MovementType movementType, Vec3d vec3d, CallbackInfo ci) {
-        final int ticks = ServerCore.getServer().getTicks() + 20;
+    @Inject(method = "move", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/world/entity/Entity;limitPistonMovement(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;"))
+    public void onPistonMove(MoverType moverType, Vec3 vec3, CallbackInfo ci) {
+        final int ticks = ServerCore.getServer().getTickCount() + 20;
         this.activatedTick = Math.max(this.activatedTick, ticks);
         this.activatedImmunityTick = Math.max(this.activatedImmunityTick, ticks);
     }
 
-    @Inject(method = "move", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/entity/Entity;adjustMovementForSneaking(Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/entity/MovementType;)Lnet/minecraft/util/math/Vec3d;"), cancellable = true)
-    public void ignoreMovementWhileInactive(MovementType movementType, Vec3d vec3d, CallbackInfo ci) {
+    @Inject(method = "move", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/world/entity/Entity;maybeBackOffFromEdge(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/entity/MoverType;)Lnet/minecraft/world/phys/Vec3;"), cancellable = true)
+    public void ignoreMovementWhileInactive(MoverType moverType, Vec3 vec3, CallbackInfo ci) {
         final Entity entity = (Entity) (Object) this;
-        if (this.isTemporarilyActive && !(entity instanceof ItemEntity || entity instanceof AbstractMinecartEntity) && vec3d == this.velocity && movementType == MovementType.SELF) {
-            this.setVelocity(Vec3d.ZERO);
-            this.world.getProfiler().pop();
+        if (this.isTemporarilyActive && !(entity instanceof ItemEntity || entity instanceof AbstractMinecart) && vec3 == this.deltaMovement && moverType == MoverType.SELF) {
+            this.setDeltaMovement(Vec3.ZERO);
+            this.level.getProfiler().pop();
             ci.cancel();
         }
     }
@@ -111,13 +104,13 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
     }
 
     @Override
-    public int getTickCount() {
-        return this.tickCount;
+    public int getFullTickCount() {
+        return this.fullTickCount;
     }
 
     @Override
-    public void incTickCount() {
-        this.tickCount++;
+    public void incFullTickCount() {
+        this.fullTickCount++;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.provim.servercore.mixin.performance.activation_range;
 
-import net.minecraft.entity.ai.goal.GoalSelector;
-import net.minecraft.entity.ai.goal.PrioritizedGoal;
+import net.minecraft.world.entity.ai.goal.GoalSelector;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import org.provim.servercore.interfaces.IGoalSelector;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,16 +17,16 @@ import java.util.Set;
 
 @Mixin(GoalSelector.class)
 public abstract class GoalSelectorMixin implements IGoalSelector {
+    @Shadow
+    @Final
+    private Set<WrappedGoal> availableGoals;
+
     @Unique
     private int curRate;
 
-    @Shadow
-    @Final
-    private Set<PrioritizedGoal> goals;
-
     @Override
     public boolean hasTasks() {
-        for (PrioritizedGoal task : this.goals) {
+        for (WrappedGoal task : this.availableGoals) {
             if (task.isRunning()) {
                 return true;
             }

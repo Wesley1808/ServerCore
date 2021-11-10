@@ -1,8 +1,8 @@
 package org.provim.servercore.mixin.event;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import org.provim.servercore.commands.InfoCommand;
 import org.provim.servercore.commands.SettingCommand;
 import org.spongepowered.asm.mixin.Final;
@@ -12,11 +12,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(CommandManager.class)
+@Mixin(Commands.class)
 public abstract class CommandManagerMixin {
     @Shadow
     @Final
-    private CommandDispatcher<ServerCommandSource> dispatcher;
+    private CommandDispatcher<CommandSourceStack> dispatcher;
 
     /**
      * [Command Registration Event]
@@ -24,7 +24,7 @@ public abstract class CommandManagerMixin {
      */
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/CommandDispatcher;findAmbiguities(Lcom/mojang/brigadier/AmbiguityConsumer;)V", remap = false))
-    private void register(CommandManager.RegistrationEnvironment environment, CallbackInfo ci) {
+    private void register(Commands.CommandSelection commandSelection, CallbackInfo ci) {
         SettingCommand.register(dispatcher);
         InfoCommand.register(dispatcher);
     }

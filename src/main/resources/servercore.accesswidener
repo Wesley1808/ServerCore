@@ -1,20 +1,19 @@
 accessWidener v1 named
 
-accessible class net/minecraft/world/SpawnDensityCapper$DensityCap
-accessible class net/minecraft/server/world/ServerChunkManager$ChunkWithHolder
+accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
 
-accessible method net/minecraft/world/SpawnDensityCapper$DensityCap <init> ()V
-accessible method net/minecraft/server/network/ServerPlayerEntity moveToSpawn (Lnet/minecraft/server/world/ServerWorld;)V
-accessible method net/minecraft/server/world/ServerChunkManager getChunkHolder (J)Lnet/minecraft/server/world/ChunkHolder;
-accessible method net/minecraft/server/world/ServerChunkManager$ChunkWithHolder <init> (Lnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/server/world/ChunkHolder;)V
+accessible method net/minecraft/world/level/LocalMobCapCalculator$MobCounts <init> ()V
+accessible method net/minecraft/server/level/ServerPlayer fudgeSpawnLocation (Lnet/minecraft/server/level/ServerLevel;)V
+accessible method net/minecraft/server/level/ServerChunkCache getVisibleChunkIfPresent (J)Lnet/minecraft/server/level/ChunkHolder;
+accessible method net/minecraft/server/level/ServerChunkCache$ChunkAndHolder <init> (Lnet/minecraft/world/level/chunk/LevelChunk;Lnet/minecraft/server/level/ChunkHolder;)V
 
-accessible field net/minecraft/entity/ExperienceOrbEntity orbAge I
-accessible field net/minecraft/entity/ExperienceOrbEntity pickingCount I
-accessible field net/minecraft/entity/LivingEntity jumping Z
-accessible field net/minecraft/entity/Entity inNetherPortal Z
-accessible field net/minecraft/entity/projectile/PersistentProjectileEntity inGround Z
-accessible field net/minecraft/entity/mob/MobEntity holdingEntity Lnet/minecraft/entity/Entity;
-accessible field net/minecraft/entity/mob/MobEntity targetSelector Lnet/minecraft/entity/ai/goal/GoalSelector;
-accessible field net/minecraft/world/SpawnDensityCapper playersToDensityCap Ljava/util/Map;
-accessible field net/minecraft/world/SpawnHelper$Info densityCapper Lnet/minecraft/world/SpawnDensityCapper;
-accessible field net/minecraft/world/SpawnDensityCapper$DensityCap spawnGroupsToDensity Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+accessible field net/minecraft/world/entity/ExperienceOrb age I
+accessible field net/minecraft/world/entity/ExperienceOrb count I
+accessible field net/minecraft/world/entity/LivingEntity jumping Z
+accessible field net/minecraft/world/entity/Entity isInsidePortal Z
+accessible field net/minecraft/world/entity/projectile/AbstractArrow inGround Z
+accessible field net/minecraft/world/entity/Mob leashHolder Lnet/minecraft/world/entity/Entity;
+accessible field net/minecraft/world/entity/Mob targetSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
+accessible field net/minecraft/world/level/NaturalSpawner$SpawnState localMobCapCalculator Lnet/minecraft/world/level/LocalMobCapCalculator;
+accessible field net/minecraft/world/level/LocalMobCapCalculator playerMobCounts Ljava/util/Map;
+accessible field net/minecraft/world/level/LocalMobCapCalculator$MobCounts counts Lit/unimi/dsi/fastutil/objects/Object2IntMap;

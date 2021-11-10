@@ -18,7 +18,7 @@ public interface ActivationEntity {
 
     void setTemporarilyActive(boolean active);
 
-    int getTickCount();
+    int getFullTickCount();
 
-    void incTickCount();
+    void incFullTickCount();
 }

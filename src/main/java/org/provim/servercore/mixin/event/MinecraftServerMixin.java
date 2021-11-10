@@ -1,7 +1,7 @@
 package org.provim.servercore.mixin.event;
 
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.WorldGenerationProgressListener;
+import net.minecraft.server.level.progress.ChunkProgressListener;
 import org.objectweb.asm.Opcodes;
 import org.provim.servercore.ServerCore;
 import org.provim.servercore.config.Config;
@@ -20,15 +20,15 @@ import java.util.function.BooleanSupplier;
 public abstract class MinecraftServerMixin {
 
     @Shadow
-    private int ticks;
+    private int tickCount;
 
     /**
      * [Server Tick Event]
      */
 
-    @Inject(method = "tick", at = @At("TAIL"))
+    @Inject(method = "tickServer", at = @At("TAIL"))
     private void onTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
-        if (this.ticks % 300 == 0) {
+        if (this.tickCount % 300 == 0) {
             TickManager.runPerformanceChecks((MinecraftServer) (Object) this);
         }
     }
@@ -37,7 +37,7 @@ public abstract class MinecraftServerMixin {
      * [Server Startup Event]
      */
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setFavicon(Lnet/minecraft/server/ServerMetadata;)V", ordinal = 0), method = "runServer")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;updateStatusIcon(Lnet/minecraft/network/protocol/status/ServerStatus;)V", ordinal = 0), method = "runServer")
     private void afterSetupServer(CallbackInfo info) {
         final MinecraftServer server = (MinecraftServer) (Object) this;
         ServerCore.setServer(server);
@@ -48,20 +48,20 @@ public abstract class MinecraftServerMixin {
      * [Server Shutdown Event]
      */
 
-    @Inject(method = "shutdown", at = @At("HEAD"))
+    @Inject(method = "stopServer", at = @At("HEAD"))
     private void beforeShutdownServer(CallbackInfo info) {
         Config.save();
     }
 
-    @Inject(method = "prepareStartRegion", at = @At("HEAD"), cancellable = true)
-    private void disableSpawnChunks(WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci) {
+    @Inject(method = "prepareLevels", at = @At("HEAD"), cancellable = true)
+    private void disableSpawnChunks(ChunkProgressListener chunkProgressListener, CallbackInfo ci) {
         if (FeatureConfig.DISABLE_SPAWN_CHUNKS.get()) {
             ci.cancel();
         }
     }
 
-    @Redirect(method = "tick", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/server/MinecraftServer;ticks:I", ordinal = 1))
+    @Redirect(method = "tickServer", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/server/MinecraftServer;tickCount:I", ordinal = 1))
     public int modifyAutoSaveInterval(MinecraftServer minecraftServer) {
-        return this.ticks % (FeatureConfig.AUTO_SAVE_INTERVAL.get() * 1200) == 0 ? 6000 : -1;
+        return this.tickCount % (FeatureConfig.AUTO_SAVE_INTERVAL.get() * 1200) == 0 ? 6000 : -1;
     }
 }

@@ -1,20 +1,19 @@
 package org.provim.servercore.utils;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.GameMode;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import org.provim.servercore.ServerCore;
 import org.provim.servercore.config.tables.DynamicConfig;
 import org.provim.servercore.config.tables.EntityConfig;
@@ -33,7 +32,7 @@ public final class TickManager {
     }
 
     public static void initValues(MinecraftServer server) {
-        viewDistance = server.getPlayerManager().getViewDistance();
+        viewDistance = server.getPlayerList().getViewDistance();
         simulationDistance = viewDistance;
         chunkTickDistance = viewDistance;
     }
@@ -46,7 +45,7 @@ public final class TickManager {
 
     public static void runPerformanceChecks(MinecraftServer server) {
         if (DynamicConfig.ENABLED.get()) {
-            final double mspt = MathHelper.average(server.lastTickLengths) * 1.0E-6D;
+            final double mspt = Mth.average(server.tickTimes) * 1.0E-6D;
             final double targetMspt = DynamicConfig.TARGET_MSPT.get();
             final double upperBound = targetMspt + 5;
             final double lowerBound = Math.max(targetMspt - 5, 2);
@@ -95,12 +94,12 @@ public final class TickManager {
     }
 
     public static void setViewDistance(int distance) {
-        ServerCore.getServer().getPlayerManager().setViewDistance(distance);
+        ServerCore.getServer().getPlayerList().setViewDistance(distance);
         viewDistance = distance;
     }
 
     public static void setSimulationDistance(int distance) {
-        ServerCore.getServer().getPlayerManager().setSimulationDistance(distance);
+        ServerCore.getServer().getPlayerList().setSimulationDistance(distance);
         simulationDistance = distance;
     }
 
@@ -116,25 +115,25 @@ public final class TickManager {
         return String.format("%.1f", mobcapModifier.doubleValue());
     }
 
-    public static int getMobcap(SpawnGroup group) {
-        return (int) (group.getCapacity() * mobcapModifier.doubleValue());
+    public static int getMobcap(MobCategory group) {
+        return (int) (group.getMaxInstancesPerChunk() * mobcapModifier.doubleValue());
     }
 
     /**
      * Decides whether a chunk should tick.
      *
      * @param pos:   The position of the chunk
-     * @param world: The world that is ticking chunks
+     * @param level: The world that is ticking chunks
      * @return Boolean: whether the chunk should tick.
      */
 
-    public static boolean shouldTickChunk(ChunkPos pos, ServerWorld world) {
+    public static boolean shouldTickChunk(ChunkPos pos, ServerLevel level) {
         if (chunkTickDistance >= viewDistance) {
             return true;
         }
 
-        for (ServerPlayerEntity player : world.getPlayers()) {
-            if (player.interactionManager.getGameMode() != GameMode.SPECTATOR && player.getChunkPos().getChebyshevDistance(pos) <= chunkTickDistance) {
+        for (ServerPlayer player : level.players()) {
+            if (player.gameMode.getGameModeForPlayer() != GameType.SPECTATOR && player.chunkPosition().getChessboardDistance(pos) <= chunkTickDistance) {
                 return true;
             }
         }
@@ -147,34 +146,34 @@ public final class TickManager {
      * If there are more than the limit specifies within the range, it will return true.
      *
      * @param type:  The type of entity
-     * @param world: The world to check in
+     * @param level: The world to check in
      * @param pos:   The position of the entity
      * @param limit: The entity limit
      * @param range: The range of the limit
      * @return Boolean: if there are more entities of the same type as the limit, within the specified range.
      */
 
-    public static boolean checkForEntities(EntityType<?> type, World world, BlockPos pos, int limit, int range) {
+    public static boolean checkForEntities(EntityType<?> type, Level level, BlockPos pos, int limit, int range) {
         if (EntityConfig.ENABLED.get()) {
-            return limit <= world.getEntitiesByType(type, new Box(pos.mutableCopy().add(range, range, range), pos.mutableCopy().add(-range, -range, -range)), EntityPredicates.EXCEPT_SPECTATOR).size();
+            return limit <= level.getEntities(type, new AABB(pos.mutable().offset(range, range, range), pos.mutable().offset(-range, -range, -range)), entity -> !entity.isSpectator()).size();
         } else {
             return false;
         }
     }
 
     public static boolean checkForEntities(Entity entity, int limit, int range) {
-        return checkForEntities(entity.getType(), entity.getEntityWorld(), entity.getBlockPos(), limit, range);
+        return checkForEntities(entity.getType(), entity.getLevel(), entity.blockPosition(), limit, range);
     }
 
-    public static MutableText createStatusReport() {
-        return new LiteralText(replaceStatusVariables("§8> §3ServerCore Status §8<\n§8- §3TPS: §a%s\n§8- §3MSPT: §a%s\n§8- §3Online: §a%d\n§8- §3View distance: §a%d\n§8- §3Mobcap multiplier: §a%s\n§8- §3Simulation distance: §a%d\n§8- §3Chunk-tick distance: §a%d"));
+    public static MutableComponent createStatusReport() {
+        return new TextComponent(replaceStatusVariables("§8> §3ServerCore Status §8<\n§8- §3TPS: §a%s\n§8- §3MSPT: §a%s\n§8- §3Online: §a%d\n§8- §3View distance: §a%d\n§8- §3Mobcap multiplier: §a%s\n§8- §3Simulation distance: §a%d\n§8- §3Chunk-tick distance: §a%d"));
     }
 
     private static String replaceStatusVariables(String message) {
         final MinecraftServer server = ServerCore.getServer();
-        final double ms = MathHelper.average(server.lastTickLengths) * 1.0E-6D;
+        final double ms = Mth.average(server.tickTimes) * 1.0E-6D;
         final String mspt = String.format("%.1f", ms);
         final String tps = String.format("%.1f", ms != 0 ? Math.min((1000 / ms), 20) : 20);
-        return String.format(message, tps, mspt, server.getCurrentPlayerCount(), viewDistance, getModifierAsString(), simulationDistance, chunkTickDistance);
+        return String.format(message, tps, mspt, server.getPlayerCount(), viewDistance, getModifierAsString(), simulationDistance, chunkTickDistance);
     }
 }

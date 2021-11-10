@@ -5,9 +5,9 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.LiteralText;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.TextComponent;
 import org.provim.servercore.ServerCore;
 import org.provim.servercore.config.Config;
 import org.provim.servercore.config.ConfigEntry;
@@ -27,8 +27,8 @@ import static com.mojang.brigadier.arguments.LongArgumentType.getLong;
 import static com.mojang.brigadier.arguments.LongArgumentType.longArg;
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 import static com.mojang.brigadier.arguments.StringArgumentType.greedyString;
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 
 public final class SettingCommand {
     private static final String VALUE = "value";
@@ -36,8 +36,8 @@ public final class SettingCommand {
     private SettingCommand() {
     }
 
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        final LiteralArgumentBuilder<ServerCommandSource> builder = literal("servercore").requires(src -> PermissionUtils.perm(src, PermissionUtils.COMMAND_SETTINGS, 2));
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        final LiteralArgumentBuilder<CommandSourceStack> builder = literal("servercore").requires(src -> PermissionUtils.perm(src, PermissionUtils.COMMAND_SETTINGS, 2));
         registerConfigs(builder);
         registerSettings(builder);
 
@@ -46,9 +46,9 @@ public final class SettingCommand {
         dispatcher.register(builder);
     }
 
-    private static void registerConfigs(LiteralArgumentBuilder<ServerCommandSource> builder) {
+    private static void registerConfigs(LiteralArgumentBuilder<CommandSourceStack> builder) {
         for (Config.Table table : Config.TABLES) {
-            final LiteralArgumentBuilder<ServerCommandSource> child = literal(table.key());
+            final LiteralArgumentBuilder<CommandSourceStack> child = literal(table.key());
             try {
                 Config.forEachEntry(table.clazz(), (field, entry) -> {
                     final String key = field.getName().toLowerCase();
@@ -68,8 +68,8 @@ public final class SettingCommand {
         }
     }
 
-    private static void registerSettings(LiteralArgumentBuilder<ServerCommandSource> builder) {
-        final LiteralArgumentBuilder<ServerCommandSource> settings = literal("settings");
+    private static void registerSettings(LiteralArgumentBuilder<CommandSourceStack> builder) {
+        final LiteralArgumentBuilder<CommandSourceStack> settings = literal("settings");
         settings.then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 32)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 1, "Chunk-tick distance"))));
         settings.then(literal("view_distance").then(argument(VALUE, integer(2, 32)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 2, "View distance"))));
         settings.then(literal("simulation_distance").then(argument(VALUE, integer(2, 32)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 3, "Simulation distance"))));
@@ -77,7 +77,7 @@ public final class SettingCommand {
         builder.then(settings);
     }
 
-    private static <T> int sendInfo(ServerCommandSource source, String key, ConfigEntry<T> entry) {
+    private static <T> int sendInfo(CommandSourceStack source, String key, ConfigEntry<T> entry) {
         final StringBuilder builder = new StringBuilder("§7");
         if (entry.getComment() != null) {
             builder.append(entry.getComment());
@@ -88,80 +88,80 @@ public final class SettingCommand {
         builder.append("\n§3Current value: §a").append(asString(entry.get()));
         builder.append("\n§3Default value: §a").append(asString(entry.getDefault()));
         builder.append("\n§3Type: §a").append(entry.getType().getSimpleName());
-        source.sendFeedback(new LiteralText(builder.toString()), false);
+        source.sendSuccess(new TextComponent(builder.toString()), false);
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int modifyBoolean(String key, ConfigEntry<Boolean> entry, boolean value, ServerCommandSource source) {
+    private static int modifyBoolean(String key, ConfigEntry<Boolean> entry, boolean value, CommandSourceStack source) {
         if (entry.set(value)) {
-            source.sendFeedback(new LiteralText(String.format("§a%s §3has been set to §a%b", key, value)), false);
+            source.sendSuccess(new TextComponent(String.format("§a%s §3has been set to §a%b", key, value)), false);
         } else {
-            source.sendError(new LiteralText(String.format("%s cannot be set to %b!", key, value)));
+            source.sendFailure(new TextComponent(String.format("%s cannot be set to %b!", key, value)));
         }
 
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int modifyInt(String key, ConfigEntry<Integer> entry, int value, ServerCommandSource source) {
+    private static int modifyInt(String key, ConfigEntry<Integer> entry, int value, CommandSourceStack source) {
         if (entry.set(value)) {
-            source.sendFeedback(new LiteralText(String.format("§a%s §3has been set to §a%d", key, value)), false);
+            source.sendSuccess(new TextComponent(String.format("§a%s §3has been set to §a%d", key, value)), false);
         } else {
-            source.sendError(new LiteralText(String.format("%s cannot be set to %d!", key, value)));
+            source.sendFailure(new TextComponent(String.format("%s cannot be set to %d!", key, value)));
         }
 
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int modifyDouble(String key, ConfigEntry<Double> entry, double value, ServerCommandSource source) {
+    private static int modifyDouble(String key, ConfigEntry<Double> entry, double value, CommandSourceStack source) {
         if (entry.set(value)) {
-            source.sendFeedback(new LiteralText(String.format("§a%s §3has been set to §a%.1f", key, value)), false);
+            source.sendSuccess(new TextComponent(String.format("§a%s §3has been set to §a%.1f", key, value)), false);
         } else {
-            source.sendError(new LiteralText(String.format("%s cannot be set to %.1f!", key, value)));
+            source.sendFailure(new TextComponent(String.format("%s cannot be set to %.1f!", key, value)));
         }
 
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int modifyString(String key, ConfigEntry<String> entry, String value, ServerCommandSource source) {
+    private static int modifyString(String key, ConfigEntry<String> entry, String value, CommandSourceStack source) {
         value = formatString(value);
         if (entry.set(value)) {
-            source.sendFeedback(new LiteralText(String.format("§a%s §3has been set to §a%s", key, value)), false);
+            source.sendSuccess(new TextComponent(String.format("§a%s §3has been set to §a%s", key, value)), false);
         } else {
-            source.sendError(new LiteralText(String.format("%s cannot be set to %s!", key, value)));
+            source.sendFailure(new TextComponent(String.format("%s cannot be set to %s!", key, value)));
         }
 
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int modifyInt(ServerCommandSource source, int value, int id, String setting) {
+    private static int modifyInt(CommandSourceStack source, int value, int id, String setting) {
         switch (id) {
             case 1 -> TickManager.setChunkTickDistance(value);
             case 2 -> TickManager.setViewDistance(value);
             case 3 -> TickManager.setSimulationDistance(value);
         }
 
-        source.sendFeedback(new LiteralText(String.format("§a%s §3has been set to §a%d", setting, value)), false);
+        source.sendSuccess(new TextComponent(String.format("§a%s §3has been set to §a%d", setting, value)), false);
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int modifyDouble(ServerCommandSource source, double value, int id, String setting) {
+    private static int modifyDouble(CommandSourceStack source, double value, int id, String setting) {
         switch (id) {
             case 1 -> TickManager.setModifier(BigDecimal.valueOf(value));
         }
 
-        source.sendFeedback(new LiteralText(String.format("§a%s §3has been set to §a%.1f", setting, value)), false);
+        source.sendSuccess(new TextComponent(String.format("§a%s §3has been set to §a%.1f", setting, value)), false);
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int reload(CommandContext<ServerCommandSource> context) {
+    private static int reload(CommandContext<CommandSourceStack> context) {
         Config.load();
-        context.getSource().sendFeedback(new LiteralText("Config reloaded!").formatted(Formatting.GREEN), false);
+        context.getSource().sendSuccess(new TextComponent("Config reloaded!").withStyle(ChatFormatting.GREEN), false);
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int save(CommandContext<ServerCommandSource> context) {
+    private static int save(CommandContext<CommandSourceStack> context) {
         Config.save();
-        context.getSource().sendFeedback(new LiteralText("Config saved!").formatted(Formatting.GREEN), false);
+        context.getSource().sendSuccess(new TextComponent("Config saved!").withStyle(ChatFormatting.GREEN), false);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -199,7 +199,7 @@ public final class SettingCommand {
 
     private static record Type(
             ArgumentType<?> argumentType,
-            Function<CommandContext<ServerCommandSource>, Integer> function
+            Function<CommandContext<CommandSourceStack>, Integer> function
     ) {
     }
 }
