@@ -5,6 +5,7 @@ plugins {
 
 repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url 'https://maven.parchmentmc.org' }
 }
 
 sourceCompatibility = JavaVersion.VERSION_16
@@ -19,10 +20,13 @@ loom {
 }
 
 dependencies {
-    //to change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.17.1:2021.10.31@zip")
+    }
 
     // Permission API
     modImplementation 'me.lucko:fabric-permissions-api:0.1-SNAPSHOT'
