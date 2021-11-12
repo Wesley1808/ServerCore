@@ -35,7 +35,7 @@ public abstract class VillagerMixin extends AbstractVillager {
     private void shouldTickBrain(Brain<Villager> brain, ServerLevel level, LivingEntity livingEntity) {
         Villager villager = (Villager) (Object) this;
         if (FeatureConfig.LOBOTOMIZE_VILLAGERS.get() && isLobotomized()) {
-            if (this.age % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0) {
+            if (this.tickCount % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0) {
                 brain.tick(level, villager);
             }
         } else {
@@ -44,8 +44,8 @@ public abstract class VillagerMixin extends AbstractVillager {
     }
 
     private boolean isLobotomized() {
-        if (this.age % 300 == 0) {
-            this.lobotomized = !canTravel(this.blockPosition());
+        if (this.tickCount % 300 == 0) {
+            this.lobotomized = this.getVehicle() != null || !canTravel(this.blockPosition());
         }
 
         return this.lobotomized;
