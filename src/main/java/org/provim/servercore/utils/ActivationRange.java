@@ -264,6 +264,7 @@ public class ActivationRange {
                 if (animal.isBaby() || animal.isInLove()) {
                     return 5;
                 }
+
                 if (entity instanceof Sheep sheep && sheep.isSheared()) {
                     return 1;
                 }
@@ -289,9 +290,7 @@ public class ActivationRange {
 
     public static boolean checkIfActive(Entity entity) {
         final ActivationEntity activationEntity = (ActivationEntity) entity;
-        if (shouldTick(entity, activationEntity)) {
-            return true;
-        }
+        if (shouldTick(entity, activationEntity)) return true;
 
         final int currentTick = ServerCore.getServer().getTickCount();
         final boolean active = activationEntity.getActivatedTick() >= currentTick;
@@ -300,17 +299,22 @@ public class ActivationRange {
         if (!active) {
             if ((currentTick - activationEntity.getActivatedTick() - 1) % 20 == 0) {
                 // Check immunities every 20 inactive ticks.
-                if (checkIfImmune(entity, currentTick)) return true;
+                final int immunity = checkEntityImmunities(entity);
+                if (immunity >= 0) {
+                    activationEntity.setActivatedTick(currentTick + immunity);
+                    return true;
+                }
 
-                final boolean shouldTickInactive = activationEntity.getActivationType().tickInactive.getAsBoolean();
-                activationEntity.setTemporarilyActive(shouldTickInactive);
-                return shouldTickInactive;
+                if (activationEntity.getActivationType().tickInactive.getAsBoolean()) {
+                    activationEntity.setTemporarilyActive(true);
+                    return true;
+                }
             }
             // Spigot - Add a little performance juice to active entities. Skip 1/4 if not immune.
-        } else if (activationEntity.getFullTickCount() % 4 == 0) {
-            // ServerCore - If immune, increase activated ticks.
-            return checkIfImmune(entity, currentTick);
+        } else if (activationEntity.getFullTickCount() % 4 == 0 && checkEntityImmunities(entity) < 0) {
+            return false;
         }
+
         return active;
     }
 
@@ -319,16 +323,6 @@ public class ActivationRange {
                 || (entity.tickCount < 200 && activationEntity.getActivationType() == ActivationType.MISC) // New misc entities
                 || (entity instanceof Mob mob && mob.leashHolder instanceof Player) // Player leashed mobs
                 || (entity instanceof LivingEntity living && living.hurtTime > 0); // Attacked mobs
-    }
-
-    private static boolean checkIfImmune(Entity entity, int currentTick) {
-        final ActivationEntity activationEntity = (ActivationEntity) entity;
-        final int immunity = checkEntityImmunities(entity);
-        if (immunity >= 0) {
-            activationEntity.setActivatedTick(currentTick + immunity);
-            return true;
-        }
-        return false;
     }
 
     private static int checkInactiveWakeup(Entity entity) {

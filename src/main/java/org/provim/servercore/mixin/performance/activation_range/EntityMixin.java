@@ -36,6 +36,8 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
     @Unique
     private boolean isTemporarilyActive = false;
     @Unique
+    private boolean isInactive = false;
+    @Unique
     private ActivationRange.ActivationType activationType;
     @Unique
     private boolean excluded = false;
@@ -59,12 +61,21 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
         this.activatedImmunityTick = Math.max(this.activatedImmunityTick, ticks);
     }
 
+    // Paper - Ignore movement changes while inactive.
     @Inject(method = "move", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/world/entity/Entity;maybeBackOffFromEdge(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/entity/MoverType;)Lnet/minecraft/world/phys/Vec3;"), cancellable = true)
     public void ignoreMovementWhileInactive(MoverType moverType, Vec3 vec3, CallbackInfo ci) {
         final Entity entity = (Entity) (Object) this;
         if (this.isTemporarilyActive && !(entity instanceof ItemEntity || entity instanceof AbstractMinecart) && vec3 == this.deltaMovement && moverType == MoverType.SELF) {
             this.setDeltaMovement(Vec3.ZERO);
             this.level.getProfiler().pop();
+            ci.cancel();
+        }
+    }
+
+    // ServerCore - Prevent inactive entities from getting extreme velocities.
+    @Inject(method = "push(DDD)V", at = @At(value = "HEAD"), cancellable = true)
+    public void ignorePushingWhileInactive(double x, double y, double z, CallbackInfo ci) {
+        if (this.isInactive) {
             ci.cancel();
         }
     }
@@ -101,6 +112,11 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
     @Override
     public void setTemporarilyActive(boolean active) {
         this.isTemporarilyActive = active;
+    }
+
+    @Override
+    public void setInactive(boolean inactive) {
+        this.isInactive = inactive;
     }
 
     @Override

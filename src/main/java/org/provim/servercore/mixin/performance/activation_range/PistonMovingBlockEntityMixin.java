@@ -27,6 +27,7 @@ import java.util.List;
 @Mixin(PistonMovingBlockEntity.class)
 public abstract class PistonMovingBlockEntityMixin {
 
+    // Paper - Fix items getting stuck in slime pushed by a piston
     @Inject(method = "moveCollidedEntities", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/world/entity/Entity;setDeltaMovement(DDD)V"))
     private static void onPushEntity(Level level, BlockPos blockPos, float f, PistonMovingBlockEntity pistonMovingBlockEntity, CallbackInfo ci, Direction direction, double d, VoxelShape voxelShape, AABB aABB, List list, List list2, boolean bl, Iterator var12, Entity entity, Vec3 vec3, double e, double g, double h) {
         final int ticks = ServerCore.getServer().getTickCount() + 10;

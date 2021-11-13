@@ -30,21 +30,25 @@ public abstract class ServerLevelMixin {
 
     @Redirect(method = "tickNonPassenger", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;tick()V"))
     public void shouldTickEntity(Entity entity) {
-        if (!ActivationRange.checkIfActive(entity)) {
-            ((InactiveEntity) entity).inactiveTick();
-        } else {
+        if (ActivationRange.checkIfActive(entity)) {
+            ((ActivationEntity) entity).setInactive(false);
             entity.tickCount++;
             entity.tick();
+        } else {
+            ((ActivationEntity) entity).setInactive(true);
+            ((InactiveEntity) entity).inactiveTick();
         }
     }
 
     @Redirect(method = "tickPassenger", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;rideTick()V"))
     public void shouldTickPassengers(Entity entity) {
         if (ActivationRange.checkIfActive(entity)) {
+            ((ActivationEntity) entity).setInactive(false);
             entity.tickCount++;
             entity.rideTick();
         } else {
             entity.setDeltaMovement(Vec3.ZERO);
+            ((ActivationEntity) entity).setInactive(true);
             ((InactiveEntity) entity).inactiveTick();
             Entity vehicle = entity.getVehicle();
             if (vehicle != null) {
