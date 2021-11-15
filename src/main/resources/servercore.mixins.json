@@ -4,8 +4,7 @@
   "package": "org.provim.servercore.mixin",
   "compatibilityLevel": "JAVA_16",
   "server": [
-    "event.CommandsMixin",
-    "event.MinecraftServerMixin",
+    "performance.misc.MinecraftServerMixin",
     "limits.AnimalMixin",
     "limits.ThrownEggMixin",
     "limits.VillagerMakeLoveMixin",

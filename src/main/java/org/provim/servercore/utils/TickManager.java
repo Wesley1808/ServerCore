@@ -167,14 +167,10 @@ public final class TickManager {
     }
 
     public static MutableComponent createStatusReport() {
-        return new TextComponent(replaceStatusVariables("§8> §3ServerCore Status §8<\n§8- §3TPS: §a%s\n§8- §3MSPT: §a%s\n§8- §3Online: §a%d\n§8- §3View distance: §a%d\n§8- §3Mobcap multiplier: §a%s\n§8- §3Simulation distance: §a%d\n§8- §3Chunk-tick distance: §a%d"));
-    }
-
-    private static String replaceStatusVariables(String message) {
         final MinecraftServer server = ServerCore.getServer();
         final double ms = Mth.average(server.tickTimes) * 1.0E-6D;
         final String mspt = String.format("%.1f", ms);
         final String tps = String.format("%.1f", ms != 0 ? Math.min((1000 / ms), 20) : 20);
-        return String.format(message, tps, mspt, server.getPlayerCount(), viewDistance, getModifierAsString(), simulationDistance, chunkTickDistance);
+        return new TextComponent(String.format("§8> §3ServerCore Status §8<\n§8- §3TPS: §a%s\n§8- §3MSPT: §a%s\n§8- §3Online: §a%d\n§8- §3View distance: §a%d\n§8- §3Mobcap multiplier: §a%s\n§8- §3Simulation distance: §a%d\n§8- §3Chunk-tick distance: §a%d", tps, mspt, server.getPlayerCount(), viewDistance, getModifierAsString(), simulationDistance, chunkTickDistance));
     }
 }

@@ -117,43 +117,41 @@ public class ActivationRange {
      */
 
     public static void activateEntities(ServerLevel level) {
-        if (ENABLED.get() && ServerCore.getServer().getTickCount() % 20 == 0) {
-            int maxRange = Integer.MIN_VALUE;
-            for (ActivationType type : ActivationType.values()) {
-                maxRange = Math.max(type.activationRange.getAsInt(), maxRange);
+        int maxRange = Integer.MIN_VALUE;
+        for (ActivationType type : ActivationType.values()) {
+            maxRange = Math.max(type.activationRange.getAsInt(), maxRange);
+        }
+
+        ILevel info = (ILevel) level;
+        info.setRemainingAnimals(Math.min(info.getRemainingAnimals() + 1, ANIMAL_WAKEUP_MAX.get()));
+        info.setRemainingVillagers(Math.min(info.getRemainingVillagers() + 1, VILLAGER_WAKEUP_MAX.get()));
+        info.setRemainingMonsters(Math.min(info.getRemainingMonsters() + 1, MONSTER_WAKEUP_MAX.get()));
+        info.setRemainingFlying(Math.min(info.getRemainingFlying() + 1, FLYING_WAKEUP_MAX.get()));
+
+        maxRange = Math.min((ServerCore.getServer().getPlayerList().getViewDistance() << 4) - 8, maxRange);
+        for (ServerPlayer player : level.players()) {
+            if (player.isSpectator()) {
+                continue;
             }
 
-            ILevel info = (ILevel) level;
-            info.setRemainingAnimals(Math.min(info.getRemainingAnimals() + 1, ANIMAL_WAKEUP_MAX.get()));
-            info.setRemainingVillagers(Math.min(info.getRemainingVillagers() + 1, VILLAGER_WAKEUP_MAX.get()));
-            info.setRemainingMonsters(Math.min(info.getRemainingMonsters() + 1, MONSTER_WAKEUP_MAX.get()));
-            info.setRemainingFlying(Math.min(info.getRemainingFlying() + 1, FLYING_WAKEUP_MAX.get()));
-
-            maxRange = Math.min((ServerCore.getServer().getPlayerList().getViewDistance() << 4) - 8, maxRange);
-            for (ServerPlayer player : level.players()) {
-                if (player.isSpectator()) {
-                    continue;
+            AABB maxBB;
+            if (USE_VERTICAL_RANGE.get()) {
+                maxBB = player.getBoundingBox().inflate(maxRange, 96, maxRange);
+                for (ActivationType type : ActivationType.values()) {
+                    type.boundingBox = player.getBoundingBox().inflate(type.activationRange.getAsInt());
+                    if (type.extraHeightUp) type.boundingBox.expandTowards(0, 96, 0);
+                    if (type.extraHeightDown) type.boundingBox.expandTowards(0, -96, 0);
                 }
-
-                AABB maxBB;
-                if (USE_VERTICAL_RANGE.get()) {
-                    maxBB = player.getBoundingBox().inflate(maxRange, 96, maxRange);
-                    for (ActivationType type : ActivationType.values()) {
-                        type.boundingBox = player.getBoundingBox().inflate(type.activationRange.getAsInt());
-                        if (type.extraHeightUp) type.boundingBox.expandTowards(0, 96, 0);
-                        if (type.extraHeightDown) type.boundingBox.expandTowards(0, -96, 0);
-                    }
-                } else {
-                    maxBB = player.getBoundingBox().inflate(maxRange, 256, maxRange);
-                    for (ActivationType type : ActivationType.values()) {
-                        final int range = type.activationRange.getAsInt();
-                        type.boundingBox = player.getBoundingBox().inflate(range, 256, range);
-                    }
+            } else {
+                maxBB = player.getBoundingBox().inflate(maxRange, 256, maxRange);
+                for (ActivationType type : ActivationType.values()) {
+                    final int range = type.activationRange.getAsInt();
+                    type.boundingBox = player.getBoundingBox().inflate(range, 256, range);
                 }
+            }
 
-                for (Entity entity : level.getEntities(player, maxBB)) {
-                    activateEntity(entity);
-                }
+            for (Entity entity : level.getEntities(player, maxBB)) {
+                activateEntity(entity);
             }
         }
     }

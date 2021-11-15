@@ -1,5 +1,6 @@
 package org.provim.servercore.mixin.performance.maps;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -23,11 +24,11 @@ public abstract class MapItemSavedDataMixin {
      */
 
     @Redirect(method = "tickCarriedBy", require = 0, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;contains(Lnet/minecraft/world/item/ItemStack;)Z"))
-    private boolean stopInvIteration(Inventory inventory, ItemStack stack) {
+    private boolean cancelInventoryIteration(Inventory inventory, ItemStack stack) {
         return !stack.isFramed() && inventory.contains(stack);
     }
 
-    // Fixes potential bugs with blinking (moving) player icons on player held maps.
+    // Fixes blinking player icons on player held maps.
     @Redirect(method = "tickCarriedBy", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData;removeDecoration(Ljava/lang/String;)V", ordinal = 0))
     private void removeDecoration(MapItemSavedData data, String id, Player player, ItemStack stack) {
         if (!stack.isFramed()) {
@@ -43,7 +44,7 @@ public abstract class MapItemSavedDataMixin {
      */
 
     @Redirect(method = "tickCarriedBy", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/Component;getString()Ljava/lang/String;"))
-    private String getString(net.minecraft.network.chat.Component component) {
+    private String getString(Component component) {
         return ((TextComponent) component).getText();
     }
 }

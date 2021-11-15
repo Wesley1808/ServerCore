@@ -11,7 +11,7 @@ import net.minecraft.network.chat.TextComponent;
 import org.provim.servercore.ServerCore;
 import org.provim.servercore.config.Config;
 import org.provim.servercore.config.ConfigEntry;
-import org.provim.servercore.utils.PermissionUtils;
+import org.provim.servercore.utils.PermissionManager;
 import org.provim.servercore.utils.TickManager;
 
 import java.math.BigDecimal;
@@ -33,11 +33,8 @@ import static net.minecraft.commands.Commands.literal;
 public final class SettingCommand {
     private static final String VALUE = "value";
 
-    private SettingCommand() {
-    }
-
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        final LiteralArgumentBuilder<CommandSourceStack> builder = literal("servercore").requires(src -> PermissionUtils.perm(src, PermissionUtils.COMMAND_SETTINGS, 2));
+        final LiteralArgumentBuilder<CommandSourceStack> builder = literal("servercore").requires(src -> PermissionManager.perm(src, PermissionManager.COMMAND_SETTINGS, 2));
         registerConfigs(builder);
         registerSettings(builder);
 

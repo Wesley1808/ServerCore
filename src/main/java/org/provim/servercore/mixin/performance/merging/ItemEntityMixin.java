@@ -10,12 +10,7 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin {
 
-    /**
-     * Merges item entities from a set range.
-     *
-     * @param args: The values that decide the merging range.
-     */
-
+    // Configurable item merging radius.
     @ModifyArgs(method = "mergeWithNeighbours", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/AABB;inflate(DDD)Lnet/minecraft/world/phys/AABB;"))
     private void setMergeRadius(Args args) {
         double mergeRadius = FeatureConfig.ITEM_MERGE_RADIUS.get();

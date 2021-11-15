@@ -34,8 +34,8 @@ public abstract class ExperienceOrbMixin extends Entity {
 
     @Overwrite
     private static boolean canMerge(ExperienceOrb orb, int seed, int amount) {
-        boolean bl = !orb.isRemoved() && (orb.getId() - seed) % 40 == 0;
-        return FeatureConfig.FAST_XP_MERGING.get() ? bl : bl && orb.getValue() == amount;
+        boolean canMerge = !orb.isRemoved() && (orb.getId() - seed) % 40 == 0;
+        return FeatureConfig.FAST_XP_MERGING.get() ? canMerge : canMerge && orb.getValue() == amount;
     }
 
     /**
@@ -54,10 +54,7 @@ public abstract class ExperienceOrbMixin extends Entity {
         other.discard();
     }
 
-    /**
-     * Allows for customizing the radius experience orbs will attempt to merge at.
-     */
-
+    // Configurable experience orb merging radius.
     @Redirect(method = "scanForEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/AABB;inflate(D)Lnet/minecraft/world/phys/AABB;"))
     private AABB setMergeRadius(AABB box, double value) {
         return box.inflate(FeatureConfig.XP_MERGE_RADIUS.get());

@@ -21,9 +21,9 @@ import java.util.function.Consumer;
 
 @Mixin(ServerChunkCache.class)
 public abstract class ServerChunkCacheMixin {
-
     @Unique
     private final ObjectLinkedOpenHashSet<ServerChunkCache.ChunkAndHolder> active = new ObjectLinkedOpenHashSet<>();
+
     @Shadow
     @Final
     ServerLevel level;

@@ -4,6 +4,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.objectweb.asm.Opcodes;
+import org.provim.servercore.ServerCore;
+import org.provim.servercore.config.tables.ActivationRangeConfig;
 import org.provim.servercore.interfaces.ActivationEntity;
 import org.provim.servercore.interfaces.InactiveEntity;
 import org.provim.servercore.utils.ActivationRange;
@@ -25,7 +27,9 @@ public abstract class ServerLevelMixin {
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/entity/EntityTickList;forEach(Ljava/util/function/Consumer;)V"))
     public void activateEntities(BooleanSupplier booleanSupplier, CallbackInfo ci) {
-        ActivationRange.activateEntities((ServerLevel) (Object) this);
+        if (ActivationRangeConfig.ENABLED.get() && ServerCore.getServer().getTickCount() % 20 == 0) {
+            ActivationRange.activateEntities((ServerLevel) (Object) this);
+        }
     }
 
     @Redirect(method = "tickNonPassenger", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;tick()V"))
