@@ -7,9 +7,9 @@
   "authors": ["Wesley1808"],
   "contact": {},
   "license": "MIT",
-  "environment": "server",
+  "environment": "*",
   "entrypoints": {
-    "server": [
+    "main": [
       "org.provim.servercore.ServerCore"
     ]
   },

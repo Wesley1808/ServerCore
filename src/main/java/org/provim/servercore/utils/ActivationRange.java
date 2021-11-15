@@ -355,11 +355,13 @@ public class ActivationRange {
 
     // Updates breeding age for age-able entities.
     public static void updateAge(AgeableMob mob) {
-        final int age = mob.getAge();
-        if (age < 0) {
-            mob.setAge(age + 1);
-        } else if (age > 0) {
-            mob.setAge(age - 1);
+        if (!mob.level.isClientSide) {
+            final int age = mob.getAge();
+            if (age < 0) {
+                mob.setAge(age + 1);
+            } else if (age > 0) {
+                mob.setAge(age - 1);
+            }
         }
     }
 

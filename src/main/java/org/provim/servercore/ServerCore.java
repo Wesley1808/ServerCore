@@ -1,7 +1,7 @@
 package org.provim.servercore;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.fabricmc.api.DedicatedServerModInitializer;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -14,7 +14,7 @@ import org.provim.servercore.commands.SettingCommand;
 import org.provim.servercore.config.Config;
 import org.provim.servercore.utils.TickManager;
 
-public final class ServerCore implements DedicatedServerModInitializer {
+public final class ServerCore implements ModInitializer {
     private static final Logger LOGGER = LogManager.getLogger();
     private static MinecraftServer server;
 
@@ -27,7 +27,8 @@ public final class ServerCore implements DedicatedServerModInitializer {
     }
 
     @Override
-    public void onInitializeServer() {
+    public void onInitialize() {
+        LOGGER.info("[ServerCore] initializing...");
         Config.load();
         this.registerEvents();
     }
