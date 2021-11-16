@@ -4,7 +4,9 @@
   "version": "${version}",
   "name": "ServerCore-Fabric",
   "description": "A fabric mod that aims to optimize the minecraft server.",
-  "authors": ["Wesley1808"],
+  "authors": [
+    "Wesley1808"
+  ],
   "contact": {},
   "license": "MIT",
   "environment": "*",

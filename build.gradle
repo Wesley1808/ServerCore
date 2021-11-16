@@ -31,7 +31,7 @@ dependencies {
     // Fabric API
     Set<String> modules = ['fabric-api-base', 'fabric-command-api-v1', 'fabric-lifecycle-events-v1']
     modules.forEach {
-        modImplementation(fabricApi.module(it, project.fabric_version))
+        modImplementation(include(fabricApi.module(it, project.fabric_version)))
     }
 
 
