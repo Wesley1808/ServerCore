@@ -3,8 +3,6 @@ package org.provim.servercore.mixin.performance.activation_range;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.provim.servercore.ServerCore;
@@ -49,23 +47,26 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
 
     @Inject(method = "<init>", at = @At(value = "RETURN"))
     public void setupActivationStates(EntityType<?> type, Level level, CallbackInfo ci) {
-        final Entity entity = (Entity) (Object) this;
-        this.activationType = ActivationRange.initializeEntityActivationType(entity);
-        this.excluded = level != null && ActivationRange.isExcluded(entity);
+        if (!this.level.isClientSide) {
+            final Entity entity = (Entity) (Object) this;
+            this.activationType = ActivationRange.initializeEntityActivationType(entity);
+            this.excluded = level != null && ActivationRange.isExcluded(entity);
+        }
     }
 
     @Inject(method = "move", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/world/entity/Entity;limitPistonMovement(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;"))
     public void onPistonMove(MoverType moverType, Vec3 vec3, CallbackInfo ci) {
-        final int ticks = ServerCore.getServer().getTickCount() + 20;
-        this.activatedTick = Math.max(this.activatedTick, ticks);
-        this.activatedImmunityTick = Math.max(this.activatedImmunityTick, ticks);
+        if (!this.level.isClientSide) {
+            final int ticks = ServerCore.getServer().getTickCount() + 20;
+            this.activatedTick = Math.max(this.activatedTick, ticks);
+            this.activatedImmunityTick = Math.max(this.activatedImmunityTick, ticks);
+        }
     }
 
     // Paper - Ignore movement changes while inactive.
     @Inject(method = "move", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/world/entity/Entity;maybeBackOffFromEdge(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/entity/MoverType;)Lnet/minecraft/world/phys/Vec3;"), cancellable = true)
     public void ignoreMovementWhileInactive(MoverType moverType, Vec3 vec3, CallbackInfo ci) {
-        final Entity entity = (Entity) (Object) this;
-        if (this.isTemporarilyActive && !(entity instanceof ItemEntity || entity instanceof AbstractMinecart) && vec3 == this.deltaMovement && moverType == MoverType.SELF) {
+        if (this.isTemporarilyActive && !this.level.isClientSide && this.activationType != ActivationRange.ActivationType.MISC && vec3 == this.deltaMovement && moverType == MoverType.SELF) {
             this.setDeltaMovement(Vec3.ZERO);
             this.level.getProfiler().pop();
             ci.cancel();
@@ -75,7 +76,7 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
     // ServerCore - Prevent inactive entities from getting extreme velocities.
     @Inject(method = "push(DDD)V", at = @At(value = "HEAD"), cancellable = true)
     public void ignorePushingWhileInactive(double x, double y, double z, CallbackInfo ci) {
-        if (this.isInactive) {
+        if (this.isInactive && !this.level.isClientSide) {
             ci.cancel();
         }
     }

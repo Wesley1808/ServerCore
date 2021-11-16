@@ -1,15 +1,17 @@
 package org.provim.servercore.mixin.performance.activation_range;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.objectweb.asm.Opcodes;
-import org.provim.servercore.ServerCore;
 import org.provim.servercore.config.tables.ActivationRangeConfig;
 import org.provim.servercore.interfaces.ActivationEntity;
 import org.provim.servercore.interfaces.InactiveEntity;
 import org.provim.servercore.utils.ActivationRange;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -24,10 +26,13 @@ import java.util.function.BooleanSupplier;
 
 @Mixin(ServerLevel.class)
 public abstract class ServerLevelMixin {
+    @Shadow
+    @Final
+    private MinecraftServer server;
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/entity/EntityTickList;forEach(Ljava/util/function/Consumer;)V"))
     public void activateEntities(BooleanSupplier booleanSupplier, CallbackInfo ci) {
-        if (ActivationRangeConfig.ENABLED.get() && ServerCore.getServer().getTickCount() % 20 == 0) {
+        if (ActivationRangeConfig.ENABLED.get() && this.server.getTickCount() % 20 == 0) {
             ActivationRange.activateEntities((ServerLevel) (Object) this);
         }
     }
