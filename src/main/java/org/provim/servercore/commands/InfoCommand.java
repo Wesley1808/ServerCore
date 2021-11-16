@@ -21,14 +21,16 @@ public final class InfoCommand {
     private InfoCommand() {
     }
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
         if (CommandConfig.COMMAND_MOBCAPS.get()) {
             dispatcher.register(literal("mobcaps").executes(InfoCommand::mobcaps));
         }
 
-        dispatcher.register(literal("sc").requires(src -> PermissionManager.perm(src, PermissionManager.COMMAND_INFO, 2))
-                .then(literal("status").executes(InfoCommand::status))
-        );
+        if (dedicated) {
+            dispatcher.register(literal("sc").requires(src -> PermissionManager.perm(src, PermissionManager.COMMAND_INFO, 2))
+                    .then(literal("status").executes(InfoCommand::status))
+            );
+        }
     }
 
     private static int mobcaps(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {

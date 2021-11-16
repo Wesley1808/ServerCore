@@ -1,5 +1,8 @@
 package org.provim.servercore.utils;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
@@ -97,11 +100,19 @@ public final class TickManager {
     public static void setViewDistance(int distance) {
         ServerCore.getServer().getPlayerList().setViewDistance(distance);
         viewDistance = distance;
+
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            Minecraft.getInstance().options.renderDistance = distance;
+        }
     }
 
     public static void setSimulationDistance(int distance) {
         ServerCore.getServer().getPlayerList().setSimulationDistance(distance);
         simulationDistance = distance;
+
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            Minecraft.getInstance().options.simulationDistance = distance;
+        }
     }
 
     public static void setModifier(BigDecimal modifier) {
