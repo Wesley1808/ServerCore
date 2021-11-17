@@ -29,7 +29,7 @@ public abstract class ServerChunkCacheMixin {
     ServerLevel level;
 
     // Avoid massive array allocations.
-    @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Lists;newArrayListWithCapacity(I)Ljava/util/ArrayList;", remap = false))
+    @Redirect(method = "tickChunks", require = 0, at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Lists;newArrayListWithCapacity(I)Ljava/util/ArrayList;", remap = false))
     private ArrayList<?> noList(int initialArraySize) {
         return null;
     }
