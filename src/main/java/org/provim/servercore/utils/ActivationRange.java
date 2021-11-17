@@ -139,8 +139,9 @@ public class ActivationRange {
                 maxBB = player.getBoundingBox().inflate(maxRange, 96, maxRange);
                 for (ActivationType type : ActivationType.values()) {
                     type.boundingBox = player.getBoundingBox().inflate(type.activationRange.getAsInt());
-                    if (type.extraHeightUp) type.boundingBox.expandTowards(0, 96, 0);
-                    if (type.extraHeightDown) type.boundingBox.expandTowards(0, -96, 0);
+
+                    if (type.extraHeightUp) type.boundingBox = type.boundingBox.expandTowards(0, 96, 0);
+                    if (type.extraHeightDown) type.boundingBox = type.boundingBox.expandTowards(0, -96, 0);
                 }
             } else {
                 maxBB = player.getBoundingBox().inflate(maxRange, 256, maxRange);
