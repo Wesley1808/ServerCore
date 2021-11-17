@@ -35,7 +35,7 @@ public abstract class ItemEntityMixin extends Entity implements InactiveEntity {
             this.age++;
         }
 
-        if (!this.level.isClientSide && this.age >= 6000) {
+        if (this.age >= 6000) {
             this.discard();
         }
     }

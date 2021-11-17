@@ -34,7 +34,6 @@ dependencies {
         modImplementation(include(fabricApi.module(it, project.fabric_version)))
     }
 
-
     // Permission API
     modImplementation 'me.lucko:fabric-permissions-api:0.1-SNAPSHOT'
 
