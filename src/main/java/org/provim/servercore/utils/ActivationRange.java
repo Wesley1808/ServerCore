@@ -129,11 +129,11 @@ public class ActivationRange {
 
                 Box maxBB;
                 if (USE_VERTICAL_RANGE.get()) {
-                    maxBB = player.getBoundingBox().expand(maxRange, 96, maxRange);
+                    maxBB = player.getBoundingBox().expand(maxRange, 128, maxRange);
                     for (ActivationType type : ActivationType.values()) {
                         type.boundingBox = player.getBoundingBox().expand(type.activationRange.getAsInt());
-                        if (type.extraHeightUp) type.boundingBox.stretch(0, 96, 0);
-                        if (type.extraHeightDown) type.boundingBox.stretch(0, -96, 0);
+                        if (type.extraHeightUp) type.boundingBox = type.boundingBox.stretch(0, 96, 0);
+                        if (type.extraHeightDown) type.boundingBox = type.boundingBox.stretch(0, -96, 0);
                     }
                 } else {
                     maxBB = player.getBoundingBox().expand(maxRange, 256, maxRange);
@@ -292,17 +292,22 @@ public class ActivationRange {
         if (!active) {
             if ((currentTick - activationEntity.getActivatedTick() - 1) % 20 == 0) {
                 // Check immunities every 20 inactive ticks.
-                if (checkIfImmune(entity, currentTick)) return true;
+                final int immunity = checkEntityImmunities(entity);
+                if (immunity >= 0) {
+                    activationEntity.setActivatedTick(currentTick + immunity);
+                    return true;
+                }
 
-                final boolean shouldTickInactive = activationEntity.getActivationType().tickInactive.getAsBoolean();
-                activationEntity.setTemporarilyActive(shouldTickInactive);
-                return shouldTickInactive;
+                if (activationEntity.getActivationType().tickInactive.getAsBoolean()) {
+                    activationEntity.setTemporarilyActive(true);
+                    return true;
+                }
             }
             // Spigot - Add a little performance juice to active entities. Skip 1/4 if not immune.
-        } else if (entity.age % 4 == 0) {
-            // ServerCore - If immune, increase activated ticks.
-            return checkIfImmune(entity, currentTick);
+        } else if (activationEntity.getTickCount() % 4 == 0 && checkEntityImmunities(entity) < 0) {
+            return false;
         }
+
         return active;
     }
 
@@ -311,16 +316,6 @@ public class ActivationRange {
                 || (entity.age < 200 && activationEntity.getActivationType() == ActivationType.MISC) // New misc entities
                 || (entity instanceof MobEntity mob && mob.holdingEntity instanceof PlayerEntity) // Player leashed mobs
                 || (entity instanceof LivingEntity living && living.hurtTime > 0); // Attacked mobs
-    }
-
-    private static boolean checkIfImmune(Entity entity, int currentTick) {
-        final ActivationEntity activationEntity = (ActivationEntity) entity;
-        final int immunity = checkEntityImmunities(entity);
-        if (immunity >= 0) {
-            activationEntity.setActivatedTick(currentTick + immunity);
-            return true;
-        }
-        return false;
     }
 
     private static int checkInactiveWakeup(Entity entity) {

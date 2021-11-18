@@ -3,14 +3,13 @@
   "minVersion": "0.8",
   "package": "org.provim.servercore.mixin",
   "compatibilityLevel": "JAVA_16",
-  "server": [
+  "mixins": [
     "accessor.ServerChunkManagerAccessor",
     "accessor.ServerPlayerEntityAccessor",
     "accessor.SpawnHelperAccessor",
     "accessor.SpawnHelperInfoAccessor",
     "accessor.TACSAccessor",
-    "event.CommandManagerMixin",
-    "event.MinecraftServerMixin",
+    "performance.MinecraftServerMixin",
     "limits.AnimalEntityMixin",
     "limits.EggEntityMixin",
     "limits.VillagerBreedTaskMixin",

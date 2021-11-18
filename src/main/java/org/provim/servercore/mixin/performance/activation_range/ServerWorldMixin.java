@@ -3,6 +3,8 @@ package org.provim.servercore.mixin.performance.activation_range;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
+import org.objectweb.asm.Opcodes;
+import org.provim.servercore.interfaces.ActivationEntity;
 import org.provim.servercore.interfaces.InactiveEntity;
 import org.provim.servercore.utils.ActivationRange;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,24 +30,42 @@ public abstract class ServerWorldMixin {
 
     @Redirect(method = "tickEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;tick()V"))
     public void shouldTickEntity(Entity entity) {
-        if (!ActivationRange.checkIfActive(entity)) {
-            ((InactiveEntity) entity).inactiveTick();
-        } else {
+        if (ActivationRange.checkIfActive(entity)) {
+            ((ActivationEntity) entity).setInactive(false);
+            entity.age++;
             entity.tick();
+        } else {
+            ((ActivationEntity) entity).setInactive(true);
+            ((InactiveEntity) entity).inactiveTick();
         }
     }
 
     @Redirect(method = "tickPassenger", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;tickRiding()V"))
     public void shouldTickPassengers(Entity entity) {
         if (ActivationRange.checkIfActive(entity)) {
+            ((ActivationEntity) entity).setInactive(false);
+            entity.age++;
             entity.tickRiding();
         } else {
             entity.setVelocity(Vec3d.ZERO);
+            ((ActivationEntity) entity).setInactive(true);
             ((InactiveEntity) entity).inactiveTick();
             Entity vehicle = entity.getVehicle();
             if (vehicle != null) {
                 vehicle.updatePassengerPosition(entity);
             }
         }
+    }
+
+    // Only increase entity age when ticked.
+    // Increasing entity age whilst inactive can break entity behavior.
+    @Redirect(method = "tickEntity", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "net/minecraft/entity/Entity.age:I"))
+    public void cancelEntityAge(Entity entity, int value) {
+        ((ActivationEntity) entity).incTickCount();
+    }
+
+    @Redirect(method = "tickPassenger", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "net/minecraft/entity/Entity.age:I"))
+    public void cancelPassengerAge(Entity passenger, int value) {
+        ((ActivationEntity) passenger).incTickCount();
     }
 }

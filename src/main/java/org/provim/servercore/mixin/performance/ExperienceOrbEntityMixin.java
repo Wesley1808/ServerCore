@@ -15,13 +15,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ExperienceOrbEntity.class)
 public abstract class ExperienceOrbEntityMixin extends Entity {
     @Shadow
+    public int pickingCount;
+    @Shadow
+    public int orbAge;
+    @Shadow
     private int amount;
-
-    @Shadow
-    private int pickingCount;
-
-    @Shadow
-    private int orbAge;
 
     protected ExperienceOrbEntityMixin(EntityType<?> type, World world) {
         super(type, world);

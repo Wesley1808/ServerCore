@@ -27,7 +27,7 @@ public abstract class AreaEffectCloudEntityMixin extends Entity implements Inact
 
     @Override
     public void inactiveTick() {
-        if (this.age >= this.waitTime + this.duration) {
+        if (++this.age >= this.waitTime + this.duration) {
             this.discard();
         }
     }

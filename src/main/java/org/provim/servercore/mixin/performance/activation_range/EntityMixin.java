@@ -2,9 +2,7 @@ package org.provim.servercore.mixin.performance.activation_range;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.MovementType;
-import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.provim.servercore.ServerCore;
@@ -33,37 +31,52 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
     @Unique
     private int activatedImmunityTick = Integer.MIN_VALUE;
     @Unique
-    private boolean isTemporarilyActive = false;
-    @Unique
     private ActivationRange.ActivationType activationType;
     @Unique
+    private boolean isTemporarilyActive = false;
+    @Unique
     private boolean excluded = false;
+    @Unique
+    private boolean inactive = false;
     @Shadow
     private Vec3d velocity;
+    @Unique
+    private int tickCount;
 
     @Shadow
     public abstract void setVelocity(Vec3d velocity);
 
     @Inject(method = "<init>", at = @At(value = "RETURN"))
     public void setupActivationStates(EntityType<?> entityType, World world, CallbackInfo ci) {
-        final Entity entity = (Entity) (Object) this;
-        this.activationType = ActivationRange.initializeEntityActivationType(entity);
-        this.excluded = world != null && ActivationRange.isExcluded(entity);
+        if (!this.world.isClient) {
+            final Entity entity = (Entity) (Object) this;
+            this.activationType = ActivationRange.initializeEntityActivationType(entity);
+            this.excluded = world != null && ActivationRange.isExcluded(entity);
+        }
     }
 
     @Inject(method = "move", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/entity/Entity;adjustMovementForPiston(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;"))
     public void onPistonMove(MovementType movementType, Vec3d vec3d, CallbackInfo ci) {
-        final int ticks = ServerCore.getServer().getTicks() + 20;
-        this.activatedTick = Math.max(this.activatedTick, ticks);
-        this.activatedImmunityTick = Math.max(this.activatedImmunityTick, ticks);
+        if (!this.world.isClient) {
+            final int ticks = ServerCore.getServer().getTicks() + 20;
+            this.activatedTick = Math.max(this.activatedTick, ticks);
+            this.activatedImmunityTick = Math.max(this.activatedImmunityTick, ticks);
+        }
     }
 
     @Inject(method = "move", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/entity/Entity;adjustMovementForSneaking(Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/entity/MovementType;)Lnet/minecraft/util/math/Vec3d;"), cancellable = true)
     public void ignoreMovementWhileInactive(MovementType movementType, Vec3d vec3d, CallbackInfo ci) {
-        final Entity entity = (Entity) (Object) this;
-        if (this.isTemporarilyActive && !(entity instanceof ItemEntity || entity instanceof AbstractMinecartEntity) && vec3d == this.velocity && movementType == MovementType.SELF) {
+        if (this.isTemporarilyActive && !this.world.isClient && this.activationType != ActivationRange.ActivationType.MISC && vec3d == this.velocity && movementType == MovementType.SELF) {
             this.setVelocity(Vec3d.ZERO);
             this.world.getProfiler().pop();
+            ci.cancel();
+        }
+    }
+
+    // ServerCore - Prevent inactive entities from getting extreme velocities.
+    @Inject(method = "addVelocity", at = @At(value = "HEAD"), cancellable = true)
+    public void ignorePushingWhileInactive(double x, double y, double z, CallbackInfo ci) {
+        if (this.inactive && !this.world.isClient) {
             ci.cancel();
         }
     }
@@ -95,6 +108,21 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
 
     public void setActivatedImmunityTick(int tick) {
         this.activatedImmunityTick = tick;
+    }
+
+    @Override
+    public int getTickCount() {
+        return this.tickCount;
+    }
+
+    @Override
+    public void incTickCount() {
+        this.tickCount++;
+    }
+
+    @Override
+    public void setInactive(boolean inactive) {
+        this.inactive = inactive;
     }
 
     @Override

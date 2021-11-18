@@ -1,5 +1,8 @@
 package org.provim.servercore.utils;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.predicate.entity.EntityPredicates;
@@ -82,6 +85,10 @@ public final class TickManager {
     public static void setViewDistance(int distance) {
         ServerCore.getServer().getPlayerManager().setViewDistance(distance);
         viewDistance = distance;
+
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            MinecraftClient.getInstance().options.viewDistance = distance;
+        }
     }
 
     public static int getChunkTickDistance() {

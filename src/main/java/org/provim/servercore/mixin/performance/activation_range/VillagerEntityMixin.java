@@ -35,6 +35,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity implements Inac
         }
 
         if (ActivationRangeConfig.VILLAGER_TICK_ALWAYS.get()) {
+            this.age++;
             this.mobTick();
         }
 

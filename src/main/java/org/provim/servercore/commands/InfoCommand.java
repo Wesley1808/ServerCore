@@ -21,11 +21,14 @@ public final class InfoCommand {
     private InfoCommand() {
     }
 
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated) {
         dispatcher.register(literal("mobcaps").executes(InfoCommand::mobcaps));
-        dispatcher.register(literal("sc").requires(src -> PermissionUtils.perm(src, PermissionUtils.COMMAND_INFO, 2))
-                .then(literal("status").executes(InfoCommand::performanceReport))
-        );
+
+        if (dedicated) {
+            dispatcher.register(literal("sc").requires(src -> PermissionUtils.perm(src, PermissionUtils.COMMAND_INFO, 2))
+                    .then(literal("status").executes(InfoCommand::performanceReport))
+            );
+        }
     }
 
     private static int mobcaps(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {

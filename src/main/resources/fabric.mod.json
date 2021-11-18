@@ -3,11 +3,18 @@
   "id": "servercore-fabric",
   "version": "${version}",
   "name": "ServerCore-Fabric",
-  "description": "A fabric mod that aims to optimize & add multiplayer features to the minecraft server.",
-  "authors": ["Wesley1808"],
+  "description": "A fabric mod that aims to optimize the minecraft server.",
+  "authors": [
+    "Wesley1808"
+  ],
   "contact": {},
   "license": "MIT",
-  "environment": "server",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "org.provim.servercore.ServerCore"
+    ]
+  },
   "mixins": [
     "servercore.mixins.json"
   ],
