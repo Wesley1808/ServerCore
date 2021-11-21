@@ -9,7 +9,6 @@
     "accessor.SpawnHelperAccessor",
     "accessor.SpawnHelperInfoAccessor",
     "accessor.TACSAccessor",
-    "performance.MinecraftServerMixin",
     "limits.AnimalEntityMixin",
     "limits.EggEntityMixin",
     "limits.VillagerBreedTaskMixin",
@@ -17,12 +16,14 @@
     "performance.FilledMapItemMixin",
     "performance.ItemEntityMixin",
     "performance.MapStateMixin",
+    "performance.MinecraftServerMixin",
     "performance.MobNavigationMixin",
     "performance.PlayerAdvancementTrackerMixin",
     "performance.PlayerManagerMixin",
     "performance.ServerChunkManagerMixin",
     "performance.ServerPlayerEntityMixin",
     "performance.SpawnGroupMixin",
+    "performance.SpawnHelperMixin",
     "performance.TACSEntityTrackerMixin",
     "performance.VillagerEntityMixin",
     "performance.activation_range.AreaEffectCloudEntityMixin",
@@ -39,12 +40,7 @@
     "performance.activation_range.ServerWorldMixin",
     "performance.activation_range.SpectralArrowEntityMixin",
     "performance.activation_range.VillagerEntityMixin",
-    "performance.activation_range.WorldMixin",
-    "perplayerspawns.PassiveEntityMixin",
-    "perplayerspawns.ServerChunkManagerMixin",
-    "perplayerspawns.ServerPlayerEntityMixin",
-    "perplayerspawns.SpawnHelperMixin",
-    "perplayerspawns.ThreadedAnvilChunkStorageMixin"
+    "performance.activation_range.WorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1

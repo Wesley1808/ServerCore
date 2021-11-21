@@ -4,7 +4,6 @@ import org.provim.servercore.config.ConfigEntry;
 
 public final class FeatureConfig {
     public static final ConfigEntry<Boolean> DISABLE_SPAWN_CHUNKS = new ConfigEntry<>(true, "(Default = true) Stops the server from loading spawn chunks.");
-    public static final ConfigEntry<Boolean> PER_PLAYER_SPAWNS = new ConfigEntry<>(true, "(Default = true) Replaces vanilla's mobspawning algorithm with PaperMC's per player mobspawning.");
     public static final ConfigEntry<Boolean> USE_CHUNK_TICK_DISTANCE = new ConfigEntry<>(false, "(Default = true) Allows ServerCore to modify the distance the server will perform chunk ticks at.\nChunk ticks include randomticks and mobspawning.");
     public static final ConfigEntry<Boolean> FAST_XP_MERGING = new ConfigEntry<>(false, "(Default = false) Allows xp orbs to merge with others that have different experience amounts.\nThis will also allow players to pickup xp much faster.");
     public static final ConfigEntry<Boolean> LOBOTOMIZE_VILLAGERS = new ConfigEntry<>(false, "(Default = false) Makes villagers tick less often if they are stuck in a 1x1 space.");
