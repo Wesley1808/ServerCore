@@ -17,3 +17,4 @@ accessible field net/minecraft/world/entity/Mob targetSelector Lnet/minecraft/wo
 accessible field net/minecraft/world/level/NaturalSpawner$SpawnState localMobCapCalculator Lnet/minecraft/world/level/LocalMobCapCalculator;
 accessible field net/minecraft/world/level/LocalMobCapCalculator playerMobCounts Ljava/util/Map;
 accessible field net/minecraft/world/level/LocalMobCapCalculator$MobCounts counts Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+accessible field net/minecraft/world/level/PathNavigationRegion level Lnet/minecraft/world/level/Level;

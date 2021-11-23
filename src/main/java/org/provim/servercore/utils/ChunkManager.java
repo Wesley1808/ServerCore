@@ -28,7 +28,12 @@ public final class ChunkManager {
 
     @Nullable
     public static LevelChunk getChunkIfLoaded(Level level, BlockPos pos) {
-        final ChunkHolder holder = getChunkHolder(level, pos);
+        return getChunkIfLoaded(level, pos.getX() >> 4, pos.getZ() >> 4);
+    }
+
+    @Nullable
+    public static LevelChunk getChunkIfLoaded(Level level, int chunkX, int chunkZ) {
+        final ChunkHolder holder = getChunkHolder(level, chunkX, chunkZ);
         return holder != null ? holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left().orElse(null) : null;
     }
 
@@ -37,7 +42,11 @@ public final class ChunkManager {
      */
 
     public static boolean isChunkLoaded(Level level, BlockPos pos) {
-        return isChunkLoaded(getChunkHolder(level, pos));
+        return isChunkLoaded(level, pos.getX() >> 4, pos.getZ() >> 4);
+    }
+
+    public static boolean isChunkLoaded(Level level, int chunkX, int chunkZ) {
+        return isChunkLoaded(getChunkHolder(level, chunkX, chunkZ));
     }
 
     public static boolean isChunkLoaded(ChunkHolder holder) {
@@ -45,11 +54,11 @@ public final class ChunkManager {
     }
 
     /**
-     * Returns the ChunkHolder at {@param pos} in {@param level} if the location is loaded.
+     * Returns the ChunkHolder at chunk coordinate X / Z in {@param level} if the location is loaded.
      */
 
     @Nullable
-    public static ChunkHolder getChunkHolder(Level level, BlockPos pos) {
-        return level.getChunkSource() instanceof ServerChunkCache chunkCache ? chunkCache.getVisibleChunkIfPresent(ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4)) : null;
+    public static ChunkHolder getChunkHolder(Level level, int chunkX, int chunkZ) {
+        return level.getChunkSource() instanceof ServerChunkCache chunkCache ? chunkCache.getVisibleChunkIfPresent(ChunkPos.asLong(chunkX, chunkZ)) : null;
     }
 }

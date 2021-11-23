@@ -33,10 +33,10 @@ import net.minecraft.world.entity.vehicle.MinecartHopper;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.provim.servercore.ServerCore;
-import org.provim.servercore.interfaces.ActivationEntity;
-import org.provim.servercore.interfaces.IGoalSelector;
-import org.provim.servercore.interfaces.ILevel;
-import org.provim.servercore.interfaces.IPathFinderMob;
+import org.provim.servercore.interfaces.activation_range.ActivationEntity;
+import org.provim.servercore.interfaces.activation_range.IGoalSelector;
+import org.provim.servercore.interfaces.activation_range.ILevel;
+import org.provim.servercore.interfaces.activation_range.IPathFinderMob;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.IntSupplier;
@@ -136,7 +136,7 @@ public class ActivationRange {
 
             AABB maxBB;
             if (USE_VERTICAL_RANGE.get()) {
-                maxBB = player.getBoundingBox().inflate(maxRange, 96, maxRange);
+                maxBB = player.getBoundingBox().inflate(maxRange, 128, maxRange);
                 for (ActivationType type : ActivationType.values()) {
                     type.boundingBox = player.getBoundingBox().inflate(type.activationRange.getAsInt());
 
@@ -293,7 +293,6 @@ public class ActivationRange {
 
         final int currentTick = ServerCore.getServer().getTickCount();
         final boolean active = activationEntity.getActivatedTick() >= currentTick;
-        activationEntity.setTemporarilyActive(false);
 
         if (!active) {
             if ((currentTick - activationEntity.getActivatedTick() - 1) % 20 == 0) {
@@ -304,10 +303,7 @@ public class ActivationRange {
                     return true;
                 }
 
-                if (activationEntity.getActivationType().tickInactive.getAsBoolean()) {
-                    activationEntity.setTemporarilyActive(true);
-                    return true;
-                }
+                return activationEntity.getActivationType().tickInactive.getAsBoolean();
             }
             // Spigot - Add a little performance juice to active entities. Skip 1/4 if not immune.
         } else if (activationEntity.getFullTickCount() % 4 == 0 && checkEntityImmunities(entity) < 0) {
