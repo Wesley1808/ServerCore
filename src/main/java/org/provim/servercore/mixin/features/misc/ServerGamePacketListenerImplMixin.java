@@ -22,6 +22,11 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Collections;
 import java.util.Set;
 
+/**
+ * From: PaperMC (Add-option-to-prevent-players-from-moving-into-unloaded-chunks.patch)
+ * License: GPL-3.0 (licenses/GPL.md)
+ */
+
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class ServerGamePacketListenerImplMixin {
 
@@ -35,7 +40,6 @@ public abstract class ServerGamePacketListenerImplMixin {
     @Shadow
     public abstract void teleport(double d, double e, double f, float g, float h, Set<ClientboundPlayerPositionPacket.RelativeArgument> set, boolean bl);
 
-    // Paper - Prevent moving into unloaded chunks
     @Inject(method = "handleMoveVehicle", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", shift = At.Shift.AFTER, ordinal = 0, target = "Lnet/minecraft/world/phys/Vec3;lengthSqr()D"), cancellable = true)
     private void handleMoveVehicle(ServerboundMoveVehiclePacket packet, CallbackInfo ci, Entity entity, ServerLevel serverLevel, double d, double e, double f, double g, double h, double i, float j, float k, double l, double m, double n) {
         if (FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get() && !ChunkManager.isChunkLoaded(serverLevel, (int) Math.floor(packet.getX()) >> 4, (int) Math.floor(packet.getZ()) >> 4)) {
@@ -44,7 +48,6 @@ public abstract class ServerGamePacketListenerImplMixin {
         }
     }
 
-    // Paper - Prevent moving into unloaded chunks
     @Inject(method = "handleMovePlayer", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", shift = At.Shift.BEFORE, ordinal = 0, target = "Lnet/minecraft/server/level/ServerPlayer;isChangingDimension()Z"), cancellable = true)
     private void handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double d, double e, double f, float g, float h, double x, double y, double z, double l, double m, double n, double o, double p, double q, int r) {
         final double toX = packet.getX(x);

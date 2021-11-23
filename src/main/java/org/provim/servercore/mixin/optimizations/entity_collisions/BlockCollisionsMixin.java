@@ -86,7 +86,7 @@ public abstract class BlockCollisionsMixin extends AbstractIterator<VoxelShape> 
         return blockGetter;
     }
 
-    @Inject(method = "computeNext()Lnet/minecraft/world/phys/shapes/VoxelShape;", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/world/level/BlockCollisions;getChunk(II)Lnet/minecraft/world/level/BlockGetter;"))
+    @Inject(method = "computeNext()Lnet/minecraft/world/phys/shapes/VoxelShape;", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/world/level/BlockCollisions;getChunk(II)Lnet/minecraft/world/level/BlockGetter;"), cancellable = true)
     private void onPostGetChunk(CallbackInfoReturnable<VoxelShape> cir, int x, int y, int z, int l) {
         if (this.isNull) {
             if (!(this.entity instanceof ServerPlayer) || FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get()) {

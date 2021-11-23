@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * From: PaperMC (Optimize-the-advancement-data-player-iteration-to-be.patch)
+ * From: PaperMC (Optimize-the-advancement-data-player-iteration-to-be-O(N)-rather-than-O(N^2).patch)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 
