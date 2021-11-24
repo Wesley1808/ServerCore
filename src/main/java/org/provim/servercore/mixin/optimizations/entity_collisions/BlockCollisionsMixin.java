@@ -2,9 +2,9 @@ package org.provim.servercore.mixin.optimizations.entity_collisions;
 
 import com.google.common.collect.AbstractIterator;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.*;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -76,7 +76,7 @@ public abstract class BlockCollisionsMixin extends AbstractIterator<VoxelShape> 
         if (this.collisionGetter instanceof WorldGenRegion) {
             this.isNull = false;
             return this.getChunk(x, z);
-        } else if ((!this.isFar && this.entity instanceof ServerPlayer) || (this.entity instanceof CollisionEntity collisionEntity && collisionEntity.shouldCollisionLoadChunks())) {
+        } else if ((!this.isFar && this.entity instanceof Player) || (this.entity instanceof CollisionEntity collisionEntity && collisionEntity.shouldCollisionLoadChunks())) {
             blockGetter = this.getChunk(x, z);
         } else {
             blockGetter = this.getChunkIfLoaded(x >> 4, z >> 4);
@@ -89,7 +89,7 @@ public abstract class BlockCollisionsMixin extends AbstractIterator<VoxelShape> 
     @Inject(method = "computeNext()Lnet/minecraft/world/phys/shapes/VoxelShape;", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/world/level/BlockCollisions;getChunk(II)Lnet/minecraft/world/level/BlockGetter;"), cancellable = true)
     private void onPostGetChunk(CallbackInfoReturnable<VoxelShape> cir, int x, int y, int z, int l) {
         if (this.isNull) {
-            if (!(this.entity instanceof ServerPlayer) || FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get()) {
+            if (!(this.entity instanceof Player) || FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get()) {
                 cir.setReturnValue(Shapes.create(this.isFar ? this.entity.getBoundingBox() : new AABB(new BlockPos(x, y, z))));
             }
         }
