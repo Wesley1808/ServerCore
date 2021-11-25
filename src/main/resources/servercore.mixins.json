@@ -34,6 +34,7 @@
     "optimizations.entity_collisions.BlockCollisionsMixin",
     "optimizations.entity_collisions.CollisionGetterMixin",
     "optimizations.entity_collisions.EntityMixin",
+    "optimizations.misc.AcquirePoiMixin",
     "optimizations.misc.MapItemSavedDataMixin",
     "optimizations.misc.TrackedEntityMixin",
     "optimizations.mob_spawning.ChunkMapMixin",
@@ -44,7 +45,10 @@
     "optimizations.mob_spawning.ServerPlayerMixin",
     "optimizations.player_login.PlayerAdvancementsMixin",
     "optimizations.player_login.PlayerListMixin",
-    "optimizations.player_login.ServerPlayerMixin"
+    "optimizations.player_login.ServerPlayerMixin",
+    "optimizations.ticking.LevelChunkMixin",
+    "optimizations.ticking.ServerChunkCacheMixin",
+    "optimizations.ticking.ServerLevelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
