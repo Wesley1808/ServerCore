@@ -24,6 +24,7 @@
     "features.entity_limits.VillagerMakeLoveMixin",
     "features.merging.ExperienceOrbMixin",
     "features.merging.ItemEntityMixin",
+    "features.misc.ChunkMapMixin",
     "features.misc.MinecraftServerMixin",
     "features.misc.ServerGamePacketListenerImplMixin",
     "features.ticking.ServerChunkCacheMixin",

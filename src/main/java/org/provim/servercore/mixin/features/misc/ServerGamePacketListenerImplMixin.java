@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import org.provim.servercore.config.tables.FeatureConfig;
 import org.provim.servercore.utils.ChunkManager;
 import org.spongepowered.asm.mixin.Final;
@@ -48,12 +49,11 @@ public abstract class ServerGamePacketListenerImplMixin {
         }
     }
 
-    @Inject(method = "handleMovePlayer", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", shift = At.Shift.BEFORE, ordinal = 0, target = "Lnet/minecraft/server/level/ServerPlayer;isChangingDimension()Z"), cancellable = true)
-    private void handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double d, double e, double f, float g, float h, double x, double y, double z, double l, double m, double n, double o, double p, double q, int r) {
-        final double toX = packet.getX(x);
-        final double toZ = packet.getZ(z);
-        if (FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get() && (x != toX || z != toZ) && !ChunkManager.isChunkLoaded(serverLevel, (int) Math.floor(toX) >> 4, (int) Math.floor(toZ) >> 4)) {
-            this.teleport(x, y, z, this.player.getYRot(), this.player.getXRot(), Collections.emptySet(), true);
+    @Inject(method = "handleMovePlayer", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/server/level/ServerPlayer;getBoundingBox()Lnet/minecraft/world/phys/AABB;"), cancellable = true)
+    private void handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double toX, double toY, double toZ, float g, float h, double i, double j, double k, double l) {
+        final Vec3 pos = this.player.position();
+        if (FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get() && (pos.x != toX || pos.z != toZ) && !ChunkManager.isChunkLoaded(serverLevel, (int) Math.floor(toX) >> 4, (int) Math.floor(toZ) >> 4)) {
+            this.teleport(pos.x, pos.y, pos.z, this.player.getYRot(), this.player.getXRot(), Collections.emptySet(), true);
             ci.cancel();
         }
     }

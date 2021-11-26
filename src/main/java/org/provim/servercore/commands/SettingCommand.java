@@ -67,9 +67,9 @@ public final class SettingCommand {
 
     private static void registerSettings(LiteralArgumentBuilder<CommandSourceStack> builder) {
         final LiteralArgumentBuilder<CommandSourceStack> settings = literal("settings");
-        settings.then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 32)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 1, "Chunk-tick distance"))));
-        settings.then(literal("view_distance").then(argument(VALUE, integer(2, 32)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 2, "View distance"))));
-        settings.then(literal("simulation_distance").then(argument(VALUE, integer(2, 32)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 3, "Simulation distance"))));
+        settings.then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 1, "Chunk-tick distance"))));
+        settings.then(literal("view_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 2, "View distance"))));
+        settings.then(literal("simulation_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 3, "Simulation distance"))));
         settings.then(literal("mobcaps").then(argument(VALUE, doubleArg(0.1, 1.0)).executes(ctx -> modifyDouble(ctx.getSource(), getDouble(ctx, VALUE), 1, "Mobcap multiplier"))));
         builder.then(settings);
     }
