@@ -64,15 +64,6 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
         }
     }
 
-    @Inject(method = "move", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/entity/Entity;adjustMovementForSneaking(Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/entity/MovementType;)Lnet/minecraft/util/math/Vec3d;"), cancellable = true)
-    public void ignoreMovementWhileInactive(MovementType movementType, Vec3d vec3d, CallbackInfo ci) {
-        if (this.isTemporarilyActive && !this.world.isClient && this.activationType != ActivationRange.ActivationType.MISC && vec3d == this.velocity && movementType == MovementType.SELF) {
-            this.setVelocity(Vec3d.ZERO);
-            this.world.getProfiler().pop();
-            ci.cancel();
-        }
-    }
-
     // ServerCore - Prevent inactive entities from getting extreme velocities.
     @Inject(method = "addVelocity", at = @At(value = "HEAD"), cancellable = true)
     public void ignorePushingWhileInactive(double x, double y, double z, CallbackInfo ci) {
@@ -106,6 +97,7 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
         return this.activatedImmunityTick;
     }
 
+    @Override
     public void setActivatedImmunityTick(int tick) {
         this.activatedImmunityTick = tick;
     }
