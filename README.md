@@ -23,13 +23,6 @@ This is a port based off of Spigot's and PaperMC's implementation, with extra fe
 
 ___
 
-#### Per player spawns - (1.17, part of vanilla in 1.18)
-
-A feature that makes mob spawns work per-player, rather than globally.\
-This prevents the situation where one player hoards the entire mobcap, and nobody else gets to see any hostile mobs.
-
-___
-
 #### Chunk ticking distance
 
 A setting that allows you to reduce the distance at which chunks can tick (mob spawns & random ticks).\
@@ -51,9 +44,6 @@ in 1x1 spaces.
 \
 \
 **- And more!**
-## Known Incompatibilities
-
-**Carpet:** `/carpet lagFreeSpawning` - 1.17.1 only
 
 ## Commands & Configuration
 
