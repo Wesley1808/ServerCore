@@ -50,9 +50,9 @@ public abstract class ServerGamePacketListenerImplMixin {
     }
 
     @Inject(method = "handleMovePlayer", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/server/level/ServerPlayer;getBoundingBox()Lnet/minecraft/world/phys/AABB;"), cancellable = true)
-    private void handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double toX, double toY, double toZ, float g, float h, double fromX, double fromY, double fromZ, double l) {
-        if (FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get() && (fromX != toX || fromZ != toZ) && ChunkManager.isTouchingUnloadedChunk(serverLevel, new AABB(toX - 2, toY, toZ - 2, toX + 2, toY, toZ + 2))) {
-            this.teleport(fromX, fromY, fromZ, this.player.getYRot(), this.player.getXRot(), Collections.emptySet(), true);
+    private void handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double toX, double toY, double toZ, float yRot, float xRot, double fromX, double fromY, double fromZ, double l) {
+        if (FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get() && (fromX != toX || fromZ != toZ) && ChunkManager.isTouchingUnloadedChunk(serverLevel, new AABB(toX - 4, toY, toZ - 4, toX + 4, toY, toZ + 4))) {
+            this.teleport(fromX, fromY, fromZ, yRot, xRot, Collections.emptySet(), true);
             ci.cancel();
         }
     }
