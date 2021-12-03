@@ -3,7 +3,6 @@ package org.provim.servercore.mixin.optimizations.chunk_loading;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayerGameMode;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.provim.servercore.utils.ChunkManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +18,6 @@ public abstract class ServerPlayerGameModeMixin {
     // Don't load chunks for block break packets.
     @Redirect(method = "handleBlockBreakAction", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"))
     private BlockState onlyProcessIfLoaded(ServerLevel level, BlockPos pos) {
-        final BlockState state = ChunkManager.getStateIfLoaded(level, pos);
-        return state == null ? Blocks.VOID_AIR.defaultBlockState() : state;
+        return ChunkManager.getStateIfLoaded(level, pos);
     }
 }

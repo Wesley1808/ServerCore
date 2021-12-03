@@ -76,7 +76,7 @@ public abstract class BlockCollisionsMixin extends AbstractIterator<VoxelShape> 
         if (this.collisionGetter instanceof WorldGenRegion) {
             this.isNull = false;
             return this.getChunk(x, z);
-        } else if (entity == null || (!this.isFar && this.entity instanceof Player) || (this.entity instanceof CollisionEntity collisionEntity && (collisionEntity.shouldCollisionLoadChunks() || this.entity.level.isClientSide))) {
+        } else if (entity == null || this.entity.level.isClientSide || (!this.isFar && this.entity instanceof Player) || (this.entity instanceof CollisionEntity collisionEntity && (collisionEntity.shouldCollisionLoadChunks()))) {
             blockGetter = this.getChunk(x, z);
         } else {
             blockGetter = this.getChunkIfLoaded(x >> 4, z >> 4);

@@ -58,7 +58,7 @@ public abstract class VillagerMixin extends AbstractVillager {
     private boolean canTravelTo(BlockPos pos) {
         // Returns true in case it's surrounded by any bed. This way we don't break iron farms.
         final BlockState state = ChunkManager.getStateIfLoaded(this.level, pos);
-        if (state == null || state.getBlock() instanceof BedBlock) {
+        if (state.getBlock() instanceof BedBlock) {
             return true;
         }
 
