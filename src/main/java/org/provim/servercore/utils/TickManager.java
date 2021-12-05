@@ -13,7 +13,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
@@ -122,8 +121,8 @@ public final class TickManager {
         return String.format("%.1f", mobcapModifier.doubleValue());
     }
 
-    public static int getMobcap(MobCategory group) {
-        return (int) (group.getMaxInstancesPerChunk() * mobcapModifier.doubleValue());
+    public static int getMobcap(int mobcap) {
+        return (int) (mobcap * mobcapModifier.doubleValue());
     }
 
     public static double getAverageTickTime() {

@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,7 +23,7 @@ public final class InfoCommand {
     }
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
-        if (CommandConfig.COMMAND_MOBCAPS.get()) {
+        if (CommandConfig.COMMAND_MOBCAPS.get() && !FabricLoader.getInstance().isModLoaded("vmp")) {
             dispatcher.register(literal("mobcaps").executes(InfoCommand::mobcaps));
         }
 
@@ -44,7 +45,7 @@ public final class InfoCommand {
                 text.append("\n").append(new TextComponent(CommandConfig.MOBCAP_SPAWN_GROUP.get()
                         .replace("%NAME%", category.getName())
                         .replace("%CURRENT%", String.valueOf(mobCounts.counts.getOrDefault(category, 0)))
-                        .replace("%CAPACITY%", String.valueOf(TickManager.getMobcap(category)))
+                        .replace("%CAPACITY%", String.valueOf(category.getMaxInstancesPerChunk()))
                 ));
             }
         }

@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.optimizations.mob_spawning;
+package org.provim.servercore.mixin.optimizations.mob_spawning.distance_map;
 
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerChunkCache;
