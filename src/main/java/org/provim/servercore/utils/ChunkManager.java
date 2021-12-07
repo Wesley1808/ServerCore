@@ -34,8 +34,12 @@ public final class ChunkManager {
 
     @Nullable
     public static LevelChunk getChunkIfLoaded(Level level, int chunkX, int chunkZ) {
-        final ChunkHolder holder = getChunkHolder(level, chunkX, chunkZ);
-        return holder != null ? holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left().orElse(null) : null;
+        if (!level.isClientSide) {
+            final ChunkHolder holder = getChunkHolder(level, chunkX, chunkZ);
+            return holder != null ? holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left().orElse(null) : null;
+        } else {
+            return level.getChunk(chunkX, chunkZ);
+        }
     }
 
     /**
@@ -47,10 +51,10 @@ public final class ChunkManager {
     }
 
     public static boolean isChunkLoaded(Level level, int chunkX, int chunkZ) {
-        return isChunkLoaded(getChunkHolder(level, chunkX, chunkZ));
+        return level.isClientSide || isChunkLoaded(getChunkHolder(level, chunkX, chunkZ));
     }
 
-    public static boolean isChunkLoaded(ChunkHolder holder) {
+    private static boolean isChunkLoaded(ChunkHolder holder) {
         return holder != null && holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left().isPresent();
     }
 
@@ -75,7 +79,7 @@ public final class ChunkManager {
      */
 
     @Nullable
-    public static ChunkHolder getChunkHolder(Level level, int chunkX, int chunkZ) {
+    private static ChunkHolder getChunkHolder(Level level, int chunkX, int chunkZ) {
         return level.getChunkSource() instanceof ServerChunkCache chunkCache ? chunkCache.getVisibleChunkIfPresent(ChunkPos.asLong(chunkX, chunkZ)) : null;
     }
 }
