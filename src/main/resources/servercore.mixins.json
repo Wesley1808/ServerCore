@@ -28,6 +28,7 @@
     "features.misc.ChunkMapMixin",
     "features.misc.MinecraftServerMixin",
     "features.misc.ServerGamePacketListenerImplMixin",
+    "features.misc.PortalForcerMixin",
     "features.ticking.ServerChunkCacheMixin",
     "features.ticking.VillagerMixin",
     "optimizations.chunk_loading.BlockGetterMixin",
