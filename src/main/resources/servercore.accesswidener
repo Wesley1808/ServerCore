@@ -1,6 +1,7 @@
 accessWidener v1 named
 
 accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
+accessible class net/minecraft/world/entity/animal/Bee$BeeEnterHiveGoal
 
 accessible method net/minecraft/world/level/LocalMobCapCalculator$MobCounts <init> ()V
 accessible method net/minecraft/server/level/ServerPlayer fudgeSpawnLocation (Lnet/minecraft/server/level/ServerLevel;)V
