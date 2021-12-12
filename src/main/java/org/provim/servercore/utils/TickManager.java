@@ -37,21 +37,33 @@ public final class TickManager {
         chunkTickDistance = viewDistance;
     }
 
-    public static void updateValues(MinecraftServer server) {
-        averageTickTime = Mth.average(server.tickTimes) * 1.0E-6D;
+    public static void update(MinecraftServer server) {
+        updateValues(server);
+        runPerformanceChecks(server);
+    }
+
+    private static void updateValues(MinecraftServer server) {
+        if (server.getTickCount() % 20 == 0) {
+            averageTickTime = Mth.average(server.tickTimes) * 1.0E-6D;
+        }
     }
 
     // Runs performance checks based on the current MSPT.
-    public static void runPerformanceChecks() {
+    private static void runPerformanceChecks(MinecraftServer server) {
         if (DynamicConfig.ENABLED.get()) {
             final double targetMspt = DynamicConfig.TARGET_MSPT.get();
             final double upperBound = targetMspt + 5;
             final double lowerBound = Math.max(targetMspt - 5, 2);
 
-            checkViewDistance(upperBound, lowerBound);
-            checkSimulationDistance(upperBound, lowerBound);
-            checkMobcaps(upperBound, lowerBound);
-            checkChunkTickDistance(upperBound, lowerBound);
+            if (server.getTickCount() % (DynamicConfig.VIEW_DISTANCE_UPDATE_RATE.get() * 20) == 0) {
+                checkViewDistance(upperBound, lowerBound);
+            }
+
+            if (server.getTickCount() % (DynamicConfig.UPDATE_RATE.get() * 20) == 0) {
+                checkSimulationDistance(upperBound, lowerBound);
+                checkMobcaps(upperBound, lowerBound);
+                checkChunkTickDistance(upperBound, lowerBound);
+            }
         }
     }
 

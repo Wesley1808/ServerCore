@@ -5,6 +5,8 @@ import org.provim.servercore.config.ConfigEntry;
 public final class DynamicConfig {
     public static final ConfigEntry<Boolean> ENABLED = new ConfigEntry<>(false, "(Default = false) Enables this feature.");
     public static final ConfigEntry<Integer> TARGET_MSPT = new ConfigEntry<>(35, i -> i >= 1, "(Default = 35) The average MSPT to target.");
+    public static final ConfigEntry<Integer> UPDATE_RATE = new ConfigEntry<>(15, i -> i >= 1, "(Default = 15) The amount of seconds between dynamic performance updates.");
+    public static final ConfigEntry<Integer> VIEW_DISTANCE_UPDATE_RATE = new ConfigEntry<>(150, i -> i >= 1, "(Default = 150) The amount of seconds between dynamic viewdistance updates.\nThis value is separate from the other checks because it makes all clients reload their chunks.");
     public static final ConfigEntry<Integer> MAX_CHUNK_TICK_DISTANCE = new ConfigEntry<>(10, i -> i >= 1, "(Default = [Max: 10, Min: 2]) Distance in which random ticks and mobspawning can happen.");
     public static final ConfigEntry<Integer> MIN_CHUNK_TICK_DISTANCE = new ConfigEntry<>(2, i -> i >= 1);
     public static final ConfigEntry<Integer> MAX_SIMULATION_DISTANCE = new ConfigEntry<>(10, i -> i >= 1, "(Default = [Max: 10, Min: 2]) Distance in which the world will tick, similar to no-tick-vd.");

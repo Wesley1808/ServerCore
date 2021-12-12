@@ -41,13 +41,7 @@ public final class ServerCore implements ModInitializer {
     }
 
     private void onTick(MinecraftServer server) {
-        if (server.getTickCount() % 20 == 0) {
-            TickManager.updateValues(server);
-        }
-
-        if (server.getTickCount() % 300 == 0) {
-            TickManager.runPerformanceChecks();
-        }
+        TickManager.update(server);
     }
 
     private void onServerStarted(MinecraftServer server) {
