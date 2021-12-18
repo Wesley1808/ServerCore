@@ -46,7 +46,7 @@ public final class ServerCore implements ModInitializer {
 
     private void onServerStarted(MinecraftServer server) {
         ServerCore.server = server;
-        TickManager.initValues(server);
+        TickManager.initValues(server.getPlayerList());
     }
 
     private void onShutdown(MinecraftServer server) {

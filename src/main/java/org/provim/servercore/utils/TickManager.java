@@ -9,6 +9,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
@@ -31,10 +32,18 @@ public final class TickManager {
     private static int simulationDistance;
     private static int chunkTickDistance;
 
-    public static void initValues(MinecraftServer server) {
-        viewDistance = server.getPlayerList().getViewDistance();
-        simulationDistance = viewDistance;
-        chunkTickDistance = viewDistance;
+    public static void initValues(PlayerList playerList) {
+        viewDistance = playerList.getViewDistance();
+        simulationDistance = playerList.getSimulationDistance();
+
+        if (DynamicConfig.ENABLED.get()) {
+            final int maxViewDistance = DynamicConfig.MAX_VIEW_DISTANCE.get();
+            final int maxSimDistance = DynamicConfig.MAX_SIMULATION_DISTANCE.get();
+            if (viewDistance > maxViewDistance) setViewDistance(maxViewDistance);
+            if (simulationDistance > maxSimDistance) setSimulationDistance(maxSimDistance);
+        }
+
+        chunkTickDistance = Math.min(simulationDistance, DynamicConfig.MAX_CHUNK_TICK_DISTANCE.get());
     }
 
     public static void update(MinecraftServer server) {
