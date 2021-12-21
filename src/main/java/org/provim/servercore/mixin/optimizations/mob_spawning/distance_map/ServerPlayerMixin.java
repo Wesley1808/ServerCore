@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import org.provim.servercore.interfaces.IServerPlayer;
 import org.provim.servercore.utils.data.PooledHashSets;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -18,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin implements IServerPlayer {
+    @Unique
     private PooledHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> cachedSingleMobDistanceMap;
 
     @Inject(method = "<init>", at = @At("RETURN"))

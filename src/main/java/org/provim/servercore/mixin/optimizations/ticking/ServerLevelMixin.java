@@ -10,6 +10,7 @@ import net.minecraft.world.level.storage.WritableLevelData;
 import org.provim.servercore.interfaces.ILevelChunk;
 import org.provim.servercore.interfaces.IServerLevel;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
@@ -23,6 +24,7 @@ import java.util.function.Supplier;
 
 @Mixin(ServerLevel.class)
 public abstract class ServerLevelMixin extends Level implements IServerLevel {
+    @Unique
     private int currentIceAndSnowTick = 0;
 
     private ServerLevelMixin(WritableLevelData writableLevelData, ResourceKey<Level> resourceKey, DimensionType dimensionType, Supplier<ProfilerFiller> supplier, boolean bl, boolean bl2, long l) {

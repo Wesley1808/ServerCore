@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "servercore-fabric",
+  "id": "servercore",
   "version": "${version}",
-  "name": "ServerCore-Fabric",
+  "name": "ServerCore",
   "description": "A fabric mod that aims to optimize the minecraft server.",
   "authors": [
     "Wesley1808"

@@ -9,6 +9,7 @@ import net.minecraft.world.level.levelgen.blending.BlendingData;
 import net.minecraft.world.ticks.LevelChunkTicks;
 import org.provim.servercore.interfaces.ILevelChunk;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -23,6 +24,7 @@ import java.util.Random;
 @Mixin(LevelChunk.class)
 public abstract class LevelChunkMixin implements ILevelChunk {
     // Airplane - instead of using a random every time the chunk is ticked, define when lightning strikes preemptively.
+    @Unique
     private int lightningTick;
 
     // shouldDoLightning compiles down to 29 bytes,
