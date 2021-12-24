@@ -28,7 +28,7 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
         }
 
         if (mixinClassName.equals(DEFAULT_PATH + "optimizations.chunk_loading.MapItemMixin")) {
-            return !FabricLoader.getInstance().isModLoaded("the_aether");
+            return !(FabricLoader.getInstance().isModLoaded("the_aether") || FabricLoader.getInstance().isModLoaded("nethermap"));
         }
 
         return true;
