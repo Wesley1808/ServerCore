@@ -5,6 +5,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import org.provim.servercore.interfaces.activation_range.InactiveEntity;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
@@ -15,6 +16,18 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin extends Entity implements InactiveEntity {
+    @Shadow
+    @Final
+    private static int INFINITE_PICKUP_DELAY;
+
+    @Shadow
+    @Final
+    private static int INFINITE_LIFETIME;
+
+    @Shadow
+    @Final
+    private static int LIFETIME;
+
     @Shadow
     private int pickupDelay;
 
@@ -27,15 +40,15 @@ public abstract class ItemEntityMixin extends Entity implements InactiveEntity {
 
     @Override
     public void inactiveTick() {
-        if (this.pickupDelay > 0 && this.pickupDelay != 32767) {
+        if (this.pickupDelay > 0 && this.pickupDelay != INFINITE_PICKUP_DELAY) {
             this.pickupDelay--;
         }
 
-        if (this.age != -32768) {
+        if (this.age != INFINITE_LIFETIME) {
             this.age++;
         }
 
-        if (this.age >= 6000) {
+        if (this.age >= LIFETIME) {
             this.discard();
         }
     }
