@@ -24,7 +24,7 @@ import java.util.List;
  * License: GPL-3.0 (licenses/GPL.md)
  */
 
-@Mixin(PistonMovingBlockEntity.class)
+@Mixin(value = PistonMovingBlockEntity.class, priority = 900)
 public abstract class PistonMovingBlockEntityMixin {
 
     // Paper - Fix items getting stuck in slime pushed by a piston

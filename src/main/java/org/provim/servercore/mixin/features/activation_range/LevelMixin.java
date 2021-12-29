@@ -3,6 +3,7 @@ package org.provim.servercore.mixin.features.activation_range;
 import net.minecraft.world.level.Level;
 import org.provim.servercore.interfaces.activation_range.ILevel;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 /**
  * From: PaperMC (Entity-Activation-Range-2.0.patch)
@@ -11,9 +12,16 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(Level.class)
 public abstract class LevelMixin implements ILevel {
+    @Unique
     private int remainingAnimals;
+
+    @Unique
     private int remainingFlying;
+
+    @Unique
     private int remainingMonsters;
+
+    @Unique
     private int remainingVillagers;
 
     @Override

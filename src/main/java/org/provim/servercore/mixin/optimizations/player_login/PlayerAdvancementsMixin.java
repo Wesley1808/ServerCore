@@ -3,10 +3,7 @@ package org.provim.servercore.mixin.optimizations.player_login;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.server.PlayerAdvancements;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -47,10 +44,10 @@ public abstract class PlayerAdvancementsMixin {
      */
     @Overwrite
     private void ensureVisibility(Advancement advancement) {
-        this.ensureVisibility(advancement, ROOT);
+        this.fastEnsureVisibility(advancement, ROOT);
     }
 
-    private void ensureVisibility(Advancement advancement, int entryPoint) {
+    private void fastEnsureVisibility(Advancement advancement, int entryPoint) {
         boolean bl = this.shouldBeVisible(advancement);
         boolean bl2 = this.visible.contains(advancement);
         if (bl && !bl2) {
@@ -67,7 +64,7 @@ public abstract class PlayerAdvancementsMixin {
         if (bl != bl2 && advancement.getParent() != null) {
             // Paper - If we're not coming from an iterator consider this to be a root entry, otherwise
             // market that we're entering from the parent of an iterator.
-            this.ensureVisibility(advancement.getParent(), entryPoint == ITERATOR ? PARENT_OF_ITERATOR : ROOT);
+            this.fastEnsureVisibility(advancement.getParent(), entryPoint == ITERATOR ? PARENT_OF_ITERATOR : ROOT);
         }
 
         // If this is true, we've gone through a child iteration, entered the parent, processed the parent
@@ -77,7 +74,7 @@ public abstract class PlayerAdvancementsMixin {
         }
 
         for (Advancement child : advancement.getChildren()) {
-            this.ensureVisibility(child, ITERATOR);
+            this.fastEnsureVisibility(child, ITERATOR);
         }
     }
 }

@@ -48,7 +48,7 @@ import static org.provim.servercore.config.tables.ActivationRangeConfig.*;
  * License: GPL-3.0 (licenses/GPL.md)
  */
 
-public class ActivationRange {
+public final class ActivationRange {
     private static final Activity[] VILLAGER_PANIC_IMMUNITIES = {
             Activity.HIDE,
             Activity.PRE_RAID,

@@ -194,7 +194,7 @@ public final class SettingCommand {
         return "b0931825467adcfelmnor".contains(c.toString());
     }
 
-    private static record Type(
+    private record Type(
             ArgumentType<?> argumentType,
             Function<CommandContext<CommandSourceStack>, Integer> function
     ) {

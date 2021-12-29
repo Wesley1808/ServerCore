@@ -20,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(MoveToBlockGoal.class)
 public abstract class MoveToBlockGoalMixin extends Goal {
-
     @Shadow
     protected BlockPos blockPos;
 

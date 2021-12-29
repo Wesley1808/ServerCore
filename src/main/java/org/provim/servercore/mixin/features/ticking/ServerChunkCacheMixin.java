@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.provim.servercore.ServerCore;
 import org.provim.servercore.utils.TickManager;
 import org.spongepowered.asm.mixin.Final;
@@ -13,10 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 @Mixin(ServerChunkCache.class)
@@ -71,14 +69,15 @@ public abstract class ServerChunkCacheMixin {
             this.active.clear();
             // Add active chunks
             for (ChunkHolder holder : holders) {
-                holder.getTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left().ifPresent(chunk -> {
+                Optional<LevelChunk> optional = holder.getTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
+                if (optional.isPresent()) {
                     if (TickManager.shouldTickChunk(holder.getPos(), this.level)) {
-                        this.active.add(new ServerChunkCache.ChunkAndHolder(chunk, holder));
+                        this.active.add(new ServerChunkCache.ChunkAndHolder(optional.get(), holder));
                     } else {
                         // Sends clients block updates from inactive chunks.
-                        holder.broadcastChanges(chunk);
+                        holder.broadcastChanges(optional.get());
                     }
-                });
+                }
             }
         }
     }

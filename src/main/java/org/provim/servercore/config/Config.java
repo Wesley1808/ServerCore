@@ -99,6 +99,6 @@ public final class Config {
         }
     }
 
-    public static record Table(Class<?> clazz, String key, String comment) {
+    public record Table(Class<?> clazz, String key, String comment) {
     }
 }

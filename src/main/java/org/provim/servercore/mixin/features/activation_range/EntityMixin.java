@@ -25,16 +25,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
     @Shadow
     public Level level;
+
     @Unique
     private int activatedTick = Integer.MIN_VALUE;
+
     @Unique
     private int activatedImmunityTick = Integer.MIN_VALUE;
+
     @Unique
     private boolean isInactive = false;
+
     @Unique
     private ActivationRange.ActivationType activationType;
+
     @Unique
     private boolean excluded = false;
+
     @Unique
     private int fullTickCount;
 

@@ -15,9 +15,7 @@ public abstract class ChunkMapMixin {
     @Redirect(method = "processUnloads", at = @At(value = "INVOKE", target = "Ljava/util/function/BooleanSupplier;getAsBoolean()Z", ordinal = 2))
     private boolean limitChunkSaves(BooleanSupplier supplier) {
         final int threshold = FeatureConfig.CHUNK_SAVE_THRESHOLD.get();
-        if (threshold < 0) {
-            return supplier.getAsBoolean();
-        }
+        if (threshold < 0) return supplier.getAsBoolean();
 
         return TickManager.getAverageTickTime() < threshold && supplier.getAsBoolean();
     }
