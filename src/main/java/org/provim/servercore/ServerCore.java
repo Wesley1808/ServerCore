@@ -54,7 +54,7 @@ public final class ServerCore implements ModInitializer {
     }
 
     private void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
-        SettingCommand.register(dispatcher);
+        SettingCommand.register(dispatcher, dedicated);
         InfoCommand.register(dispatcher, dedicated);
     }
 }

@@ -21,12 +21,15 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
         return null;
     }
 
-    @Override
+    @Override // Disables specific mixins for mod compatibility.
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+
+        // Very Many Players
         if (mixinClassName.startsWith(DEFAULT_PATH + "optimizations.mob_spawning.distance_map")) {
             return !FabricLoader.getInstance().isModLoaded("vmp");
         }
 
+        // The Aether Reborn & Better Nether Map
         if (mixinClassName.equals(DEFAULT_PATH + "optimizations.chunk_loading.MapItemMixin")) {
             return !(FabricLoader.getInstance().isModLoaded("the_aether") || FabricLoader.getInstance().isModLoaded("nethermap"));
         }

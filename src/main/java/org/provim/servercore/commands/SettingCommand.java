@@ -33,19 +33,18 @@ import static net.minecraft.commands.Commands.literal;
 public final class SettingCommand {
     private static final String VALUE = "value";
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        final LiteralArgumentBuilder<CommandSourceStack> builder = literal("servercore").requires(src -> PermissionManager.perm(src, PermissionManager.COMMAND_SETTINGS, 2));
-        registerConfigs(builder);
-        registerSettings(builder);
-
-        builder.then(literal("reload").executes(SettingCommand::reload));
-        builder.then(literal("save").executes(SettingCommand::save));
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
+        LiteralArgumentBuilder<CommandSourceStack> builder = literal("servercore");
+        builder.then(config());
+        builder.then(settings());
         dispatcher.register(builder);
     }
 
-    private static void registerConfigs(LiteralArgumentBuilder<CommandSourceStack> builder) {
+    private static LiteralArgumentBuilder<CommandSourceStack> config() {
+        LiteralArgumentBuilder<CommandSourceStack> config = literal("config").requires(src -> PermissionManager.perm(src, PermissionManager.COMMAND_SETTINGS, 2));
         for (Config.Table table : Config.TABLES) {
-            final LiteralArgumentBuilder<CommandSourceStack> child = literal(table.key());
+            LiteralArgumentBuilder<CommandSourceStack> child = literal(table.key());
+
             try {
                 Config.forEachEntry(table.clazz(), (field, entry) -> {
                     final String key = field.getName().toLowerCase();
@@ -54,28 +53,33 @@ public final class SettingCommand {
                             .executes(ctx -> sendInfo(ctx.getSource(), key, entry))
                             .then(argument(VALUE, type.argumentType)
                                     .executes(type.function::apply)
-                                    .suggests((ctx, suggestionsBuilder) -> suggestionsBuilder.suggest(asString(entry.get())).suggest(asString(entry.getDefault())).buildFuture()))
+                                    .suggests((ctx, suggestionsBuilder) -> suggestionsBuilder.suggest(asString(entry.get())).suggest(asString(entry.getDefault())).buildFuture())
+                            )
                     );
                 });
             } catch (Exception ex) {
                 ServerCore.getLogger().error("Exception thrown whilst registering commands!", ex);
             }
 
-            builder.then(child);
+            config.then(child);
         }
+
+        config.then(literal("reload").executes(SettingCommand::reload));
+        config.then(literal("save").executes(SettingCommand::save));
+        return config;
     }
 
-    private static void registerSettings(LiteralArgumentBuilder<CommandSourceStack> builder) {
-        final LiteralArgumentBuilder<CommandSourceStack> settings = literal("settings");
+    private static LiteralArgumentBuilder<CommandSourceStack> settings() {
+        LiteralArgumentBuilder<CommandSourceStack> settings = literal("settings").requires(src -> PermissionManager.perm(src, PermissionManager.COMMAND_SETTINGS, 2));
         settings.then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 1, "Chunk-tick distance"))));
         settings.then(literal("view_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 2, "View distance"))));
         settings.then(literal("simulation_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modifyInt(ctx.getSource(), getInteger(ctx, VALUE), 3, "Simulation distance"))));
         settings.then(literal("mobcaps").then(argument(VALUE, doubleArg(0.1, 10.0)).executes(ctx -> modifyDouble(ctx.getSource(), getDouble(ctx, VALUE), 1, "Mobcap multiplier"))));
-        builder.then(settings);
+        return settings;
     }
 
     private static <T> int sendInfo(CommandSourceStack source, String key, ConfigEntry<T> entry) {
-        final StringBuilder builder = new StringBuilder("§7");
+        StringBuilder builder = new StringBuilder("§7");
         if (entry.getComment() != null) {
             builder.append(entry.getComment());
         } else {

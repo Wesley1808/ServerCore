@@ -6,8 +6,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.world.entity.player.Player;
 
 public final class PermissionManager {
-    public static final String COMMAND_INFO = "servercore.command.sc";
-    public static final String COMMAND_SETTINGS = "servercore.command.servercore";
+    public static final String COMMAND_SETTINGS = "servercore.command.settings";
     private static final boolean LOADED = FabricLoader.getInstance().isModLoaded("fabric-permissions-api-v0");
 
     /**
