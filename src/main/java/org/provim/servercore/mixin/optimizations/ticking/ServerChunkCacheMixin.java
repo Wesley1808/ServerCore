@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerChunkCache.class)
 public abstract class ServerChunkCacheMixin {
-
     @Shadow
     @Final
     ServerLevel level;

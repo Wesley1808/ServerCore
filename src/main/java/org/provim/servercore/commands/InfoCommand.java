@@ -27,7 +27,7 @@ public final class InfoCommand {
             dispatcher.register(literal("mobcaps").executes(InfoCommand::mobcaps));
         }
 
-        if (dedicated) {
+        if (CommandConfig.COMMAND_STATUS.get() && dedicated) {
             dispatcher.register(literal("sc").requires(src -> PermissionManager.perm(src, PermissionManager.COMMAND_INFO, 2))
                     .then(literal("status").executes(InfoCommand::status))
             );
@@ -42,7 +42,7 @@ public final class InfoCommand {
         if (state != null) {
             LocalMobCapCalculator.MobCounts mobCounts = state.localMobCapCalculator.playerMobCounts.computeIfAbsent(player, p -> new LocalMobCapCalculator.MobCounts());
             for (MobCategory category : MobCategory.values()) {
-                text.append("\n").append(new TextComponent(CommandConfig.MOBCAP_SPAWN_GROUP.get()
+                text.append("\n").append(new TextComponent(CommandConfig.MOBCAP_CONTENT.get()
                         .replace("%NAME%", category.getName())
                         .replace("%CURRENT%", String.valueOf(mobCounts.counts.getOrDefault(category, 0)))
                         .replace("%CAPACITY%", String.valueOf(category.getMaxInstancesPerChunk()))

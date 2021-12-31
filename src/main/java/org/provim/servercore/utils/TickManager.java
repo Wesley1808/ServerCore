@@ -19,6 +19,7 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.provim.servercore.ServerCore;
+import org.provim.servercore.config.tables.CommandConfig;
 import org.provim.servercore.config.tables.DynamicConfig;
 import org.provim.servercore.config.tables.EntityConfig;
 
@@ -197,9 +198,11 @@ public final class TickManager {
     }
 
     public static MutableComponent createStatusReport() {
-        final MinecraftServer server = ServerCore.getServer();
-        final String mspt = String.format("%.1f", averageTickTime);
-        final String tps = String.format("%.1f", averageTickTime != 0 ? Math.min((1000 / averageTickTime), 20) : 20);
-        return new TextComponent(String.format("§8> §3ServerCore Status §8<\n§8- §3TPS: §a%s\n§8- §3MSPT: §a%s\n§8- §3Online: §a%d\n§8- §3View distance: §a%d\n§8- §3Mobcap multiplier: §a%s\n§8- §3Simulation distance: §a%d\n§8- §3Chunk-tick distance: §a%d", tps, mspt, server.getPlayerCount(), viewDistance, getModifierAsString(), simulationDistance, chunkTickDistance));
+        return new TextComponent(CommandConfig.STATUS_CONTENT.get()
+                .replace("%MOBCAPS%", getModifierAsString())
+                .replace("%VIEW_DISTANCE%", String.valueOf(viewDistance))
+                .replace("%SIMULATION_DISTANCE%", String.valueOf(simulationDistance))
+                .replace("%CHUNK_TICK_DISTANCE%", String.valueOf(chunkTickDistance))
+        );
     }
 }
