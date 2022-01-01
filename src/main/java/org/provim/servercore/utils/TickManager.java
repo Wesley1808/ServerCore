@@ -40,8 +40,8 @@ public final class TickManager {
         if (DynamicConfig.ENABLED.get()) {
             final int maxViewDistance = DynamicConfig.MAX_VIEW_DISTANCE.get();
             final int maxSimDistance = DynamicConfig.MAX_SIMULATION_DISTANCE.get();
-            if (viewDistance > maxViewDistance) setViewDistance(maxViewDistance);
-            if (simulationDistance > maxSimDistance) setSimulationDistance(maxSimDistance);
+            if (viewDistance > maxViewDistance) modifyViewDistance(maxViewDistance);
+            if (simulationDistance > maxSimDistance) modifySimulationDistance(maxSimDistance);
         }
 
         chunkTickDistance = Math.min(simulationDistance, DynamicConfig.MAX_CHUNK_TICK_DISTANCE.get());
@@ -98,45 +98,49 @@ public final class TickManager {
     // Modifies simulation distance
     private static void checkSimulationDistance(double upperBound, double lowerBound) {
         if (averageTickTime > upperBound && simulationDistance > DynamicConfig.MIN_SIMULATION_DISTANCE.get() && mobcapModifier.doubleValue() <= DynamicConfig.MIN_MOBCAP.get()) {
-            setSimulationDistance(simulationDistance - 1);
+            modifySimulationDistance(simulationDistance - 1);
         } else if (averageTickTime < lowerBound && simulationDistance < DynamicConfig.MAX_SIMULATION_DISTANCE.get() && viewDistance >= DynamicConfig.MAX_VIEW_DISTANCE.get()) {
-            setSimulationDistance(simulationDistance + 1);
+            modifySimulationDistance(simulationDistance + 1);
         }
     }
 
     // Modifies view distance
     private static void checkViewDistance(double upperBound, double lowerBound) {
         if (averageTickTime > upperBound && viewDistance > DynamicConfig.MIN_VIEW_DISTANCE.get() && simulationDistance <= DynamicConfig.MIN_SIMULATION_DISTANCE.get()) {
-            setViewDistance(viewDistance - 1);
+            modifyViewDistance(viewDistance - 1);
         } else if (averageTickTime < lowerBound && viewDistance < DynamicConfig.MAX_VIEW_DISTANCE.get()) {
-            setViewDistance(viewDistance + 1);
+            modifyViewDistance(viewDistance + 1);
         }
     }
 
-    public static void setViewDistance(int distance) {
+    public static void modifyViewDistance(int distance) {
         ServerCore.getServer().getPlayerList().setViewDistance(distance);
-        viewDistance = distance;
-
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             Minecraft.getInstance().options.renderDistance = distance;
         }
     }
 
-    public static void setSimulationDistance(int distance) {
+    public static void modifySimulationDistance(int distance) {
         ServerCore.getServer().getPlayerList().setSimulationDistance(distance);
-        simulationDistance = distance;
-
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             Minecraft.getInstance().options.simulationDistance = distance;
         }
     }
 
-    public static void setModifier(BigDecimal modifier) {
-        mobcapModifier = modifier;
+    public static void setViewDistance(int distance) {
+        viewDistance = distance;
+    }
+
+    public static void setSimulationDistance(int distance) {
+        simulationDistance = distance;
     }
 
     public static void setChunkTickDistance(int distance) {
         chunkTickDistance = distance;
+    }
+
+    public static void setModifier(BigDecimal modifier) {
+        mobcapModifier = modifier;
     }
 
     public static String getModifierAsString() {

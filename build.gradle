@@ -5,7 +5,6 @@ plugins {
 
 repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    maven { url 'https://maven.parchmentmc.org' }
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -16,17 +15,13 @@ version = String.format("%s-%s", project.mod_version, project.minecraft_version)
 group = project.maven_group as String
 
 loom {
-    accessWidenerPath = file("src/main/resources/servercore.accesswidener")
+    accessWidenerPath.set(file("src/main/resources/servercore.accesswidener"))
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    mappings loom.layered() {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.17.1:2021.10.31@zip")
-    }
+    mappings loom.officialMojangMappings()
 
     // Fabric API
     Set<String> modules = ['fabric-api-base', 'fabric-command-api-v1', 'fabric-lifecycle-events-v1']

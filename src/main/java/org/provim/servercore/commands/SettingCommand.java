@@ -137,8 +137,8 @@ public final class SettingCommand {
     private static int modifyInt(CommandSourceStack source, int value, int id, String setting) {
         switch (id) {
             case 1 -> TickManager.setChunkTickDistance(value);
-            case 2 -> TickManager.setViewDistance(value);
-            case 3 -> TickManager.setSimulationDistance(value);
+            case 2 -> TickManager.modifyViewDistance(value);
+            case 3 -> TickManager.modifySimulationDistance(value);
         }
 
         source.sendSuccess(new TextComponent(String.format("§a%s §3has been set to §a%d", setting, value)), false);

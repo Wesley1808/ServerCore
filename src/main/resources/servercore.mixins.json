@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_16",
   "plugin": "org.provim.servercore.mixin.ServerCoreMixinPlugin",
   "mixins": [
+    "events.PlayerListMixin",
     "features.activation_range.AgeableMobMixin",
     "features.activation_range.AreaEffectCloudMixin",
     "features.activation_range.ArrowMixin",
