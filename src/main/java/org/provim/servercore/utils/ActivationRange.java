@@ -7,6 +7,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ambient.AmbientCreature;
+import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.animal.Sheep;
@@ -209,7 +210,7 @@ public final class ActivationRange {
         }
 
         if (!(entity instanceof AbstractArrow projectile)) {
-            if (!entity.isOnGround() && !entity.isInWater() && !(entity instanceof FlyingMob)) {
+            if (!entity.isOnGround() && !entity.isInWater() && !(entity instanceof FlyingMob || entity instanceof Bat)) {
                 return 10;
             }
         } else if (!projectile.inGround) {

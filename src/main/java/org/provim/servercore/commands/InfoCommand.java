@@ -18,12 +18,12 @@ import static net.minecraft.commands.Commands.literal;
 
 public final class InfoCommand {
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         if (CommandConfig.COMMAND_MOBCAPS.get() && !FabricLoader.getInstance().isModLoaded("vmp")) {
             dispatcher.register(literal("mobcaps").executes(InfoCommand::mobcaps));
         }
 
-        if (CommandConfig.COMMAND_STATUS.get() && dedicated) {
+        if (CommandConfig.COMMAND_STATUS.get()) {
             dispatcher.register(literal("servercore").then(literal("status").executes(InfoCommand::status)));
         }
     }

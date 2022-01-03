@@ -30,7 +30,6 @@ import java.util.Set;
 
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class ServerGamePacketListenerImplMixin {
-
     @Shadow
     @Final
     public Connection connection;

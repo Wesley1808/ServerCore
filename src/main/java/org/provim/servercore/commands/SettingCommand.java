@@ -33,7 +33,7 @@ import static net.minecraft.commands.Commands.literal;
 public final class SettingCommand {
     private static final String VALUE = "value";
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> builder = literal("servercore");
         builder.then(config());
         builder.then(settings());
