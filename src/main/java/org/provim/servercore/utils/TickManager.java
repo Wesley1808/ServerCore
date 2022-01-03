@@ -36,6 +36,7 @@ public final class TickManager {
     public static void initValues(PlayerList playerList) {
         viewDistance = playerList.getViewDistance();
         simulationDistance = playerList.getSimulationDistance();
+        chunkTickDistance = DynamicConfig.MAX_CHUNK_TICK_DISTANCE.get();
 
         if (DynamicConfig.ENABLED.get()) {
             final int maxViewDistance = DynamicConfig.MAX_VIEW_DISTANCE.get();
@@ -43,8 +44,6 @@ public final class TickManager {
             if (viewDistance > maxViewDistance) modifyViewDistance(maxViewDistance);
             if (simulationDistance > maxSimDistance) modifySimulationDistance(maxSimDistance);
         }
-
-        chunkTickDistance = Math.min(simulationDistance, DynamicConfig.MAX_CHUNK_TICK_DISTANCE.get());
     }
 
     public static void update(MinecraftServer server) {
