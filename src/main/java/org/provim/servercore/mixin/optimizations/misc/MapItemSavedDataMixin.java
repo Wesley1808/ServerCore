@@ -23,7 +23,7 @@ public abstract class MapItemSavedDataMixin {
      * @return Boolean: whether moving player icons should be tracked by item frames.
      */
 
-    @Redirect(method = "tickCarriedBy", require = 0, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;contains(Lnet/minecraft/world/item/ItemStack;)Z"))
+    @Redirect(method = "tickCarriedBy", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;contains(Lnet/minecraft/world/item/ItemStack;)Z"), require = 0)
     private boolean cancelInventoryIteration(Inventory inventory, ItemStack stack) {
         return !stack.isFramed() && inventory.contains(stack);
     }

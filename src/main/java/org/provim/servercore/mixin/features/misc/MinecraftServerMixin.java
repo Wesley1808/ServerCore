@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MinecraftServer.class)
+@Mixin(value = MinecraftServer.class, priority = 900)
 public abstract class MinecraftServerMixin {
 
     @Inject(method = "prepareLevels", at = @At("HEAD"), cancellable = true)
@@ -20,7 +20,7 @@ public abstract class MinecraftServerMixin {
         }
     }
 
-    @ModifyConstant(method = "tickServer", constant = @Constant(intValue = 6000))
+    @ModifyConstant(method = "tickServer", constant = @Constant(intValue = 6000), require = 0)
     public int modifyAutoSaveInterval(int constant) {
         return FeatureConfig.AUTO_SAVE_INTERVAL.get() * 1200;
     }
