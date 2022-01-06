@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.features.activation_range;
+package org.provim.servercore.mixin.features.activation_range.fixes;
 
 import net.minecraft.world.entity.animal.Ocelot;
 import org.objectweb.asm.Opcodes;

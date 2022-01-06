@@ -15,6 +15,12 @@ A fabric mod that aims to optimize the minecraft server.
 
 ## Features
 
+#### Optimizations
+
+Most optimizations in this mod are focused on getting rid of the majority of random lagspikes on servers.\
+Besides that, it also includes optimizations for chunk ticking, mob spawning, maps and player logins.
+
+___
 #### Entity Activation Range
 
 A very configurable and optional feature that allows you to drastically cut down on the amount of entities that have to
@@ -33,7 +39,7 @@ ___
 #### Dynamic performance checks
 
 Allows the server to automatically adjust the current settings depending on the MSPT and config.\
-These include: Chunk-tick distance, View distance, Simulation distance (1.18) & mobcaps.
+These include: Chunk-tick distance, View distance, Simulation distance & mobcaps.
 
 ___
 
@@ -62,10 +68,10 @@ The config file can be found at `/config/servercore.toml`
 ```toml
 # Lets you enable / disable certain features and modify them.
 [features]
-    # (Default = true) Stops the server from loading spawn chunks.
-    disable_spawn_chunks = true
     # (Default = true) Optimizes vanilla's per-player mobspawning by using PaperMC's PlayerMobDistanceMap.
     use_distance_map = true
+    # (Default = false) Stops the server from loading spawn chunks.
+    disable_spawn_chunks = false
     # (Default = false) Allows more xp orbs to merge with one another, to reduce xp orb lag.
     fast_xp_merging = false
     # (Default = false) Prevents players from moving into unloaded chunks.

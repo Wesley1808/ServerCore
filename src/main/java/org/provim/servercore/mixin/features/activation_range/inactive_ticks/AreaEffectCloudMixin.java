@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.features.activation_range;
+package org.provim.servercore.mixin.features.activation_range.inactive_ticks;
 
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;

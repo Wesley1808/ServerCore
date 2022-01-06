@@ -1,4 +1,4 @@
-package org.provim.servercore.mixin.features.activation_range;
+package org.provim.servercore.mixin.features.activation_range.fixes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
