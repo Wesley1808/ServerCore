@@ -3,8 +3,8 @@ package org.provim.servercore.config.tables;
 import org.provim.servercore.config.ConfigEntry;
 
 public final class FeatureConfig {
-    public static final ConfigEntry<Boolean> DISABLE_SPAWN_CHUNKS = new ConfigEntry<>(true, "(Default = true) Stops the server from loading spawn chunks.");
     public static final ConfigEntry<Boolean> USE_DISTANCE_MAP = new ConfigEntry<>(true, "(Default = true) Optimizes vanilla's per-player mobspawning by using PaperMC's PlayerMobDistanceMap.");
+    public static final ConfigEntry<Boolean> DISABLE_SPAWN_CHUNKS = new ConfigEntry<>(false, "(Default = false) Stops the server from loading spawn chunks.");
     public static final ConfigEntry<Boolean> FAST_XP_MERGING = new ConfigEntry<>(false, "(Default = false) Allows more xp orbs to merge with one another, to reduce xp orb lag.");
     public static final ConfigEntry<Boolean> PREVENT_MOVING_INTO_UNLOADED_CHUNKS = new ConfigEntry<>(false, "(Default = false) Prevents players from moving into unloaded chunks.");
     public static final ConfigEntry<Boolean> PORTAL_SEARCH_VANILLA_SCALING = new ConfigEntry<>(true, "(Default = true) Whether the custom portal radius will use the vanilla dimension scale.");
