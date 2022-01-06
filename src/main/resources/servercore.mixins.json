@@ -16,6 +16,7 @@
     "features.activation_range.LivingEntityMixin",
     "features.activation_range.MobMixin",
     "features.activation_range.MoveToBlockGoalMixin",
+    "features.activation_range.OcelotMixin",
     "features.activation_range.PathFinderMobMixin",
     "features.activation_range.PistonMovingBlockEntityMixin",
     "features.activation_range.ServerLevelMixin",
