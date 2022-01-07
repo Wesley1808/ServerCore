@@ -12,7 +12,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "org.provim.servercore.ServerCore"
+      "me.wesley1808.servercore.ServerCore"
     ]
   },
   "mixins": [
