@@ -34,6 +34,11 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             return !(FabricLoader.getInstance().isModLoaded("the_aether") || FabricLoader.getInstance().isModLoaded("nethermap"));
         }
 
+        // Essentials Commands
+        if (mixinClassName.equals(DEFAULT_PATH + "optimizations.chunk_loading.BlockGetterMixin")) {
+            return !FabricLoader.getInstance().isModLoaded("essential_commands");
+        }
+
         return true;
     }
 
