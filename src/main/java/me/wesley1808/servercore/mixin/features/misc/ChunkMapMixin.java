@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ChunkMap.class)
 public abstract class ChunkMapMixin {
 
-    @Redirect(method = "processUnloads", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectIterator;hasNext()Z", ordinal = 0), remap = false)
+    @Redirect(method = "processUnloads", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectIterator;hasNext()Z", ordinal = 0))
     private boolean limitChunkSaves(ObjectIterator<ChunkHolder> iterator) {
         final int threshold = FeatureConfig.CHUNK_SAVE_THRESHOLD.get();
         if (threshold < 0) return iterator.hasNext();
