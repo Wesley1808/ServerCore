@@ -1,6 +1,7 @@
 package me.wesley1808.servercore.mixin.features.misc;
 
 import me.wesley1808.servercore.config.tables.FeatureConfig;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.TicketType;
@@ -21,9 +22,9 @@ public abstract class MinecraftServerMixin {
         }
     }
 
-    @Redirect(method = "prepareLevels", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerChunkCache;getTickingGenerated()I"))
-    private int disableSpawnChunks(ServerChunkCache chunkCache) {
-        return FeatureConfig.DISABLE_SPAWN_CHUNKS.get() ? 441 : chunkCache.getTickingGenerated();
+    @ModifyConstant(method = "prepareLevels", constant = @Constant(intValue = 441))
+    private int disableSpawnChunks(int constant) {
+        return FeatureConfig.DISABLE_SPAWN_CHUNKS.get() && !FabricLoader.getInstance().isModLoaded("ksyxis") ? 0 : constant;
     }
 
     @ModifyConstant(method = "tickServer", constant = @Constant(intValue = 6000), require = 0)
