@@ -24,7 +24,14 @@ public abstract class ThrownEggMixin extends ThrowableItemProjectile {
      * @return Integer: chance for chickens to spawn from an egg.
      */
 
-    @Redirect(method = "onHit", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I", ordinal = 0))
+    @Redirect(
+            method = "onHit",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/Random;nextInt(I)I",
+                    ordinal = 0
+            )
+    )
     public int shouldSpawn(Random random, int bound) {
         if (TickManager.checkForEntities(EntityType.CHICKEN, this.level, this.blockPosition(), EntityConfig.ANIMAL_COUNT.get(), EntityConfig.ANIMAL_RANGE.get())) {
             return 1;

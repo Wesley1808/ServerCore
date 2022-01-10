@@ -15,13 +15,23 @@ public abstract class ExperienceOrbMixin {
     @Shadow
     public int age;
 
-    @Inject(method = "canMerge(Lnet/minecraft/world/entity/ExperienceOrb;II)Z", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "canMerge(Lnet/minecraft/world/entity/ExperienceOrb;II)Z",
+            cancellable = true,
+            at = @At("HEAD")
+    )
     private static void canMerge(ExperienceOrb experienceOrb, int seed, int value, CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(!experienceOrb.isRemoved() && (experienceOrb.getId() - seed) % (FeatureConfig.FAST_XP_MERGING.get() ? 8 : 40) == 0 && experienceOrb.getValue() == value);
     }
 
     // Configurable experience orb merging radius.
-    @Redirect(method = "scanForEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/AABB;inflate(D)Lnet/minecraft/world/phys/AABB;"))
+    @Redirect(
+            method = "scanForEntities",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/phys/AABB;inflate(D)Lnet/minecraft/world/phys/AABB;"
+            )
+    )
     private AABB setMergeRadius(AABB box, double value) {
         return box.inflate(FeatureConfig.XP_MERGE_RADIUS.get());
     }

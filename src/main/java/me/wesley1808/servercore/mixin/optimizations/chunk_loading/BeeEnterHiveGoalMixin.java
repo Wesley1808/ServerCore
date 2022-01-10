@@ -22,7 +22,11 @@ public abstract class BeeEnterHiveGoalMixin {
     @Final
     Bee this$0;
 
-    @Inject(method = "start", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "start",
+            cancellable = true,
+            at = @At("HEAD")
+    )
     private void onlyStartIfLoaded(CallbackInfo ci) {
         final BlockPos hivePos = this.this$0.getHivePos();
         if (hivePos != null && !ChunkManager.isChunkLoaded(this.this$0.level, hivePos)) {
@@ -30,7 +34,14 @@ public abstract class BeeEnterHiveGoalMixin {
         }
     }
 
-    @Inject(method = "canBeeUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getBlockEntity(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/entity/BlockEntity;"), cancellable = true)
+    @Inject(
+            method = "canBeeUse",
+            cancellable = true,
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;getBlockEntity(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/entity/BlockEntity;"
+            )
+    )
     private void onlyUseIfLoaded(CallbackInfoReturnable<Boolean> cir) {
         final BlockPos hivePos = this.this$0.getHivePos();
         if (hivePos != null && !ChunkManager.isChunkLoaded(this.this$0.level, hivePos)) {

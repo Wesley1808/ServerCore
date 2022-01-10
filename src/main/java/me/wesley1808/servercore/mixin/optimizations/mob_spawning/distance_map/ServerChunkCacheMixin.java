@@ -30,7 +30,13 @@ public abstract class ServerChunkCacheMixin {
     @Shadow
     private boolean spawnEnemies;
 
-    @Inject(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/NaturalSpawner;createState(ILjava/lang/Iterable;Lnet/minecraft/world/level/NaturalSpawner$ChunkGetter;Lnet/minecraft/world/level/LocalMobCapCalculator;)Lnet/minecraft/world/level/NaturalSpawner$SpawnState;"))
+    @Inject(
+            method = "tickChunks",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/NaturalSpawner;createState(ILjava/lang/Iterable;Lnet/minecraft/world/level/NaturalSpawner$ChunkGetter;Lnet/minecraft/world/level/LocalMobCapCalculator;)Lnet/minecraft/world/level/NaturalSpawner$SpawnState;"
+            )
+    )
     private void updateDistanceMap(CallbackInfo ci) {
         if (FeatureConfig.USE_DISTANCE_MAP.get() && (this.spawnFriendlies || this.spawnEnemies) && this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)) {
             // Update distance map -> by using a constant 10 as view distance we prevent the situations where:

@@ -23,13 +23,27 @@ public abstract class MapItemSavedDataMixin {
      * @return Boolean: whether moving player icons should be tracked by item frames.
      */
 
-    @Redirect(method = "tickCarriedBy", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;contains(Lnet/minecraft/world/item/ItemStack;)Z"), require = 0)
+    @Redirect(
+            method = "tickCarriedBy",
+            require = 0,
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/player/Inventory;contains(Lnet/minecraft/world/item/ItemStack;)Z"
+            )
+    )
     private boolean cancelInventoryIteration(Inventory inventory, ItemStack stack) {
         return !stack.isFramed() && inventory.contains(stack);
     }
 
     // Fixes blinking player icons on player held maps.
-    @Redirect(method = "tickCarriedBy", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData;removeDecoration(Ljava/lang/String;)V", ordinal = 0))
+    @Redirect(
+            method = "tickCarriedBy",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData;removeDecoration(Ljava/lang/String;)V",
+                    ordinal = 0
+            )
+    )
     private void removeDecoration(MapItemSavedData data, String id, Player player, ItemStack stack) {
         if (!stack.isFramed()) {
             this.removeDecoration(id);
@@ -43,7 +57,13 @@ public abstract class MapItemSavedDataMixin {
      * @return String: The ID string of the icon.
      */
 
-    @Redirect(method = "tickCarriedBy", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/Component;getString()Ljava/lang/String;"))
+    @Redirect(
+            method = "tickCarriedBy",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/network/chat/Component;getString()Ljava/lang/String;"
+            )
+    )
     private String getString(Component component) {
         return ((TextComponent) component).getText();
     }

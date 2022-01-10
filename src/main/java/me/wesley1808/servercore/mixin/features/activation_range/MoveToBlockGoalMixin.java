@@ -27,7 +27,16 @@ public abstract class MoveToBlockGoalMixin extends Goal {
     @Final
     protected PathfinderMob mob;
 
-    @Inject(method = "findNearestBlock", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "FIELD", ordinal = 0, shift = At.Shift.AFTER, target = "Lnet/minecraft/world/entity/ai/goal/MoveToBlockGoal;blockPos:Lnet/minecraft/core/BlockPos;"))
+    @Inject(
+            method = "findNearestBlock",
+            locals = LocalCapture.CAPTURE_FAILHARD,
+            at = @At(
+                    value = "FIELD",
+                    ordinal = 0,
+                    shift = At.Shift.AFTER,
+                    target = "Lnet/minecraft/world/entity/ai/goal/MoveToBlockGoal;blockPos:Lnet/minecraft/core/BlockPos;"
+            )
+    )
     public void setTargetPos(CallbackInfoReturnable<Boolean> cir, int i, int j, BlockPos blockPos, BlockPos.MutableBlockPos mutable, int k, int l, int m, int n) {
         this.setTargetPosition(mutable.immutable());
     }

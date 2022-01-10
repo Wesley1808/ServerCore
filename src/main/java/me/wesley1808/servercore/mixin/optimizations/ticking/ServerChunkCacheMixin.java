@@ -21,7 +21,14 @@ public abstract class ServerChunkCacheMixin {
     @Final
     ServerLevel level;
 
-    @Inject(method = "tickChunks", at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/util/profiling/ProfilerFiller;push(Ljava/lang/String;)V"))
+    @Inject(
+            method = "tickChunks",
+            at = @At(
+                    value = "INVOKE",
+                    ordinal = 0,
+                    target = "Lnet/minecraft/util/profiling/ProfilerFiller;push(Ljava/lang/String;)V"
+            )
+    )
     private void resetIceAndSnowTick(CallbackInfo ci) {
         ((IServerLevel) this.level).resetIceAndSnowTick();
     }

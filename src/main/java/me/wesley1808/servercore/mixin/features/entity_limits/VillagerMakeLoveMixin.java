@@ -18,7 +18,13 @@ public abstract class VillagerMakeLoveMixin {
      * @return Double: distance to other villager.
      */
 
-    @Redirect(method = "tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/npc/Villager;J)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/npc/Villager;distanceToSqr(Lnet/minecraft/world/entity/Entity;)D"))
+    @Redirect(
+            method = "tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/npc/Villager;J)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/npc/Villager;distanceToSqr(Lnet/minecraft/world/entity/Entity;)D"
+            )
+    )
     public double cancelBreeding(Villager villager, Entity entity) {
         if (TickManager.checkForEntities(villager, EntityConfig.VILLAGER_COUNT.get(), EntityConfig.VILLAGER_RANGE.get())) {
             ((Villager) entity).setAge(6000);

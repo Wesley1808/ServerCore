@@ -16,7 +16,16 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class SleepInBedMixin {
 
     // Don't load chunks to find beds
-    @Inject(method = "checkExtraStartConditions", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/server/level/ServerLevel;dimension()Lnet/minecraft/resources/ResourceKey;"), cancellable = true)
+    @Inject(
+            method = "checkExtraStartConditions",
+            locals = LocalCapture.CAPTURE_FAILHARD,
+            cancellable = true,
+            at = @At(
+                    value = "INVOKE",
+                    ordinal = 0,
+                    target = "Lnet/minecraft/server/level/ServerLevel;dimension()Lnet/minecraft/resources/ResourceKey;"
+            )
+    )
     private void onlyProcessIfLoaded(ServerLevel level, LivingEntity owner, CallbackInfoReturnable<Boolean> cir, Brain<?> brain, GlobalPos globalPos) {
         if (!ChunkManager.isChunkLoaded(level, globalPos.pos())) {
             cir.setReturnValue(false);

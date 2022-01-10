@@ -14,7 +14,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin {
 
-    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;fudgeSpawnLocation(Lnet/minecraft/server/level/ServerLevel;)V"))
+    @Redirect(
+            method = "<init>",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/server/level/ServerPlayer;fudgeSpawnLocation(Lnet/minecraft/server/level/ServerLevel;)V"
+            )
+    )
     private void cancelOp(ServerPlayer player, ServerLevel level) {
         // Moves operation to PlayerList.
     }

@@ -31,12 +31,26 @@ public abstract class ServerLevelMixin extends Level implements IServerLevel {
         super(writableLevelData, resourceKey, dimensionType, supplier, bl, bl2, l);
     }
 
-    @Redirect(method = "tickChunk", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I", ordinal = 0))
+    @Redirect(
+            method = "tickChunk",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/Random;nextInt(I)I",
+                    ordinal = 0
+            )
+    )
     private int replaceLightningCheck(Random random, int i, LevelChunk chunk, int randomTickSpeed) {
         return ((ILevelChunk) chunk).shouldDoLightning(this.random);
     }
 
-    @Redirect(method = "tickChunk", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I", ordinal = 1))
+    @Redirect(
+            method = "tickChunk",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/Random;nextInt(I)I",
+                    ordinal = 1
+            )
+    )
     private int replaceIceAndSnowCheck(Random random, int i) {
         return this.currentIceAndSnowTick++ & 15;
     }

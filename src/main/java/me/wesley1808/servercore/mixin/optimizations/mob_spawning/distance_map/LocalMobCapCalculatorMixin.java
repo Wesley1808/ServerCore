@@ -25,19 +25,35 @@ public abstract class LocalMobCapCalculatorMixin {
     @Final
     private ChunkMap chunkMap;
 
-    @Inject(method = "getPlayersNear", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "getPlayersNear",
+            cancellable = true,
+            at = @At("HEAD")
+    )
     private void getPlayersNear(ChunkPos chunkPos, CallbackInfoReturnable<List<ServerPlayer>> cir) {
         if (FeatureConfig.USE_DISTANCE_MAP.get()) {
             cir.setReturnValue(null); // Return nothing as we won't be using it.
         }
     }
 
-    @Redirect(method = "canSpawn", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
+    @Redirect(
+            method = "canSpawn",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/List;iterator()Ljava/util/Iterator;"
+            )
+    )
     private Iterator<ServerPlayer> useDistanceMap$1(List<ServerPlayer> list, MobCategory category, ChunkPos chunkPos) {
         return this.getPlayerIterator(list, chunkPos);
     }
 
-    @Redirect(method = "addMob", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
+    @Redirect(
+            method = "addMob",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/List;iterator()Ljava/util/Iterator;"
+            )
+    )
     private Iterator<ServerPlayer> useDistanceMap$2(List<ServerPlayer> list, ChunkPos chunkPos, MobCategory category) {
         return this.getPlayerIterator(list, chunkPos);
     }

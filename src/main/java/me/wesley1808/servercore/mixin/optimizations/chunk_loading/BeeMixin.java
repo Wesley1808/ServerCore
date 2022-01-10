@@ -27,14 +27,22 @@ public abstract class BeeMixin extends Animal {
         super(entityType, level);
     }
 
-    @Inject(method = "isHiveNearFire", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "isHiveNearFire",
+            cancellable = true,
+            at = @At("HEAD")
+    )
     private void onlyCheckIfLoaded(CallbackInfoReturnable<Boolean> cir) {
         if (this.hivePos != null && !ChunkManager.isChunkLoaded(this.level, this.hivePos)) {
             cir.setReturnValue(false);
         }
     }
 
-    @Inject(method = "doesHiveHaveSpace", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "doesHiveHaveSpace",
+            cancellable = true,
+            at = @At("HEAD")
+    )
     private void onlyCheckIfLoaded(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (!ChunkManager.isChunkLoaded(this.level, pos)) {
             cir.setReturnValue(false);

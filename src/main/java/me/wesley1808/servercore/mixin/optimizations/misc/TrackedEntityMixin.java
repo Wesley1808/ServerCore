@@ -10,7 +10,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class TrackedEntityMixin {
 
     // Avoid stream allocations and unnecessary iterations.
-    @Redirect(method = "getEffectiveRange", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getIndirectPassengers()Ljava/lang/Iterable;"))
+    @Redirect(
+            method = "getEffectiveRange",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/Entity;getIndirectPassengers()Ljava/lang/Iterable;"
+            )
+    )
     private Iterable<Entity> getPassengers(Entity entity) {
         return entity.getPassengers();
     }

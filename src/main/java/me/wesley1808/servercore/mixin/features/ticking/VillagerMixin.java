@@ -31,15 +31,16 @@ public abstract class VillagerMixin extends AbstractVillager {
         super(entityType, level);
     }
 
-    @Redirect(method = "customServerAiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/Brain;tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;)V"))
+    @Redirect(
+            method = "customServerAiStep",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/ai/Brain;tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;)V"
+            )
+    )
     private void shouldTickBrain(Brain<Villager> brain, ServerLevel level, LivingEntity livingEntity) {
-        Villager villager = (Villager) (Object) this;
-        if (FeatureConfig.LOBOTOMIZE_VILLAGERS.get() && isLobotomized()) {
-            if (this.tickCount % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0) {
-                brain.tick(level, villager);
-            }
-        } else {
-            brain.tick(level, villager);
+        if (!FeatureConfig.LOBOTOMIZE_VILLAGERS.get() || !isLobotomized() || this.tickCount % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0) {
+            brain.tick(level, (Villager) (Object) this);
         }
     }
 

@@ -26,7 +26,11 @@ public abstract class AnimalMixin extends AgeableMob {
      * Cancels animal breeding if there are too many animals of the same type in the surrounding area.
      */
 
-    @Inject(method = "spawnChildFromBreeding", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(
+            method = "spawnChildFromBreeding",
+            cancellable = true,
+            at = @At(value = "HEAD")
+    )
     public void cancelBreeding(ServerLevel level, Animal other, CallbackInfo ci) {
         if (TickManager.checkForEntities(this, EntityConfig.ANIMAL_COUNT.get(), EntityConfig.ANIMAL_RANGE.get())) {
             this.setAge(6000);

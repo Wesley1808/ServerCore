@@ -10,7 +10,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(Ocelot.class)
 public abstract class OcelotMixin {
 
-    @Redirect(method = "removeWhenFarAway", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/animal/Ocelot;tickCount:I"))
+    @Redirect(
+            method = "removeWhenFarAway",
+            at = @At(
+                    value = "FIELD",
+                    opcode = Opcodes.GETFIELD,
+                    target = "Lnet/minecraft/world/entity/animal/Ocelot;tickCount:I"
+            )
+    )
     private int fixOcelotDespawning(Ocelot ocelot) {
         return ((ActivationEntity) ocelot).getFullTickCount();
     }

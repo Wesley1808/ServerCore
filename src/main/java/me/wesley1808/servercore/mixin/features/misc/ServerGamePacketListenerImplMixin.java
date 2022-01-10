@@ -40,7 +40,17 @@ public abstract class ServerGamePacketListenerImplMixin {
     @Shadow
     public abstract void teleport(double d, double e, double f, float g, float h, Set<ClientboundPlayerPositionPacket.RelativeArgument> set, boolean bl);
 
-    @Inject(method = "handleMoveVehicle", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", shift = At.Shift.AFTER, ordinal = 0, target = "Lnet/minecraft/world/phys/Vec3;lengthSqr()D"), cancellable = true)
+    @Inject(
+            method = "handleMoveVehicle",
+            locals = LocalCapture.CAPTURE_FAILHARD,
+            cancellable = true,
+            at = @At(
+                    value = "INVOKE",
+                    shift = At.Shift.AFTER,
+                    ordinal = 0,
+                    target = "Lnet/minecraft/world/phys/Vec3;lengthSqr()D"
+            )
+    )
     private void handleMoveVehicle(ServerboundMoveVehiclePacket packet, CallbackInfo ci, Entity entity, ServerLevel serverLevel, double d, double e, double f, double g, double h, double i, float j, float k, double l, double m, double n) {
         if (FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get() && !ChunkManager.isChunkLoaded(serverLevel, (int) Math.floor(packet.getX()) >> 4, (int) Math.floor(packet.getZ()) >> 4)) {
             this.connection.send(new ClientboundMoveVehiclePacket(entity));
@@ -48,7 +58,16 @@ public abstract class ServerGamePacketListenerImplMixin {
         }
     }
 
-    @Inject(method = "handleMovePlayer", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/server/level/ServerPlayer;getBoundingBox()Lnet/minecraft/world/phys/AABB;"), cancellable = true)
+    @Inject(
+            method = "handleMovePlayer",
+            locals = LocalCapture.CAPTURE_FAILHARD,
+            cancellable = true,
+            at = @At(
+                    value = "INVOKE",
+                    ordinal = 0,
+                    target = "Lnet/minecraft/server/level/ServerPlayer;getBoundingBox()Lnet/minecraft/world/phys/AABB;"
+            )
+    )
     private void handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double toX, double toY, double toZ, float yRot, float xRot, double fromX, double fromY, double fromZ, double l) {
         if (FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get() && (fromX != toX || fromZ != toZ) && ChunkManager.isTouchingUnloadedChunk(serverLevel, new AABB(toX - 4, toY, toZ - 4, toX + 4, toY, toZ + 4))) {
             this.teleport(fromX, fromY, fromZ, yRot, xRot, Collections.emptySet(), true);

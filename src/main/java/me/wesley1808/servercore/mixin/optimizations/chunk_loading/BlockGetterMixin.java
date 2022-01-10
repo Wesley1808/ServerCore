@@ -17,7 +17,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public interface BlockGetterMixin {
 
     // Don't load chunks for raytracing.
-    @Inject(method = "lambda$clip$2(Lnet/minecraft/world/level/ClipContext;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/BlockHitResult;", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "lambda$clip$2(Lnet/minecraft/world/level/ClipContext;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/BlockHitResult;",
+            cancellable = true,
+            at = @At("HEAD")
+    )
     private void onlyRaytraceIfLoaded(ClipContext traverseContext, BlockPos traversePos, CallbackInfoReturnable<BlockHitResult> cir) {
         if (this instanceof Level level && !ChunkManager.isChunkLoaded(level, traversePos)) {
             Vec3 vec3d = traverseContext.getFrom().subtract(traverseContext.getTo());

@@ -10,7 +10,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(Cat.class)
 public abstract class CatMixin {
 
-    @Redirect(method = "removeWhenFarAway", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/entity/animal/Cat;tickCount:I"))
+    @Redirect(
+            method = "removeWhenFarAway",
+            at = @At(
+                    value = "FIELD",
+                    opcode = Opcodes.GETFIELD,
+                    target = "Lnet/minecraft/world/entity/animal/Cat;tickCount:I"
+            )
+    )
     private int fixCatDespawning(Cat cat) {
         return ((ActivationEntity) cat).getFullTickCount();
     }

@@ -21,7 +21,14 @@ public abstract class AcquirePoiMixin {
     private long nextScheduledStart;
 
     // Airplane - wait an additional 10s to check again if they're stuck
-    @Inject(method = "start(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/PathfinderMob;J)V", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/server/level/ServerLevel;getPoiManager()Lnet/minecraft/world/entity/ai/village/poi/PoiManager;"))
+    @Inject(
+            method = "start(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/PathfinderMob;J)V",
+            at = @At(
+                    value = "INVOKE",
+                    shift = At.Shift.BEFORE,
+                    target = "Lnet/minecraft/server/level/ServerLevel;getPoiManager()Lnet/minecraft/world/entity/ai/village/poi/PoiManager;"
+            )
+    )
     private void skipIfStuck(ServerLevel level, PathfinderMob entity, long gameTime, CallbackInfo ci) {
         if (entity.getNavigation().isStuck()) this.nextScheduledStart += 200L;
     }

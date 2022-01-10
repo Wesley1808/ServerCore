@@ -13,7 +13,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class EntityMixin {
 
     // Fall back to default spawn position if the spawn chunks aren't loaded.
-    @Redirect(method = "findDimensionEntryPoint", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;getHeightmapPos(Lnet/minecraft/world/level/levelgen/Heightmap$Types;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;"))
+    @Redirect(
+            method = "findDimensionEntryPoint",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/server/level/ServerLevel;getHeightmapPos(Lnet/minecraft/world/level/levelgen/Heightmap$Types;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;"
+            )
+    )
     private BlockPos fixSpawnHeight(ServerLevel level, Heightmap.Types types, BlockPos blockPos) {
         return ChunkManager.isChunkLoaded(level, blockPos) ? level.getHeightmapPos(types, blockPos) : blockPos;
     }

@@ -30,14 +30,26 @@ public abstract class ServerLevelMixin {
     @Final
     private MinecraftServer server;
 
-    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/entity/EntityTickList;forEach(Ljava/util/function/Consumer;)V"))
+    @Inject(
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/entity/EntityTickList;forEach(Ljava/util/function/Consumer;)V"
+            )
+    )
     public void activateEntities(BooleanSupplier booleanSupplier, CallbackInfo ci) {
         if (ActivationRangeConfig.ENABLED.get() && this.server.getTickCount() % 20 == 0) {
             ActivationRange.activateEntities((ServerLevel) (Object) this);
         }
     }
 
-    @Redirect(method = "tickNonPassenger", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;tick()V"))
+    @Redirect(
+            method = "tickNonPassenger",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/Entity;tick()V"
+            )
+    )
     public void shouldTickEntity(Entity entity) {
         if (ActivationRange.checkIfActive(entity)) {
             ((ActivationEntity) entity).setInactive(false);
@@ -49,7 +61,13 @@ public abstract class ServerLevelMixin {
         }
     }
 
-    @Redirect(method = "tickPassenger", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;rideTick()V"))
+    @Redirect(
+            method = "tickPassenger",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/Entity;rideTick()V"
+            )
+    )
     public void shouldTickPassengers(Entity entity) {
         if (ActivationRange.checkIfActive(entity)) {
             ((ActivationEntity) entity).setInactive(false);
@@ -68,12 +86,26 @@ public abstract class ServerLevelMixin {
 
     // ServerCore - Only increase tick count when ticked.
     // Increasing the tick count whilst inactive can break entity behavior.
-    @Redirect(method = "tickNonPassenger", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "net/minecraft/world/entity/Entity.tickCount:I"))
+    @Redirect(
+            method = "tickNonPassenger",
+            at = @At(
+                    value = "FIELD",
+                    opcode = Opcodes.PUTFIELD,
+                    target = "net/minecraft/world/entity/Entity.tickCount:I"
+            )
+    )
     public void cancelTickCount$1(Entity entity, int value) {
         ((ActivationEntity) entity).incFullTickCount();
     }
 
-    @Redirect(method = "tickPassenger", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "net/minecraft/world/entity/Entity.tickCount:I"))
+    @Redirect(
+            method = "tickPassenger",
+            at = @At(
+                    value = "FIELD",
+                    opcode = Opcodes.PUTFIELD,
+                    target = "net/minecraft/world/entity/Entity.tickCount:I"
+            )
+    )
     public void cancelTickCount$2(Entity passenger, int value) {
         ((ActivationEntity) passenger).incFullTickCount();
     }

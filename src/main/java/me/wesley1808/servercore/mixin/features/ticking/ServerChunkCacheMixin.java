@@ -27,31 +27,66 @@ public abstract class ServerChunkCacheMixin {
     ServerLevel level;
 
     // Avoid massive array allocations.
-    @Redirect(method = "tickChunks", require = 0, at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Lists;newArrayListWithCapacity(I)Ljava/util/ArrayList;", remap = false))
+    @Redirect(
+            method = "tickChunks",
+            require = 0,
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lcom/google/common/collect/Lists;newArrayListWithCapacity(I)Ljava/util/ArrayList;",
+                    remap = false
+            )
+    )
     private ArrayList<?> noList(int initialArraySize) {
         return null;
     }
 
     // Cancel any operations performed on the list.
-    @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Ljava/util/Collections;shuffle(Ljava/util/List;)V"))
+    @Redirect(
+            method = "tickChunks",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/Collections;shuffle(Ljava/util/List;)V"
+            )
+    )
     private void cancelShuffle(List<?> list) {
     }
 
     // Replaces chunk filtering with our own implementation.
-    @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Ljava/lang/Iterable;iterator()Ljava/util/Iterator;", ordinal = 0))
+    @Redirect(
+            method = "tickChunks",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/lang/Iterable;iterator()Ljava/util/Iterator;",
+                    ordinal = 0
+            )
+    )
     private Iterator<ChunkHolder> updateFilteredChunks(Iterable<ChunkHolder> iterable) {
         this.updateActiveChunks(iterable);
         return Collections.emptyIterator();
     }
 
     // Only iterate through active chunks.
-    @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;", ordinal = 0))
+    @Redirect(
+            method = "tickChunks",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/List;iterator()Ljava/util/Iterator;",
+                    ordinal = 0
+            )
+    )
     private Iterator<?> onlyTickActiveChunks(List<?> list) {
         return this.active.iterator();
     }
 
     // Only flush active chunks.
-    @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V", ordinal = 0))
+    @Redirect(
+            method = "tickChunks",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V",
+                    ordinal = 0
+            )
+    )
     private void flushActiveChunks(List<?> list, Consumer<ServerChunkCache.ChunkAndHolder> action) {
         this.active.forEach(action);
     }

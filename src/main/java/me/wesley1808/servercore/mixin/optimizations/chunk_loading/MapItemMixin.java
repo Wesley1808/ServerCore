@@ -13,12 +13,24 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class MapItemMixin {
 
     // Stop maps from loading chunks.
-    @Redirect(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getChunkAt(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/chunk/LevelChunk;"))
+    @Redirect(
+            method = "update",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;getChunkAt(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/chunk/LevelChunk;"
+            )
+    )
     private LevelChunk onlyUpdateIfLoaded(Level level, BlockPos pos) {
         return ChunkManager.getChunkIfLoaded(level, pos);
     }
 
-    @Redirect(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/LevelChunk;isEmpty()Z"))
+    @Redirect(
+            method = "update",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/chunk/LevelChunk;isEmpty()Z"
+            )
+    )
     private boolean validateNotNull(LevelChunk chunk) {
         return chunk == null || chunk.isEmpty();
     }
