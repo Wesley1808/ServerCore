@@ -23,10 +23,7 @@ public abstract class ChunkMapMixin implements IChunkMap {
     @Unique
     private PlayerMobDistanceMap distanceMap = new PlayerMobDistanceMap();
 
-    @Inject(
-            method = "saveAllChunks",
-            at = @At("TAIL")
-    )
+    @Inject(method = "saveAllChunks", at = @At("TAIL"))
     private void resetDistanceMap(boolean flush, CallbackInfo ci) {
         if (FeatureConfig.USE_DISTANCE_MAP.get() && this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)) {
             // Resets the PlayerMobDistanceMap whenever the worlds save.

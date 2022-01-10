@@ -44,10 +44,7 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
     @Unique
     private int fullTickCount;
 
-    @Inject(
-            method = "<init>",
-            at = @At(value = "RETURN")
-    )
+    @Inject(method = "<init>", at = @At("RETURN"))
     public void setupActivationStates(EntityType<?> type, Level level, CallbackInfo ci) {
         if (!this.level.isClientSide) {
             final Entity entity = (Entity) (Object) this;
@@ -60,8 +57,8 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
             method = "move",
             at = @At(
                     value = "INVOKE",
-                    shift = At.Shift.BEFORE,
-                    target = "Lnet/minecraft/world/entity/Entity;limitPistonMovement(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;"
+                    target = "Lnet/minecraft/world/entity/Entity;limitPistonMovement(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;",
+                    shift = At.Shift.BEFORE
             )
     )
     public void onPistonMove(MoverType moverType, Vec3 vec3, CallbackInfo ci) {
@@ -73,11 +70,7 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
     }
 
     // ServerCore - Prevent inactive entities from getting extreme velocities.
-    @Inject(
-            method = "push(DDD)V",
-            cancellable = true,
-            at = @At(value = "HEAD")
-    )
+    @Inject(method = "push(DDD)V", at = @At("HEAD"), cancellable = true)
     public void ignorePushingWhileInactive(double x, double y, double z, CallbackInfo ci) {
         if (this.isInactive && !this.level.isClientSide) {
             ci.cancel();

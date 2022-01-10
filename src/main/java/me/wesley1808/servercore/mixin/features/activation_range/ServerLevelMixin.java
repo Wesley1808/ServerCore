@@ -90,8 +90,8 @@ public abstract class ServerLevelMixin {
             method = "tickNonPassenger",
             at = @At(
                     value = "FIELD",
-                    opcode = Opcodes.PUTFIELD,
-                    target = "net/minecraft/world/entity/Entity.tickCount:I"
+                    target = "net/minecraft/world/entity/Entity.tickCount:I",
+                    opcode = Opcodes.PUTFIELD
             )
     )
     public void cancelTickCount$1(Entity entity, int value) {
@@ -102,8 +102,8 @@ public abstract class ServerLevelMixin {
             method = "tickPassenger",
             at = @At(
                     value = "FIELD",
-                    opcode = Opcodes.PUTFIELD,
-                    target = "net/minecraft/world/entity/Entity.tickCount:I"
+                    target = "net/minecraft/world/entity/Entity.tickCount:I",
+                    opcode = Opcodes.PUTFIELD
             )
     )
     public void cancelTickCount$2(Entity passenger, int value) {

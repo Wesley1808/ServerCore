@@ -25,8 +25,8 @@ public abstract class ServerChunkCacheMixin {
             method = "tickChunks",
             at = @At(
                     value = "INVOKE",
-                    ordinal = 0,
-                    target = "Lnet/minecraft/util/profiling/ProfilerFiller;push(Ljava/lang/String;)V"
+                    target = "Lnet/minecraft/util/profiling/ProfilerFiller;push(Ljava/lang/String;)V",
+                    ordinal = 0
             )
     )
     private void resetIceAndSnowTick(CallbackInfo ci) {

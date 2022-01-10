@@ -14,8 +14,8 @@ public abstract class OcelotMixin {
             method = "removeWhenFarAway",
             at = @At(
                     value = "FIELD",
-                    opcode = Opcodes.GETFIELD,
-                    target = "Lnet/minecraft/world/entity/animal/Ocelot;tickCount:I"
+                    target = "Lnet/minecraft/world/entity/animal/Ocelot;tickCount:I",
+                    opcode = Opcodes.GETFIELD
             )
     )
     private int fixOcelotDespawning(Ocelot ocelot) {

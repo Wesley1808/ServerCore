@@ -22,10 +22,7 @@ public abstract class ServerPlayerMixin implements IServerPlayer {
     @Unique
     private PooledHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> cachedSingleMobDistanceMap;
 
-    @Inject(
-            method = "<init>",
-            at = @At("RETURN")
-    )
+    @Inject(method = "<init>", at = @At("RETURN"))
     private void init(MinecraftServer minecraftServer, ServerLevel serverLevel, GameProfile gameProfile, CallbackInfo ci) {
         this.cachedSingleMobDistanceMap = new PooledHashSets.PooledObjectLinkedOpenHashSet<>((ServerPlayer) (Object) this);
     }

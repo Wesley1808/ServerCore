@@ -22,11 +22,7 @@ public abstract class BeeEnterHiveGoalMixin {
     @Final
     Bee this$0;
 
-    @Inject(
-            method = "start",
-            cancellable = true,
-            at = @At("HEAD")
-    )
+    @Inject(method = "start", at = @At("HEAD"), cancellable = true)
     private void onlyStartIfLoaded(CallbackInfo ci) {
         final BlockPos hivePos = this.this$0.getHivePos();
         if (hivePos != null && !ChunkManager.isChunkLoaded(this.this$0.level, hivePos)) {

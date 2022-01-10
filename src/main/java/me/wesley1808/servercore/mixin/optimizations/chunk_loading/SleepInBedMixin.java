@@ -22,8 +22,8 @@ public abstract class SleepInBedMixin {
             cancellable = true,
             at = @At(
                     value = "INVOKE",
-                    ordinal = 0,
-                    target = "Lnet/minecraft/server/level/ServerLevel;dimension()Lnet/minecraft/resources/ResourceKey;"
+                    target = "Lnet/minecraft/server/level/ServerLevel;dimension()Lnet/minecraft/resources/ResourceKey;",
+                    ordinal = 0
             )
     )
     private void onlyProcessIfLoaded(ServerLevel level, LivingEntity owner, CallbackInfoReturnable<Boolean> cir, Brain<?> brain, GlobalPos globalPos) {

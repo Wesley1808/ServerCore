@@ -32,9 +32,9 @@ public abstract class MoveToBlockGoalMixin extends Goal {
             locals = LocalCapture.CAPTURE_FAILHARD,
             at = @At(
                     value = "FIELD",
-                    ordinal = 0,
+                    target = "Lnet/minecraft/world/entity/ai/goal/MoveToBlockGoal;blockPos:Lnet/minecraft/core/BlockPos;",
                     shift = At.Shift.AFTER,
-                    target = "Lnet/minecraft/world/entity/ai/goal/MoveToBlockGoal;blockPos:Lnet/minecraft/core/BlockPos;"
+                    ordinal = 0
             )
     )
     public void setTargetPos(CallbackInfoReturnable<Boolean> cir, int i, int j, BlockPos blockPos, BlockPos.MutableBlockPos mutable, int k, int l, int m, int n) {

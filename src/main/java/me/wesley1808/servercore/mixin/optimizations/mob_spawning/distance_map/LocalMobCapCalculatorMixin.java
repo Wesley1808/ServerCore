@@ -25,11 +25,7 @@ public abstract class LocalMobCapCalculatorMixin {
     @Final
     private ChunkMap chunkMap;
 
-    @Inject(
-            method = "getPlayersNear",
-            cancellable = true,
-            at = @At("HEAD")
-    )
+    @Inject(method = "getPlayersNear", at = @At("HEAD"), cancellable = true)
     private void getPlayersNear(ChunkPos chunkPos, CallbackInfoReturnable<List<ServerPlayer>> cir) {
         if (FeatureConfig.USE_DISTANCE_MAP.get()) {
             cir.setReturnValue(null); // Return nothing as we won't be using it.

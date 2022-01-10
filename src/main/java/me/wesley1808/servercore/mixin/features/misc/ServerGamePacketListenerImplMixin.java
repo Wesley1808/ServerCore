@@ -46,9 +46,9 @@ public abstract class ServerGamePacketListenerImplMixin {
             cancellable = true,
             at = @At(
                     value = "INVOKE",
+                    target = "Lnet/minecraft/world/phys/Vec3;lengthSqr()D",
                     shift = At.Shift.AFTER,
-                    ordinal = 0,
-                    target = "Lnet/minecraft/world/phys/Vec3;lengthSqr()D"
+                    ordinal = 0
             )
     )
     private void handleMoveVehicle(ServerboundMoveVehiclePacket packet, CallbackInfo ci, Entity entity, ServerLevel serverLevel, double d, double e, double f, double g, double h, double i, float j, float k, double l, double m, double n) {
@@ -64,8 +64,8 @@ public abstract class ServerGamePacketListenerImplMixin {
             cancellable = true,
             at = @At(
                     value = "INVOKE",
-                    ordinal = 0,
-                    target = "Lnet/minecraft/server/level/ServerPlayer;getBoundingBox()Lnet/minecraft/world/phys/AABB;"
+                    target = "Lnet/minecraft/server/level/ServerPlayer;getBoundingBox()Lnet/minecraft/world/phys/AABB;",
+                    ordinal = 0
             )
     )
     private void handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double toX, double toY, double toZ, float yRot, float xRot, double fromX, double fromY, double fromZ, double l) {

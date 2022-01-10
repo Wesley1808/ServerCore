@@ -14,8 +14,8 @@ public abstract class CatMixin {
             method = "removeWhenFarAway",
             at = @At(
                     value = "FIELD",
-                    opcode = Opcodes.GETFIELD,
-                    target = "Lnet/minecraft/world/entity/animal/Cat;tickCount:I"
+                    target = "Lnet/minecraft/world/entity/animal/Cat;tickCount:I",
+                    opcode = Opcodes.GETFIELD
             )
     )
     private int fixCatDespawning(Cat cat) {

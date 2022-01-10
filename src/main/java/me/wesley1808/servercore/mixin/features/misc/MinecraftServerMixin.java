@@ -28,19 +28,12 @@ public abstract class MinecraftServerMixin {
         }
     }
 
-    @ModifyConstant(
-            method = "prepareLevels",
-            constant = @Constant(intValue = 441)
-    )
+    @ModifyConstant(method = "prepareLevels", constant = @Constant(intValue = 441))
     private int disableSpawnChunks(int constant) {
         return FeatureConfig.DISABLE_SPAWN_CHUNKS.get() && !FabricLoader.getInstance().isModLoaded("ksyxis") ? 0 : constant;
     }
 
-    @ModifyConstant(
-            method = "tickServer",
-            require = 0,
-            constant = @Constant(intValue = 6000)
-    )
+    @ModifyConstant(method = "tickServer", constant = @Constant(intValue = 6000), require = 0)
     public int modifyAutoSaveInterval(int constant) {
         return FeatureConfig.AUTO_SAVE_INTERVAL.get() * 1200;
     }
