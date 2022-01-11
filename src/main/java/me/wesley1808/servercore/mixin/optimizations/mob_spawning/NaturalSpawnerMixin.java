@@ -3,6 +3,7 @@ package me.wesley1808.servercore.mixin.optimizations.mob_spawning;
 import me.wesley1808.servercore.utils.ChunkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
@@ -11,7 +12,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(NaturalSpawner.class)
 public abstract class NaturalSpawnerMixin {
@@ -40,6 +43,11 @@ public abstract class NaturalSpawnerMixin {
         return isRightDistanceToPlayerAndSpawnPoint(world, chunk, pos, squaredDistance) && (cachedChunk = ChunkManager.getChunkIfLoaded(world, pos)) != null;
     }
 
+    @Inject(method = "spawnCategoryForPosition(Lnet/minecraft/world/entity/MobCategory;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/chunk/ChunkAccess;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/NaturalSpawner$SpawnPredicate;Lnet/minecraft/world/level/NaturalSpawner$AfterSpawnCallback;)V", at = @At("RETURN"))
+    private static void onReturn(MobCategory mobCategory, ServerLevel serverLevel, ChunkAccess chunkAccess, BlockPos blockPos, NaturalSpawner.SpawnPredicate spawnPredicate, NaturalSpawner.AfterSpawnCallback afterSpawnCallback, CallbackInfo ci) {
+        cachedChunk = null;
+    }
+
     // Fast blockstate lookup.
     @Redirect(
             method = "isInNetherFortressBounds",
@@ -49,7 +57,7 @@ public abstract class NaturalSpawnerMixin {
             )
     )
     private static BlockState fastBlockStateLookup(ServerLevel level, BlockPos pos) {
-        return cachedChunk.getBlockState(pos);
+        return cachedChunk != null ? cachedChunk.getBlockState(pos) : level.getBlockState(pos);
     }
 
     // Fast biome lookups.
@@ -61,7 +69,7 @@ public abstract class NaturalSpawnerMixin {
             )
     )
     private static Biome fastBiomeLookup$1(ServerLevel level, BlockPos pos) {
-        return getRoughBiome(pos, cachedChunk);
+        return cachedChunk != null ? getRoughBiome(pos, cachedChunk) : level.getBiome(pos);
     }
 
     @Redirect(
@@ -72,6 +80,6 @@ public abstract class NaturalSpawnerMixin {
             )
     )
     private static Biome fastBiomeLookup$2(ServerLevel level, BlockPos pos) {
-        return getRoughBiome(pos, cachedChunk);
+        return cachedChunk != null ? getRoughBiome(pos, cachedChunk) : level.getBiome(pos);
     }
 }
