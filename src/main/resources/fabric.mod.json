@@ -7,7 +7,11 @@
   "authors": [
     "Wesley1808"
   ],
-  "contact": {},
+  "contact": {
+    "sources": "https://github.com/Wesley1808/ServerCore",
+    "issues": "https://github.com/Wesley1808/ServerCore/issues"
+  },
+  "icon": "assets/servercore/icon.png",
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
