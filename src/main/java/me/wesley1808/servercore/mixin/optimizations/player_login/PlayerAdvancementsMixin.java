@@ -65,7 +65,7 @@ public abstract class PlayerAdvancementsMixin {
         }
 
         if (bl != bl2 && advancement.getParent() != null) {
-            // Paper - If we're not coming from an iterator consider this to be a root entry, otherwise
+            // If we're not coming from an iterator consider this to be a root entry, otherwise
             // market that we're entering from the parent of an iterator.
             this.fastEnsureVisibility(advancement.getParent(), entryPoint == ITERATOR ? PARENT_OF_ITERATOR : ROOT);
         }

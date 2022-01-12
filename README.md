@@ -133,11 +133,12 @@ The config file can be found at `/config/servercore.toml`
 
 # Allows you to disable specific commands and modify the way some of them are formatted.
 [commands]
-    # Enables / disables the /sc status command.
+    # Enables / disables the /servercore status command.
     command_status = true
-    # The content for the /sc status command.
+    # The content for the /servercore status command.
     status_content = "§3>----( §bServerCore §3)----<\n§7>§8> §3Chunk-Tick Distance: §a%CHUNK_TICK_DISTANCE%\n§7>§8> §3Simulation Distance: §a%SIMULATION_DISTANCE%\n§7>§8> §3View Distance: §a%VIEW_DISTANCE%\n§7>§8> §3Mobcap Multiplier: §a%MOBCAPS%"
     # Enables / disables the /mobcaps command.
+    # Forcefully set to false by: VMP
     command_mobcaps = true
     # The title for the /mobcaps command.
     mobcap_title = "§3Per Player Mobcaps (§a%MODIFIER%§3)"
