@@ -2,6 +2,7 @@ package me.wesley1808.servercore.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.wesley1808.servercore.config.tables.CommandConfig;
@@ -16,15 +17,11 @@ import net.minecraft.world.level.NaturalSpawner;
 
 import static net.minecraft.commands.Commands.literal;
 
-public final class InfoCommand {
+public final class MobcapsCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         if (CommandConfig.COMMAND_MOBCAPS.get() && !FabricLoader.getInstance().isModLoaded("vmp")) {
-            dispatcher.register(literal("mobcaps").executes(InfoCommand::mobcaps));
-        }
-
-        if (CommandConfig.COMMAND_STATUS.get()) {
-            dispatcher.register(literal("servercore").then(literal("status").executes(InfoCommand::status)));
+            dispatcher.register(literal("mobcaps").executes(MobcapsCommand::mobcaps));
         }
     }
 
@@ -45,11 +42,6 @@ public final class InfoCommand {
         }
 
         player.displayClientMessage(text, false);
-        return Command.SINGLE_SUCCESS;
-    }
-
-    private static int status(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendSuccess(TickManager.createStatusReport(), false);
         return Command.SINGLE_SUCCESS;
     }
 }
