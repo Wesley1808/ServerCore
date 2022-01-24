@@ -14,6 +14,7 @@ public abstract class ChunkMapMixin {
 
     @Redirect(
             method = "processUnloads",
+            require = 0,
             at = @At(
                     value = "INVOKE",
                     target = "Lit/unimi/dsi/fastutil/objects/ObjectIterator;hasNext()Z",

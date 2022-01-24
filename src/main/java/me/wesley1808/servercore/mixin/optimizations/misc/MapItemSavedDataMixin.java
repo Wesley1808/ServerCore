@@ -59,6 +59,7 @@ public abstract class MapItemSavedDataMixin {
 
     @Redirect(
             method = "tickCarriedBy",
+            require = 0,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/network/chat/Component;getString()Ljava/lang/String;"

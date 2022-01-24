@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
-    private static final String DEFAULT_PATH = "me.wesley1808.servercore.mixin.";
+    private static final String MIXIN_CLASS_PATH = "me.wesley1808.servercore.mixin.";
 
     @Override
     public void onLoad(String mixinPackage) {
@@ -25,18 +25,18 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
 
         // Very Many Players
-        if (mixinClassName.startsWith(DEFAULT_PATH + "optimizations.mob_spawning.distance_map")) {
-            return !FabricLoader.getInstance().isModLoaded("vmp");
+        if (mixinClassName.startsWith(MIXIN_CLASS_PATH + "optimizations.mob_spawning.distance_map")) {
+            return !this.isModLoaded("vmp");
         }
 
         // The Aether Reborn & Better Nether Map
-        if (mixinClassName.equals(DEFAULT_PATH + "optimizations.chunk_loading.MapItemMixin")) {
-            return !(FabricLoader.getInstance().isModLoaded("the_aether") || FabricLoader.getInstance().isModLoaded("nethermap"));
+        if (mixinClassName.equals(MIXIN_CLASS_PATH + "optimizations.chunk_loading.MapItemMixin")) {
+            return !this.isModLoaded("the_aether", "nethermap");
         }
 
         // Essentials Commands
-        if (mixinClassName.equals(DEFAULT_PATH + "optimizations.chunk_loading.BlockGetterMixin")) {
-            return !FabricLoader.getInstance().isModLoaded("essential_commands");
+        if (mixinClassName.equals(MIXIN_CLASS_PATH + "optimizations.chunk_loading.BlockGetterMixin")) {
+            return !this.isModLoaded("essential_commands");
         }
 
         return true;
@@ -60,5 +60,18 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
     @Override
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
 
+    }
+
+    private boolean isModLoaded(String id) {
+        return FabricLoader.getInstance().isModLoaded(id);
+    }
+
+    private boolean isModLoaded(String... ids) {
+        for (String id : ids) {
+            if (this.isModLoaded(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

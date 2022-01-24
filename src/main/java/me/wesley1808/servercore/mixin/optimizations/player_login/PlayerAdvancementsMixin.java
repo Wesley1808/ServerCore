@@ -16,7 +16,7 @@ import java.util.Set;
  * License: GPL-3.0 (licenses/GPL.md)
  */
 
-@Mixin(PlayerAdvancements.class)
+@Mixin(value = PlayerAdvancements.class, priority = 900)
 public abstract class PlayerAdvancementsMixin {
     private static final int PARENT_OF_ITERATOR = 2;
     private static final int ITERATOR = 1;
@@ -51,20 +51,20 @@ public abstract class PlayerAdvancementsMixin {
     }
 
     private void fastEnsureVisibility(Advancement advancement, int entryPoint) {
-        boolean bl = this.shouldBeVisible(advancement);
-        boolean bl2 = this.visible.contains(advancement);
-        if (bl && !bl2) {
+        boolean shouldBeVisible = this.shouldBeVisible(advancement);
+        boolean isVisible = this.visible.contains(advancement);
+        if (shouldBeVisible && !isVisible) {
             this.visible.add(advancement);
             this.visibilityChanged.add(advancement);
             if (this.advancements.containsKey(advancement)) {
                 this.progressChanged.add(advancement);
             }
-        } else if (!bl && bl2) {
+        } else if (!shouldBeVisible && isVisible) {
             this.visible.remove(advancement);
             this.visibilityChanged.add(advancement);
         }
 
-        if (bl != bl2 && advancement.getParent() != null) {
+        if (shouldBeVisible != isVisible && advancement.getParent() != null) {
             // If we're not coming from an iterator consider this to be a root entry, otherwise
             // market that we're entering from the parent of an iterator.
             this.fastEnsureVisibility(advancement.getParent(), entryPoint == ITERATOR ? PARENT_OF_ITERATOR : ROOT);

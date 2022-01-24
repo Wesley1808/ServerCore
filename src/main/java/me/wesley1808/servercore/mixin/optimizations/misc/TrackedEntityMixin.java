@@ -12,6 +12,7 @@ public abstract class TrackedEntityMixin {
     // Avoid stream allocations and unnecessary iterations.
     @Redirect(
             method = "getEffectiveRange",
+            require = 0,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/entity/Entity;getIndirectPassengers()Ljava/lang/Iterable;"

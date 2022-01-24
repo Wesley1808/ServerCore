@@ -90,8 +90,8 @@ public final class ServerCoreCommand {
     }
 
     private static int sendInfo(CommandSourceStack source, String key, ConfigEntry<Object> entry) {
-        String message = String.format("§7%s\n§3Current value: §a%s\n§3Default value: §a%s\n§3Type: §a%s",
-                entry.getComment() != null ? entry.getComment() : key,
+        String message = String.format("§b%s\n§3Current value: §a%s\n§3Default value: §a%s\n§3Type: §a%s",
+                key,
                 asString(entry.get()),
                 asString(entry.getDefault()),
                 entry.getType().getSimpleName()

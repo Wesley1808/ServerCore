@@ -54,7 +54,7 @@ public final class ChunkManager {
         return level.isClientSide || isChunkLoaded(getChunkHolder(level, chunkX, chunkZ));
     }
 
-    private static boolean isChunkLoaded(ChunkHolder holder) {
+    public static boolean isChunkLoaded(ChunkHolder holder) {
         return holder != null && holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left().isPresent();
     }
 

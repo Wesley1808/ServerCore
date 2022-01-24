@@ -55,6 +55,7 @@ public abstract class NaturalSpawnerMixin {
     // Fast biome lookups.
     @Redirect(
             method = "mobsAt",
+            require = 0,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/level/ServerLevel;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome;"
@@ -66,6 +67,7 @@ public abstract class NaturalSpawnerMixin {
 
     @Redirect(
             method = "getRandomSpawnMobAt",
+            require = 0,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/level/ServerLevel;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome;"
@@ -78,6 +80,7 @@ public abstract class NaturalSpawnerMixin {
     // Fast block / fluid state lookups.
     @Redirect(
             method = "isInNetherFortressBounds",
+            require = 0,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/level/ServerLevel;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"
@@ -89,6 +92,7 @@ public abstract class NaturalSpawnerMixin {
 
     @Redirect(
             method = "isSpawnPositionOk",
+            require = 0,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/level/LevelReader;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"
@@ -100,6 +104,7 @@ public abstract class NaturalSpawnerMixin {
 
     @Redirect(
             method = "isSpawnPositionOk",
+            require = 0,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/level/LevelReader;getFluidState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/material/FluidState;"

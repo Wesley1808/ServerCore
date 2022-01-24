@@ -3,50 +3,29 @@ package me.wesley1808.servercore.mixin.features.misc;
 import me.wesley1808.servercore.config.tables.FeatureConfig;
 import net.minecraft.world.level.portal.PortalForcer;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 /**
- * From: PaperMC (Add-configurable-portal-search-radius.patch.patch)
+ * From: PaperMC (Add-configurable-portal-search-radius.patch)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 
 @Mixin(PortalForcer.class)
 public class PortalForcerMixin {
 
-    @ModifyArg(
-            method = "findPortalAround",
-            index = 2,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/ai/village/poi/PoiManager;ensureLoadedAndValid(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;I)V"
-            )
-    )
-    private int modifyDistance$1(int i) {
-        return this.calculateDistance(i == 16);
+    @ModifyConstant(method = "findPortalAround", constant = @Constant(intValue = 128), require = 0)
+    private int modifyDistance$1(int constant) {
+        return this.calculateDistance(false);
     }
 
-    @ModifyArg(
-            method = "findPortalAround",
-            index = 2,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/ai/village/poi/PoiManager;getInSquare(Ljava/util/function/Predicate;Lnet/minecraft/core/BlockPos;ILnet/minecraft/world/entity/ai/village/poi/PoiManager$Occupancy;)Ljava/util/stream/Stream;"
-            )
-    )
-    private int modifyDistance$2(int i) {
-        return this.calculateDistance(i == 16);
+    @ModifyConstant(method = "findPortalAround", constant = @Constant(intValue = 16), require = 0)
+    private int modifyDistance$2(int constant) {
+        return this.calculateDistance(true);
     }
 
-    @ModifyArg(
-            method = "createPortal",
-            index = 1,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/core/BlockPos;spiralAround(Lnet/minecraft/core/BlockPos;ILnet/minecraft/core/Direction;Lnet/minecraft/core/Direction;)Ljava/lang/Iterable;"
-            )
-    )
-    private int modifyDistance$3(int i) {
+    @ModifyConstant(method = "createPortal", constant = @Constant(intValue = 16), require = 0)
+    private int modifyDistance$3(int constant) {
         return FeatureConfig.PORTAL_CREATE_RADIUS.get();
     }
 

@@ -18,6 +18,7 @@ public abstract class ServerPlayerGameModeMixin {
     // Don't load chunks for block break packets.
     @Redirect(
             method = "handleBlockBreakAction",
+            require = 0,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/level/ServerLevel;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"
