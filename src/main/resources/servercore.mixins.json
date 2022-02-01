@@ -40,6 +40,7 @@
     "optimizations.chunk_loading.BlockGetterMixin",
     "optimizations.chunk_loading.GroundPathNavigationMixin",
     "optimizations.chunk_loading.MapItemMixin",
+    "optimizations.chunk_loading.ServerGamePacketListenerImplMixin",
     "optimizations.chunk_loading.ServerPlayerGameModeMixin",
     "optimizations.chunk_loading.SleepInBedMixin",
     "optimizations.misc.AcquirePoiMixin",
