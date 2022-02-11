@@ -20,12 +20,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class BeeEnterHiveGoalMixin {
     @Shadow
     @Final
-    Bee this$0;
+    Bee field_20367;
 
     @Inject(method = "start", at = @At("HEAD"), cancellable = true)
     private void onlyStartIfLoaded(CallbackInfo ci) {
-        final BlockPos hivePos = this.this$0.getHivePos();
-        if (hivePos != null && !ChunkManager.isChunkLoaded(this.this$0.level, hivePos)) {
+        final BlockPos hivePos = this.field_20367.getHivePos();
+        if (hivePos != null && !ChunkManager.isChunkLoaded(this.field_20367.level, hivePos)) {
             ci.cancel();
         }
     }
@@ -39,8 +39,8 @@ public abstract class BeeEnterHiveGoalMixin {
             )
     )
     private void onlyUseIfLoaded(CallbackInfoReturnable<Boolean> cir) {
-        final BlockPos hivePos = this.this$0.getHivePos();
-        if (hivePos != null && !ChunkManager.isChunkLoaded(this.this$0.level, hivePos)) {
+        final BlockPos hivePos = this.field_20367.getHivePos();
+        if (hivePos != null && !ChunkManager.isChunkLoaded(this.field_20367.level, hivePos)) {
             cir.setReturnValue(false);
         }
     }
