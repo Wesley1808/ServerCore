@@ -10,9 +10,8 @@ import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,6 +25,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class VillagerMixin extends AbstractVillager {
     @Unique
     private boolean lobotomized = false;
+
+    @Unique
+    private int notLobotomizedCount = 0;
 
     private VillagerMixin(EntityType<? extends AbstractVillager> entityType, Level level) {
         super(entityType, level);
@@ -45,8 +47,16 @@ public abstract class VillagerMixin extends AbstractVillager {
     }
 
     private boolean isLobotomized() {
-        if (this.tickCount % 300 == 0) {
-            this.lobotomized = this.getVehicle() != null || !canTravel(this.blockPosition());
+        // Check half as often if not lobotomized for the last 3+ consecutive checks
+        if (this.tickCount % (this.notLobotomizedCount > 3 ? 600 : 300) == 0) {
+            // Offset Y for short blocks like dirt_path/farmland
+            this.lobotomized = this.getNavigation().isStuck() || !this.canTravel(new BlockPos(this.getX(), this.getY() + 0.0625D, this.getZ()));
+
+            if (this.lobotomized) {
+                this.notLobotomizedCount = 0;
+            } else {
+                this.notLobotomizedCount++;
+            }
         }
 
         return this.lobotomized;
@@ -57,13 +67,24 @@ public abstract class VillagerMixin extends AbstractVillager {
     }
 
     private boolean canTravelTo(BlockPos pos) {
-        // Returns true in case it's surrounded by any bed. This way we don't break iron farms.
-        final BlockState state = ChunkManager.getStateIfLoaded(this.level, pos);
-        if (state.getBlock() instanceof BedBlock) {
+        LevelChunk chunk = ChunkManager.getChunkIfLoaded(this.level, pos);
+        if (chunk == null) {
+            return false;
+        }
+
+        Block bottom = chunk.getBlockState(pos).getBlock();
+        if (bottom instanceof BedBlock) {
+            // Allows iron farms to function normally
             return true;
         }
 
-        Path path = this.getNavigation().createPath(pos, 0);
-        return path != null && path.canReach();
+        if (bottom instanceof FenceBlock || bottom instanceof FenceGateBlock || bottom instanceof WallBlock) {
+            // Bottom block is too tall to get over
+            return false;
+        }
+
+        Block top = chunk.getBlockState(pos.above()).getBlock();
+        // Only if both blocks have no collision
+        return !bottom.hasCollision && !top.hasCollision;
     }
 }
