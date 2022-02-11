@@ -2,6 +2,7 @@ package me.wesley1808.servercore.mixin.optimizations.mob_spawning;
 
 import me.wesley1808.servercore.utils.ChunkManager;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.LevelReader;
@@ -22,11 +23,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class NaturalSpawnerMixin {
     @Unique
     private static ChunkAccess cachedChunk;
-
-    @Shadow
-    static Biome getRoughBiome(BlockPos blockPos, ChunkAccess chunkAccess) {
-        throw new UnsupportedOperationException();
-    }
 
     @Shadow
     private static boolean isRightDistanceToPlayerAndSpawnPoint(ServerLevel serverLevel, ChunkAccess chunkAccess, BlockPos.MutableBlockPos mutableBlockPos, double d) {
@@ -58,11 +54,11 @@ public abstract class NaturalSpawnerMixin {
             require = 0,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ServerLevel;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome;"
+                    target = "Lnet/minecraft/server/level/ServerLevel;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;"
             )
     )
-    private static Biome fastBiomeLookup$1(ServerLevel level, BlockPos pos) {
-        return cachedChunk != null ? getRoughBiome(pos, cachedChunk) : level.getBiome(pos);
+    private static Holder<Biome> fastBiomeLookup$1(ServerLevel level, BlockPos pos) {
+        return cachedChunk != null ? ChunkManager.getRoughBiome(cachedChunk, pos) : level.getBiome(pos);
     }
 
     @Redirect(
@@ -70,11 +66,11 @@ public abstract class NaturalSpawnerMixin {
             require = 0,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ServerLevel;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome;"
+                    target = "Lnet/minecraft/server/level/ServerLevel;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;"
             )
     )
-    private static Biome fastBiomeLookup$2(ServerLevel level, BlockPos pos) {
-        return cachedChunk != null ? getRoughBiome(pos, cachedChunk) : level.getBiome(pos);
+    private static Holder<Biome> fastBiomeLookup$2(ServerLevel level, BlockPos pos) {
+        return cachedChunk != null ? ChunkManager.getRoughBiome(cachedChunk, pos) : level.getBiome(pos);
     }
 
     // Fast block / fluid state lookups.
