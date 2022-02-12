@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.mixin.optimizations.mob_spawning;
+package me.wesley1808.servercore.mixin.features.misc;
 
 import me.wesley1808.servercore.utils.TickManager;
 import net.minecraft.world.entity.MobCategory;

@@ -50,7 +50,7 @@ public abstract class VillagerMixin extends AbstractVillager {
         // Check half as often if not lobotomized for the last 3+ consecutive checks
         if (this.tickCount % (this.notLobotomizedCount > 3 ? 600 : 300) == 0) {
             // Offset Y for short blocks like dirt_path/farmland
-            this.lobotomized = this.getNavigation().isStuck() || !this.canTravel(new BlockPos(this.getX(), this.getY() + 0.0625D, this.getZ()));
+            this.lobotomized = this.isPassenger() || !this.canTravel(new BlockPos(this.getX(), this.getY() + 0.0625D, this.getZ()));
 
             if (this.lobotomized) {
                 this.notLobotomizedCount = 0;
@@ -63,10 +63,16 @@ public abstract class VillagerMixin extends AbstractVillager {
     }
 
     private boolean canTravel(BlockPos pos) {
-        return canTravelTo(pos.east()) || canTravelTo(pos.west()) || canTravelTo(pos.north()) || canTravelTo(pos.south());
+        LevelChunk chunk = ChunkManager.getChunkIfLoaded(this.level, pos);
+        if (chunk == null) {
+            return false;
+        }
+
+        boolean canJump = this.noCollisionAbove(chunk, pos);
+        return canTravelTo(pos.east(), canJump) || canTravelTo(pos.west(), canJump) || canTravelTo(pos.north(), canJump) || canTravelTo(pos.south(), canJump);
     }
 
-    private boolean canTravelTo(BlockPos pos) {
+    private boolean canTravelTo(BlockPos pos, boolean canJump) {
         LevelChunk chunk = ChunkManager.getChunkIfLoaded(this.level, pos);
         if (chunk == null) {
             return false;
@@ -78,13 +84,21 @@ public abstract class VillagerMixin extends AbstractVillager {
             return true;
         }
 
-        if (bottom instanceof FenceBlock || bottom instanceof FenceGateBlock || bottom instanceof WallBlock) {
-            // Bottom block is too tall to get over
+        Block top = chunk.getBlockState(pos.above()).getBlock();
+        if (top.hasCollision) {
             return false;
         }
 
-        Block top = chunk.getBlockState(pos.above()).getBlock();
-        // Only if both blocks have no collision
-        return !bottom.hasCollision && !top.hasCollision;
+        // We can only jump if:
+        // - There is no collision above the villager
+        // - There is no collision above the top block
+        // - The bottom block is short enough to jump over
+        boolean isTallBlock = bottom instanceof FenceBlock || bottom instanceof FenceGateBlock || bottom instanceof WallBlock;
+        return !bottom.hasCollision || (canJump && !isTallBlock && noCollisionAbove(chunk, pos));
+    }
+
+    // Checks for collisions 2 blocks above the given position
+    private boolean noCollisionAbove(LevelChunk chunk, BlockPos pos) {
+        return !chunk.getBlockState(pos.above(2)).getBlock().hasCollision;
     }
 }

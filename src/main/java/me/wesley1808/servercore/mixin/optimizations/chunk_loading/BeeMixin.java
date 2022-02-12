@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * From: PaperMC (Do-not-allow-bees-to-load-chunks-for-beehives.patch)
- * License: MIT (licenses/MIT.md)
  */
 
 @Mixin(Bee.class)
