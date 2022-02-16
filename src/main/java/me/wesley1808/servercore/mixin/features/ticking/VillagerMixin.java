@@ -41,7 +41,7 @@ public abstract class VillagerMixin extends AbstractVillager {
             )
     )
     private void shouldTickBrain(Brain<Villager> brain, ServerLevel level, LivingEntity livingEntity) {
-        if (!FeatureConfig.LOBOTOMIZE_VILLAGERS.get() || !isLobotomized() || this.tickCount % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0) {
+        if (!FeatureConfig.LOBOTOMIZE_VILLAGERS.get() || !this.isLobotomized() || this.tickCount % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0) {
             brain.tick(level, (Villager) (Object) this);
         }
     }
@@ -89,12 +89,12 @@ public abstract class VillagerMixin extends AbstractVillager {
             return false;
         }
 
-        // We can only jump if:
+        // The villager can only jump if:
         // - There is no collision above the villager
         // - There is no collision above the top block
-        // - The bottom block is short enough to jump over
+        // - The bottom block is short enough to jump on
         boolean isTallBlock = bottom instanceof FenceBlock || bottom instanceof FenceGateBlock || bottom instanceof WallBlock;
-        return !bottom.hasCollision || (canJump && !isTallBlock && noCollisionAbove(chunk, pos));
+        return !bottom.hasCollision || (canJump && !isTallBlock && this.noCollisionAbove(chunk, pos));
     }
 
     // Checks for collisions 2 blocks above the given position
