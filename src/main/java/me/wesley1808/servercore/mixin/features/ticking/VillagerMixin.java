@@ -69,7 +69,7 @@ public abstract class VillagerMixin extends AbstractVillager {
         }
 
         boolean canJump = this.noCollisionAbove(chunk, pos);
-        return canTravelTo(pos.east(), canJump) || canTravelTo(pos.west(), canJump) || canTravelTo(pos.north(), canJump) || canTravelTo(pos.south(), canJump);
+        return this.canTravelTo(pos.east(), canJump) || this.canTravelTo(pos.west(), canJump) || this.canTravelTo(pos.north(), canJump) || this.canTravelTo(pos.south(), canJump);
     }
 
     private boolean canTravelTo(BlockPos pos, boolean canJump) {
