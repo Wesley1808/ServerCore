@@ -46,11 +46,9 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     public void setupActivationStates(EntityType<?> type, Level level, CallbackInfo ci) {
-        if (!this.level.isClientSide) {
-            final Entity entity = (Entity) (Object) this;
-            this.activationType = ActivationRange.initializeEntityActivationType(entity);
-            this.excluded = level != null && ActivationRange.isExcluded(entity);
-        }
+        final Entity entity = (Entity) (Object) this;
+        this.activationType = ActivationRange.initializeEntityActivationType(entity);
+        this.excluded = level == null || ActivationRange.isExcluded(entity);
     }
 
     @Inject(
