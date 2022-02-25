@@ -26,17 +26,42 @@ public abstract class BeeMixin extends Animal {
         super(entityType, level);
     }
 
-    @Inject(method = "isHiveNearFire", at = @At("HEAD"), cancellable = true)
-    private void onlyCheckIfLoaded(CallbackInfoReturnable<Boolean> cir) {
-        if (this.hivePos != null && !ChunkManager.isChunkLoaded(this.level, this.hivePos)) {
-            cir.setReturnValue(false);
-        }
-    }
-
     @Inject(method = "doesHiveHaveSpace", at = @At("HEAD"), cancellable = true)
     private void onlyCheckIfLoaded(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (!ChunkManager.isChunkLoaded(this.level, pos)) {
             cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(
+            method = "isHiveNearFire",
+            cancellable = true,
+            at = @At(
+                    value = "INVOKE",
+                    shift = At.Shift.BEFORE,
+                    target = "Lnet/minecraft/world/level/Level;getBlockEntity(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/entity/BlockEntity;"
+            )
+    )
+    private void onlyCheckIfLoaded(CallbackInfoReturnable<Boolean> cir) {
+        // noinspection ConstantConditions
+        if (!ChunkManager.isChunkLoaded(this.level, this.hivePos)) {
+            cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(
+            method = "isHiveValid",
+            cancellable = true,
+            at = @At(
+                    value = "INVOKE",
+                    shift = At.Shift.BEFORE,
+                    target = "Lnet/minecraft/world/level/Level;getBlockEntity(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/entity/BlockEntity;"
+            )
+    )
+    private void onlyValidateIfLoaded(CallbackInfoReturnable<Boolean> cir) {
+        // noinspection ConstantConditions
+        if (!ChunkManager.isChunkLoaded(this.level, this.hivePos)) {
+            cir.setReturnValue(true);
         }
     }
 }

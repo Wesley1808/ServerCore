@@ -1,7 +1,6 @@
 package me.wesley1808.servercore.mixin.optimizations.chunk_loading;
 
 import me.wesley1808.servercore.utils.ChunkManager;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.animal.Bee;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,10 +20,18 @@ public abstract class BeeEnterHiveGoalMixin {
     @Final
     Bee field_20367;
 
-    @Inject(method = "start", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "start",
+            cancellable = true,
+            at = @At(
+                    value = "INVOKE",
+                    shift = At.Shift.BEFORE,
+                    target = "Lnet/minecraft/world/level/Level;getBlockEntity(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/entity/BlockEntity;"
+            )
+    )
     private void onlyStartIfLoaded(CallbackInfo ci) {
-        final BlockPos hivePos = this.field_20367.getHivePos();
-        if (hivePos != null && !ChunkManager.isChunkLoaded(this.field_20367.level, hivePos)) {
+        // noinspection ConstantConditions
+        if (!ChunkManager.isChunkLoaded(this.field_20367.level, this.field_20367.getHivePos())) {
             ci.cancel();
         }
     }
@@ -34,12 +41,13 @@ public abstract class BeeEnterHiveGoalMixin {
             cancellable = true,
             at = @At(
                     value = "INVOKE",
+                    shift = At.Shift.BEFORE,
                     target = "Lnet/minecraft/world/level/Level;getBlockEntity(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/entity/BlockEntity;"
             )
     )
     private void onlyUseIfLoaded(CallbackInfoReturnable<Boolean> cir) {
-        final BlockPos hivePos = this.field_20367.getHivePos();
-        if (hivePos != null && !ChunkManager.isChunkLoaded(this.field_20367.level, hivePos)) {
+        // noinspection ConstantConditions
+        if (!ChunkManager.isChunkLoaded(this.field_20367.level, this.field_20367.getHivePos())) {
             cir.setReturnValue(false);
         }
     }

@@ -50,26 +50,14 @@ public abstract class NaturalSpawnerMixin {
 
     // Fast biome lookups.
     @Redirect(
-            method = "mobsAt",
+            method = {"mobsAt", "getRandomSpawnMobAt"},
             require = 0,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/level/ServerLevel;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;"
             )
     )
-    private static Holder<Biome> fastBiomeLookup$1(ServerLevel level, BlockPos pos) {
-        return cachedChunk != null ? ChunkManager.getRoughBiome(cachedChunk, pos) : level.getBiome(pos);
-    }
-
-    @Redirect(
-            method = "getRandomSpawnMobAt",
-            require = 0,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ServerLevel;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;"
-            )
-    )
-    private static Holder<Biome> fastBiomeLookup$2(ServerLevel level, BlockPos pos) {
+    private static Holder<Biome> fastBiomeLookup(ServerLevel level, BlockPos pos) {
         return cachedChunk != null ? ChunkManager.getRoughBiome(cachedChunk, pos) : level.getBiome(pos);
     }
 
