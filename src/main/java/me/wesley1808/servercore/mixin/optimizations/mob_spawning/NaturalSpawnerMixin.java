@@ -2,7 +2,6 @@ package me.wesley1808.servercore.mixin.optimizations.mob_spawning;
 
 import me.wesley1808.servercore.utils.ChunkManager;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.LevelReader;
@@ -26,6 +25,11 @@ public abstract class NaturalSpawnerMixin {
 
     @Shadow
     private static boolean isRightDistanceToPlayerAndSpawnPoint(ServerLevel serverLevel, ChunkAccess chunkAccess, BlockPos.MutableBlockPos mutableBlockPos, double d) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Shadow
+    static Biome getRoughBiome(BlockPos blockPos, ChunkAccess chunkAccess) {
         throw new UnsupportedOperationException();
     }
 
@@ -54,11 +58,11 @@ public abstract class NaturalSpawnerMixin {
             require = 0,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ServerLevel;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;"
+                    target = "Lnet/minecraft/server/level/ServerLevel;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome;"
             )
     )
-    private static Holder<Biome> fastBiomeLookup(ServerLevel level, BlockPos pos) {
-        return cachedChunk != null ? ChunkManager.getRoughBiome(cachedChunk, pos) : level.getBiome(pos);
+    private static Biome fastBiomeLookup(ServerLevel level, BlockPos pos) {
+        return cachedChunk != null ? getRoughBiome(pos, cachedChunk) : level.getBiome(pos);
     }
 
     // Fast block / fluid state lookups.

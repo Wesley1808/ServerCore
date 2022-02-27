@@ -1,7 +1,6 @@
 package me.wesley1808.servercore;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.logging.LogUtils;
 import me.wesley1808.servercore.commands.MobcapsCommand;
 import me.wesley1808.servercore.commands.ServerCoreCommand;
 import me.wesley1808.servercore.config.Config;
@@ -13,9 +12,10 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class ServerCore implements ModInitializer {
-    private static final Logger LOGGER = LogUtils.getLogger();
+    private static final Logger LOGGER = LoggerFactory.getLogger("ServerCore");
     private static MinecraftServer server;
 
     public static Logger getLogger() {
