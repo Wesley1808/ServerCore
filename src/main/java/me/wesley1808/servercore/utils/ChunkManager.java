@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerChunkCache;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -51,7 +50,7 @@ public final class ChunkManager {
     @NotNull
     public static BlockState getStateIfLoaded(Level level, BlockPos pos) {
         final LevelChunk chunk = getChunkIfLoaded(level, pos);
-        return chunk != null ? chunk.getBlockState(pos) : Blocks.VOID_AIR.defaultBlockState();
+        return chunk != null ? chunk.getBlockState(pos) : Blocks.AIR.defaultBlockState();
     }
 
     public static Holder<Biome> getRoughBiome(ChunkAccess chunk, BlockPos pos) {
