@@ -31,11 +31,15 @@ public final class ChunkManager {
     @Nullable
     public static LevelChunk getChunkIfLoaded(Level level, int chunkX, int chunkZ) {
         if (!level.isClientSide) {
-            final ChunkHolder holder = getChunkHolder(level, chunkX, chunkZ);
-            return holder != null ? holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left().orElse(null) : null;
+            return getChunkIfLoaded(getChunkHolder(level, chunkX, chunkZ));
         } else {
             return level.getChunk(chunkX, chunkZ);
         }
+    }
+
+    @Nullable
+    public static LevelChunk getChunkIfLoaded(ChunkHolder holder) {
+        return holder != null ? holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left().orElse(null) : null;
     }
 
     @Nullable

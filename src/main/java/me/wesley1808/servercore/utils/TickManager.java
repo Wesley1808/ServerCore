@@ -202,6 +202,7 @@ public final class TickManager {
 
     public static MutableComponent createStatusReport() {
         return new TextComponent(CommandConfig.STATUS_CONTENT.get()
+                .replace("%VERSION%", ServerCore.getVersion())
                 .replace("%MOBCAPS%", getModifierAsString())
                 .replace("%VIEW_DISTANCE%", String.valueOf(viewDistance))
                 .replace("%SIMULATION_DISTANCE%", String.valueOf(simulationDistance))

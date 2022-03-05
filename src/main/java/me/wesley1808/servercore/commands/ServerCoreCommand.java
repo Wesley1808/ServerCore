@@ -157,7 +157,7 @@ public final class ServerCoreCommand {
     }
 
     // Outdated message formatting method.
-    // Will be used until theres a better solution that consistently works in snapshots.
+    // Will be used until there's a better solution that consistently works in snapshots.
     private static String formatString(String string) {
         var builder = new StringBuilder(string.replace("#N", "\n"));
         for (int index = builder.indexOf("&"); index >= 0; index = builder.indexOf("&", index + 1)) {
