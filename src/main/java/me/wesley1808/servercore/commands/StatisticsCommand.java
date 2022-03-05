@@ -15,9 +15,7 @@ import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.block.entity.TickingBlockEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +49,6 @@ public final class StatisticsCommand {
                 )
         );
 
-
         dispatcher.register(statistics);
     }
 
@@ -78,7 +75,7 @@ public final class StatisticsCommand {
         );
 
         var entitiesByCount = sortByValue(getEntitiesByCount(getAllEntities()));
-        boolean success = displayPage(entitiesByCount, page, (entry, index) -> appendEntry(component, EntityType.getKey(entry.getKey()), index, entry.getValue()));
+        boolean success = displayPage(entitiesByCount, page, (entry, index) -> appendEntry(component, entry, index));
 
         if (success) {
             source.sendSuccess(component, false);
@@ -98,7 +95,7 @@ public final class StatisticsCommand {
         );
 
         var blockEntitiesByCount = sortByValue(getBlockEntitiesByCount(getAllBlockEntities()));
-        boolean success = displayPage(blockEntitiesByCount, page, (entry, index) -> appendEntry(component, BlockEntityType.getKey(entry.getKey()), index, entry.getValue()));
+        boolean success = displayPage(blockEntitiesByCount, page, (entry, index) -> appendEntry(component, entry, index));
 
         if (success) {
             source.sendSuccess(component, false);
@@ -111,14 +108,12 @@ public final class StatisticsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static void appendEntry(TextComponent component, ResourceLocation location, int index, int count) {
-        if (location != null) {
-            component.append(new TextComponent("\n" + CommandConfig.STATS_PAGE_CONTENT.get()
-                    .replace("%NAME%", location.toString())
-                    .replace("%INDEX%", String.valueOf(index))
-                    .replace("%COUNT%", String.valueOf(count)))
-            );
-        }
+    private static void appendEntry(TextComponent component, Map.Entry<String, Integer> entry, int index) {
+        component.append(new TextComponent("\n" + CommandConfig.STATS_PAGE_CONTENT.get()
+                .replace("%NAME%", entry.getKey())
+                .replace("%INDEX%", String.valueOf(index))
+                .replace("%COUNT%", String.valueOf(entry.getValue())))
+        );
     }
 
     private static <T> boolean displayPage(List<T> list, int page, BiConsumer<T, Integer> consumer) {
@@ -147,15 +142,10 @@ public final class StatisticsCommand {
         return builder.build();
     }
 
-    private static ImmutableList<BlockEntity> getAllBlockEntities() {
-        ImmutableList.Builder<BlockEntity> builder = ImmutableList.builder();
+    private static ImmutableList<TickingBlockEntity> getAllBlockEntities() {
+        ImmutableList.Builder<TickingBlockEntity> builder = ImmutableList.builder();
         for (ServerLevel level : ServerCore.getServer().getAllLevels()) {
-            for (ChunkHolder holder : level.getChunkSource().chunkMap.getChunks()) {
-                LevelChunk chunk = ChunkManager.getChunkIfLoaded(holder);
-                if (chunk != null) {
-                    builder.addAll(chunk.getBlockEntities().values());
-                }
-            }
+            builder.addAll(level.blockEntityTickers);
         }
 
         return builder.build();
@@ -174,21 +164,24 @@ public final class StatisticsCommand {
         return count;
     }
 
-    private static Map<EntityType<?>, Integer> getEntitiesByCount(Iterable<Entity> entities) {
-        Map<EntityType<?>, Integer> map = new HashMap<>();
+    private static Map<String, Integer> getEntitiesByCount(Iterable<Entity> entities) {
+        Map<String, Integer> map = new HashMap<>();
         for (Entity entity : entities) {
-            EntityType<?> type = entity.getType();
-            map.put(type, map.getOrDefault(type, 0) + 1);
+            ResourceLocation location = EntityType.getKey(entity.getType());
+            if (location != null) {
+                String key = location.toString();
+                map.put(key, map.getOrDefault(key, 0) + 1);
+            }
         }
 
         return map;
     }
 
-    private static Map<BlockEntityType<?>, Integer> getBlockEntitiesByCount(Iterable<BlockEntity> blockEntities) {
-        Map<BlockEntityType<?>, Integer> map = new HashMap<>();
-        for (BlockEntity blockEntity : blockEntities) {
-            BlockEntityType<?> type = blockEntity.getType();
-            map.put(type, map.getOrDefault(type, 0) + 1);
+    private static Map<String, Integer> getBlockEntitiesByCount(Iterable<TickingBlockEntity> blockEntities) {
+        Map<String, Integer> map = new HashMap<>();
+        for (TickingBlockEntity blockEntity : blockEntities) {
+            String key = blockEntity.getType();
+            map.put(key, map.getOrDefault(key, 0) + 1);
         }
 
         return map;
