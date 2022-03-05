@@ -57,10 +57,11 @@ in 1x1 spaces.
 
 - /servercore settings | config - Allows for modifying settings & configs ingame.
 
-- /servercore status - Gives information about the current settings.
+- /servercore status - Gives information about the current dynamic settings.
 
 - /mobcaps - Displays current mobcaps for each spawn group.
 
+- /statistics entities | block-entities - Displays performance related statistics.
 ___
 ### Config
 Most features are disabled by default and can be found in the config.\
@@ -133,17 +134,23 @@ The config file can be found at `/config/servercore.toml`
 
 # Allows you to disable specific commands and modify the way some of them are formatted.
 [commands]
-    # Enables / disables the /servercore status command.
-    command_status = true
-    # The content for the /servercore status command.
-    status_content = "§3>----( §bServerCore §3)----<\n§7>§8> §3Chunk-Tick Distance: §a%CHUNK_TICK_DISTANCE%\n§7>§8> §3Simulation Distance: §a%SIMULATION_DISTANCE%\n§7>§8> §3View Distance: §a%VIEW_DISTANCE%\n§7>§8> §3Mobcap Multiplier: §a%MOBCAPS%"
-    # Enables / disables the /mobcaps command.
-    # Forcefully set to false by: VMP
-    command_mobcaps = true
-    # The title for the /mobcaps command.
-    mobcap_title = "§3Per Player Mobcaps (§a%MODIFIER%§3)"
-    # The content for the /mobcaps command. This is displayed for every existing spawngroup.
-    mobcap_content = "§8- §3%NAME%: §a%CURRENT% §8/ §a%CAPACITY%"
+	# Enables / disables the /servercore status command.
+	command_status = true
+	# The content for the /servercore status command.
+	status_content = "§3>----( §bServerCore §3)----<\n§8» §3Version: §a%VERSION%\n§8» §3Chunk-Tick Distance: §a%CHUNK_TICK_DISTANCE%\n§8» §3Simulation Distance: §a%SIMULATION_DISTANCE%\n§8» §3View Distance: §a%VIEW_DISTANCE%\n§8» §3Mobcap Multiplier: §a%MOBCAPS%"
+	# Enables / disables the /mobcaps command.
+	# Forcefully set to false by: VMP
+	command_mobcaps = true
+	# The title for the /mobcaps command.
+	mobcap_title = "§3Per Player Mobcaps (§a%MODIFIER%§3)"
+	# The content for the /mobcaps command. This is displayed for every existing spawngroup.
+	mobcap_content = "§8- §3%NAME%: §a%CURRENT% §8/ §a%CAPACITY%"
+	# The content for the /statistics command.
+	stats_overview_content = "§3>----(§b Statistics - Overview §3)----<\n§8» §3TPS: §a%TPS% §8- §3MSPT: §a%MSPT%\n§8» §3Total chunk count: §a%CHUNK_COUNT%\n§8» §3Total entity count: §a%ENTITY_COUNT%\n§8» §3Total block entity count: §a%BLOCK_ENTITY_COUNT%"
+	# The title for the /statistics (block) entities command.
+	stats_page_title = "§3>----(§b %TITLE% - Page %PAGE% §3)----<"
+	# The content for the /statistics (block) entities command. This is displayed for every entity type.
+	stats_page_content = "§a%INDEX%. §3%NAME% §a%COUNT%"
 
 # Stops entities from ticking if they are too far away.
 [activation_range]

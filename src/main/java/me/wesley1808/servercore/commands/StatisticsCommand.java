@@ -134,9 +134,7 @@ public final class StatisticsCommand {
     private static ImmutableList<Entity> getAllEntities() {
         ImmutableList.Builder<Entity> builder = ImmutableList.builder();
         for (ServerLevel level : ServerCore.getServer().getAllLevels()) {
-            for (Entity entity : level.getAllEntities()) {
-                builder.add(entity);
-            }
+            builder.addAll(level.getAllEntities());
         }
 
         return builder.build();
