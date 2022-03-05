@@ -11,8 +11,8 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
-version = String.format("%s-%s", project.mod_version, project.minecraft_version) as String
 group = project.maven_group as String
+version = this.getModVersion()
 
 loom {
     accessWidenerPath.set(file("src/main/resources/servercore.accesswidener"))
@@ -38,10 +38,10 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.mod_version
+    inputs.property "version", version
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.mod_version
+        expand "version": version
     }
 }
 
@@ -51,9 +51,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
     withSourcesJar()
 }
 
@@ -77,4 +74,13 @@ publishing {
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
     }
+}
+
+private String getModVersion() {
+    String version = String.format("%s-%s", project.mod_version, project.minecraft_version)
+    if (!project.version_type.isEmpty()) {
+        version = String.format("%s-%s", version, project.version_type)
+    }
+
+    return version
 }
