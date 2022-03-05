@@ -55,6 +55,7 @@
     "optimizations.player_login.PlayerAdvancementsMixin",
     "optimizations.player_login.PlayerListMixin",
     "optimizations.player_login.ServerPlayerMixin",
+    "optimizations.ticking.EntityCallbacksMixin",
     "optimizations.ticking.LevelChunkMixin",
     "optimizations.ticking.ServerChunkCacheMixin",
     "optimizations.ticking.ServerLevelMixin"
