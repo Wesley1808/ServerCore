@@ -3,6 +3,7 @@ package me.wesley1808.servercore;
 import com.mojang.brigadier.CommandDispatcher;
 import me.wesley1808.servercore.commands.MobcapsCommand;
 import me.wesley1808.servercore.commands.ServerCoreCommand;
+import me.wesley1808.servercore.commands.StatisticsCommand;
 import me.wesley1808.servercore.config.Config;
 import me.wesley1808.servercore.utils.TickManager;
 import net.fabricmc.api.ModInitializer;
@@ -28,7 +29,7 @@ public final class ServerCore implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        LOGGER.info("[ServerCore] initializing...");
+        LOGGER.info("[ServerCore] Initializing...");
         Config.load();
         this.registerEvents();
     }
@@ -55,6 +56,7 @@ public final class ServerCore implements ModInitializer {
 
     private void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
         ServerCoreCommand.register(dispatcher);
+        StatisticsCommand.register(dispatcher);
         MobcapsCommand.register(dispatcher);
     }
 }
