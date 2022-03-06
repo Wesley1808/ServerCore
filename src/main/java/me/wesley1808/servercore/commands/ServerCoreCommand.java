@@ -11,6 +11,7 @@ import me.wesley1808.servercore.config.ConfigEntry;
 import me.wesley1808.servercore.config.tables.CommandConfig;
 import me.wesley1808.servercore.utils.PermissionManager;
 import me.wesley1808.servercore.utils.TickManager;
+import me.wesley1808.servercore.utils.Util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.TextComponent;
@@ -102,7 +103,7 @@ public final class ServerCoreCommand {
     }
 
     private static int modify(String key, ConfigEntry<Object> entry, Object value, CommandSourceStack source) {
-        if (value instanceof String val) value = formatString(val);
+        if (value instanceof String val) value = Util.formatString(val.replace("#N", "\n"));
 
         sendMessage(source, key, String.valueOf(value), entry.set(value));
         return Command.SINGLE_SUCCESS;
@@ -134,7 +135,8 @@ public final class ServerCoreCommand {
     }
 
     private static int getStatus(CommandSourceStack source) {
-        source.sendSuccess(TickManager.createStatusReport(), false);
+        String message = TickManager.createStatusReport();
+        source.sendSuccess(new TextComponent(Util.isPlayer(source) ? message : Util.removeFormatting(message)), false);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -156,24 +158,8 @@ public final class ServerCoreCommand {
         };
     }
 
-    // Outdated message formatting method.
-    // Will be used until there's a better solution that consistently works in snapshots.
-    private static String formatString(String string) {
-        var builder = new StringBuilder(string.replace("#N", "\n"));
-        for (int index = builder.indexOf("&"); index >= 0; index = builder.indexOf("&", index + 1)) {
-            if (matches(builder.charAt(index + 1))) {
-                builder.setCharAt(index, '§');
-            }
-        }
-        return builder.toString();
-    }
-
     private static String asString(Object obj) {
         return obj instanceof String string ? string.replace("§", "&").replace("\n", "#N") : String.valueOf(obj);
-    }
-
-    private static boolean matches(Character c) {
-        return "b0931825467adcfelmnor".contains(c.toString());
     }
 
     private record Type(

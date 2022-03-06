@@ -8,8 +8,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -200,13 +198,12 @@ public final class TickManager {
         return checkForEntities(entity.getType(), entity.getLevel(), entity.blockPosition(), limit, range);
     }
 
-    public static MutableComponent createStatusReport() {
-        return new TextComponent(CommandConfig.STATUS_CONTENT.get()
+    public static String createStatusReport() {
+        return CommandConfig.STATUS_CONTENT.get()
                 .replace("%VERSION%", ServerCore.getVersion())
                 .replace("%MOBCAPS%", getModifierAsString())
                 .replace("%VIEW_DISTANCE%", String.valueOf(viewDistance))
                 .replace("%SIMULATION_DISTANCE%", String.valueOf(simulationDistance))
-                .replace("%CHUNK_TICK_DISTANCE%", String.valueOf(chunkTickDistance))
-        );
+                .replace("%CHUNK_TICK_DISTANCE%", String.valueOf(chunkTickDistance));
     }
 }
