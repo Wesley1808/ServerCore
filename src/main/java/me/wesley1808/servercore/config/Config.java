@@ -15,7 +15,7 @@ public final class Config {
     public static final Table[] TABLES = {
             new Table(FeatureConfig.class, "features", "Lets you enable / disable certain features and modify them."),
             new Table(DynamicConfig.class, "dynamic", "Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT."),
-            new Table(EntityConfig.class, "entity_limits", "Stops animals / villagers from breeding if there are too many of the same type nearby."),
+            new Table(EntityLimitConfig.class, "entity_limits", "Stops animals / villagers from breeding if there are too many of the same type nearby."),
             new Table(CommandConfig.class, "commands", "Allows you to disable specific commands and modify the way some of them are formatted."),
             new Table(ActivationRangeConfig.class, "activation_range", "Stops entities from ticking if they are too far away.")
     };

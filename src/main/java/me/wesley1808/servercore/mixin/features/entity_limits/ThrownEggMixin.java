@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.entity_limits;
 
-import me.wesley1808.servercore.config.tables.EntityConfig;
+import me.wesley1808.servercore.config.tables.EntityLimitConfig;
 import me.wesley1808.servercore.utils.TickManager;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
@@ -33,7 +33,7 @@ public abstract class ThrownEggMixin extends ThrowableItemProjectile {
             )
     )
     public int shouldSpawn(Random random, int bound) {
-        if (TickManager.checkForEntities(EntityType.CHICKEN, this.level, this.blockPosition(), EntityConfig.ANIMAL_COUNT.get(), EntityConfig.ANIMAL_RANGE.get())) {
+        if (TickManager.checkForEntities(EntityType.CHICKEN, this.level, this.blockPosition(), EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {
             return 1;
         } else {
             return random.nextInt(8);

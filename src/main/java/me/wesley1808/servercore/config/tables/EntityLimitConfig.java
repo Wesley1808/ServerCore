@@ -2,7 +2,7 @@ package me.wesley1808.servercore.config.tables;
 
 import me.wesley1808.servercore.config.ConfigEntry;
 
-public final class EntityConfig {
+public final class EntityLimitConfig {
     public static final ConfigEntry<Boolean> ENABLED = new ConfigEntry<>(false, "(Default = false) Enables this feature.");
     public static final ConfigEntry<Integer> VILLAGER_COUNT = new ConfigEntry<>(24, "(Default = [Villager: 24, Animals: 32]) Maximum count before stopping entities of the same type from breeding.");
     public static final ConfigEntry<Integer> ANIMAL_COUNT = new ConfigEntry<>(32);

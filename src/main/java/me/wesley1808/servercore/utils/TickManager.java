@@ -3,7 +3,7 @@ package me.wesley1808.servercore.utils;
 import me.wesley1808.servercore.ServerCore;
 import me.wesley1808.servercore.config.tables.CommandConfig;
 import me.wesley1808.servercore.config.tables.DynamicConfig;
-import me.wesley1808.servercore.config.tables.EntityConfig;
+import me.wesley1808.servercore.config.tables.EntityLimitConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
@@ -187,7 +187,7 @@ public final class TickManager {
      */
 
     public static boolean checkForEntities(EntityType<?> type, Level level, BlockPos pos, int limit, int range) {
-        if (EntityConfig.ENABLED.get()) {
+        if (EntityLimitConfig.ENABLED.get()) {
             return limit <= level.getEntities(type, new AABB(pos.mutable().offset(range, range, range), pos.mutable().offset(-range, -range, -range)), EntitySelector.NO_SPECTATORS).size();
         } else {
             return false;

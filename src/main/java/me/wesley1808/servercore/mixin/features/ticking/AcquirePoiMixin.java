@@ -1,5 +1,6 @@
-package me.wesley1808.servercore.mixin.optimizations.misc;
+package me.wesley1808.servercore.mixin.features.ticking;
 
+import me.wesley1808.servercore.config.tables.FeatureConfig;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.behavior.AcquirePoi;
@@ -30,6 +31,6 @@ public abstract class AcquirePoiMixin {
             )
     )
     private void skipIfStuck(ServerLevel level, PathfinderMob entity, long gameTime, CallbackInfo ci) {
-        if (entity.getNavigation().isStuck()) this.nextScheduledStart += 200L;
+        if (entity.getNavigation().isStuck() && FeatureConfig.LOBOTOMIZE_VILLAGERS.get()) this.nextScheduledStart += 200L;
     }
 }

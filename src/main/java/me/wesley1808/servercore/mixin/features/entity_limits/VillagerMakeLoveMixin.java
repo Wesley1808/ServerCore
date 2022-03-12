@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.entity_limits;
 
-import me.wesley1808.servercore.config.tables.EntityConfig;
+import me.wesley1808.servercore.config.tables.EntityLimitConfig;
 import me.wesley1808.servercore.utils.TickManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.behavior.VillagerMakeLove;
@@ -26,7 +26,7 @@ public abstract class VillagerMakeLoveMixin {
             )
     )
     public double cancelBreeding(Villager villager, Entity entity) {
-        if (TickManager.checkForEntities(villager, EntityConfig.VILLAGER_COUNT.get(), EntityConfig.VILLAGER_RANGE.get())) {
+        if (TickManager.checkForEntities(villager, EntityLimitConfig.VILLAGER_COUNT.get(), EntityLimitConfig.VILLAGER_RANGE.get())) {
             ((Villager) entity).setAge(6000);
             villager.setAge(6000);
             return 10;
