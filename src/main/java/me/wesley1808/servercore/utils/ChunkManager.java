@@ -75,9 +75,9 @@ public final class ChunkManager {
         final int minZ = Mth.floor(box.minZ) >> 4;
         final int maxZ = Mth.ceil(box.maxZ) >> 4;
 
-        for (int x = minX; x <= maxX; x++) {
-            for (int z = minZ; z <= maxZ; z++) {
-                if (!ChunkManager.isChunkLoaded(level, x, z)) {
+        for (int chunkX = minX; chunkX <= maxX; chunkX++) {
+            for (int chunkZ = minZ; chunkZ <= maxZ; chunkZ++) {
+                if (!ChunkManager.isChunkLoaded(level, chunkX, chunkZ)) {
                     return true;
                 }
             }

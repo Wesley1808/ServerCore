@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -51,8 +51,8 @@ public abstract class ServerGamePacketListenerImplMixin {
                     ordinal = 0
             )
     )
-    private void handleMoveVehicle(ServerboundMoveVehiclePacket packet, CallbackInfo ci, Entity entity, ServerLevel serverLevel, double d, double e, double f, double g, double h, double i, float j, float k, double l, double m, double n) {
-        if (FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get() && !ChunkManager.isChunkLoaded(serverLevel, (int) Math.floor(packet.getX()) >> 4, (int) Math.floor(packet.getZ()) >> 4)) {
+    private void handleMoveVehicle(ServerboundMoveVehiclePacket packet, CallbackInfo ci, Entity entity, ServerLevel serverLevel, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, float yRot, float xRot, double l, double m, double n) {
+        if (this.shouldPreventMovement(serverLevel, entity, fromX, fromZ, toX, toY, toZ)) {
             this.connection.send(new ClientboundMoveVehiclePacket(entity));
             ci.cancel();
         }
@@ -69,9 +69,15 @@ public abstract class ServerGamePacketListenerImplMixin {
             )
     )
     private void handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double toX, double toY, double toZ, float yRot, float xRot, double fromX, double fromY, double fromZ, double l) {
-        if (FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get() && (fromX != toX || fromZ != toZ) && ChunkManager.isTouchingUnloadedChunk(serverLevel, new AABB(toX - 4, toY, toZ - 4, toX + 4, toY, toZ + 4))) {
+        if (this.shouldPreventMovement(serverLevel, this.player, fromX, fromZ, toX, toY, toZ)) {
             this.teleport(fromX, fromY, fromZ, yRot, xRot, Collections.emptySet(), true);
             ci.cancel();
         }
+    }
+
+    private boolean shouldPreventMovement(ServerLevel level, Entity entity, double fromX, double fromZ, double toX, double toY, double toZ) {
+        return FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get()
+                && (fromX != toX || fromZ != toZ)
+                && ChunkManager.isTouchingUnloadedChunk(level, entity.getBoundingBox().expandTowards(new Vec3(toX, toY, toZ).subtract(entity.position())));
     }
 }
