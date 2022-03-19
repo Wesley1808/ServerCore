@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
 import java.util.Random;
 
 @Mixin(FrogspawnBlock.class)
@@ -25,7 +26,7 @@ public class FrogSpawnBlockMixin {
             )
     )
     private void cancelFrogSpawn(ServerLevel level, BlockPos pos, Random random, CallbackInfo ci) {
-        if (TickManager.checkForEntities(new EntityType[]{EntityType.TADPOLE, EntityType.FROG}, level, pos, EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {
+        if (TickManager.checkForEntities(List.of(EntityType.TADPOLE, EntityType.FROG), level, pos, EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {
             ci.cancel();
         }
     }

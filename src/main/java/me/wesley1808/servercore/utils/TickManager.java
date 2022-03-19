@@ -22,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public final class TickManager {
     private static final BigDecimal VALUE = new BigDecimal("0.1");
@@ -188,24 +189,24 @@ public final class TickManager {
 
     public static boolean checkForEntities(EntityType<?> type, Level level, BlockPos pos, int limit, int range) {
         if (EntityLimitConfig.ENABLED.get()) {
-            return limit <= level.getEntities(type, new AABB(pos.mutable().offset(range, range, range), pos.mutable().offset(-range, -range, -range)), EntitySelector.NO_SPECTATORS).size();
-        } else {
-            return false;
+            return limit <= level.getEntities(type, getBox(pos, range), EntitySelector.NO_SPECTATORS).size();
         }
+        return false;
     }
 
-    public static boolean checkForEntities(EntityType<?>[] types, Level level, BlockPos pos, int limit, int range) {
-        for (EntityType<?> type : types) {
-            if (checkForEntities(type, level, pos, limit, range)) {
-                return true;
-            }
+    public static boolean checkForEntities(List<EntityType<?>> types, Level level, BlockPos pos, int limit, int range) {
+        if (EntityLimitConfig.ENABLED.get()) {
+            return limit <= level.getEntities((Entity) null, getBox(pos, range), e -> types.contains(e.getType())).size();
         }
-
         return false;
     }
 
     public static boolean checkForEntities(Entity entity, int limit, int range) {
         return checkForEntities(entity.getType(), entity.getLevel(), entity.blockPosition(), limit, range);
+    }
+
+    private static AABB getBox(BlockPos pos, int range) {
+        return new AABB(pos.mutable().offset(range, range, range), pos.mutable().offset(-range, -range, -range));
     }
 
     public static String createStatusReport() {
