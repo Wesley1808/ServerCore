@@ -194,6 +194,16 @@ public final class TickManager {
         }
     }
 
+    public static boolean checkForEntities(EntityType<?>[] types, Level level, BlockPos pos, int limit, int range) {
+        for (EntityType<?> type : types) {
+            if (checkForEntities(type, level, pos, limit, range)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static boolean checkForEntities(Entity entity, int limit, int range) {
         return checkForEntities(entity.getType(), entity.getLevel(), entity.blockPosition(), limit, range);
     }

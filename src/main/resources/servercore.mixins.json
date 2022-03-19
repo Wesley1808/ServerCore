@@ -24,6 +24,7 @@
     "features.activation_range.inactive_ticks.SpectralArrowMixin",
     "features.activation_range.inactive_ticks.VillagerMixin",
     "features.entity_limits.AnimalMixin",
+    "features.entity_limits.FrogSpawnBlockMixin",
     "features.entity_limits.ThrownEggMixin",
     "features.entity_limits.VillagerMakeLoveMixin",
     "features.merging.ExperienceOrbMixin",
