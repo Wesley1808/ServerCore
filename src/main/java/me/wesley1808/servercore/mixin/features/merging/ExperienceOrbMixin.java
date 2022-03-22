@@ -13,11 +13,10 @@ public abstract class ExperienceOrbMixin {
     public int age;
 
     @ModifyConstant(method = "canMerge(Lnet/minecraft/world/entity/ExperienceOrb;II)Z", constant = @Constant(intValue = 40), require = 0)
-    private static int fastXpMerge(int constant) {
+    private static int modifyMergeChance(int constant) {
         return FeatureConfig.FAST_XP_MERGING.get() ? 8 : constant;
     }
 
-    // Configurable experience orb merging radius.
     @ModifyConstant(method = "scanForEntities", constant = @Constant(doubleValue = 0.5), require = 0)
     private double modifyMergeRadius(double constant) {
         return FeatureConfig.XP_MERGE_RADIUS.get();

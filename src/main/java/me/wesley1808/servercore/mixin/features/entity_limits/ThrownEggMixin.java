@@ -18,12 +18,6 @@ public abstract class ThrownEggMixin extends ThrowableItemProjectile {
         super(entityType, level);
     }
 
-    /**
-     * Cancels chicken spawning from eggs if there are too many chickens in the surrounding area.
-     *
-     * @return Integer: chance for chickens to spawn from an egg.
-     */
-
     @Redirect(
             method = "onHit",
             at = @At(
@@ -32,7 +26,7 @@ public abstract class ThrownEggMixin extends ThrowableItemProjectile {
                     ordinal = 0
             )
     )
-    public int shouldSpawn(Random random, int bound) {
+    public int cancelEggSpawns(Random random, int bound) {
         if (TickManager.checkForEntities(EntityType.CHICKEN, this.level, this.blockPosition(), EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {
             return 1;
         } else {

@@ -25,7 +25,7 @@ public class FrogSpawnBlockMixin {
                     target = "Lnet/minecraft/server/level/ServerLevel;playSound(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/core/BlockPos;Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V"
             )
     )
-    private void cancelFrogSpawn(ServerLevel level, BlockPos pos, Random random, CallbackInfo ci) {
+    private void cancelFrogHatching(ServerLevel level, BlockPos pos, Random random, CallbackInfo ci) {
         if (TickManager.checkForEntities(List.of(EntityType.TADPOLE, EntityType.FROG), level, pos, EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {
             ci.cancel();
         }

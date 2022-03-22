@@ -27,7 +27,7 @@ public abstract class AnimalMixin extends AgeableMob {
      */
 
     @Inject(method = "spawnChildFromBreeding", at = @At("HEAD"), cancellable = true)
-    public void cancelBreeding(ServerLevel level, Animal other, CallbackInfo ci) {
+    public void cancelAnimalBreeding(ServerLevel level, Animal other, CallbackInfo ci) {
         if (TickManager.checkForEntities(this, EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {
             this.setAge(6000);
             other.setAge(6000);

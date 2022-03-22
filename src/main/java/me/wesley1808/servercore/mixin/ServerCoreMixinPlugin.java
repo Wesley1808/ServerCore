@@ -23,10 +23,14 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
 
     @Override // Disables specific mixins for mod compatibility.
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-
         // Very Many Players
         if (mixinClassName.startsWith(MIXIN_CLASS_PATH + "optimizations.mob_spawning.distance_map")) {
             return !this.isModLoaded("vmp");
+        }
+
+        // Lithium
+        if (mixinClassName.equals(MIXIN_CLASS_PATH + "features.misc.PortalForcerMixin")) {
+            return !this.isModLoaded("lithium");
         }
 
         // The Aether Reborn & Better Nether Map

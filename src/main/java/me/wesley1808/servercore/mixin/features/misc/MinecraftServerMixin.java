@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.world.level.ChunkPos;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
@@ -14,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(value = MinecraftServer.class, priority = 900)
 public abstract class MinecraftServerMixin {
+    @Unique
+    private static final boolean KSYXIS_LOADED = FabricLoader.getInstance().isModLoaded("ksyxis");
 
     @Redirect(
             method = "prepareLevels",
@@ -30,7 +33,7 @@ public abstract class MinecraftServerMixin {
 
     @ModifyConstant(method = "prepareLevels", constant = @Constant(intValue = 441))
     private int disableSpawnChunks(int constant) {
-        return FeatureConfig.DISABLE_SPAWN_CHUNKS.get() && !FabricLoader.getInstance().isModLoaded("ksyxis") ? 0 : constant;
+        return FeatureConfig.DISABLE_SPAWN_CHUNKS.get() && !KSYXIS_LOADED ? 0 : constant;
     }
 
     @ModifyConstant(method = "tickServer", constant = @Constant(intValue = 6000), require = 0)
