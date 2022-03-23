@@ -1,11 +1,14 @@
 package me.wesley1808.servercore.utils;
 
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 public final class Util {
@@ -60,5 +63,13 @@ public final class Util {
 
     public static boolean isPlayer(CommandSourceStack source) {
         return source.getEntity() instanceof Player;
+    }
+
+    public static CompletableFuture<Suggestions> suggestAll(SuggestionsBuilder builder, List<String> suggestions) {
+        for (String suggestion : suggestions) {
+            builder.suggest(suggestion);
+        }
+
+        return builder.buildFuture();
     }
 }

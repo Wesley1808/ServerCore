@@ -153,6 +153,14 @@ public final class TickManager {
         return averageTickTime;
     }
 
+    public static int getViewDistance() {
+        return viewDistance;
+    }
+
+    public static int getSimulationDistance() {
+        return simulationDistance;
+    }
+
     /**
      * Decides whether a chunk should tick.
      *

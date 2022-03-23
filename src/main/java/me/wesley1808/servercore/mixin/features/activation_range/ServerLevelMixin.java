@@ -87,26 +87,14 @@ public abstract class ServerLevelMixin {
     // ServerCore - Only increase tick count when ticked.
     // Increasing the tick count whilst inactive can break entity behavior.
     @Redirect(
-            method = "tickNonPassenger",
+            method = {"tickNonPassenger", "tickPassenger"},
             at = @At(
                     value = "FIELD",
                     target = "net/minecraft/world/entity/Entity.tickCount:I",
                     opcode = Opcodes.PUTFIELD
             )
     )
-    public void cancelTickCount$1(Entity entity, int value) {
+    public void redirectTickCount(Entity entity, int value) {
         ((ActivationEntity) entity).incFullTickCount();
-    }
-
-    @Redirect(
-            method = "tickPassenger",
-            at = @At(
-                    value = "FIELD",
-                    target = "net/minecraft/world/entity/Entity.tickCount:I",
-                    opcode = Opcodes.PUTFIELD
-            )
-    )
-    public void cancelTickCount$2(Entity passenger, int value) {
-        ((ActivationEntity) passenger).incFullTickCount();
     }
 }
