@@ -2,6 +2,7 @@ package me.wesley1808.servercore.utils;
 
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import me.wesley1808.servercore.config.tables.CommandConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.world.entity.player.Player;
@@ -54,6 +55,19 @@ public final class Util {
         }
 
         return true;
+    }
+
+    public static String createHeader(String title, int targetLength, boolean format) {
+        if (!format) {
+            return title;
+        }
+
+        ChatFormatting color = ChatFormatting.getByName(CommandConfig.LINE_COLOR.get());
+        if (color == null) {
+            throw new IllegalStateException("Config entry for line color is invalid!");
+        }
+
+        return createHeader(title, targetLength, color);
     }
 
     public static String createHeader(String title, int targetLength, ChatFormatting color) {

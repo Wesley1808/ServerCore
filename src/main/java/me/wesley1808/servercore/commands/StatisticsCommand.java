@@ -6,11 +6,11 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.wesley1808.servercore.ServerCore;
+import me.wesley1808.servercore.config.tables.CommandConfig;
 import me.wesley1808.servercore.utils.ChunkManager;
 import me.wesley1808.servercore.utils.PermissionManager;
 import me.wesley1808.servercore.utils.TickManager;
 import me.wesley1808.servercore.utils.Util;
-import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -106,12 +106,13 @@ public final class StatisticsCommand {
         final double mspt = TickManager.getAverageTickTime();
         final double tps = mspt != 0 ? Math.min((1000 / mspt), 20) : 20;
         final boolean format = Util.isPlayer(source);
-        final String title = "§bStatistics";
 
-        String message = String.format("%s\n§8» §3TPS: §a%.2f §8- §3MSPT: §a%.2f\n§8» §3Total chunk count: §a%d\n§8» §3Total entity count: §a%d\n§8» §3Total block entity count: §a%d",
-                format ? Util.createHeader(title, 48, ChatFormatting.DARK_AQUA) : title,
-                tps, mspt, getLoadedChunkCount(), getAllEntities().size(), getAllBlockEntities().size()
-        );
+        String message = Util.createHeader(CommandConfig.STATS_TITLE.get(), 48, format) + "\n" + CommandConfig.STATS_CONTENT.get()
+                .replace("%TPS%", String.format("%.2f", tps))
+                .replace("%MSPT%", String.format("%.2f", mspt))
+                .replace("%CHUNK_COUNT%", String.valueOf(getLoadedChunkCount()))
+                .replace("%ENTITY_COUNT%", String.valueOf(getAllEntities().size()))
+                .replace("%BLOCK_ENTITY_COUNT%", String.valueOf(getAllBlockEntities().size()));
 
         source.sendSuccess(new TextComponent(format ? message : Util.removeFormatting(message)), false);
         return Command.SINGLE_SUCCESS;
@@ -160,24 +161,33 @@ public final class StatisticsCommand {
     }
 
     private static String createHeader(boolean format, boolean isBlockEntity, ServerPlayer player) {
-        String title = isBlockEntity ? "Block Entities" : "Entities";
-        String string;
+        String type = isBlockEntity ? "Block Entities" : "Entities";
+        String title;
         if (player != null) {
-            string = String.format("§b%s §3for §b%s", title, player.getScoreboardName());
+            title = CommandConfig.STATS_PAGE_TITLE_PLAYER.get()
+                    .replace("%TYPE%", type)
+                    .replace("%PLAYER%", player.getScoreboardName());
         } else {
-            string = String.format("§b%s", title);
+            title = CommandConfig.STATS_PAGE_TITLE.get().replace("%TYPE%", type);
         }
 
-        return format ? Util.createHeader(string, 48, ChatFormatting.DARK_AQUA) : string;
+        return Util.createHeader(title, 48, format);
     }
 
     private static String createFooter(boolean format, int page, int pageCount, boolean isBlockEntity) {
-        String string = String.format("§3Page §b%d §3of §b%d", page, pageCount);
-        return format ? Util.createHeader(string, isBlockEntity ? 54 : 52, ChatFormatting.DARK_AQUA) : string;
+        String title = CommandConfig.STATS_PAGE_FOOTER.get()
+                .replace("%PAGE%", String.valueOf(page))
+                .replace("%PAGE_COUNT%", String.valueOf(pageCount));
+
+        return Util.createHeader(title, isBlockEntity ? 54 : 52, format);
     }
 
     private static void appendEntry(StringBuilder builder, Map.Entry<String, Integer> entry, int index) {
-        builder.append(String.format("\n§a%d. §3%s §a%d", index, entry.getKey(), entry.getValue()));
+        builder.append("\n").append(CommandConfig.STATS_PAGE_CONTENT.get()
+                .replace("%NAME%", entry.getKey())
+                .replace("%INDEX%", String.valueOf(index))
+                .replace("%COUNT%", String.valueOf(entry.getValue()))
+        );
     }
 
     private static ImmutableList<Entity> getAllEntities() {

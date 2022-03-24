@@ -1,6 +1,7 @@
 package me.wesley1808.servercore.utils;
 
 import me.wesley1808.servercore.ServerCore;
+import me.wesley1808.servercore.config.tables.CommandConfig;
 import me.wesley1808.servercore.config.tables.DynamicConfig;
 import me.wesley1808.servercore.config.tables.EntityLimitConfig;
 import net.fabricmc.api.EnvType;
@@ -217,8 +218,11 @@ public final class TickManager {
     }
 
     public static String createStatusReport(String title) {
-        return String.format("%s\n§8» §3Version: §a%s\n§8» §3Chunk-Tick Distance: §a%d\n§8» §3Simulation Distance: §a%d\n§8» §3View Distance: §a%d\n§8» §3Mobcap Multiplier: §a%s",
-                title, ServerCore.getVersion(), chunkTickDistance, simulationDistance, viewDistance, getModifierAsString()
-        );
+        return title + "\n" + CommandConfig.STATUS_CONTENT.get()
+                .replace("%VERSION%", ServerCore.getVersion())
+                .replace("%MOBCAPS%", getModifierAsString())
+                .replace("%VIEW_DISTANCE%", String.valueOf(viewDistance))
+                .replace("%SIMULATION_DISTANCE%", String.valueOf(simulationDistance))
+                .replace("%CHUNK_TICK_DISTANCE%", String.valueOf(chunkTickDistance));
     }
 }
