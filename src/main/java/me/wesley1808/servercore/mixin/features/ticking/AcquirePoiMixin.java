@@ -31,6 +31,8 @@ public abstract class AcquirePoiMixin {
             )
     )
     private void skipIfStuck(ServerLevel level, PathfinderMob entity, long gameTime, CallbackInfo ci) {
-        if (entity.getNavigation().isStuck() && FeatureConfig.LOBOTOMIZE_VILLAGERS.get()) this.nextScheduledStart += 200L;
+        if (entity.getNavigation().isStuck() && FeatureConfig.LOBOTOMIZE_VILLAGERS.get()) {
+            this.nextScheduledStart += 200L;
+        }
     }
 }

@@ -135,8 +135,11 @@ public final class ServerCoreCommand {
     }
 
     private static int getStatus(CommandSourceStack source) {
-        String message = TickManager.createStatusReport();
-        source.sendSuccess(new TextComponent(Util.isPlayer(source) ? message : Util.removeFormatting(message)), false);
+        final boolean format = Util.isPlayer(source);
+        final String title = "§bServerCore";
+
+        String message = TickManager.createStatusReport(format ? Util.createHeader(title, 44, ChatFormatting.DARK_AQUA) : title);
+        source.sendSuccess(new TextComponent(format ? message : Util.removeFormatting(message)), false);
         return Command.SINGLE_SUCCESS;
     }
 
