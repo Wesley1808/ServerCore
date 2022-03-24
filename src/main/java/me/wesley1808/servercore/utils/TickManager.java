@@ -114,14 +114,14 @@ public final class TickManager {
     public static void modifyViewDistance(int distance) {
         ServerCore.getServer().getPlayerList().setViewDistance(distance);
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            Minecraft.getInstance().options.renderDistance = distance;
+            Minecraft.getInstance().options.renderDistance().set(distance);
         }
     }
 
     public static void modifySimulationDistance(int distance) {
         ServerCore.getServer().getPlayerList().setSimulationDistance(distance);
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            Minecraft.getInstance().options.simulationDistance = distance;
+            Minecraft.getInstance().options.simulationDistance().set(distance);
         }
     }
 

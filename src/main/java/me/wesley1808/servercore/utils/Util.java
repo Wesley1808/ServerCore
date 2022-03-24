@@ -43,7 +43,7 @@ public final class Util {
     }
 
     public static <T> boolean displayPage(List<T> list, int page, int pageSize, BiConsumer<T, Integer> consumer) {
-        int index = pageSize * (page - 1);
+        int index = getIndex(page, pageSize);
         int toIndex = Math.min(index + pageSize, list.size());
 
         if (toIndex <= index) {
@@ -55,6 +55,14 @@ public final class Util {
         }
 
         return true;
+    }
+
+    public static int getIndex(int page, int pageSize) {
+        return pageSize * (page - 1);
+    }
+
+    public static int getPage(int index, int pageSize) {
+        return (index + pageSize - 1) / pageSize;
     }
 
     public static String createHeader(String title, int targetLength, boolean format) {

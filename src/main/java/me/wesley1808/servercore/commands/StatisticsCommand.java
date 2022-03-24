@@ -149,8 +149,7 @@ public final class StatisticsCommand {
         boolean success = Util.displayPage(Util.sortByValue(map), page, 8, (entry, index) -> appendEntry(builder, entry, index));
 
         if (success) {
-            builder.append("\n").append(createFooter(format, page, map.size() / 8 + 1, isBlockEntity));
-
+            builder.append("\n").append(createFooter(format, page, Util.getPage(map.size(), 8), isBlockEntity));
             String message = builder.toString();
             source.sendSuccess(new TextComponent(format ? message : Util.removeFormatting(message)), false);
         } else if (page == 1) {
