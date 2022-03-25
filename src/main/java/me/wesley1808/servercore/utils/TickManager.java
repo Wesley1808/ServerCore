@@ -141,14 +141,6 @@ public final class TickManager {
         mobcapModifier = modifier;
     }
 
-    public static String getModifierAsString() {
-        return String.format("%.1f", mobcapModifier.doubleValue());
-    }
-
-    public static int getMobcap(int mobcap) {
-        return (int) (mobcap * mobcapModifier.doubleValue());
-    }
-
     public static double getAverageTickTime() {
         return averageTickTime;
     }
@@ -159,6 +151,14 @@ public final class TickManager {
 
     public static int getSimulationDistance() {
         return simulationDistance;
+    }
+
+    public static double getMobcapModifier() {
+        return mobcapModifier.doubleValue();
+    }
+
+    public static String getModifierAsString() {
+        return String.format("%.1f", mobcapModifier.doubleValue());
     }
 
     /**

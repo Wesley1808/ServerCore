@@ -18,6 +18,9 @@ public abstract class MobCategoryMixin {
 
     @Inject(method = "getMaxInstancesPerChunk", at = @At("HEAD"), cancellable = true)
     private void modifyMobcaps(CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(TickManager.getMobcap(this.max));
+        final double modifier = TickManager.getMobcapModifier();
+        if (modifier != 1.0D) {
+            cir.setReturnValue((int) (this.max * modifier));
+        }
     }
 }

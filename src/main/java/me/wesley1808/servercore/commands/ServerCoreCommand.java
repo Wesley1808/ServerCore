@@ -49,7 +49,7 @@ public final class ServerCoreCommand {
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> config() {
-        var config = literal("config").requires(src -> PermissionManager.perm(src, PermissionManager.MODIFY_CONFIG, 2));
+        var config = literal("config").requires(src -> PermissionManager.hasPermission(src, PermissionManager.MODIFY_CONFIG, 2));
 
         for (Config.Table table : Config.TABLES) {
             var child = literal(table.key());
@@ -64,7 +64,7 @@ public final class ServerCoreCommand {
                             .then(argument(VALUE, type.argumentType)
                                     .executes(type.function::apply)
                                     .suggests((ctx, suggestionsBuilder) ->
-                                            suggestionsBuilder.suggest(asString(entry.get())).suggest(asString(entry.getDefault())).buildFuture()
+                                            Util.suggestAll(suggestionsBuilder, asString(entry.get()), asString(entry.getDefault()))
                                     )
                             )
                     );
@@ -82,7 +82,7 @@ public final class ServerCoreCommand {
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> settings() {
-        var settings = literal("settings").requires(src -> PermissionManager.perm(src, PermissionManager.MODIFY_SETTINGS, 2));
+        var settings = literal("settings").requires(src -> PermissionManager.hasPermission(src, PermissionManager.MODIFY_SETTINGS, 2));
         settings.then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> setDistance(ctx.getSource(), getInteger(ctx, VALUE), 1, "Chunk-tick distance"))));
         settings.then(literal("view_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> setDistance(ctx.getSource(), getInteger(ctx, VALUE), 2, "View distance"))));
         settings.then(literal("simulation_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> setDistance(ctx.getSource(), getInteger(ctx, VALUE), 3, "Simulation distance"))));

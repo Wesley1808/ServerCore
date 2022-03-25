@@ -40,7 +40,7 @@ public final class StatisticsCommand {
     };
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        var statistics = literal("statistics").requires(src -> PermissionManager.perm(src, PermissionManager.VIEW_STATS, 2));
+        var statistics = literal("statistics").requires(src -> PermissionManager.hasPermission(src, PermissionManager.VIEW_STATS, 2));
         statistics.executes(ctx -> displayOverview(ctx.getSource()));
 
         for (int i = 0; i < SUB_COMMANDS.length; i++) {

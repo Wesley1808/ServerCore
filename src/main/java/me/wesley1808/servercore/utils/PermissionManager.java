@@ -20,11 +20,11 @@ public final class PermissionManager {
      * @return Boolean: whether the player can use certain commands.
      */
 
-    public static boolean perm(CommandSourceStack src, String perm, int level) {
+    public static boolean hasPermission(CommandSourceStack src, String perm, int level) {
         return LOADED ? Permissions.check(src, perm, level) : src.hasPermission(level);
     }
 
-    public static boolean perm(Player src, String perm) {
+    public static boolean hasPermission(Player src, String perm) {
         return LOADED ? Permissions.check(src, perm, 2) : src.hasPermissions(2);
     }
 }
