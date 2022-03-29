@@ -3,11 +3,10 @@ package me.wesley1808.servercore.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import me.wesley1808.servercore.config.tables.CommandConfig;
+import me.wesley1808.servercore.utils.Formatter;
 import me.wesley1808.servercore.utils.TickManager;
-import me.wesley1808.servercore.utils.Util;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.LocalMobCapCalculator;
@@ -24,9 +23,10 @@ public final class MobcapsCommand {
     }
 
     private static int mobcaps(ServerPlayer player) {
-        StringBuilder builder = new StringBuilder(Util.createHeader(
-                CommandConfig.MOBCAP_TITLE.get().replace("%MODIFIER%", TickManager.getModifierAsString()), 56, true)
-        );
+        StringBuilder builder = new StringBuilder(Formatter.line(
+                CommandConfig.MOBCAP_TITLE.get().replace("%MODIFIER%", TickManager.getModifierAsString()),
+                50, true
+        ));
 
         NaturalSpawner.SpawnState state = player.getLevel().getChunkSource().getLastSpawnState();
         if (state != null) {
@@ -40,7 +40,7 @@ public final class MobcapsCommand {
             }
         }
 
-        player.displayClientMessage(new TextComponent(builder.toString()), false);
+        player.displayClientMessage(Formatter.parse(builder.toString()), false);
         return Command.SINGLE_SUCCESS;
     }
 }

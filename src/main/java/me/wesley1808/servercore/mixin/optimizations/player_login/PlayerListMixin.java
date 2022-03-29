@@ -51,7 +51,7 @@ public abstract class PlayerListMixin {
                     ordinal = 0
             )
     )
-    private void moveToSpawn(ServerPlayer serverPlayer, boolean bl, CallbackInfoReturnable<ServerPlayer> cir, BlockPos blockPos, float f, boolean bl2, ServerLevel serverLevel, Optional optional, ServerLevel serverLevel2, ServerPlayer serverPlayer2) {
-        if (optional.isEmpty()) serverPlayer2.fudgeSpawnLocation(serverLevel2);
+    private void moveToSpawn(ServerPlayer oldPlayer, boolean bl, CallbackInfoReturnable<ServerPlayer> cir, BlockPos blockPos, float f, boolean bl2, ServerLevel serverLevel, Optional optional, ServerLevel serverLevel2, ServerPlayer newPlayer) {
+        if (optional.isEmpty()) newPlayer.fudgeSpawnLocation(serverLevel2);
     }
 }

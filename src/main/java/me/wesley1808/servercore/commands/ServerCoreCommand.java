@@ -9,11 +9,13 @@ import me.wesley1808.servercore.ServerCore;
 import me.wesley1808.servercore.config.Config;
 import me.wesley1808.servercore.config.ConfigEntry;
 import me.wesley1808.servercore.config.tables.CommandConfig;
+import me.wesley1808.servercore.utils.Formatter;
 import me.wesley1808.servercore.utils.PermissionManager;
 import me.wesley1808.servercore.utils.TickManager;
 import me.wesley1808.servercore.utils.Util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 
 import java.math.BigDecimal;
@@ -91,19 +93,19 @@ public final class ServerCoreCommand {
     }
 
     private static int sendInfo(CommandSourceStack source, String key, ConfigEntry<Object> entry) {
-        String message = String.format("§b%s\n§3Current value: §a%s\n§3Default value: §a%s\n§3Type: §a%s",
+        String message = String.format("<aqua>%s\n<dark_aqua>Current value: <green>%s\n<dark_aqua>Default value: <green>%s\n<dark_aqua>Type: <green>%s",
                 key,
                 asString(entry.get()),
                 asString(entry.getDefault()),
                 entry.getType().getSimpleName()
         );
 
-        source.sendSuccess(new TextComponent(message), false);
+        source.sendSuccess(Formatter.parse(message), false);
         return Command.SINGLE_SUCCESS;
     }
 
     private static int modify(String key, ConfigEntry<Object> entry, Object value, CommandSourceStack source) {
-        if (value instanceof String val) value = Util.formatString(val.replace("#N", "\n"));
+        if (value instanceof String val) value = val.replace("#N", "\n");
 
         sendMessage(source, key, String.valueOf(value), entry.set(value));
         return Command.SINGLE_SUCCESS;
@@ -122,7 +124,8 @@ public final class ServerCoreCommand {
 
     private static int setMobcaps(CommandSourceStack source, double value) {
         TickManager.setModifier(BigDecimal.valueOf(value));
-        source.sendSuccess(new TextComponent(String.format("§aMobcap multiplier §3has been set to §a%.1f", value)), false);
+
+        source.sendSuccess(Formatter.parse(String.format("<green>Mobcap multiplier <dark_aqua>has been set to <green>%.1f", value)), false);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -135,15 +138,14 @@ public final class ServerCoreCommand {
     }
 
     private static int getStatus(CommandSourceStack source) {
-        final boolean format = Util.isPlayer(source);
-        String message = TickManager.createStatusReport(Util.createHeader(CommandConfig.STATUS_TITLE.get(), 44, format));
-        source.sendSuccess(new TextComponent(format ? message : Util.removeFormatting(message)), false);
+        Component component = Formatter.parse(TickManager.createStatusReport(Formatter.line(CommandConfig.STATUS_TITLE.get(), 40, Util.isPlayer(source))));
+        source.sendSuccess(component, false);
         return Command.SINGLE_SUCCESS;
     }
 
     private static void sendMessage(CommandSourceStack source, String key, String value, boolean success) {
         if (success) {
-            source.sendSuccess(new TextComponent(String.format("§a%s §3has been set to §a%s", key, value)), false);
+            source.sendSuccess(Formatter.parse(String.format("<green>%s <dark_aqua>has been set to <green>%s", key, value)), false);
         } else {
             source.sendFailure(new TextComponent(String.format("%s cannot be set to %s!", key, value)));
         }
@@ -160,7 +162,7 @@ public final class ServerCoreCommand {
     }
 
     private static String asString(Object obj) {
-        return obj instanceof String string ? string.replace("§", "&").replace("\n", "#N") : String.valueOf(obj);
+        return obj instanceof String string ? string.replace("\n", "#N") : String.valueOf(obj);
     }
 
     private record Type(

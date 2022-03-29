@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.mixin.optimizations.chunk_loading;
+package me.wesley1808.servercore.mixin.optimizations.sync_loads;
 
 import me.wesley1808.servercore.utils.ChunkManager;
 import net.minecraft.core.BlockPos;
