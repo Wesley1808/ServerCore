@@ -39,7 +39,6 @@ public final class ServerCore implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("[ServerCore] Initializing...");
-        Config.load();
 
         ServerCore.version = this.findVersion();
         this.registerEvents();

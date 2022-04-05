@@ -1,5 +1,7 @@
 package me.wesley1808.servercore.mixin;
 
+import me.wesley1808.servercore.config.Config;
+import me.wesley1808.servercore.config.tables.FeatureConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
@@ -9,11 +11,12 @@ import java.util.List;
 import java.util.Set;
 
 public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
-    private static final String MIXIN_CLASS_PATH = "me.wesley1808.servercore.mixin.";
+    private String mixinPackage;
 
     @Override
     public void onLoad(String mixinPackage) {
-
+        this.mixinPackage = mixinPackage + ".";
+        Config.load();
     }
 
     @Override
@@ -24,23 +27,23 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
     @Override // Disables specific mixins for mod compatibility.
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         // Very Many Players
-        if (mixinClassName.startsWith(MIXIN_CLASS_PATH + "optimizations.mob_spawning.distance_map")) {
+        if (mixinClassName.startsWith(this.mixinPackage + "optimizations.mob_spawning.distance_map")) {
             return !this.isModLoaded("vmp");
         }
 
         // Lithium
-        if (mixinClassName.equals(MIXIN_CLASS_PATH + "features.misc.PortalForcerMixin")) {
+        if (mixinClassName.equals(this.mixinPackage + "features.misc.PortalForcerMixin")) {
             return !this.isModLoaded("lithium");
         }
 
-        // The Aether Reborn & Better Nether Map
-        if (mixinClassName.equals(MIXIN_CLASS_PATH + "optimizations.chunk_loading.MapItemMixin")) {
-            return !this.isModLoaded("the_aether", "nethermap");
+        // Better Nether Map
+        if (mixinClassName.equals(this.mixinPackage + "optimizations.sync_loads.MapItemMixin")) {
+            return !this.isModLoaded("nethermap");
         }
 
-        // Essentials Commands
-        if (mixinClassName.equals(MIXIN_CLASS_PATH + "optimizations.chunk_loading.BlockGetterMixin")) {
-            return !this.isModLoaded("essential_commands");
+        // Disable spawn chunk mixins if the setting is set to false - to minimize mod conflicts.
+        if (mixinClassName.startsWith(this.mixinPackage + "features.spawn_chunks")) {
+            return FeatureConfig.DISABLE_SPAWN_CHUNKS.get();
         }
 
         return true;
