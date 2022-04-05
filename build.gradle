@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.11-SNAPSHOT'
+    id 'fabric-loom' version '0.12-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -12,9 +12,9 @@ repositories {
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
+version = "${mod_version}-${minecraft_version}" as String
 archivesBaseName = project.archives_base_name
 group = project.maven_group as String
-version = this.getModVersion()
 
 loom {
     accessWidenerPath.set(file("src/main/resources/servercore.accesswidener"))
@@ -63,29 +63,4 @@ jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
-}
-
-// configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
-    }
-}
-
-private String getModVersion() {
-    String version = String.format("%s-%s", project.mod_version, project.minecraft_version)
-    if (!project.version_type.isEmpty()) {
-        version = String.format("%s-%s", version, project.version_type)
-    }
-
-    return version
 }
