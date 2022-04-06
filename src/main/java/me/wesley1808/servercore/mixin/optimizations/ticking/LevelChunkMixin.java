@@ -1,6 +1,7 @@
 package me.wesley1808.servercore.mixin.optimizations.ticking;
 
 import me.wesley1808.servercore.interfaces.ILevelChunk;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -13,8 +14,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Random;
 
 /**
  * From: Airplane (Optimize-random-calls-in-chunk-ticking.patch)
@@ -29,9 +28,9 @@ public abstract class LevelChunkMixin implements ILevelChunk {
 
     // shouldDoLightning compiles down to 29 bytes, which with the default of 35 byte inlining should guarantee an inline.
     @Override
-    public final int shouldDoLightning(Random random) {
+    public final int shouldDoLightning(RandomSource randomSource) {
         if (this.lightningTick-- <= 0) {
-            this.lightningTick = random.nextInt(100000) << 1;
+            this.lightningTick = randomSource.nextInt(100000) << 1;
             return 0;
         }
         return -1;

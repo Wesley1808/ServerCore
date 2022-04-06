@@ -5,6 +5,7 @@ import me.wesley1808.servercore.interfaces.IServerLevel;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -15,7 +16,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 /**
@@ -36,23 +36,23 @@ public abstract class ServerLevelMixin extends Level implements IServerLevel {
             method = "tickChunk",
             at = @At(
                     value = "INVOKE",
-                    target = "Ljava/util/Random;nextInt(I)I",
+                    target = "Lnet/minecraft/util/RandomSource;nextInt(I)I",
                     ordinal = 0
             )
     )
-    private int replaceLightningCheck(Random random, int i, LevelChunk chunk, int randomTickSpeed) {
-        return ((ILevelChunk) chunk).shouldDoLightning(this.random);
+    private int replaceLightningCheck(RandomSource randomSource, int i, LevelChunk chunk, int i2) {
+        return ((ILevelChunk) chunk).shouldDoLightning(randomSource);
     }
 
     @Redirect(
             method = "tickChunk",
             at = @At(
                     value = "INVOKE",
-                    target = "Ljava/util/Random;nextInt(I)I",
+                    target = "Lnet/minecraft/util/RandomSource;nextInt(I)I",
                     ordinal = 1
             )
     )
-    private int replaceIceAndSnowCheck(Random random, int i) {
+    private int replaceIceAndSnowCheck(RandomSource randomSource, int i) {
         return this.currentIceAndSnowTick++ & 15;
     }
 
