@@ -30,6 +30,7 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.hoglin.Hoglin;
+import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.*;
@@ -59,7 +60,6 @@ public final class ActivationRange {
     /**
      * Puts entities in their corresponding groups / activation types, upon initialization.
      */
-
     public static ActivationType initializeEntityActivationType(Entity entity) {
         if (entity instanceof Raider) {
             return ActivationType.RAIDER;
@@ -90,7 +90,6 @@ public final class ActivationRange {
      *
      * @return Boolean: whether the entity will be excluded from activation range checks.
      */
-
     public static boolean isExcluded(Entity entity) {
         return (((ActivationEntity) entity).getActivationType().activationRange.getAsInt() <= 0)
                 || entity instanceof Player
@@ -115,7 +114,6 @@ public final class ActivationRange {
     /**
      * Activates entities in {@param world} that are close enough to players.
      */
-
     public static void activateEntities(ServerLevel level) {
         int maxRange = Integer.MIN_VALUE;
         for (ActivationType type : ActivationType.values()) {
@@ -174,7 +172,6 @@ public final class ActivationRange {
      * @param entity: The entity to check immunities for
      * @return Integer: the amount of ticks an entity should be immune for activation range checks.
      */
-
     public static int checkEntityImmunities(Entity entity) {
         final int inactiveWakeUpImmunity = checkInactiveWakeup(entity);
         if (inactiveWakeUpImmunity > -1) {
@@ -273,6 +270,10 @@ public final class ActivationRange {
                 return 20;
             }
 
+            if (entity instanceof Warden warden && warden.getEntityAngryAt().isPresent()) {
+                return 20;
+            }
+
             if (entity instanceof Mob mob && ((IGoalSelector) mob.targetSelector).hasTasks()) {
                 return 0;
             }
@@ -286,7 +287,6 @@ public final class ActivationRange {
      * @param entity: The ticking entity
      * @return Boolean: whether the entity should tick.
      */
-
     public static boolean checkIfActive(Entity entity) {
         final ActivationEntity activationEntity = (ActivationEntity) entity;
         if (shouldTick(entity, activationEntity)) return true;
