@@ -58,9 +58,9 @@
     "optimizations.sync_loads.MapItemMixin",
     "optimizations.sync_loads.SleepInBedMixin",
     "optimizations.ticking.EntityCallbacksMixin",
-    "optimizations.ticking.LevelChunkMixin",
-    "optimizations.ticking.ServerChunkCacheMixin",
-    "optimizations.ticking.ServerLevelMixin"
+    "optimizations.ticking.chunk.LevelChunkMixin",
+    "optimizations.ticking.chunk.ServerChunkCacheMixin",
+    "optimizations.ticking.chunk.ServerLevelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

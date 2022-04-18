@@ -31,6 +31,13 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             return !this.isModLoaded("vmp");
         }
 
+        // C2ME - Disabled due to these mixins accessing the world's random at chunk initialization.
+        // Since C2ME can run this asynchronously, it will crash the server because the random is being accessed from a different thread.
+        // This happens because Mojang decided crashing the server is a better solution than ensuring thread safety.
+        if (mixinClassName.startsWith(this.mixinPackage + "optimizations.ticking.chunk")) {
+            return !this.isModLoaded("c2me");
+        }
+
         // Lithium
         if (mixinClassName.equals(this.mixinPackage + "features.misc.PortalForcerMixin")) {
             return !this.isModLoaded("lithium");

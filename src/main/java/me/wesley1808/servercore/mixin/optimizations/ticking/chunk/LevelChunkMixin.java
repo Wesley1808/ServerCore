@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.mixin.optimizations.ticking;
+package me.wesley1808.servercore.mixin.optimizations.ticking.chunk;
 
 import me.wesley1808.servercore.interfaces.ILevelChunk;
 import net.minecraft.util.RandomSource;

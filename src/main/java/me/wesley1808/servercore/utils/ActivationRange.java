@@ -107,6 +107,7 @@ public final class ActivationRange {
 
                 // ServerCore
                 || entity instanceof Ghast
+                || entity instanceof Warden
                 || entity instanceof MinecartHopper;
 
     }
@@ -267,10 +268,6 @@ public final class ActivationRange {
             }
 
             if (entity instanceof Creeper creeper && creeper.isIgnited()) {
-                return 20;
-            }
-
-            if (entity instanceof Warden warden && warden.getEntityAngryAt().isPresent()) {
                 return 20;
             }
 
