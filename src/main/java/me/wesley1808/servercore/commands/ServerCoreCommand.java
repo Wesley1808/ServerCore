@@ -62,7 +62,7 @@ public final class ServerCoreCommand {
                     Type type = getTypeFor(key, entry);
 
                     child.then(literal(key)
-                            .executes(ctx -> sendInfo(ctx.getSource(), key, entry))
+                            .executes(ctx -> sendInfo(ctx.getSource(), String.format("%s.%s", table.key(), key), entry))
                             .then(argument(VALUE, type.argumentType)
                                     .executes(type.function::apply)
                                     .suggests((ctx, suggestionsBuilder) ->
@@ -93,7 +93,7 @@ public final class ServerCoreCommand {
     }
 
     private static int sendInfo(CommandSourceStack source, String key, ConfigEntry<Object> entry) {
-        String message = String.format("<aqua>%s\n<dark_aqua>Current value: <green>%s\n<dark_aqua>Default value: <green>%s\n<dark_aqua>Type: <green>%s",
+        String message = String.format("<dark_aqua>Key: <green>%s\n<dark_aqua>Current value: <green>%s\n<dark_aqua>Default value: <green>%s\n<dark_aqua>Type: <green>%s",
                 key,
                 asString(entry.get()),
                 asString(entry.getDefault()),

@@ -26,26 +26,21 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
 
     @Override // Disables specific mixins for mod compatibility.
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        // Very Many Players
-        if (mixinClassName.startsWith(this.mixinPackage + "optimizations.mob_spawning.distance_map")) {
-            return !this.isModLoaded("vmp");
-        }
-
-        // C2ME - Disabled due to these mixins accessing the world's random at chunk initialization.
+        // C2ME - Disabled (small) chunk ticking optimizations due to these mixins accessing the world's random at chunk initialization.
         // Since C2ME can run this asynchronously, it will crash the server because the random is being accessed from a different thread.
         // This happens because Mojang decided crashing the server is a better solution than ensuring thread safety.
         if (mixinClassName.startsWith(this.mixinPackage + "optimizations.ticking.chunk")) {
             return !this.isModLoaded("c2me");
         }
 
-        // Lithium
+        // Lithium - Disabled configurable portal radius in favor of portal / POI optimizations.
         if (mixinClassName.equals(this.mixinPackage + "features.misc.PortalForcerMixin")) {
             return !this.isModLoaded("lithium");
         }
 
-        // Better Nether Map
-        if (mixinClassName.equals(this.mixinPackage + "optimizations.sync_loads.MapItemMixin")) {
-            return !this.isModLoaded("nethermap");
+        // Very Many Players - Disabled distance maps for mobspawning, as VMP implements its own distance maps.
+        if (mixinClassName.startsWith(this.mixinPackage + "optimizations.mob_spawning.distance_map")) {
+            return !this.isModLoaded("vmp");
         }
 
         // Disable spawn chunk mixins if the setting is set to false - to minimize mod conflicts.

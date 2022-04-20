@@ -8,6 +8,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.FrogspawnBlock;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -16,6 +17,8 @@ import java.util.List;
 
 @Mixin(FrogspawnBlock.class)
 public class FrogSpawnBlockMixin {
+    @Unique
+    private static final List<EntityType<?>> ENTITIES_TO_CHECK = List.of(EntityType.TADPOLE, EntityType.FROG);
 
     @Inject(
             method = "hatchFrogspawn",
@@ -26,7 +29,7 @@ public class FrogSpawnBlockMixin {
             )
     )
     private void cancelFrogHatching(ServerLevel level, BlockPos pos, RandomSource randomSource, CallbackInfo ci) {
-        if (TickManager.checkForEntities(List.of(EntityType.TADPOLE, EntityType.FROG), level, pos, EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {
+        if (TickManager.checkForEntities(ENTITIES_TO_CHECK, level, pos, EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {
             ci.cancel();
         }
     }
