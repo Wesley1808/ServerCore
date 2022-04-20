@@ -35,7 +35,7 @@ dependencies {
     modImplementation(include('me.lucko:fabric-permissions-api:0.1-SNAPSHOT'))
 
     // Placeholder API
-    // modImplementation(include("eu.pb4:placeholder-api:${placeholder_api_version}"))
+    modImplementation(include("eu.pb4:placeholder-api:${placeholder_api_version}"))
 
     // Night Config
     implementation(include("com.electronwill.night-config:core:${night_config_version}"))
