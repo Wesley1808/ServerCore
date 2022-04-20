@@ -1,7 +1,5 @@
 package me.wesley1808.servercore.mixin.optimizations.misc;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -48,24 +46,5 @@ public abstract class MapItemSavedDataMixin {
         if (!stack.isFramed()) {
             this.removeDecoration(id);
         }
-    }
-
-    /**
-     * Replaces getString() in map updates with a faster alternative.
-     *
-     * @param component: The player name as text component
-     * @return String: The ID string of the icon.
-     */
-
-    @Redirect(
-            method = "tickCarriedBy",
-            require = 0,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/network/chat/Component;getString()Ljava/lang/String;"
-            )
-    )
-    private String getString(Component component) {
-        return ((TextComponent) component).getText();
     }
 }

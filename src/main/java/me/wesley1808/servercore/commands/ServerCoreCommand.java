@@ -16,7 +16,6 @@ import me.wesley1808.servercore.utils.Util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 import java.math.BigDecimal;
 import java.util.function.Function;
@@ -133,7 +132,7 @@ public final class ServerCoreCommand {
         if (saved) Config.save();
         else Config.load();
 
-        source.sendSuccess(new TextComponent(saved ? "Config saved!" : "Config reloaded!").withStyle(ChatFormatting.GREEN), false);
+        source.sendSuccess(Component.literal(saved ? "Config saved!" : "Config reloaded!").withStyle(ChatFormatting.GREEN), false);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -147,7 +146,7 @@ public final class ServerCoreCommand {
         if (success) {
             source.sendSuccess(Formatter.parse(String.format("<green>%s <dark_aqua>has been set to <green>%s", key, value)), false);
         } else {
-            source.sendFailure(new TextComponent(String.format("%s cannot be set to %s!", key, value)));
+            source.sendFailure(Component.literal(String.format("%s cannot be set to %s!", key, value)));
         }
     }
 

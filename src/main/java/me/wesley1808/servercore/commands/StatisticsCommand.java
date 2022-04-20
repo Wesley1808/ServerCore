@@ -9,7 +9,6 @@ import me.wesley1808.servercore.config.tables.CommandConfig;
 import me.wesley1808.servercore.utils.*;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
@@ -142,9 +141,9 @@ public final class StatisticsCommand {
             builder.append("\n").append(createFooter(page, Util.getPage(map.size(), 8), isBlockEntity, context));
             source.sendSuccess(Formatter.parse(builder.toString()), false);
         } else if (page == 1) {
-            source.sendFailure(new TextComponent(isBlockEntity ? "No block entities were found!" : "No entities were found!"));
+            source.sendFailure(Component.literal(isBlockEntity ? "No block entities were found!" : "No entities were found!"));
         } else {
-            source.sendFailure(new TextComponent("Page doesn't exist!"));
+            source.sendFailure(Component.literal("Page doesn't exist!"));
         }
     }
 
