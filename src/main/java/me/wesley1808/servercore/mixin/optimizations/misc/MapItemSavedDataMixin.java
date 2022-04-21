@@ -1,5 +1,7 @@
 package me.wesley1808.servercore.mixin.optimizations.misc;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -46,5 +48,17 @@ public abstract class MapItemSavedDataMixin {
         if (!stack.isFramed()) {
             this.removeDecoration(id);
         }
+    }
+
+    @Redirect(
+            method = "tickCarriedBy",
+            require = 0,
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/network/chat/Component;getString()Ljava/lang/String;"
+            )
+    )
+    private String getString(Component component) {
+        return ((LiteralContents) component.getContents()).text();
     }
 }
