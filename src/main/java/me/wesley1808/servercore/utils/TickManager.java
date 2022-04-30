@@ -153,6 +153,10 @@ public final class TickManager {
         return simulationDistance;
     }
 
+    public static int getChunkTickDistance() {
+        return chunkTickDistance;
+    }
+
     public static double getMobcapModifier() {
         return mobcapModifier.doubleValue();
     }

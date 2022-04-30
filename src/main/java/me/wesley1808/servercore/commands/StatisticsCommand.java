@@ -135,7 +135,7 @@ public final class StatisticsCommand {
         CommandSourceStack source = context.getSource();
 
         StringBuilder builder = new StringBuilder(createHeader(isBlockEntity, byPlayer, Util.isPlayer(source), player));
-        boolean success = Util.displayPage(Util.sortByValue(map), page, 8, (entry, index) -> builder.append(createEntry(entry, index, isBlockEntity, byPlayer)));
+        boolean success = Util.iteratePage(Util.sortByValue(map), page, 8, (entry, index) -> builder.append(createEntry(entry, index, isBlockEntity, byPlayer)));
 
         if (success) {
             builder.append("\n").append(createFooter(page, Util.getPage(map.size(), 8), isBlockEntity, context));

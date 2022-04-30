@@ -13,7 +13,7 @@ import java.util.function.BiConsumer;
 
 public final class Util {
 
-    public static <T> boolean displayPage(List<T> list, int page, int pageSize, BiConsumer<T, Integer> consumer) {
+    public static <T> boolean iteratePage(List<T> list, int page, int pageSize, BiConsumer<T, Integer> consumer) {
         int index = getIndex(page, pageSize);
         int toIndex = Math.min(index + pageSize, list.size());
 
