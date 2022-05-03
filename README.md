@@ -141,24 +141,24 @@ The config file can be found at `/config/servercore.toml`
 	# Forcefully set to false by: VMP
 	command_mobcaps = true
 	# The title for the /mobcaps command.
-	mobcap_title = "<dark_aqua>%LINE% <aqua>Mobcaps</aqua> (<aqua>%MODIFIER%</aqua>) %LINE%</dark_aqua>"
+	mobcap_title = "<dark_aqua>${line} <aqua>Mobcaps</aqua> (<aqua>${mobcap_modifier}</aqua>) ${line}</dark_aqua>"
 	# The content for the /mobcaps command. This is displayed for every existing spawngroup.
-	mobcap_content = "<dark_gray>» <dark_aqua>%NAME%:</dark_aqua> <green>%CURRENT%</green> / <green>%CAPACITY%</green></dark_gray>"
+	mobcap_content = "<dark_gray>» <dark_aqua>${name}:</dark_aqua> <green>${current}</green> / <green>${capacity}</green></dark_gray>"
 	# The title for the /servercore status command.
-	status_title = "<dark_aqua>%LINE% <aqua>ServerCore</aqua> %LINE%</dark_aqua>"
+	status_title = "<dark_aqua>${line} <aqua>ServerCore</aqua> ${line}</dark_aqua>"
 	# The content for the /servercore status command.
-	status_content = "<dark_gray>» <dark_aqua>Version:</dark_aqua> <green>%VERSION%</green>\n» <dark_aqua>Chunk-Tick Distance:</dark_aqua> <green>%CHUNK_TICK_DISTANCE%</green>\n» <dark_aqua>Simulation Distance:</dark_aqua> <green>%SIMULATION_DISTANCE%</green>\n» <dark_aqua>View Distance:</dark_aqua> <green>%VIEW_DISTANCE%</green>\n» <dark_aqua>Mobcap Multiplier:</dark_aqua> <green>%MOBCAPS%</green></dark_gray>"
+	status_content = "<dark_gray>» <dark_aqua>Version:</dark_aqua> <green>${version}</green>\n» <dark_aqua>Chunk-Tick Distance:</dark_aqua> <green>${chunk_tick_distance}</green>\n» <dark_aqua>Simulation Distance:</dark_aqua> <green>${simulation_distance}</green>\n» <dark_aqua>View Distance:</dark_aqua> <green>${view_distance}</green>\n» <dark_aqua>Mobcap Multiplier:</dark_aqua> <green>${mobcap_modifier}</green></dark_gray>"
 	# The title for the /statistics command.
-	stats_title = "<dark_aqua>%LINE% <aqua>Statistics</aqua> %LINE%</dark_aqua>"
+	stats_title = "<dark_aqua>${line} <aqua>Statistics</aqua> ${line}</dark_aqua>"
 	# The content for the /statistics command.
-	stats_content = "<dark_gray>» <dark_aqua>TPS:</dark_aqua> <green>%TPS%</green> - <dark_aqua>MSPT:</dark_aqua> <green>%MSPT%</green>\n» <dark_aqua>Total chunk count:</dark_aqua> <green>%CHUNK_COUNT%</green>\n» <dark_aqua>Total entity count:</dark_aqua> <green>%ENTITY_COUNT%</green>\n» <dark_aqua>Total block entity count:</dark_aqua> <green>%BLOCK_ENTITY_COUNT%</green></dark_gray>"
+	stats_content = "<dark_gray>» <dark_aqua>TPS:</dark_aqua> <green>${tps}</green> - <dark_aqua>MSPT:</dark_aqua> <green>${mspt}</green>\n» <dark_aqua>Total chunk count:</dark_aqua> <green>${chunk_count}</green>\n» <dark_aqua>Total entity count:</dark_aqua> <green>${entity_count}</green>\n» <dark_aqua>Total block entity count:</dark_aqua> <green>${block_entity_count}</green></dark_gray>"
 	# The title for the /statistics (block) entities command.
-	stats_page_title = "<dark_aqua>%LINE% <aqua>%TITLE%</aqua> by <aqua>%TYPE%</aqua> %LINE%</dark_aqua>"
-	stats_page_title_player = "<dark_aqua>%LINE% <aqua>%TITLE%</aqua> for <aqua>%PLAYER%</aqua> %LINE%</dark_aqua>"
+	stats_page_title = "<dark_aqua>${line} <aqua>${title}</aqua> by <aqua>${type}</aqua> ${line}</dark_aqua>"
+	stats_page_title_player = "<dark_aqua>${line} <aqua>${title}</aqua> for <aqua>${player}</aqua> ${line}</dark_aqua>"
 	# The content for the /statistics (block) entities command. This is displayed for every entry.
-	stats_page_content = "<green>%INDEX%. <dark_aqua>%NAME%</dark_aqua> %COUNT%</green>"
+	stats_page_content = "<green>${index}. <dark_aqua>${name}</dark_aqua> ${count}</green>"
 	# The footer for the /statistics (block) entities command.
-	stats_page_footer = "<dark_aqua>%LINE% <green>%PREV_PAGE%</green> Page <aqua>%PAGE%</aqua> of <aqua>%PAGE_COUNT%</aqua> <green>%NEXT_PAGE%</green> %LINE%"
+	stats_page_footer = "<dark_aqua>${line} <green>${prev_page}</green> Page <aqua>${page}</aqua> of <aqua>${page_count}</aqua> <green>${next_page}</green> ${line}"
 
 # Stops entities from ticking if they are too far away.
 [activation_range]

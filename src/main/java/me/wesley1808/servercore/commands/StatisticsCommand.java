@@ -96,11 +96,11 @@ public final class StatisticsCommand {
         final double tps = mspt != 0 ? Math.min((1000 / mspt), 20) : 20;
 
         Component component = Formatter.parse(Formatter.line(CommandConfig.STATS_TITLE.get(), 40, Util.isPlayer(source)) + "\n" + CommandConfig.STATS_CONTENT.get()
-                .replace("{tps}", String.format("%.2f", tps))
-                .replace("{mspt}", String.format("%.2f", mspt))
-                .replace("{chunk_count}", String.valueOf(Statistics.getLoadedChunkCount()))
-                .replace("{entity_count}", String.valueOf(Statistics.getAllEntities().size()))
-                .replace("{block_entity_count}", String.valueOf(Statistics.getAllBlockEntities().size()))
+                .replace("${tps}", String.format("%.2f", tps))
+                .replace("${mspt}", String.format("%.2f", mspt))
+                .replace("${chunk_count}", String.valueOf(Statistics.getLoadedChunkCount()))
+                .replace("${entity_count}", String.valueOf(Statistics.getAllEntities().size()))
+                .replace("${block_entity_count}", String.valueOf(Statistics.getAllBlockEntities().size()))
         );
 
         source.sendSuccess(component, false);
@@ -149,9 +149,9 @@ public final class StatisticsCommand {
 
     private static String createEntry(Map.Entry<String, Integer> entry, int index, boolean isBlockEntity, boolean byPlayer) {
         String string = "\n" + CommandConfig.STATS_PAGE_CONTENT.get()
-                .replace("{name}", entry.getKey())
-                .replace("{index}", String.valueOf(index))
-                .replace("{count}", String.valueOf(entry.getValue()));
+                .replace("${name}", entry.getKey())
+                .replace("${index}", String.valueOf(index))
+                .replace("${count}", String.valueOf(entry.getValue()));
 
         if (byPlayer) {
             string = Formatter.command(String.format("/statistics %s byType %s", isBlockEntity ? "block-entities" : "entities", entry.getKey()), string);
@@ -162,20 +162,20 @@ public final class StatisticsCommand {
 
     private static String createHeader(boolean isBlockEntity, boolean byPlayer, boolean isPlayer, ServerPlayer player) {
         String title = player == null
-                ? CommandConfig.STATS_PAGE_TITLE.get().replace("{type}", byPlayer ? "Player" : "Type")
-                : CommandConfig.STATS_PAGE_TITLE_PLAYER.get().replace("{player}", player.getScoreboardName());
+                ? CommandConfig.STATS_PAGE_TITLE.get().replace("${type}", byPlayer ? "Player" : "Type")
+                : CommandConfig.STATS_PAGE_TITLE_PLAYER.get().replace("${player}", player.getScoreboardName());
 
-        return Formatter.line(title.replace("{title}", isBlockEntity ? "Block Entities" : "Entities"), 40, isPlayer);
+        return Formatter.line(title.replace("${title}", isBlockEntity ? "Block Entities" : "Entities"), 40, isPlayer);
     }
 
     private static String createFooter(int page, int pageCount, boolean isBlockEntity, CommandContext<CommandSourceStack> context) {
         String title = CommandConfig.STATS_PAGE_FOOTER.get()
-                .replace("{page}", String.valueOf(page))
-                .replace("{page_count}", String.valueOf(pageCount));
+                .replace("${page}", String.valueOf(page))
+                .replace("${page_count}", String.valueOf(pageCount));
 
-        String command = context.getInput().replaceAll("\\b\\d+\\b", "%PAGE_NR%");
-        if (!command.contains("%PAGE_NR%")) {
-            command += " %PAGE_NR%";
+        String command = context.getInput().replaceAll("\\b\\d+\\b", "${page_nr}");
+        if (!command.contains("${page_nr}")) {
+            command += " ${page_nr}";
         }
 
         return Formatter.line(Formatter.page(title, command, page), isBlockEntity ? 40 : 38, Util.isPlayer(context.getSource()));
