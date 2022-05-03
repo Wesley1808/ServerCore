@@ -11,23 +11,23 @@ public final class Formatter {
 
     public static String line(String input, int targetLength, boolean isPlayer) {
         if (!isPlayer) {
-            return input.replace("%LINE%", "");
+            return input.replace("{line}", "");
         }
 
-        String cleanInput = input.replace("%LINE%", "").replaceAll("<.*?>", "").strip();
+        String cleanInput = input.replace("{line}", "").replaceAll("<.*?>", "").strip();
 
         final int length = (targetLength - cleanInput.length()) / 2;
-        return input.replace("%LINE%", "<strikethrough>" + " ".repeat(length) + "</strikethrough>");
+        return input.replace("{line}", "<strikethrough>" + " ".repeat(length) + "</strikethrough>");
     }
 
     public static String page(String input, String command, int page) {
         if (page > 1) {
-            input = input.replace("%PREV_PAGE%", command(command.replace("%PAGE_NR%", String.valueOf(page - 1)), "<<"));
+            input = input.replace("{prev_page}", command(command.replace("%PAGE_NR%", String.valueOf(page - 1)), "<<"));
         } else {
-            input = input.replace("%PREV_PAGE%", "<<");
+            input = input.replace("{prev_page}", "<<");
         }
 
-        return input.replace("%NEXT_PAGE%", command(command.replace("%PAGE_NR%", String.valueOf(page + 1)), ">>"));
+        return input.replace("{next_page}", command(command.replace("%PAGE_NR%", String.valueOf(page + 1)), ">>"));
     }
 
     public static String command(String command, String text) {

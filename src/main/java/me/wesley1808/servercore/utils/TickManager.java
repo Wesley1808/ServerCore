@@ -223,10 +223,10 @@ public final class TickManager {
 
     public static String createStatusReport(String title) {
         return title + "\n" + CommandConfig.STATUS_CONTENT.get()
-                .replace("%VERSION%", ServerCore.getVersion())
-                .replace("%MOBCAPS%", getModifierAsString())
-                .replace("%VIEW_DISTANCE%", String.valueOf(viewDistance))
-                .replace("%SIMULATION_DISTANCE%", String.valueOf(simulationDistance))
-                .replace("%CHUNK_TICK_DISTANCE%", String.valueOf(chunkTickDistance));
+                .replace("{version}", ServerCore.getVersion())
+                .replace("{mobcap_modifier}", getModifierAsString())
+                .replace("{view_distance}", String.valueOf(viewDistance))
+                .replace("{simulation_distance}", String.valueOf(simulationDistance))
+                .replace("{chunk_tick_distance}", String.valueOf(chunkTickDistance));
     }
 }

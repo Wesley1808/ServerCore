@@ -24,7 +24,7 @@ public final class MobcapsCommand {
 
     private static int mobcaps(ServerPlayer player) {
         StringBuilder builder = new StringBuilder(Formatter.line(
-                CommandConfig.MOBCAP_TITLE.get().replace("%MODIFIER%", TickManager.getModifierAsString()),
+                CommandConfig.MOBCAP_TITLE.get().replace("{mobcap_modifier}", TickManager.getModifierAsString()),
                 50, true
         ));
 
@@ -33,9 +33,9 @@ public final class MobcapsCommand {
             LocalMobCapCalculator.MobCounts mobCounts = state.localMobCapCalculator.playerMobCounts.computeIfAbsent(player, p -> new LocalMobCapCalculator.MobCounts());
             for (MobCategory category : MobCategory.values()) {
                 builder.append("\n").append(CommandConfig.MOBCAP_CONTENT.get()
-                        .replace("%NAME%", category.getName())
-                        .replace("%CURRENT%", String.valueOf(mobCounts.counts.getOrDefault(category, 0)))
-                        .replace("%CAPACITY%", String.valueOf(category.getMaxInstancesPerChunk()))
+                        .replace("{name}", category.getName())
+                        .replace("{current}", String.valueOf(mobCounts.counts.getOrDefault(category, 0)))
+                        .replace("{capacity}", String.valueOf(category.getMaxInstancesPerChunk()))
                 );
             }
         }
