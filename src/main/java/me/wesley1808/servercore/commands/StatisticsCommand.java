@@ -154,7 +154,7 @@ public final class StatisticsCommand {
                 .replace("${count}", String.valueOf(entry.getValue()));
 
         if (byPlayer) {
-            string = Formatter.command(String.format("/statistics %s byType %s", isBlockEntity ? "block-entities" : "entities", entry.getKey()), string);
+            string = Formatter.command(String.format("statistics %s byType %s", isBlockEntity ? "block-entities" : "entities", entry.getKey()), string);
         }
 
         return string;
@@ -173,9 +173,9 @@ public final class StatisticsCommand {
                 .replace("${page}", String.valueOf(page))
                 .replace("${page_count}", String.valueOf(pageCount));
 
-        String command = context.getInput().replaceAll("\\b\\d+\\b", "${page_nr}");
-        if (!command.contains("${page_nr}")) {
-            command += " ${page_nr}";
+        String command = context.getInput().replaceAll("\\b\\d+\\b", "%page_nr%");
+        if (!command.contains("%page_nr%")) {
+            command += " %page_nr%";
         }
 
         return Formatter.line(Formatter.page(title, command, page), isBlockEntity ? 40 : 38, Util.isPlayer(context.getSource()));

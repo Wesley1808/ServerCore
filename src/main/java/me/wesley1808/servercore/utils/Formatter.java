@@ -22,15 +22,15 @@ public final class Formatter {
 
     public static String page(String input, String command, int page) {
         if (page > 1) {
-            input = input.replace("${prev_page}", command(command.replace("${page_nr}", String.valueOf(page - 1)), "<<"));
+            input = input.replace("${prev_page}", command(command.replace("%page_nr%", String.valueOf(page - 1)), "<<"));
         } else {
             input = input.replace("${prev_page}", "<<");
         }
 
-        return input.replace("${next_page}", command(command.replace("${page_nr}", String.valueOf(page + 1)), ">>"));
+        return input.replace("${next_page}", command(command.replace("%page_nr%", String.valueOf(page + 1)), ">>"));
     }
 
     public static String command(String command, String text) {
-        return String.format("<click:run_command:'%s'>%s</click>", command, text);
+        return String.format("<click:run_command:'/%s'>%s</click>", command, text);
     }
 }
