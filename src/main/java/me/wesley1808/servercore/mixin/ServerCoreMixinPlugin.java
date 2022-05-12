@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.mixin;
 
-import me.wesley1808.servercore.config.Config;
-import me.wesley1808.servercore.config.tables.FeatureConfig;
+import me.wesley1808.servercore.common.config.Config;
+import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;

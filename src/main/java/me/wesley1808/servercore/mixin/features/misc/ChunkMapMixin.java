@@ -1,8 +1,8 @@
 package me.wesley1808.servercore.mixin.features.misc;
 
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import me.wesley1808.servercore.config.tables.FeatureConfig;
-import me.wesley1808.servercore.utils.TickManager;
+import me.wesley1808.servercore.common.config.tables.FeatureConfig;
+import me.wesley1808.servercore.common.utils.DynamicManager;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ChunkMap;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,6 +25,6 @@ public abstract class ChunkMapMixin {
         final int threshold = FeatureConfig.CHUNK_SAVE_THRESHOLD.get();
         if (threshold < 0) return iterator.hasNext();
 
-        return TickManager.getAverageTickTime() < threshold && iterator.hasNext();
+        return DynamicManager.getAverageTickTime() < threshold && iterator.hasNext();
     }
 }

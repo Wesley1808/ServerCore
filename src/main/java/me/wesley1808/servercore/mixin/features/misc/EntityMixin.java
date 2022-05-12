@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.misc;
 
-import me.wesley1808.servercore.utils.ChunkManager;
+import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

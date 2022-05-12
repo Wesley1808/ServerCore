@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.mixin.features.activation_range.fixes;
 
-import me.wesley1808.servercore.ServerCore;
-import me.wesley1808.servercore.interfaces.activation_range.ActivationEntity;
+import me.wesley1808.servercore.common.ServerCore;
+import me.wesley1808.servercore.common.interfaces.activation_range.ActivationEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;

@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.mixin.features.entity_limits;
 
-import me.wesley1808.servercore.config.tables.EntityLimitConfig;
-import me.wesley1808.servercore.utils.TickManager;
+import me.wesley1808.servercore.common.config.tables.EntityLimitConfig;
+import me.wesley1808.servercore.common.utils.BreedingCap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
@@ -28,7 +28,7 @@ public abstract class AnimalMixin extends AgeableMob {
 
     @Inject(method = "spawnChildFromBreeding", at = @At("HEAD"), cancellable = true)
     public void cancelAnimalBreeding(ServerLevel level, Animal other, CallbackInfo ci) {
-        if (TickManager.checkForEntities(this, EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {
+        if (BreedingCap.exceedsLimit(this, EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {
             this.setAge(6000);
             other.setAge(6000);
             this.resetLove();

@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.optimizations.sync_loads;
 
-import me.wesley1808.servercore.utils.ChunkManager;
+import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.world.entity.animal.Bee;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

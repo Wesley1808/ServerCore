@@ -16,7 +16,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "me.wesley1808.servercore.ServerCore"
+      "me.wesley1808.servercore.common.ServerCore"
     ]
   },
   "mixins": [

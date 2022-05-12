@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.misc;
 
-import me.wesley1808.servercore.utils.TickManager;
+import me.wesley1808.servercore.common.utils.DynamicManager;
 import net.minecraft.world.entity.MobCategory;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +18,7 @@ public abstract class MobCategoryMixin {
 
     @Inject(method = "getMaxInstancesPerChunk", at = @At("HEAD"), cancellable = true)
     private void modifyMobcaps(CallbackInfoReturnable<Integer> cir) {
-        final double modifier = TickManager.getMobcapModifier();
+        final double modifier = DynamicManager.getMobcapModifier();
         if (modifier != 1.0D) {
             cir.setReturnValue((int) (this.max * modifier));
         }

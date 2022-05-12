@@ -1,9 +1,9 @@
 package me.wesley1808.servercore.mixin.features.activation_range;
 
-import me.wesley1808.servercore.config.tables.ActivationRangeConfig;
-import me.wesley1808.servercore.interfaces.activation_range.ActivationEntity;
-import me.wesley1808.servercore.interfaces.activation_range.InactiveEntity;
-import me.wesley1808.servercore.utils.ActivationRange;
+import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
+import me.wesley1808.servercore.common.interfaces.activation_range.ActivationEntity;
+import me.wesley1808.servercore.common.interfaces.activation_range.InactiveEntity;
+import me.wesley1808.servercore.common.utils.ActivationRange;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

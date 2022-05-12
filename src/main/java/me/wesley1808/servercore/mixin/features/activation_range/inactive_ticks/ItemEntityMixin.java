@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.activation_range.inactive_ticks;
 
-import me.wesley1808.servercore.interfaces.activation_range.InactiveEntity;
+import me.wesley1808.servercore.common.interfaces.activation_range.InactiveEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;

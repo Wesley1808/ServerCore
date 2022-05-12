@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.ticking;
 
-import me.wesley1808.servercore.config.tables.FeatureConfig;
+import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.behavior.AcquirePoi;

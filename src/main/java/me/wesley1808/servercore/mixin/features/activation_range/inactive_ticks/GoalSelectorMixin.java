@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.activation_range.inactive_ticks;
 
-import me.wesley1808.servercore.interfaces.activation_range.IGoalSelector;
+import me.wesley1808.servercore.common.interfaces.activation_range.IGoalSelector;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import org.spongepowered.asm.mixin.Final;

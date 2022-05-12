@@ -1,8 +1,8 @@
 package me.wesley1808.servercore.mixin.features.ticking;
 
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
-import me.wesley1808.servercore.ServerCore;
-import me.wesley1808.servercore.utils.TickManager;
+import me.wesley1808.servercore.common.ServerCore;
+import me.wesley1808.servercore.common.utils.DynamicManager;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
@@ -106,7 +106,7 @@ public abstract class ServerChunkCacheMixin {
             for (ChunkHolder holder : holders) {
                 Optional<LevelChunk> optional = holder.getTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
                 if (optional.isPresent()) {
-                    if (TickManager.shouldTickChunk(holder.getPos(), this.level)) {
+                    if (DynamicManager.shouldTickChunk(holder.getPos(), this.level)) {
                         this.active.add(new ServerChunkCache.ChunkAndHolder(optional.get(), holder));
                     } else {
                         // Sends clients block updates from inactive chunks.

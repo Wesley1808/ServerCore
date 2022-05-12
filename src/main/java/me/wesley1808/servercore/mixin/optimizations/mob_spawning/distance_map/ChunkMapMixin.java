@@ -1,8 +1,8 @@
 package me.wesley1808.servercore.mixin.optimizations.mob_spawning.distance_map;
 
-import me.wesley1808.servercore.config.tables.FeatureConfig;
-import me.wesley1808.servercore.interfaces.IChunkMap;
-import me.wesley1808.servercore.utils.data.PlayerMobDistanceMap;
+import me.wesley1808.servercore.common.collections.PlayerMobDistanceMap;
+import me.wesley1808.servercore.common.config.tables.FeatureConfig;
+import me.wesley1808.servercore.common.interfaces.IChunkMap;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.GameRules;

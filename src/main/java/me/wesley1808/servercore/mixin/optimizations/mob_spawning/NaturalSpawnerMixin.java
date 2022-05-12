@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.optimizations.mob_spawning;
 
-import me.wesley1808.servercore.utils.ChunkManager;
+import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;

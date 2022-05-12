@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.optimizations.ticking.chunk;
 
-import me.wesley1808.servercore.interfaces.ILevelChunk;
+import me.wesley1808.servercore.common.interfaces.ILevelChunk;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;

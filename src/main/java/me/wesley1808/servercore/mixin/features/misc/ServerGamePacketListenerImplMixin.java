@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.mixin.features.misc;
 
-import me.wesley1808.servercore.config.tables.FeatureConfig;
-import me.wesley1808.servercore.utils.ChunkManager;
+import me.wesley1808.servercore.common.config.tables.FeatureConfig;
+import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundMoveVehiclePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;

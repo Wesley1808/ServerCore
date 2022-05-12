@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.optimizations.sync_loads;
 
-import me.wesley1808.servercore.utils.ChunkManager;
+import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.chunk.ChunkAccess;

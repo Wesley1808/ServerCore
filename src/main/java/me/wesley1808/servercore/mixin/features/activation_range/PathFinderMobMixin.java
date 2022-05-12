@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.activation_range;
 
-import me.wesley1808.servercore.interfaces.activation_range.IPathFinderMob;
+import me.wesley1808.servercore.common.interfaces.activation_range.IPathFinderMob;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
 import org.spongepowered.asm.mixin.Mixin;
