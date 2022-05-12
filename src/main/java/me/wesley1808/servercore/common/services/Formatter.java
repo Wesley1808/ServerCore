@@ -31,6 +31,6 @@ public final class Formatter {
     }
 
     public static String command(String command, String text) {
-        return String.format("<click:run_command:'/%s'>%s</click>", command, text);
+        return String.format("<click:run_command:'%s'>%s</click>", command, text);
     }
 }
