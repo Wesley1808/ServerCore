@@ -24,8 +24,8 @@
   ],
   "accessWidener": "servercore.accesswidener",
   "depends": {
-    "fabricloader": ">=0.13.0",
-    "minecraft": ">=1.19-alpha.22.11.a"
+    "fabricloader": ">=0.14.5",
+    "minecraft": ">=1.19-alpha.22.19.a"
   },
   "breaks": {
     "cardboard": "*"

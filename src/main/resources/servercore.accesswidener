@@ -1,24 +1,24 @@
 accessWidener v1 named
 
-accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
-accessible class net/minecraft/world/entity/animal/Bee$BeeEnterHiveGoal
-accessible class net/minecraft/server/level/ServerLevel$EntityCallbacks
-
-accessible method net/minecraft/world/level/LocalMobCapCalculator$MobCounts <init> ()V
-accessible method net/minecraft/server/level/ChunkMap getChunks ()Ljava/lang/Iterable;
-accessible method net/minecraft/server/level/ServerPlayer fudgeSpawnLocation (Lnet/minecraft/server/level/ServerLevel;)V
-accessible method net/minecraft/server/level/ServerChunkCache getVisibleChunkIfPresent (J)Lnet/minecraft/server/level/ChunkHolder;
-accessible method net/minecraft/server/level/ServerChunkCache$ChunkAndHolder <init> (Lnet/minecraft/world/level/chunk/LevelChunk;Lnet/minecraft/server/level/ChunkHolder;)V
-
-accessible field net/minecraft/world/entity/ExperienceOrb age I
-accessible field net/minecraft/world/entity/ExperienceOrb count I
+# Entity Activation Range
 accessible field net/minecraft/world/entity/LivingEntity jumping Z
 accessible field net/minecraft/world/entity/Entity isInsidePortal Z
 accessible field net/minecraft/world/entity/projectile/AbstractArrow inGround Z
 accessible field net/minecraft/world/entity/Mob leashHolder Lnet/minecraft/world/entity/Entity;
 accessible field net/minecraft/world/entity/Mob targetSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
-accessible field net/minecraft/world/level/block/state/BlockBehaviour hasCollision Z
+
+# Commands
+accessible method net/minecraft/world/level/LocalMobCapCalculator$MobCounts <init> ()V
+accessible method net/minecraft/server/level/ChunkMap getChunks ()Ljava/lang/Iterable;
+
 accessible field net/minecraft/world/level/NaturalSpawner$SpawnState localMobCapCalculator Lnet/minecraft/world/level/LocalMobCapCalculator;
 accessible field net/minecraft/world/level/LocalMobCapCalculator playerMobCounts Ljava/util/Map;
 accessible field net/minecraft/world/level/LocalMobCapCalculator$MobCounts counts Lit/unimi/dsi/fastutil/objects/Object2IntMap;
 accessible field net/minecraft/world/level/Level blockEntityTickers Ljava/util/List;
+
+# Miscellaneous
+accessible method net/minecraft/server/level/ServerPlayer fudgeSpawnLocation (Lnet/minecraft/server/level/ServerLevel;)V
+accessible method net/minecraft/server/level/ServerChunkCache getVisibleChunkIfPresent (J)Lnet/minecraft/server/level/ChunkHolder;
+accessible method net/minecraft/server/level/ServerChunkCache$ChunkAndHolder <init> (Lnet/minecraft/world/level/chunk/LevelChunk;Lnet/minecraft/server/level/ChunkHolder;)V
+
+accessible field net/minecraft/world/level/block/state/BlockBehaviour hasCollision Z

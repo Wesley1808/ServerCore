@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * From: PaperMC (Do-not-allow-bees-to-load-chunks-for-beehives.patch)
  */
 
-@Mixin(Bee.BeeEnterHiveGoal.class)
+@Mixin(targets = "net/minecraft/world/entity/animal/Bee$BeeEnterHiveGoal")
 public abstract class BeeEnterHiveGoalMixin {
     @Shadow
     @Final
