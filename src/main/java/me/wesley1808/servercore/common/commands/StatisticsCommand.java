@@ -158,7 +158,7 @@ public final class StatisticsCommand {
                 .replace("${count}", String.valueOf(entry.getValue()));
 
         if (byPlayer) {
-            string = Formatter.command(String.format("/statistics %s byType %s", isBlockEntity ? "block-entities" : "entities", entry.getKey()), string);
+            string = Formatter.command(String.format("statistics %s byType %s", isBlockEntity ? "block-entities" : "entities", entry.getKey()), string);
         }
 
         return string;
