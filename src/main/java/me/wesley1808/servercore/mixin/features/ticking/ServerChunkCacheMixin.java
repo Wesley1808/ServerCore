@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.ticking;
 
-import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.utils.DynamicManager;
 import net.minecraft.server.level.ChunkHolder;
@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 @Mixin(ServerChunkCache.class)
 public abstract class ServerChunkCacheMixin {
     @Unique
-    private final ObjectLinkedOpenHashSet<ServerChunkCache.ChunkAndHolder> active = new ObjectLinkedOpenHashSet<>();
+    private final ObjectArrayList<ServerChunkCache.ChunkAndHolder> active = new ObjectArrayList<>();
 
     @Shadow
     @Final
