@@ -1,5 +1,6 @@
 plugins {
     id 'fabric-loom' version '0.12+'
+    id 'io.github.juuxel.loom-quiltflower' version '1.7.1'
 }
 
 repositories {
@@ -25,7 +26,7 @@ dependencies {
     mappings loom.officialMojangMappings()
 
     // Fabric API
-    Set<String> modules = ['fabric-api-base', 'fabric-command-api-v1', 'fabric-lifecycle-events-v1']
+    Set<String> modules = ['fabric-api-base', 'fabric-command-api-v2', 'fabric-lifecycle-events-v1']
     modules.forEach {
         modImplementation(include(fabricApi.module(it, project.fabric_version)))
     }

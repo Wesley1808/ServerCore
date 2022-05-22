@@ -12,9 +12,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.function.Consumer;
 
 @Mixin(ServerChunkCache.class)
@@ -22,11 +27,14 @@ public abstract class ServerChunkCacheMixin {
     @Unique
     private final ObjectArrayList<ServerChunkCache.ChunkAndHolder> active = new ObjectArrayList<>();
 
+    @Unique
+    private boolean trim;
+
     @Shadow
     @Final
     ServerLevel level;
 
-    // Avoid massive array allocations.
+    // Avoid unnecessary array allocations.
     @Redirect(
             method = "tickChunks",
             require = 0,
@@ -60,8 +68,8 @@ public abstract class ServerChunkCacheMixin {
                     ordinal = 0
             )
     )
-    private Iterator<ChunkHolder> updateFilteredChunks(Iterable<ChunkHolder> iterable) {
-        this.updateActiveChunks(iterable);
+    private Iterator<ChunkHolder> filterChunks(Iterable<ChunkHolder> holders) {
+        this.updateActiveChunks(holders);
         return Collections.emptyIterator();
     }
 
@@ -91,28 +99,35 @@ public abstract class ServerChunkCacheMixin {
         this.active.forEach(action);
     }
 
-    /**
-     * Replaces the chunk filtering algorithm to support adjustable chunk-tick distances.
-     * Random ticks and mob spawns will not happen outside of this distance.
-     * This does not affect redstone and block updates.
-     */
+    // Trim the active chunk ticking list periodically.
+    @Inject(method = "save", at = @At("TAIL"))
+    private void onSave(boolean bl, CallbackInfo ci) {
+        this.trim = true;
+    }
 
     private void updateActiveChunks(Iterable<ChunkHolder> holders) {
-        // Updates active chunks once a second.
+        // Update active chunks once a second.
         if (ServerCore.getServer().getTickCount() % 20 == 0) {
             // Clear cached chunks
             this.active.clear();
+
             // Add active chunks
             for (ChunkHolder holder : holders) {
-                Optional<LevelChunk> optional = holder.getTickingChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left();
-                if (optional.isPresent()) {
+                LevelChunk chunk = holder.getTickingChunk();
+                if (chunk != null) {
                     if (DynamicManager.shouldTickChunk(holder.getPos(), this.level)) {
-                        this.active.add(new ServerChunkCache.ChunkAndHolder(optional.get(), holder));
+                        this.active.add(new ServerChunkCache.ChunkAndHolder(chunk, holder));
                     } else {
-                        // Sends clients block updates from inactive chunks.
-                        holder.broadcastChanges(optional.get());
+                        // Send clients block updates from inactive chunks.
+                        holder.broadcastChanges(chunk);
                     }
                 }
+            }
+
+            // Trim the list if necessary.
+            if (this.trim) {
+                this.active.trim();
+                this.trim = false;
             }
         }
     }

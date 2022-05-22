@@ -7,10 +7,12 @@ import me.wesley1808.servercore.common.commands.ServerCoreCommand;
 import me.wesley1808.servercore.common.commands.StatisticsCommand;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.utils.DynamicManager;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.server.MinecraftServer;
 
 public final class Events {
@@ -34,7 +36,7 @@ public final class Events {
         Config.save();
     }
 
-    private static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
+    private static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, Commands.CommandSelection environment) {
         ServerCoreCommand.register(dispatcher);
         StatisticsCommand.register(dispatcher);
         MobcapsCommand.register(dispatcher);
