@@ -23,7 +23,7 @@ import java.util.function.Supplier;
  * License: GPL-3.0 (licenses/GPL.md)
  */
 
-@Mixin(ServerLevel.class)
+@Mixin(value = ServerLevel.class, priority = 900)
 public abstract class ServerLevelMixin extends Level implements IServerLevel {
     @Unique
     private int currentIceAndSnowTick = 0;
@@ -34,6 +34,7 @@ public abstract class ServerLevelMixin extends Level implements IServerLevel {
 
     @Redirect(
             method = "tickChunk",
+            require = 0,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/RandomSource;nextInt(I)I",
@@ -46,6 +47,7 @@ public abstract class ServerLevelMixin extends Level implements IServerLevel {
 
     @Redirect(
             method = "tickChunk",
+            require = 0,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/RandomSource;nextInt(I)I",
