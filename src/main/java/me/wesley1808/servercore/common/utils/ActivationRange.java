@@ -303,7 +303,7 @@ public final class ActivationRange {
                 return activationEntity.getActivationType().tickInactive.getAsBoolean();
             }
             // Spigot - Add a little performance juice to active entities. Skip 1/4 if not immune.
-        } else if (activationEntity.getFullTickCount() % 4 == 0 && checkEntityImmunities(entity) < 0) {
+        } else if (ActivationRangeConfig.SKIP_NON_IMMUNE.get() && activationEntity.getFullTickCount() % 4 == 0 && checkEntityImmunities(entity) < 0) {
             return false;
         }
 

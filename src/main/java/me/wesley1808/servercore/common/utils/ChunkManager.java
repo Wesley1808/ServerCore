@@ -31,11 +31,19 @@ public final class ChunkManager {
     @Nullable
     public static LevelChunk getChunkIfLoaded(Level level, int chunkX, int chunkZ) {
         if (!level.isClientSide) {
-            final ChunkHolder holder = getChunkHolder(level, chunkX, chunkZ);
-            return holder != null ? holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left().orElse(null) : null;
+            return getChunkFromHolder(getChunkHolder(level, chunkX, chunkZ));
         } else {
             return level.getChunk(chunkX, chunkZ);
         }
+    }
+
+    @Nullable
+    public static LevelChunk getChunkFromHolder(ChunkHolder holder) {
+        if (holder == null || holder.getFullChunkFuture() == ChunkHolder.UNLOADED_LEVEL_CHUNK_FUTURE) {
+            return null;
+        }
+
+        return holder.getFullChunk();
     }
 
     @Nullable
@@ -66,7 +74,7 @@ public final class ChunkManager {
     }
 
     public static boolean isChunkLoaded(ChunkHolder holder) {
-        return holder != null && holder.getFullChunkFuture().getNow(ChunkHolder.UNLOADED_LEVEL_CHUNK).left().isPresent();
+        return getChunkFromHolder(holder) != null;
     }
 
     public static boolean isTouchingUnloadedChunk(Level level, AABB box) {
