@@ -1,12 +1,12 @@
 package me.wesley1808.servercore.common.services;
 
-import eu.pb4.placeholders.TextParser;
+import eu.pb4.placeholders.api.TextParserUtils;
 import net.minecraft.network.chat.Component;
 
 public final class Formatter {
 
     public static Component parse(String input) {
-        return TextParser.parse(input);
+        return TextParserUtils.formatText(input);
     }
 
     public static String line(String input, int targetLength, boolean isPlayer) {

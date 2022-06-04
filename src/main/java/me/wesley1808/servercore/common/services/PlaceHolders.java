@@ -2,9 +2,9 @@ package me.wesley1808.servercore.common.services;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import eu.pb4.placeholders.PlaceholderAPI;
-import eu.pb4.placeholders.PlaceholderHandler;
-import eu.pb4.placeholders.PlaceholderResult;
+import eu.pb4.placeholders.api.PlaceholderHandler;
+import eu.pb4.placeholders.api.PlaceholderResult;
+import eu.pb4.placeholders.api.Placeholders;
 import me.wesley1808.servercore.common.utils.DynamicManager;
 import me.wesley1808.servercore.common.utils.Statistics;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +13,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public final class Placeholders {
+public final class PlaceHolders {
     // Caches expensive to calculate global values for 1 tick.
     // This way we won't have to re-calculate these values for every single player on the same tick.
     private static final Cache<String, String> CACHE = CacheBuilder.newBuilder()
@@ -22,22 +22,22 @@ public final class Placeholders {
 
     public static void register() {
         register("view_distance",
-                (ctx) -> PlaceholderResult.value(String.valueOf(DynamicManager.getViewDistance()))
+                (ctx, arg) -> PlaceholderResult.value(String.valueOf(DynamicManager.getViewDistance()))
         );
 
         register("simulation_distance",
-                (ctx) -> PlaceholderResult.value(String.valueOf(DynamicManager.getSimulationDistance()))
+                (ctx, arg) -> PlaceholderResult.value(String.valueOf(DynamicManager.getSimulationDistance()))
         );
 
         register("chunk_tick_distance",
-                (ctx) -> PlaceholderResult.value(String.valueOf(DynamicManager.getChunkTickDistance()))
+                (ctx, arg) -> PlaceholderResult.value(String.valueOf(DynamicManager.getChunkTickDistance()))
         );
 
         register("mobcap_multiplier",
-                (ctx) -> PlaceholderResult.value(DynamicManager.getModifierAsString())
+                (ctx, arg) -> PlaceholderResult.value(DynamicManager.getModifierAsString())
         );
 
-        register("chunk_count", (ctx) -> {
+        register("chunk_count", (ctx, arg) -> {
             if (ctx.hasPlayer()) {
                 return cachedValue("chunk_count", () -> String.valueOf(Statistics.getLoadedChunkCount()));
             }
@@ -45,10 +45,11 @@ public final class Placeholders {
             return PlaceholderResult.value(String.valueOf(Statistics.getLoadedChunkCount()));
         });
 
-        register("entity_count", (ctx) -> {
+        register("entity_count", (ctx, arg) -> {
             if (ctx.hasPlayer()) {
-                if (ctx.getArgument().equals("player")) {
-                    return PlaceholderResult.value(String.valueOf(Statistics.getEntitiesNear(ctx.getPlayer()).size()));
+                if ("player".equals(arg)) {
+                    // noinspection ConstantConditions
+                    return PlaceholderResult.value(String.valueOf(Statistics.getEntitiesNear(ctx.player()).size()));
                 }
 
                 return cachedValue("entity_count", () -> String.valueOf(Statistics.getAllEntities().size()));
@@ -57,10 +58,11 @@ public final class Placeholders {
             return PlaceholderResult.value(String.valueOf(Statistics.getAllEntities().size()));
         });
 
-        register("block_entity_count", (ctx) -> {
+        register("block_entity_count", (ctx, arg) -> {
             if (ctx.hasPlayer()) {
-                if (ctx.getArgument().equals("player")) {
-                    return PlaceholderResult.value(String.valueOf(Statistics.getBlockEntitiesNear(ctx.getPlayer()).size()));
+                if ("player".equals(arg)) {
+                    // noinspection ConstantConditions
+                    return PlaceholderResult.value(String.valueOf(Statistics.getBlockEntitiesNear(ctx.player()).size()));
                 }
 
                 return cachedValue("block_entity_count", () -> String.valueOf(Statistics.getAllBlockEntities().size()));
@@ -79,6 +81,6 @@ public final class Placeholders {
     }
 
     private static void register(String name, PlaceholderHandler handler) {
-        PlaceholderAPI.register(new ResourceLocation("servercore", name), handler);
+        Placeholders.register(new ResourceLocation("servercore", name), handler);
     }
 }

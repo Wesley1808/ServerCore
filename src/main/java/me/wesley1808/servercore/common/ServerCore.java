@@ -2,7 +2,7 @@ package me.wesley1808.servercore.common;
 
 import com.mojang.logging.LogUtils;
 import me.wesley1808.servercore.common.services.Events;
-import me.wesley1808.servercore.common.services.Placeholders;
+import me.wesley1808.servercore.common.services.PlaceHolders;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -37,7 +37,7 @@ public class ServerCore implements ModInitializer {
         LOGGER.info("[ServerCore] Initializing...");
 
         version = this.findVersion();
-        Placeholders.register();
+        PlaceHolders.register();
         Events.register();
     }
 
