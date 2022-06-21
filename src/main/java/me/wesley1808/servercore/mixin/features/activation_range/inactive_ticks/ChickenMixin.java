@@ -1,6 +1,7 @@
 package me.wesley1808.servercore.mixin.features.activation_range.inactive_ticks;
 
 import me.wesley1808.servercore.common.interfaces.activation_range.InactiveEntity;
+import me.wesley1808.servercore.common.utils.ActivationRange;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Chicken;
@@ -25,5 +26,9 @@ public abstract class ChickenMixin extends Animal implements InactiveEntity {
         if (!this.isChickenJockey && this.age >= 0 && this.isAlive()) {
             --this.eggTime;
         }
+
+        this.noActionTime++;
+        ActivationRange.updateAge(this);
+        ActivationRange.updateGoalSelectors(this.goalSelector, this.targetSelector);
     }
 }
