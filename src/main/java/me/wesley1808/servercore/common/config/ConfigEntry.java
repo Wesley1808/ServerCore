@@ -43,7 +43,7 @@ public final class ConfigEntry<T> {
     }
 
     public boolean set(T value) {
-        if (this.validate(value)) {
+        if (value != null && this.validate(value)) {
             this.value = value;
             return true;
         }
