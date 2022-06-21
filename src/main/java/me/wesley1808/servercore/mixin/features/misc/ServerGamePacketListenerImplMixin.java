@@ -78,6 +78,6 @@ public abstract class ServerGamePacketListenerImplMixin {
     private boolean shouldPreventMovement(ServerLevel level, Entity entity, double fromX, double fromZ, double toX, double toY, double toZ) {
         return FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get()
                 && (fromX != toX || fromZ != toZ)
-                && ChunkManager.isTouchingUnloadedChunk(level, entity.getBoundingBox().expandTowards(new Vec3(toX, toY, toZ).subtract(entity.position())));
+                && !ChunkManager.areChunksLoadedForMove(level, entity.getBoundingBox().expandTowards(new Vec3(toX, toY, toZ).subtract(entity.position())));
     }
 }

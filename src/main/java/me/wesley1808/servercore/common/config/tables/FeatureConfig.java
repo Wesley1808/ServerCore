@@ -6,7 +6,7 @@ public final class FeatureConfig {
     public static final ConfigEntry<Boolean> USE_DISTANCE_MAP = new ConfigEntry<>(true, "(Default = true) Optimizes vanilla's per-player mobspawning by using PaperMC's PlayerMobDistanceMap.");
     public static final ConfigEntry<Boolean> DISABLE_SPAWN_CHUNKS = new ConfigEntry<>(false, "(Default = false) Stops the server from loading spawn chunks.");
     public static final ConfigEntry<Boolean> FAST_XP_MERGING = new ConfigEntry<>(false, "(Default = false) Allows more xp orbs to merge with one another, to reduce xp orb lag.");
-    public static final ConfigEntry<Boolean> PREVENT_MOVING_INTO_UNLOADED_CHUNKS = new ConfigEntry<>(false, "(Default = false) Prevents players from moving into unloaded chunks.");
+    public static final ConfigEntry<Boolean> PREVENT_MOVING_INTO_UNLOADED_CHUNKS = new ConfigEntry<>(false, "(Default = false) Prevents lagspikes caused by players moving into unloaded chunks.");
     public static final ConfigEntry<Integer> PORTAL_SEARCH_RADIUS = new ConfigEntry<>(128, "(Default = 128) The radius at which the game will look for other portals. Lower values can reduce lagspikes.\nDoes not work if lithium is installed.");
     public static final ConfigEntry<Integer> PORTAL_CREATE_RADIUS = new ConfigEntry<>(16, "(Default = 16) The radius at which the game will try to create new portals.\nIt is recommended to make this smaller than the search radius.");
     public static final ConfigEntry<Boolean> PORTAL_SEARCH_VANILLA_SCALING = new ConfigEntry<>(true, "(Default = true) Whether the custom portal radius will use the vanilla dimension scale.");

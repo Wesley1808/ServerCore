@@ -77,19 +77,28 @@ public final class ChunkManager {
         return getChunkFromHolder(holder) != null;
     }
 
-    public static boolean isTouchingUnloadedChunk(Level level, AABB box) {
-        final int minX = Mth.floor(box.minX) >> 4;
-        final int maxX = Mth.ceil(box.maxX) >> 4;
-        final int minZ = Mth.floor(box.minZ) >> 4;
-        final int maxZ = Mth.ceil(box.maxZ) >> 4;
+    // Utility method from PaperMC (MC-Utils.patch)
+    public static boolean areChunksLoadedForMove(Level level, AABB box) {
+        int minBlockX = Mth.floor(box.minX - 1.0E-7D) - 3;
+        int maxBlockX = Mth.floor(box.maxX + 1.0E-7D) + 3;
 
-        for (int chunkX = minX; chunkX <= maxX; chunkX++) {
-            for (int chunkZ = minZ; chunkZ <= maxZ; chunkZ++) {
-                if (!ChunkManager.isChunkLoaded(level, chunkX, chunkZ)) {
-                    return true;
+        int minBlockZ = Mth.floor(box.minZ - 1.0E-7D) - 3;
+        int maxBlockZ = Mth.floor(box.maxZ + 1.0E-7D) + 3;
+
+        int minChunkX = minBlockX >> 4;
+        int maxChunkX = maxBlockX >> 4;
+
+        int minChunkZ = minBlockZ >> 4;
+        int maxChunkZ = maxBlockZ >> 4;
+
+        for (int chunkX = minChunkX; chunkX <= maxChunkX; ++chunkX) {
+            for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; ++chunkZ) {
+                if (!isChunkLoaded(level, chunkX, chunkZ)) {
+                    return false;
                 }
             }
         }
-        return false;
+
+        return true;
     }
 }
