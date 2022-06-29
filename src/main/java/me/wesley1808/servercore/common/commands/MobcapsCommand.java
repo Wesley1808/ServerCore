@@ -5,7 +5,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import me.wesley1808.servercore.common.config.tables.CommandConfig;
 import me.wesley1808.servercore.common.services.Formatter;
 import me.wesley1808.servercore.common.utils.DynamicManager;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.MobCategory;
@@ -17,7 +16,7 @@ import static net.minecraft.commands.Commands.literal;
 public final class MobcapsCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        if (CommandConfig.COMMAND_MOBCAPS.get() && !FabricLoader.getInstance().isModLoaded("vmp")) {
+        if (CommandConfig.COMMAND_MOBCAPS.get()) {
             dispatcher.register(literal("mobcaps").executes(ctx -> mobcaps(ctx.getSource().getPlayerOrException())));
         }
     }
