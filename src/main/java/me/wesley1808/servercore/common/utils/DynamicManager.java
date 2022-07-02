@@ -1,5 +1,10 @@
 package me.wesley1808.servercore.common.utils;
 
+import me.lucko.spark.api.Spark;
+import me.lucko.spark.api.SparkProvider;
+import me.lucko.spark.api.statistic.StatisticWindow;
+import me.lucko.spark.api.statistic.misc.DoubleAverageInfo;
+import me.lucko.spark.api.statistic.types.GenericStatistic;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.tables.CommandConfig;
 import me.wesley1808.servercore.common.config.tables.DynamicConfig;
@@ -10,13 +15,13 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameType;
 
 import java.math.BigDecimal;
 
 public final class DynamicManager {
+    private static final boolean USE_SPARK = FabricLoader.getInstance().isModLoaded("spark");
     private static final BigDecimal VALUE = new BigDecimal("0.1");
     private static BigDecimal mobcapModifier = new BigDecimal(String.valueOf(DynamicConfig.MAX_MOBCAP.get()));
     private static double averageTickTime = 0.0;
@@ -44,7 +49,19 @@ public final class DynamicManager {
 
     private static void updateValues(MinecraftServer server) {
         if (server.getTickCount() % 20 == 0) {
-            averageTickTime = Mth.average(server.tickTimes) * 1.0E-6D;
+            averageTickTime = -1;
+
+            if (USE_SPARK) {
+                Spark spark = SparkProvider.get();
+                GenericStatistic<DoubleAverageInfo, StatisticWindow.MillisPerTick> mspt = spark.mspt();
+                if (mspt != null) {
+                    averageTickTime = mspt.poll(StatisticWindow.MillisPerTick.SECONDS_10).median();
+                }
+            }
+
+            if (averageTickTime == -1) {
+                averageTickTime = server.getAverageTickTime();
+            }
         }
     }
 

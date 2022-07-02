@@ -31,8 +31,11 @@ dependencies {
         modImplementation(include(fabricApi.module(it, project.fabric_version)))
     }
 
+    // Spark API
+    modImplementation(include("me.lucko:spark-api:${spark_api_version}"))
+
     // Permission API
-    modImplementation(include('me.lucko:fabric-permissions-api:0.1-SNAPSHOT'))
+    modImplementation(include("me.lucko:fabric-permissions-api:${permission_api_version}"))
 
     // Placeholder API
     modImplementation(include("eu.pb4:placeholder-api:${placeholder_api_version}"))
