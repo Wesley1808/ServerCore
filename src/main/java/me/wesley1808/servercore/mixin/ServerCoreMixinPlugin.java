@@ -41,6 +41,11 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             return !this.isModLoaded("nethermap");
         }
 
+        // Cyclonite - Disabled activation range as it attempts to multithread entities.
+        if (mixinClassName.startsWith(this.mixinPackage + "features.activation_range")) {
+            return !this.isModLoaded("c3h6n6o6");
+        }
+
         // Disable spawn chunk mixins if the setting is set to false - to minimize mod conflicts.
         if (mixinClassName.startsWith(this.mixinPackage + "features.spawn_chunks")) {
             return FeatureConfig.DISABLE_SPAWN_CHUNKS.get();
