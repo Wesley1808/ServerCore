@@ -1,6 +1,5 @@
 package me.wesley1808.servercore.common.utils;
 
-import me.lucko.spark.api.Spark;
 import me.lucko.spark.api.SparkProvider;
 import me.lucko.spark.api.statistic.StatisticWindow;
 import me.lucko.spark.api.statistic.misc.DoubleAverageInfo;
@@ -21,9 +20,9 @@ import net.minecraft.world.level.GameType;
 import java.math.BigDecimal;
 
 public final class DynamicManager {
-    private static final boolean USE_SPARK = FabricLoader.getInstance().isModLoaded("spark");
     private static final BigDecimal VALUE = new BigDecimal("0.1");
     private static BigDecimal mobcapModifier = new BigDecimal(String.valueOf(DynamicConfig.MAX_MOBCAP.get()));
+    private static GenericStatistic<DoubleAverageInfo, StatisticWindow.MillisPerTick> tickStatistics;
     private static double averageTickTime = 0.0;
     private static int viewDistance;
     private static int simulationDistance;
@@ -40,6 +39,10 @@ public final class DynamicManager {
             if (viewDistance > maxViewDistance) modifyViewDistance(maxViewDistance);
             if (simulationDistance > maxSimDistance) modifySimulationDistance(maxSimDistance);
         }
+
+        if (FabricLoader.getInstance().isModLoaded("spark")) {
+            tickStatistics = SparkProvider.get().mspt();
+        }
     }
 
     public static void update(MinecraftServer server) {
@@ -49,17 +52,9 @@ public final class DynamicManager {
 
     private static void updateValues(MinecraftServer server) {
         if (server.getTickCount() % 20 == 0) {
-            averageTickTime = -1;
-
-            if (USE_SPARK) {
-                Spark spark = SparkProvider.get();
-                GenericStatistic<DoubleAverageInfo, StatisticWindow.MillisPerTick> mspt = spark.mspt();
-                if (mspt != null) {
-                    averageTickTime = mspt.poll(StatisticWindow.MillisPerTick.SECONDS_10).median();
-                }
-            }
-
-            if (averageTickTime == -1) {
+            if (tickStatistics != null) {
+                averageTickTime = tickStatistics.poll(StatisticWindow.MillisPerTick.SECONDS_10).median();
+            } else {
                 averageTickTime = server.getAverageTickTime();
             }
         }
