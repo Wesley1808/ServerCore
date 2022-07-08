@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(NaturalSpawner.class)
 public abstract class NaturalSpawnerMixin {
     @Unique
-    private static ChunkAccess cachedChunk;
+    private static final ThreadLocal<ChunkAccess> cachedChunk = new ThreadLocal<>();
 
     @Shadow
     private static boolean isRightDistanceToPlayerAndSpawnPoint(ServerLevel serverLevel, ChunkAccess chunkAccess, BlockPos.MutableBlockPos mutableBlockPos, double d) {
@@ -38,14 +38,20 @@ public abstract class NaturalSpawnerMixin {
             )
     )
     private static boolean onlySpawnIfLoaded(ServerLevel world, ChunkAccess chunk, BlockPos.MutableBlockPos pos, double squaredDistance) {
-        return isRightDistanceToPlayerAndSpawnPoint(world, chunk, pos, squaredDistance) && (cachedChunk = ChunkManager.getChunkIfLoaded(world, pos)) != null;
+
+        if (isRightDistanceToPlayerAndSpawnPoint(world, chunk, pos, squaredDistance)) {
+            cachedChunk.set(ChunkManager.getChunkIfLoaded(world, pos));
+            return cachedChunk.get() != null;
+        }
+
+        return false;
     }
 
     // Sets cached chunk to null after finishing spawn attempts.
     // This way we guarantee this chunk isn't used for custom spawn logic in other mods, causing weird incompatibilities.
     @Inject(method = "spawnCategoryForPosition(Lnet/minecraft/world/entity/MobCategory;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/chunk/ChunkAccess;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/NaturalSpawner$SpawnPredicate;Lnet/minecraft/world/level/NaturalSpawner$AfterSpawnCallback;)V", at = @At("RETURN"))
     private static void onReturn(MobCategory mobCategory, ServerLevel serverLevel, ChunkAccess chunkAccess, BlockPos blockPos, NaturalSpawner.SpawnPredicate spawnPredicate, NaturalSpawner.AfterSpawnCallback afterSpawnCallback, CallbackInfo ci) {
-        cachedChunk = null;
+        cachedChunk.set(null);
     }
 
     // Fast biome lookups.
@@ -58,7 +64,7 @@ public abstract class NaturalSpawnerMixin {
             )
     )
     private static Holder<Biome> fastBiomeLookup(ServerLevel level, BlockPos pos) {
-        return cachedChunk != null ? ChunkManager.getRoughBiome(cachedChunk, pos) : level.getBiome(pos);
+        return cachedChunk.get() != null ? ChunkManager.getRoughBiome(cachedChunk.get(), pos) : level.getBiome(pos);
     }
 
     // Fast block / fluid state lookups.
@@ -71,7 +77,7 @@ public abstract class NaturalSpawnerMixin {
             )
     )
     private static BlockState fastBlockStateLookup$1(ServerLevel level, BlockPos pos) {
-        return cachedChunk != null ? cachedChunk.getBlockState(pos) : level.getBlockState(pos);
+        return cachedChunk.get() != null ? cachedChunk.get().getBlockState(pos) : level.getBlockState(pos);
     }
 
     @Redirect(
@@ -83,7 +89,7 @@ public abstract class NaturalSpawnerMixin {
             )
     )
     private static BlockState fastBlockStateLookup$2(LevelReader level, BlockPos pos) {
-        return cachedChunk != null ? cachedChunk.getBlockState(pos) : level.getBlockState(pos);
+        return cachedChunk.get() != null ? cachedChunk.get().getBlockState(pos) : level.getBlockState(pos);
     }
 
     @Redirect(
@@ -95,6 +101,6 @@ public abstract class NaturalSpawnerMixin {
             )
     )
     private static FluidState fastFluidStateLookup(LevelReader level, BlockPos pos) {
-        return cachedChunk != null ? cachedChunk.getFluidState(pos) : level.getFluidState(pos);
+        return cachedChunk.get() != null ? cachedChunk.get().getFluidState(pos) : level.getFluidState(pos);
     }
 }
