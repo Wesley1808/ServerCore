@@ -69,13 +69,11 @@ The config file can be found at `/config/servercore.toml`
 ```toml
 # Lets you enable / disable certain features and modify them.
 [features]
-	# (Default = true) Optimizes vanilla's per-player mobspawning by using PaperMC's PlayerMobDistanceMap.
-	use_distance_map = true
 	# (Default = false) Stops the server from loading spawn chunks.
 	disable_spawn_chunks = false
 	# (Default = false) Allows more xp orbs to merge with one another, to reduce xp orb lag.
 	fast_xp_merging = false
-	# (Default = false) Prevents players from moving into unloaded chunks.
+	# (Default = false) Prevents lagspikes caused by players moving into unloaded chunks.
 	prevent_moving_into_unloaded_chunks = false
 	# (Default = 128) The radius at which the game will look for other portals. Lower values can reduce lagspikes.
 	# Does not work if lithium is installed.
@@ -133,6 +131,19 @@ The config file can be found at `/config/servercore.toml`
 	villager_range = 64
 	animal_range = 64
 
+# Allows you to toggle specific optimizations that don't have full vanilla parity.
+# These settings will only take effect after server restarts.
+[optimizations]
+	# (Default = true) Optimizes vanilla's per-player mobspawning by using PaperMC's PlayerMobDistanceMap.
+	# This may sometimes count mobs to a player's mobcap that would normally be just out of its range.
+	use_distance_map = true
+	# (Default = true) Prevents many different lagspikes caused by loading chunks synchronously.
+	# This for example causes maps to only update loaded chunks, which depending on the viewdistance can be a smaller radius than vanilla.
+	reduce_sync_loads = true
+	# (Default = false) Can significantly reduce time spent on mobspawning, but isn't as accurate as vanilla on biome borders.
+	# This may cause mobs from another biome to spawn a few blocks across a biome border (this does not affect structure spawning!).
+	fast_biome_lookups = false
+
 # Allows you to disable specific commands and modify the way some of them are formatted.
 [commands]
 	# Enables / disables the /servercore status command.
@@ -167,6 +178,9 @@ The config file can be found at `/config/servercore.toml`
 	# (Default = false) Enables vertical range checks. By default, activation ranges only work horizontally.
 	# This can greatly improve performance on taller worlds, but might break a few very specific ai-based mobfarms.
 	use_vertical_range = false
+	# (Default = false) Skips 1/4th of entity ticks whilst not immune.
+	# This affects entities that are within the activation range, but not immune (for example by falling or being in water).
+	skip_non_immune = false
 	# (Default = true) Allows villagers to tick regardless of the activation range when panicking.
 	villager_tick_panic = true
 	# (Default = false) Allows villagers to tick regardless of the activation range.
