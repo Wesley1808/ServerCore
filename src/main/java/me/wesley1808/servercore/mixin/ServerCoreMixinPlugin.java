@@ -2,6 +2,7 @@ package me.wesley1808.servercore.mixin;
 
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.tables.FeatureConfig;
+import me.wesley1808.servercore.common.config.tables.OptimizationConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
@@ -38,19 +39,26 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             return !this.isModLoaded("lithium");
         }
 
-        // Very Many Players - Disabled distance maps for mobspawning, as VMP implements its own distance maps.
-        if (mixinClassName.startsWith(this.mixinPackage + "optimizations.mob_spawning.distance_map")) {
-            return !this.isModLoaded("vmp");
-        }
-
         // Cyclonite - Disabled activation range as it attempts to multithread entities.
         if (mixinClassName.startsWith(this.mixinPackage + "features.activation_range")) {
             return !this.isModLoaded("c3h6n6o6");
         }
 
-        // Disable spawn chunk mixins if the setting is set to false - to minimize mod conflicts.
+        // Very Many Players - Disabled distance maps for mobspawning, as VMP implements its own distance maps.
+        if (mixinClassName.startsWith(this.mixinPackage + "optimizations.mob_spawning.distance_map")) {
+            return OptimizationConfig.USE_DISTANCE_MAP.get() && !this.isModLoaded("vmp");
+        }
+
         if (mixinClassName.startsWith(this.mixinPackage + "features.spawn_chunks")) {
             return FeatureConfig.DISABLE_SPAWN_CHUNKS.get();
+        }
+
+        if (mixinClassName.startsWith(this.mixinPackage + "optimizations.sync_loads")) {
+            return OptimizationConfig.REDUCE_SYNC_LOADS.get();
+        }
+
+        if (mixinClassName.equals(this.mixinPackage + "optimizations.mob_spawning.NaturalSpawnerMixin")) {
+            return OptimizationConfig.FAST_BIOME_LOOKUPS.get();
         }
 
         return true;

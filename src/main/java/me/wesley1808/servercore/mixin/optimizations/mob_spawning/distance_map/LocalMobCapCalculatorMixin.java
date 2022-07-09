@@ -1,6 +1,5 @@
 package me.wesley1808.servercore.mixin.optimizations.mob_spawning.distance_map;
 
-import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import me.wesley1808.servercore.common.interfaces.IChunkMap;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,9 +26,7 @@ public abstract class LocalMobCapCalculatorMixin {
 
     @Inject(method = "getPlayersNear", at = @At("HEAD"), cancellable = true)
     private void getPlayersNear(ChunkPos chunkPos, CallbackInfoReturnable<List<ServerPlayer>> cir) {
-        if (FeatureConfig.USE_DISTANCE_MAP.get()) {
-            cir.setReturnValue(null); // Return nothing as we won't be using it.
-        }
+        cir.setReturnValue(null); // Return nothing as we won't be using it.
     }
 
     @Redirect(

@@ -1,7 +1,6 @@
 package me.wesley1808.servercore.mixin.optimizations.mob_spawning.distance_map;
 
 import me.wesley1808.servercore.common.collections.PlayerMobDistanceMap;
-import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import me.wesley1808.servercore.common.interfaces.IChunkMap;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
@@ -25,7 +24,7 @@ public abstract class ChunkMapMixin implements IChunkMap {
 
     @Inject(method = "saveAllChunks", at = @At("TAIL"))
     private void resetDistanceMap(boolean flush, CallbackInfo ci) {
-        if (FeatureConfig.USE_DISTANCE_MAP.get() && this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)) {
+        if (this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)) {
             // Resets the PlayerMobDistanceMap whenever the worlds save.
             // The PlayerMobDistanceMap may rarely fail to remove a player object from the HashSet.
             // This causes areas affected by this to be unable to spawn any mobs.

@@ -38,7 +38,7 @@ public abstract class ServerChunkCacheMixin {
             )
     )
     private void updateDistanceMap(CallbackInfo ci) {
-        if (FeatureConfig.USE_DISTANCE_MAP.get() && (this.spawnFriendlies || this.spawnEnemies) && this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)) {
+        if ((this.spawnFriendlies || this.spawnEnemies) && this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)) {
             // Update distance map -> by using a constant 10 as view distance we prevent the situations where:
             // 1 - No mobs will spawn because there's another player with mobs 500 blocks away (High view distance).
             // 2 - There will be 140 mobs in a small area because there's another player 50 blocks away (Low view distance).
