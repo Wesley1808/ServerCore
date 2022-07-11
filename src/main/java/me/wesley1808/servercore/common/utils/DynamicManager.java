@@ -20,6 +20,7 @@ import net.minecraft.world.level.GameType;
 import java.math.BigDecimal;
 
 public final class DynamicManager {
+    private static final boolean SPARK_LOADED = FabricLoader.getInstance().isModLoaded("spark");
     private static final BigDecimal VALUE = new BigDecimal("0.1");
     private static BigDecimal mobcapModifier = new BigDecimal(String.valueOf(DynamicConfig.MAX_MOBCAP.get()));
     private static GenericStatistic<DoubleAverageInfo, StatisticWindow.MillisPerTick> tickStatistics;
@@ -39,10 +40,6 @@ public final class DynamicManager {
             if (viewDistance > maxViewDistance) modifyViewDistance(maxViewDistance);
             if (simulationDistance > maxSimDistance) modifySimulationDistance(maxSimDistance);
         }
-
-        if (FabricLoader.getInstance().isModLoaded("spark")) {
-            tickStatistics = SparkProvider.get().mspt();
-        }
     }
 
     public static void update(MinecraftServer server) {
@@ -52,6 +49,10 @@ public final class DynamicManager {
 
     private static void updateValues(MinecraftServer server) {
         if (server.getTickCount() % 20 == 0) {
+            if (SPARK_LOADED && tickStatistics == null) {
+                tickStatistics = SparkProvider.get().mspt();
+            }
+
             if (tickStatistics != null) {
                 averageTickTime = tickStatistics.poll(StatisticWindow.MillisPerTick.SECONDS_10).median();
             } else {
