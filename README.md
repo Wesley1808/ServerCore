@@ -149,7 +149,6 @@ The config file can be found at `/config/servercore.toml`
 	# Enables / disables the /servercore status command.
 	command_status = true
 	# Enables / disables the /mobcaps command.
-	# Forcefully set to false by: VMP
 	command_mobcaps = true
 	# The title for the /mobcaps command.
 	mobcap_title = "<dark_aqua>${line} <aqua>Mobcaps</aqua> (<aqua>${mobcap_modifier}</aqua>) ${line}</dark_aqua>"

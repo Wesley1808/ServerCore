@@ -59,6 +59,10 @@ public abstract class MapItemSavedDataMixin {
             )
     )
     private String getString(Component component) {
-        return ((LiteralContents) component.getContents()).text();
+        if (component.getContents() instanceof LiteralContents literal) {
+            return literal.text();
+        }
+
+        return component.getString();
     }
 }

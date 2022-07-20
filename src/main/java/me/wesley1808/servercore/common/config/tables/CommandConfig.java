@@ -4,7 +4,7 @@ import me.wesley1808.servercore.common.config.ConfigEntry;
 
 public final class CommandConfig {
     public static final ConfigEntry<Boolean> COMMAND_STATUS = new ConfigEntry<>(true, "Enables / disables the /servercore status command.");
-    public static final ConfigEntry<Boolean> COMMAND_MOBCAPS = new ConfigEntry<>(true, "Enables / disables the /mobcaps command.\nForcefully set to false by: VMP");
+    public static final ConfigEntry<Boolean> COMMAND_MOBCAPS = new ConfigEntry<>(true, "Enables / disables the /mobcaps command.");
     public static final ConfigEntry<String> MOBCAP_TITLE = new ConfigEntry<>("<dark_aqua>${line} <aqua>Mobcaps</aqua> (<aqua>${mobcap_modifier}</aqua>) ${line}</dark_aqua>", "The title for the /mobcaps command.");
     public static final ConfigEntry<String> MOBCAP_CONTENT = new ConfigEntry<>("<dark_gray>» <dark_aqua>${name}:</dark_aqua> <green>${current}</green> / <green>${capacity}</green></dark_gray>", "The content for the /mobcaps command. This is displayed for every existing spawngroup.");
     public static final ConfigEntry<String> STATUS_TITLE = new ConfigEntry<>("<dark_aqua>${line} <aqua>ServerCore</aqua> ${line}</dark_aqua>", "The title for the /servercore status command.");
