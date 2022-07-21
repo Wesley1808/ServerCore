@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_16",
   "plugin": "me.wesley1808.servercore.mixin.ServerCoreMixinPlugin",
   "mixins": [
+    "compat.vmp.LocalMobCapCalculatorMixin",
+    "compat.vmp.MobCountsMixin",
     "events.PlayerListMixin",
     "features.activation_range.EntityMixin",
     "features.activation_range.LevelMixin",

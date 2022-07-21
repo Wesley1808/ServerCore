@@ -49,6 +49,10 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             return OptimizationConfig.USE_DISTANCE_MAP.get() && !this.isModLoaded("vmp");
         }
 
+        if (mixinClassName.startsWith(this.mixinPackage + "compat.vmp")) {
+            return this.isModLoaded("vmp");
+        }
+
         if (mixinClassName.startsWith(this.mixinPackage + "features.spawn_chunks")) {
             return FeatureConfig.DISABLE_SPAWN_CHUNKS.get();
         }
