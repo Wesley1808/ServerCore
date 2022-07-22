@@ -60,6 +60,7 @@
     "optimizations.sync_loads.DynamicGameEventListenerMixin",
     "optimizations.sync_loads.GroundPathNavigationMixin",
     "optimizations.sync_loads.MapItemMixin",
+    "optimizations.sync_loads.RemoveBlockGoalMixin",
     "optimizations.sync_loads.SleepInBedMixin",
     "optimizations.ticking.EntityCallbacksMixin",
     "optimizations.ticking.chunk.LevelChunkMixin",
