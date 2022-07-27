@@ -36,6 +36,6 @@ public abstract class ChickenMixin extends Animal implements InactiveEntity {
 
         this.noActionTime++;
         ActivationRange.updateAge(this);
-        ActivationRange.updateGoalSelectors(this.goalSelector, this.targetSelector);
+        ActivationRange.updateGoalSelectors(this);
     }
 }

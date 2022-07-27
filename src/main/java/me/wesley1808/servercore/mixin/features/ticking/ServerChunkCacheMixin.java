@@ -1,7 +1,6 @@
 package me.wesley1808.servercore.mixin.features.ticking;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.utils.DynamicManager;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerChunkCache;
@@ -99,13 +98,13 @@ public abstract class ServerChunkCacheMixin {
 
     // Trim the active chunk ticking list periodically.
     @Inject(method = "save", at = @At("TAIL"))
-    private void servercore$onSave(boolean bl, CallbackInfo ci) {
+    private void onSave(boolean bl, CallbackInfo ci) {
         this.trim = true;
     }
 
     private void updateActiveChunks(Iterable<ChunkHolder> holders) {
         // Update active chunks once a second.
-        if (ServerCore.getServer().getTickCount() % 20 == 0) {
+        if (this.level.getServer().getTickCount() % 20 == 0) {
             // Clear cached chunks
             this.active.clear();
 

@@ -42,6 +42,6 @@ public abstract class VillagerMixin extends AbstractVillager implements Inactive
         this.maybeDecayGossip();
         this.noActionTime++;
         ActivationRange.updateAge(this);
-        ActivationRange.updateGoalSelectors(this.goalSelector, this.targetSelector);
+        ActivationRange.updateGoalSelectors(this);
     }
 }

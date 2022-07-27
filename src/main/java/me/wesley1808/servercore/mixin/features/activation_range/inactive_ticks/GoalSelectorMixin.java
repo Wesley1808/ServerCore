@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.mixin.features.activation_range.inactive_ticks;
 
+import me.wesley1808.servercore.common.config.tables.DynamicBrainActivationConfig;
 import me.wesley1808.servercore.common.interfaces.activation_range.IGoalSelector;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
@@ -12,6 +13,7 @@ import java.util.Set;
 
 /**
  * From: PaperMC (Entity-Activation-Range-2.0.patch)
+ * And: Pufferfish (Dynamic-Activation-of-Brain.patch)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 
@@ -35,7 +37,8 @@ public abstract class GoalSelectorMixin implements IGoalSelector {
     }
 
     @Override
-    public boolean inactiveTick() {
-        return ++this.curRate % 20 == 0;
+    public boolean inactiveTick(int tickRate, boolean inactive) {
+        final int maxTickRate = DynamicBrainActivationConfig.MAX_ACTIVATION_PRIORITY.get();
+        return ++this.curRate % (inactive ? maxTickRate : Math.min(tickRate, maxTickRate)) == 0;
     }
 }

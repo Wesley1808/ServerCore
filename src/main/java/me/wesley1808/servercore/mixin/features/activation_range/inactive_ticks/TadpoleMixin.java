@@ -25,6 +25,6 @@ public abstract class TadpoleMixin extends AbstractFish implements InactiveEntit
     public void inactiveTick() {
         this.noActionTime++;
         this.setAge(this.age + 1);
-        ActivationRange.updateGoalSelectors(this.goalSelector, this.targetSelector);
+        ActivationRange.updateGoalSelectors(this);
     }
 }

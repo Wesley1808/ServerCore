@@ -34,6 +34,6 @@ public abstract class SkeletonHorseMixin extends AbstractHorse implements Inacti
 
         this.noActionTime++;
         ActivationRange.updateAge(this);
-        ActivationRange.updateGoalSelectors(this.goalSelector, this.targetSelector);
+        ActivationRange.updateGoalSelectors(this);
     }
 }

@@ -2,16 +2,13 @@ package me.wesley1808.servercore.common.utils;
 
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
-import me.wesley1808.servercore.common.interfaces.activation_range.ActivationEntity;
-import me.wesley1808.servercore.common.interfaces.activation_range.IGoalSelector;
-import me.wesley1808.servercore.common.interfaces.activation_range.ILevel;
-import me.wesley1808.servercore.common.interfaces.activation_range.IPathFinderMob;
+import me.wesley1808.servercore.common.config.tables.DynamicBrainActivationConfig;
+import me.wesley1808.servercore.common.interfaces.activation_range.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
-import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ambient.AmbientCreature;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Animal;
@@ -45,7 +42,8 @@ import java.util.function.BooleanSupplier;
 import java.util.function.IntSupplier;
 
 /**
- * Partially From: PaperMC & Spigot (Entity-Activation-Range.patch)
+ * Partially From: PaperMC, Spigot (Entity-Activation-Range.patch)
+ * And: Pufferfish (Dynamic-Activation-of-Brain.patch)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 
@@ -151,12 +149,12 @@ public final class ActivationRange {
             }
 
             for (Entity entity : level.getEntities(player, maxBB)) {
-                activateEntity(entity);
+                activateEntity(player, entity);
             }
         }
     }
 
-    private static void activateEntity(Entity entity) {
+    private static void activateEntity(ServerPlayer player, Entity entity) {
         final ActivationEntity activationEntity = (ActivationEntity) entity;
         final int currentTick = ServerCore.getServer().getTickCount();
 
@@ -164,6 +162,19 @@ public final class ActivationRange {
             if (activationEntity.isExcluded() || activationEntity.getActivationType().boundingBox.intersects(entity.getBoundingBox())) {
                 activationEntity.setActivatedTick(currentTick + 19);
             }
+        }
+
+        if (entity instanceof DynamicActivationEntity dynamicEntity) {
+            if (DynamicBrainActivationConfig.ENABLED.get()) {
+                final int startDistance = DynamicBrainActivationConfig.START_DISTANCE.get();
+                final int squaredDistance = (int) player.distanceToSqr(entity);
+                if (squaredDistance > (startDistance * startDistance)) {
+                    dynamicEntity.setActivationPriority(Math.max(1, Math.min(squaredDistance >> DynamicBrainActivationConfig.DISTANCE_MODIFIER.get(), DynamicBrainActivationConfig.MAX_ACTIVATION_PRIORITY.get())));
+                    return;
+                }
+            }
+
+            dynamicEntity.setActivationPriority(1);
         }
     }
 
@@ -358,13 +369,14 @@ public final class ActivationRange {
     }
 
     // Updates goal selectors for mob entities.
-    public static void updateGoalSelectors(GoalSelector goalSelector, GoalSelector targetSelector) {
-        if (((IGoalSelector) goalSelector).inactiveTick()) {
-            goalSelector.tick();
+    public static void updateGoalSelectors(Mob mob) {
+        final int tickRate = ((DynamicActivationEntity) mob).getActivationPriority();
+        if (((IGoalSelector) mob.goalSelector).inactiveTick(tickRate, true)) {
+            mob.goalSelector.tick();
         }
 
-        if (((IGoalSelector) targetSelector).inactiveTick()) {
-            targetSelector.tick();
+        if (((IGoalSelector) mob.targetSelector).inactiveTick(tickRate, true)) {
+            mob.targetSelector.tick();
         }
     }
 
