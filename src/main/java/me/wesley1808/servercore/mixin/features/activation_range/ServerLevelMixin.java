@@ -37,7 +37,7 @@ public abstract class ServerLevelMixin {
                     target = "Lnet/minecraft/world/level/entity/EntityTickList;forEach(Ljava/util/function/Consumer;)V"
             )
     )
-    public void activateEntities(BooleanSupplier booleanSupplier, CallbackInfo ci) {
+    public void servercore$activateEntities(BooleanSupplier booleanSupplier, CallbackInfo ci) {
         if (ActivationRangeConfig.ENABLED.get() && this.server.getTickCount() % 20 == 0) {
             ActivationRange.activateEntities((ServerLevel) (Object) this);
         }
@@ -50,7 +50,7 @@ public abstract class ServerLevelMixin {
                     target = "Lnet/minecraft/world/entity/Entity;tick()V"
             )
     )
-    public void shouldTickEntity(Entity entity) {
+    public void servercore$shouldTickEntity(Entity entity) {
         if (ActivationRange.checkIfActive(entity)) {
             ((ActivationEntity) entity).setInactive(false);
             entity.tickCount++;
@@ -68,7 +68,7 @@ public abstract class ServerLevelMixin {
                     target = "Lnet/minecraft/world/entity/Entity;rideTick()V"
             )
     )
-    public void shouldTickPassengers(Entity entity) {
+    public void servercore$shouldTickPassenger(Entity entity) {
         if (ActivationRange.checkIfActive(entity)) {
             ((ActivationEntity) entity).setInactive(false);
             entity.tickCount++;
@@ -94,7 +94,7 @@ public abstract class ServerLevelMixin {
                     opcode = Opcodes.PUTFIELD
             )
     )
-    public void redirectTickCount(Entity entity, int value) {
+    public void servercore$redirectTickCount(Entity entity, int value) {
         ((ActivationEntity) entity).incFullTickCount();
     }
 }

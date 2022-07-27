@@ -17,7 +17,7 @@ public abstract class ItemEntityMixin {
                     target = "Lnet/minecraft/world/phys/AABB;inflate(DDD)Lnet/minecraft/world/phys/AABB;"
             )
     )
-    private void modifyMergeRadius(Args args) {
+    private void servercore$modifyMergeRadius(Args args) {
         double mergeRadius = FeatureConfig.ITEM_MERGE_RADIUS.get();
         args.set(0, mergeRadius);
         args.set(2, mergeRadius);

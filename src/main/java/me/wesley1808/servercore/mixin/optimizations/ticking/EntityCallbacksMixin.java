@@ -13,7 +13,7 @@ public abstract class EntityCallbacksMixin {
     // Prevents markers from being added to the entity tick list.
     // Markers have no tick logic, but still need to be iterated over every tick.
     @Inject(method = "onTickingStart(Lnet/minecraft/world/entity/Entity;)V", at = @At("HEAD"), cancellable = true)
-    private void cancelMarkerTicks(Entity entity, CallbackInfo ci) {
+    private void servercore$cancelMarkerTicks(Entity entity, CallbackInfo ci) {
         if (entity instanceof Marker) {
             ci.cancel();
         }

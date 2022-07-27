@@ -21,7 +21,7 @@ public abstract class ChunkMapMixin {
                     ordinal = 0
             )
     )
-    private boolean limitChunkSaves(ObjectIterator<ChunkHolder> iterator) {
+    private boolean servercore$limitChunkSaves(ObjectIterator<ChunkHolder> iterator) {
         final int threshold = FeatureConfig.CHUNK_SAVE_THRESHOLD.get();
         if (threshold < 0) return iterator.hasNext();
 

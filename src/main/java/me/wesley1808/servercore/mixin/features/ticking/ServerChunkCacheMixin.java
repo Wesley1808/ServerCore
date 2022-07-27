@@ -26,10 +26,8 @@ import java.util.function.Consumer;
 public abstract class ServerChunkCacheMixin {
     @Unique
     private final ObjectArrayList<ServerChunkCache.ChunkAndHolder> active = new ObjectArrayList<>();
-
     @Unique
     private boolean trim;
-
     @Shadow
     @Final
     ServerLevel level;
@@ -44,7 +42,7 @@ public abstract class ServerChunkCacheMixin {
                     remap = false
             )
     )
-    private ArrayList<?> noList(int initialArraySize) {
+    private ArrayList<?> servercore$noList(int initialArraySize) {
         return null;
     }
 
@@ -56,7 +54,7 @@ public abstract class ServerChunkCacheMixin {
                     target = "Ljava/util/Collections;shuffle(Ljava/util/List;)V"
             )
     )
-    private void cancelShuffle(List<?> list) {
+    private void servercore$cancelShuffle(List<?> list) {
     }
 
     // Replaces chunk filtering with our own implementation.
@@ -68,7 +66,7 @@ public abstract class ServerChunkCacheMixin {
                     ordinal = 0
             )
     )
-    private Iterator<ChunkHolder> filterChunks(Iterable<ChunkHolder> holders) {
+    private Iterator<ChunkHolder> servercore$filterChunks(Iterable<ChunkHolder> holders) {
         this.updateActiveChunks(holders);
         return Collections.emptyIterator();
     }
@@ -82,7 +80,7 @@ public abstract class ServerChunkCacheMixin {
                     ordinal = 0
             )
     )
-    private Iterator<?> onlyTickActiveChunks(List<?> list) {
+    private Iterator<?> servercore$onlyTickActiveChunks(List<?> list) {
         return this.active.iterator();
     }
 
@@ -95,13 +93,13 @@ public abstract class ServerChunkCacheMixin {
                     ordinal = 0
             )
     )
-    private void flushActiveChunks(List<?> list, Consumer<ServerChunkCache.ChunkAndHolder> action) {
+    private void servercore$flushActiveChunks(List<?> list, Consumer<ServerChunkCache.ChunkAndHolder> action) {
         this.active.forEach(action);
     }
 
     // Trim the active chunk ticking list periodically.
     @Inject(method = "save", at = @At("TAIL"))
-    private void onSave(boolean bl, CallbackInfo ci) {
+    private void servercore$onSave(boolean bl, CallbackInfo ci) {
         this.trim = true;
     }
 

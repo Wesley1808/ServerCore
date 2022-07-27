@@ -45,7 +45,7 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
     private int fullTickCount;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    public void setupActivationStates(EntityType<?> type, Level level, CallbackInfo ci) {
+    public void servercore$setupActivationStates(EntityType<?> type, Level level, CallbackInfo ci) {
         final Entity entity = (Entity) (Object) this;
         this.activationType = ActivationRange.initializeEntityActivationType(entity);
         this.excluded = level == null || ActivationRange.isExcluded(entity);
@@ -59,7 +59,7 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
                     shift = At.Shift.BEFORE
             )
     )
-    public void onPistonMove(MoverType moverType, Vec3 vec3, CallbackInfo ci) {
+    public void servercore$onPistonMove(MoverType moverType, Vec3 vec3, CallbackInfo ci) {
         if (!this.level.isClientSide) {
             final int ticks = ServerCore.getServer().getTickCount() + 20;
             this.activatedTick = Math.max(this.activatedTick, ticks);
@@ -69,7 +69,7 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
 
     // ServerCore - Prevent inactive entities from getting extreme velocities.
     @Inject(method = "push(DDD)V", at = @At("HEAD"), cancellable = true)
-    public void ignorePushingWhileInactive(double x, double y, double z, CallbackInfo ci) {
+    public void servercore$ignorePushingWhileInactive(double x, double y, double z, CallbackInfo ci) {
         if (this.isInactive && !this.level.isClientSide) {
             ci.cancel();
         }

@@ -25,7 +25,7 @@ public abstract class LocalMobCapCalculatorMixin {
     private ChunkMap chunkMap;
 
     @Inject(method = "getPlayersNear", at = @At("HEAD"), cancellable = true)
-    private void getPlayersNear(ChunkPos chunkPos, CallbackInfoReturnable<List<ServerPlayer>> cir) {
+    private void servercore$cancelOp(ChunkPos chunkPos, CallbackInfoReturnable<List<ServerPlayer>> cir) {
         cir.setReturnValue(null); // Return nothing as we won't be using it.
     }
 
@@ -36,7 +36,7 @@ public abstract class LocalMobCapCalculatorMixin {
                     target = "Ljava/util/List;iterator()Ljava/util/Iterator;"
             )
     )
-    private Iterator<ServerPlayer> useDistanceMap$1(List<ServerPlayer> list, MobCategory category, ChunkPos chunkPos) {
+    private Iterator<ServerPlayer> servercore$useDistanceMap(List<ServerPlayer> list, MobCategory category, ChunkPos chunkPos) {
         return this.getPlayerIterator(list, chunkPos);
     }
 
@@ -47,7 +47,7 @@ public abstract class LocalMobCapCalculatorMixin {
                     target = "Ljava/util/List;iterator()Ljava/util/Iterator;"
             )
     )
-    private Iterator<ServerPlayer> useDistanceMap$2(List<ServerPlayer> list, ChunkPos chunkPos, MobCategory category) {
+    private Iterator<ServerPlayer> servercore$useDistanceMap(List<ServerPlayer> list, ChunkPos chunkPos, MobCategory category) {
         return this.getPlayerIterator(list, chunkPos);
     }
 

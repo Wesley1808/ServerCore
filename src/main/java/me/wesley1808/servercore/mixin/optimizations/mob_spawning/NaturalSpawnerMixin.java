@@ -22,7 +22,7 @@ public abstract class NaturalSpawnerMixin {
                     target = "Lnet/minecraft/server/level/ServerLevel;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;"
             )
     )
-    private static Holder<Biome> fastBiomeLookup(ServerLevel level, BlockPos pos) {
+    private static Holder<Biome> servercore$fastBiomeLookup(ServerLevel level, BlockPos pos) {
         LevelChunk chunk = ChunkManager.getChunkIfLoaded(level, pos);
         return chunk != null ? ChunkManager.getRoughBiome(chunk, pos) : level.getBiome(pos);
     }

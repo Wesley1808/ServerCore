@@ -19,7 +19,7 @@ public abstract class DynamicGameEventListenerMixin {
                     target = "Lnet/minecraft/world/level/LevelReader;getChunk(IILnet/minecraft/world/level/chunk/ChunkStatus;Z)Lnet/minecraft/world/level/chunk/ChunkAccess;"
             )
     )
-    private static ChunkAccess onlyUpdateIfLoaded(LevelReader levelReader, int x, int z, ChunkStatus status, boolean bl) {
+    private static ChunkAccess servercore$onlyUpdateIfLoaded(LevelReader levelReader, int x, int z, ChunkStatus status, boolean bl) {
         // levelReader is always an instance of ServerLevel here.
         return ChunkManager.getChunkIfLoaded((Level) levelReader, x, z);
     }

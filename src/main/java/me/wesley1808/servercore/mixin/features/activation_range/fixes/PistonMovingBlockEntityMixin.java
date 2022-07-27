@@ -37,7 +37,7 @@ public abstract class PistonMovingBlockEntityMixin {
                     shift = At.Shift.AFTER
             )
     )
-    private static void onPushEntity(Level level, BlockPos blockPos, float f, PistonMovingBlockEntity pistonMovingBlockEntity, CallbackInfo ci, Direction direction, double d, VoxelShape voxelShape, AABB aABB, List list, List list2, boolean bl, Iterator var12, Entity entity, Vec3 vec3, double e, double g, double h) {
+    private static void servercore$onPushEntity(Level level, BlockPos blockPos, float f, PistonMovingBlockEntity pistonMovingBlockEntity, CallbackInfo ci, Direction direction, double d, VoxelShape voxelShape, AABB aABB, List list, List list2, boolean bl, Iterator var12, Entity entity, Vec3 vec3, double e, double g, double h) {
         if (!level.isClientSide) {
             final int ticks = ServerCore.getServer().getTickCount() + 10;
             final ActivationEntity activationEntity = (ActivationEntity) entity;

@@ -24,12 +24,12 @@ public abstract class MinecraftServerMixin {
                     target = "Lnet/minecraft/server/level/ServerChunkCache;addRegionTicket(Lnet/minecraft/server/level/TicketType;Lnet/minecraft/world/level/ChunkPos;ILjava/lang/Object;)V"
             )
     )
-    private <T> void preventAddingRegionTicket(ServerChunkCache chunkCache, TicketType<T> ticketType, ChunkPos chunkPos, int i, T object) {
+    private <T> void servercore$preventAddingRegionTicket(ServerChunkCache chunkCache, TicketType<T> ticketType, ChunkPos chunkPos, int i, T object) {
         // NO-OP
     }
 
     @ModifyConstant(method = "prepareLevels", constant = @Constant(intValue = 441))
-    private int preventWaitingForSpawnChunks(int constant) {
+    private int servercore$preventWaitingForSpawnChunks(int constant) {
         return KSYXIS_LOADED ? constant : 0;
     }
 }

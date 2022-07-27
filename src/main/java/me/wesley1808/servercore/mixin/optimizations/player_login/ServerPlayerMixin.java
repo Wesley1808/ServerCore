@@ -21,7 +21,7 @@ public abstract class ServerPlayerMixin {
                     target = "Lnet/minecraft/server/level/ServerPlayer;fudgeSpawnLocation(Lnet/minecraft/server/level/ServerLevel;)V"
             )
     )
-    private void cancelOp(ServerPlayer player, ServerLevel level) {
+    private void servercore$cancelOp(ServerPlayer player, ServerLevel level) {
         // Moves operation to PlayerList.
     }
 }

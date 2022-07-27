@@ -18,7 +18,7 @@ public abstract class ServerLevelMixin {
                     target = "Lnet/minecraft/server/level/ServerChunkCache;addRegionTicket(Lnet/minecraft/server/level/TicketType;Lnet/minecraft/world/level/ChunkPos;ILjava/lang/Object;)V"
             )
     )
-    private <T> void preventAddingRegionTicket(ServerChunkCache chunkCache, TicketType<T> ticketType, ChunkPos chunkPos, int i, T object) {
+    private <T> void servercore$preventAddingRegionTicket(ServerChunkCache chunkCache, TicketType<T> ticketType, ChunkPos chunkPos, int i, T object) {
         // NO-OP
     }
 }

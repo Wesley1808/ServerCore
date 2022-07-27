@@ -20,7 +20,7 @@ public abstract class EntityMixin {
                     target = "Lnet/minecraft/server/level/ServerLevel;getHeightmapPos(Lnet/minecraft/world/level/levelgen/Heightmap$Types;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;"
             )
     )
-    private BlockPos fixSpawnHeight(ServerLevel level, Heightmap.Types types, BlockPos blockPos) {
+    private BlockPos servercore$fixSpawnHeight(ServerLevel level, Heightmap.Types types, BlockPos blockPos) {
         return ChunkManager.isChunkLoaded(level, blockPos) ? level.getHeightmapPos(types, blockPos) : blockPos;
     }
 }

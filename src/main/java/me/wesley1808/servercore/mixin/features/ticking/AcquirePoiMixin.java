@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AcquirePoi.class)
 public abstract class AcquirePoiMixin {
-
     @Shadow
     private long nextScheduledStart;
 
@@ -30,7 +29,7 @@ public abstract class AcquirePoiMixin {
                     shift = At.Shift.BEFORE
             )
     )
-    private void skipIfStuck(ServerLevel level, PathfinderMob entity, long gameTime, CallbackInfo ci) {
+    private void servercore$skipIfStuck(ServerLevel level, PathfinderMob entity, long gameTime, CallbackInfo ci) {
         if (entity.getNavigation().isStuck() && FeatureConfig.LOBOTOMIZE_VILLAGERS.get()) {
             this.nextScheduledStart += 200L;
         }

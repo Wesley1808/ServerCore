@@ -18,7 +18,7 @@ public abstract class OcelotMixin {
                     opcode = Opcodes.GETFIELD
             )
     )
-    private int fixOcelotDespawning(Ocelot ocelot) {
+    private int servercore$fixOcelotDespawning(Ocelot ocelot) {
         return ((ActivationEntity) ocelot).getFullTickCount();
     }
 }

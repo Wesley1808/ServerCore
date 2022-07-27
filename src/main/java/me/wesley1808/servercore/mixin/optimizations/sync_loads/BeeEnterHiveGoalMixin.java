@@ -29,7 +29,7 @@ public abstract class BeeEnterHiveGoalMixin {
                     target = "Lnet/minecraft/world/level/Level;getBlockEntity(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/entity/BlockEntity;"
             )
     )
-    private void onlyStartIfLoaded(CallbackInfo ci) {
+    private void servercore$onlyStartIfLoaded(CallbackInfo ci) {
         // noinspection ConstantConditions
         if (!ChunkManager.isChunkLoaded(this.field_20367.level, this.field_20367.getHivePos())) {
             ci.cancel();
@@ -45,7 +45,7 @@ public abstract class BeeEnterHiveGoalMixin {
                     target = "Lnet/minecraft/world/level/Level;getBlockEntity(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/entity/BlockEntity;"
             )
     )
-    private void onlyUseIfLoaded(CallbackInfoReturnable<Boolean> cir) {
+    private void servercore$onlyUseIfLoaded(CallbackInfoReturnable<Boolean> cir) {
         // noinspection ConstantConditions
         if (!ChunkManager.isChunkLoaded(this.field_20367.level, this.field_20367.getHivePos())) {
             cir.setReturnValue(false);

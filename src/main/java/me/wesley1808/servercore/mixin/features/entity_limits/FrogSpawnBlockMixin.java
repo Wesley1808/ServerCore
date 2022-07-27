@@ -28,7 +28,7 @@ public class FrogSpawnBlockMixin {
                     target = "Lnet/minecraft/server/level/ServerLevel;playSound(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/core/BlockPos;Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V"
             )
     )
-    private void cancelFrogHatching(ServerLevel level, BlockPos pos, RandomSource randomSource, CallbackInfo ci) {
+    private void servercore$cancelFrogHatching(ServerLevel level, BlockPos pos, RandomSource randomSource, CallbackInfo ci) {
         if (BreedingCap.exceedsLimit(ENTITIES_TO_CHECK, level, pos, EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {
             ci.cancel();
         }

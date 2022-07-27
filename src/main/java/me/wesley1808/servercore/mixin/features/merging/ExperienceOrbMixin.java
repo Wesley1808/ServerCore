@@ -10,12 +10,12 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public abstract class ExperienceOrbMixin {
 
     @ModifyConstant(method = "canMerge(Lnet/minecraft/world/entity/ExperienceOrb;II)Z", constant = @Constant(intValue = 40), require = 0)
-    private static int modifyMergeChance(int constant) {
+    private static int servercore$modifyMergeChance(int constant) {
         return FeatureConfig.FAST_XP_MERGING.get() ? 8 : constant;
     }
 
     @ModifyConstant(method = "scanForEntities", constant = @Constant(doubleValue = 0.5), require = 0)
-    private double modifyMergeRadius(double constant) {
+    private double servercore$modifyMergeRadius(double constant) {
         return FeatureConfig.XP_MERGE_RADIUS.get();
     }
 }

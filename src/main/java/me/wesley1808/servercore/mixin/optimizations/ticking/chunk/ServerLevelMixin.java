@@ -41,7 +41,7 @@ public abstract class ServerLevelMixin extends Level implements IServerLevel {
                     ordinal = 0
             )
     )
-    private int replaceLightningCheck(RandomSource randomSource, int i, LevelChunk chunk, int i2) {
+    private int servercore$replaceLightningCheck(RandomSource randomSource, int i, LevelChunk chunk, int i2) {
         return ((ILevelChunk) chunk).shouldDoLightning(randomSource);
     }
 
@@ -54,7 +54,7 @@ public abstract class ServerLevelMixin extends Level implements IServerLevel {
                     ordinal = 1
             )
     )
-    private int replaceIceAndSnowCheck(RandomSource randomSource, int i) {
+    private int servercore$replaceIceAndSnowCheck(RandomSource randomSource, int i) {
         return this.currentIceAndSnowTick++ & 15;
     }
 

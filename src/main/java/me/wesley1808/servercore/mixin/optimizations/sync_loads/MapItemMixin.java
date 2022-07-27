@@ -20,7 +20,7 @@ public abstract class MapItemMixin {
                     target = "Lnet/minecraft/world/level/Level;getChunkAt(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/chunk/LevelChunk;"
             )
     )
-    private LevelChunk onlyUpdateIfLoaded(Level level, BlockPos pos) {
+    private LevelChunk servercore$onlyUpdateIfLoaded(Level level, BlockPos pos) {
         return ChunkManager.getChunkIfLoaded(level, pos);
     }
 
@@ -31,7 +31,7 @@ public abstract class MapItemMixin {
                     target = "Lnet/minecraft/world/level/chunk/LevelChunk;isEmpty()Z"
             )
     )
-    private boolean validateNotNull(LevelChunk chunk) {
+    private boolean servercore$validateNotNull(LevelChunk chunk) {
         return chunk == null || chunk.isEmpty();
     }
 }

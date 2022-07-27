@@ -31,7 +31,7 @@ public abstract class MapItemSavedDataMixin {
                     target = "Lnet/minecraft/world/entity/player/Inventory;contains(Lnet/minecraft/world/item/ItemStack;)Z"
             )
     )
-    private boolean cancelInventoryIteration(Inventory inventory, ItemStack stack) {
+    private boolean servercore$cancelInventoryIteration(Inventory inventory, ItemStack stack) {
         return !stack.isFramed() && inventory.contains(stack);
     }
 
@@ -44,7 +44,7 @@ public abstract class MapItemSavedDataMixin {
                     ordinal = 0
             )
     )
-    private void removeDecoration(MapItemSavedData data, String id, Player player, ItemStack stack) {
+    private void servercore$removePlayerIcon(MapItemSavedData data, String id, Player player, ItemStack stack) {
         if (!stack.isFramed()) {
             this.removeDecoration(id);
         }
@@ -58,7 +58,7 @@ public abstract class MapItemSavedDataMixin {
                     target = "Lnet/minecraft/network/chat/Component;getString()Ljava/lang/String;"
             )
     )
-    private String getString(Component component) {
+    private String servercore$getPlayerName(Component component) {
         if (component.getContents() instanceof LiteralContents literal) {
             return literal.text();
         }

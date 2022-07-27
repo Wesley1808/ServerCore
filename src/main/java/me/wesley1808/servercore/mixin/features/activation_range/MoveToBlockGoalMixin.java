@@ -37,7 +37,7 @@ public abstract class MoveToBlockGoalMixin extends Goal {
                     ordinal = 0
             )
     )
-    public void setTargetPos(CallbackInfoReturnable<Boolean> cir, int i, int j, BlockPos blockPos, BlockPos.MutableBlockPos mutable, int k, int l, int m, int n) {
+    public void servercore$setTargetPos(CallbackInfoReturnable<Boolean> cir, int i, int j, BlockPos blockPos, BlockPos.MutableBlockPos mutable, int k, int l, int m, int n) {
         this.setTargetPosition(mutable.immutable());
     }
 

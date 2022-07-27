@@ -15,17 +15,17 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class PortalForcerMixin {
 
     @ModifyConstant(method = "findPortalAround", constant = @Constant(intValue = 128), require = 0)
-    private int modifyDistance$1(int constant) {
+    private int servercore$modifySearchRadiusOverworld(int constant) {
         return this.calculateDistance(false);
     }
 
     @ModifyConstant(method = "findPortalAround", constant = @Constant(intValue = 16), require = 0)
-    private int modifyDistance$2(int constant) {
+    private int servercore$modifySearchRadiusNether(int constant) {
         return this.calculateDistance(true);
     }
 
     @ModifyConstant(method = "createPortal", constant = @Constant(intValue = 16), require = 0)
-    private int modifyDistance$3(int constant) {
+    private int servercore$modifyCreateRadius(int constant) {
         return FeatureConfig.PORTAL_CREATE_RADIUS.get();
     }
 

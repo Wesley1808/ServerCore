@@ -25,7 +25,7 @@ public abstract class VillagerMakeLoveMixin {
                     target = "Lnet/minecraft/world/entity/npc/Villager;distanceToSqr(Lnet/minecraft/world/entity/Entity;)D"
             )
     )
-    public double cancelVillagerBreeding(Villager villager, Entity entity) {
+    public double servercore$cancelVillagerBreeding(Villager villager, Entity entity) {
         if (BreedingCap.exceedsLimit(villager, EntityLimitConfig.VILLAGER_COUNT.get(), EntityLimitConfig.VILLAGER_RANGE.get())) {
             ((Villager) entity).setAge(6000);
             villager.setAge(6000);

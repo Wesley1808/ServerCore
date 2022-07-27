@@ -25,7 +25,7 @@ public abstract class ThrownEggMixin extends ThrowableItemProjectile {
                     ordinal = 0
             )
     )
-    public int cancelEggSpawns(RandomSource randomSource, int i) {
+    public int servercore$cancelEggSpawns(RandomSource randomSource, int i) {
         if (BreedingCap.exceedsLimit(EntityType.CHICKEN, this.level, this.blockPosition(), EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {
             return 1;
         } else {

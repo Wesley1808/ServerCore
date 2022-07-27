@@ -18,7 +18,7 @@ public abstract class CatMixin {
                     opcode = Opcodes.GETFIELD
             )
     )
-    private int fixCatDespawning(Cat cat) {
+    private int servercore$fixCatDespawning(Cat cat) {
         return ((ActivationEntity) cat).getFullTickCount();
     }
 }

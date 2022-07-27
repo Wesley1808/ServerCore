@@ -29,7 +29,7 @@ public abstract class ServerChunkCacheMixin {
                     ordinal = 0
             )
     )
-    private void resetIceAndSnowTick(CallbackInfo ci) {
+    private void servercore$resetIceAndSnowTick(CallbackInfo ci) {
         ((IServerLevel) this.level).resetIceAndSnowTick();
     }
 }

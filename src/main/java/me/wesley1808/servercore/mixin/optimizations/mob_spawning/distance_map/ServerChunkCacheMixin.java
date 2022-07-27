@@ -1,6 +1,5 @@
 package me.wesley1808.servercore.mixin.optimizations.mob_spawning.distance_map;
 
-import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import me.wesley1808.servercore.common.interfaces.IChunkMap;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerChunkCache;
@@ -37,7 +36,7 @@ public abstract class ServerChunkCacheMixin {
                     target = "Lnet/minecraft/world/level/NaturalSpawner;createState(ILjava/lang/Iterable;Lnet/minecraft/world/level/NaturalSpawner$ChunkGetter;Lnet/minecraft/world/level/LocalMobCapCalculator;)Lnet/minecraft/world/level/NaturalSpawner$SpawnState;"
             )
     )
-    private void updateDistanceMap(CallbackInfo ci) {
+    private void servercore$updateDistanceMap(CallbackInfo ci) {
         if ((this.spawnFriendlies || this.spawnEnemies) && this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)) {
             // Update distance map -> by using a constant 10 as view distance we prevent the situations where:
             // 1 - No mobs will spawn because there's another player with mobs 500 blocks away (High view distance).

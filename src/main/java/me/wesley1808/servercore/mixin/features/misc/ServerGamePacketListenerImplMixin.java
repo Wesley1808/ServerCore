@@ -51,7 +51,7 @@ public abstract class ServerGamePacketListenerImplMixin {
                     ordinal = 0
             )
     )
-    private void handleMoveVehicle(ServerboundMoveVehiclePacket packet, CallbackInfo ci, Entity entity, ServerLevel serverLevel, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, float yRot, float xRot, double l, double m, double n) {
+    private void servercore$handleMoveVehicle(ServerboundMoveVehiclePacket packet, CallbackInfo ci, Entity entity, ServerLevel serverLevel, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, float yRot, float xRot, double l, double m, double n) {
         if (this.shouldPreventMovement(serverLevel, entity, fromX, fromZ, toX, toY, toZ)) {
             this.connection.send(new ClientboundMoveVehiclePacket(entity));
             ci.cancel();
@@ -68,7 +68,7 @@ public abstract class ServerGamePacketListenerImplMixin {
                     ordinal = 0
             )
     )
-    private void handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double toX, double toY, double toZ, float yRot, float xRot, double fromX, double fromY, double fromZ, double l) {
+    private void servercore$handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double toX, double toY, double toZ, float yRot, float xRot, double fromX, double fromY, double fromZ, double l) {
         if (this.shouldPreventMovement(serverLevel, this.player, fromX, fromZ, toX, toY, toZ)) {
             this.teleport(fromX, fromY, fromZ, yRot, xRot, Collections.emptySet(), true);
             ci.cancel();

@@ -153,18 +153,6 @@ public final class DynamicManager {
                 .replace("${chunk_tick_distance}", String.valueOf(chunkTickDistance));
     }
 
-    public static void setViewDistance(int distance) {
-        viewDistance = distance;
-    }
-
-    public static void setSimulationDistance(int distance) {
-        simulationDistance = distance;
-    }
-
-    public static void setChunkTickDistance(int distance) {
-        chunkTickDistance = distance;
-    }
-
     public static void setModifier(BigDecimal modifier) {
         mobcapModifier = modifier;
     }
@@ -177,12 +165,24 @@ public final class DynamicManager {
         return viewDistance;
     }
 
+    public static void setViewDistance(int distance) {
+        viewDistance = distance;
+    }
+
     public static int getSimulationDistance() {
         return simulationDistance;
     }
 
+    public static void setSimulationDistance(int distance) {
+        simulationDistance = distance;
+    }
+
     public static int getChunkTickDistance() {
         return chunkTickDistance;
+    }
+
+    public static void setChunkTickDistance(int distance) {
+        chunkTickDistance = distance;
     }
 
     public static double getMobcapModifier() {
