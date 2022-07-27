@@ -4,7 +4,6 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.tables.CommandConfig;
 import me.wesley1808.servercore.common.services.Formatter;
 import me.wesley1808.servercore.common.services.PermissionManager;
@@ -114,7 +113,7 @@ public final class StatisticsCommand {
     private static int displayEntities(CommandContext<CommandSourceStack> context, boolean byPlayer, int page, @Nullable ServerPlayer player) {
         Map<String, Integer> map;
         if (byPlayer) {
-            map = Statistics.getEntitiesByPlayer(ServerCore.getServer().getPlayerList().getPlayers());
+            map = Statistics.getEntitiesByPlayer(context.getSource().getServer().getPlayerList().getPlayers());
         } else {
             map = Statistics.getEntitiesByType(player == null ? Statistics.getAllEntities() : Statistics.getEntitiesNear(player));
         }
@@ -126,7 +125,7 @@ public final class StatisticsCommand {
     private static int displayBlockEntities(CommandContext<CommandSourceStack> context, boolean byPlayer, int page, @Nullable ServerPlayer player) {
         Map<String, Integer> map;
         if (byPlayer) {
-            map = Statistics.getBlockEntitiesByPlayer(ServerCore.getServer().getPlayerList().getPlayers());
+            map = Statistics.getBlockEntitiesByPlayer(context.getSource().getServer().getPlayerList().getPlayers());
         } else {
             map = Statistics.getBlockEntitiesByType(player == null ? Statistics.getAllBlockEntities() : Statistics.getBlockEntitiesNear(player));
         }

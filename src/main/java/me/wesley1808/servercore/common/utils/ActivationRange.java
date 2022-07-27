@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
-import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ambient.AmbientCreature;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Animal;
@@ -358,13 +357,13 @@ public final class ActivationRange {
     }
 
     // Updates goal selectors for mob entities.
-    public static void updateGoalSelectors(GoalSelector goalSelector, GoalSelector targetSelector) {
-        if (((IGoalSelector) goalSelector).inactiveTick()) {
-            goalSelector.tick();
+    public static void updateGoalSelectors(Mob mob) {
+        if (((IGoalSelector) mob.goalSelector).inactiveTick()) {
+            mob.goalSelector.tick();
         }
 
-        if (((IGoalSelector) targetSelector).inactiveTick()) {
-            targetSelector.tick();
+        if (((IGoalSelector) mob.targetSelector).inactiveTick()) {
+            mob.targetSelector.tick();
         }
     }
 

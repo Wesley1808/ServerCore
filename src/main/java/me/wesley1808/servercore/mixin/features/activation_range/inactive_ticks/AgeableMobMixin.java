@@ -23,6 +23,6 @@ public abstract class AgeableMobMixin extends PathfinderMob implements InactiveE
     public void inactiveTick() {
         this.noActionTime++;
         ActivationRange.updateAge((AgeableMob) (Object) this);
-        ActivationRange.updateGoalSelectors(this.goalSelector, this.targetSelector);
+        ActivationRange.updateGoalSelectors(this);
     }
 }
