@@ -2,9 +2,13 @@ package me.wesley1808.servercore.common.utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Unit;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -75,6 +79,12 @@ public final class ChunkManager {
 
     public static boolean isChunkLoaded(ChunkHolder holder) {
         return getChunkFromHolder(holder) != null;
+    }
+
+    public static void disableSpawnChunks(MinecraftServer server) {
+        ServerLevel level = server.overworld();
+        ChunkPos pos = new ChunkPos(new BlockPos(level.getLevelData().getXSpawn(), 0, level.getLevelData().getZSpawn()));
+        level.getChunkSource().removeRegionTicket(TicketType.START, pos, 11, Unit.INSTANCE);
     }
 
     // Utility method from PaperMC (MC-Utils.patch)

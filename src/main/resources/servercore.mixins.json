@@ -41,7 +41,7 @@
     "features.misc.MobCategoryMixin",
     "features.misc.PortalForcerMixin",
     "features.misc.ServerGamePacketListenerImplMixin",
-    "features.spawn_chunks.MinecraftServerMixin",
+    "features.spawn_chunks.PlayerListMixin",
     "features.spawn_chunks.ServerLevelMixin",
     "features.ticking.AcquirePoiMixin",
     "features.ticking.ServerChunkCacheMixin",

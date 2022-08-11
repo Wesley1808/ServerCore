@@ -1,6 +1,7 @@
 package me.wesley1808.servercore.common;
 
 import com.mojang.logging.LogUtils;
+import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.services.Events;
 import me.wesley1808.servercore.common.services.PlaceHolders;
 import net.fabricmc.api.ModInitializer;
@@ -32,10 +33,14 @@ public class ServerCore implements ModInitializer {
         ServerCore.server = server;
     }
 
+    public static void onLoadMixins() {
+        LOGGER.info("[ServerCore] Loading Mixins...");
+        Config.load();
+    }
+
     @Override
     public void onInitialize() {
-        LOGGER.info("[ServerCore] Initializing...");
-
+        LOGGER.info("[ServerCore] Registering Events...");
         version = this.findVersion();
         PlaceHolders.register();
         Events.register();

@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.mixin.features.spawn_chunks;
 
+import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
@@ -19,6 +20,8 @@ public abstract class ServerLevelMixin {
             )
     )
     private <T> void servercore$preventAddingRegionTicket(ServerChunkCache chunkCache, TicketType<T> ticketType, ChunkPos chunkPos, int i, T object) {
-        // NO-OP
+        if (!FeatureConfig.DISABLE_SPAWN_CHUNKS.get()) {
+            chunkCache.addRegionTicket(ticketType, chunkPos, i, object);
+        }
     }
 }

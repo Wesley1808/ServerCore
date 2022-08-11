@@ -1,7 +1,6 @@
 package me.wesley1808.servercore.mixin;
 
-import me.wesley1808.servercore.common.config.Config;
-import me.wesley1808.servercore.common.config.tables.FeatureConfig;
+import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.tables.OptimizationConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
@@ -17,7 +16,7 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
     @Override
     public void onLoad(String mixinPackage) {
         this.mixinPackage = mixinPackage + ".";
-        Config.load();
+        ServerCore.onLoadMixins();
     }
 
     @Override
@@ -44,10 +43,6 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
 
         if (mixinClassName.startsWith(this.mixinPackage + "compat.vmp")) {
             return this.isModLoaded("vmp");
-        }
-
-        if (mixinClassName.startsWith(this.mixinPackage + "features.spawn_chunks")) {
-            return FeatureConfig.DISABLE_SPAWN_CHUNKS.get();
         }
 
         if (mixinClassName.startsWith(this.mixinPackage + "optimizations.sync_loads")) {
