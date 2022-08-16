@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -19,9 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
 
-@Mixin(ServerChunkCache.class)
+@Mixin(value = ServerChunkCache.class, priority = 900)
 public abstract class ServerChunkCacheMixin {
     @Unique
     private final ObjectArrayList<ServerChunkCache.ChunkAndHolder> active = new ObjectArrayList<>();
@@ -45,17 +45,21 @@ public abstract class ServerChunkCacheMixin {
         return null;
     }
 
-    // Cancel any operations performed on the list.
-    @Redirect(
+    // Replace the list variable with our own.
+    @ModifyVariable(
             method = "tickChunks",
+            index = 12,
             at = @At(
                     value = "INVOKE",
-                    target = "Ljava/util/Collections;shuffle(Ljava/util/List;)V"
+                    target = "Ljava/lang/Iterable;iterator()Ljava/util/Iterator;",
+                    shift = At.Shift.BEFORE,
+                    ordinal = 0
             )
     )
-    private void servercore$cancelShuffle(List<?> list) {
+    private List<?> servercore$replaceList(List<?> list) {
+        return this.active;
     }
-
+    
     // Replaces chunk filtering with our own implementation.
     @Redirect(
             method = "tickChunks",
@@ -70,30 +74,17 @@ public abstract class ServerChunkCacheMixin {
         return Collections.emptyIterator();
     }
 
-    // Only iterate through active chunks.
+    // Don't shuffle the chunk list.
     @Redirect(
             method = "tickChunks",
+            require = 0,
             at = @At(
                     value = "INVOKE",
-                    target = "Ljava/util/List;iterator()Ljava/util/Iterator;",
-                    ordinal = 0
+                    target = "Ljava/util/Collections;shuffle(Ljava/util/List;)V"
             )
     )
-    private Iterator<?> servercore$onlyTickActiveChunks(List<?> list) {
-        return this.active.iterator();
-    }
-
-    // Only flush active chunks.
-    @Redirect(
-            method = "tickChunks",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V",
-                    ordinal = 0
-            )
-    )
-    private void servercore$flushActiveChunks(List<?> list, Consumer<ServerChunkCache.ChunkAndHolder> action) {
-        this.active.forEach(action);
+    private void servercore$cancelShuffle(List<?> list) {
+        // NO-OP
     }
 
     // Trim the active chunk ticking list periodically.

@@ -5,13 +5,8 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.world.entity.Entity;
 
 public final class PermissionManager {
-    public static final String MODIFY_SETTINGS = "servercore.command.settings";
-    public static final String MODIFY_CONFIG = "servercore.command.config";
-    public static final String VIEW_STATS = "servercore.command.statistics";
-
-
     public static boolean hasPermission(SharedSuggestionProvider source, String perm, int level) {
-        return Permissions.check(source, perm, level);
+        return Permissions.check(source, String.format("servercore.%s", perm), level);
     }
 
     public static boolean hasPermission(Entity source, String perm) {
