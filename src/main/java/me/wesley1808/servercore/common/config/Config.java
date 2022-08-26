@@ -18,7 +18,8 @@ public final class Config {
             new Table(EntityLimitConfig.class, "entity_limits", "Stops animals / villagers from breeding if there are too many of the same type nearby."),
             new Table(OptimizationConfig.class, "optimizations", "Allows you to toggle specific optimizations that don't have full vanilla parity.\n These settings will only take effect after server restarts."),
             new Table(CommandConfig.class, "commands", "Allows you to disable specific commands and modify the way some of them are formatted."),
-            new Table(ActivationRangeConfig.class, "activation_range", "Stops entities from ticking if they are too far away.")
+            new Table(ActivationRangeConfig.class, "activation_range", "Stops entities from ticking if they are too far away."),
+            new Table(ItemValidationConfig.class, "item_validation", "Validates the size of items like books and disallows them from being sent to the client if they are too large."),
     };
 
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml");

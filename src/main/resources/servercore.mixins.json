@@ -66,7 +66,9 @@
     "optimizations.ticking.EntityCallbacksMixin",
     "optimizations.ticking.chunk.LevelChunkMixin",
     "optimizations.ticking.chunk.ServerChunkCacheMixin",
-    "optimizations.ticking.chunk.ServerLevelMixin"
+    "optimizations.ticking.chunk.ServerLevelMixin",
+    "validation.ServerEditBookMixin",
+    "validation.ServerSignEditMixin"
   ],
   "injectors": {
     "defaultRequire": 1
