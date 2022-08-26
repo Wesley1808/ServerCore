@@ -59,6 +59,7 @@
     "optimizations.sync_loads.BeeMixin",
     "optimizations.sync_loads.BlockGetterMixin",
     "optimizations.sync_loads.DynamicGameEventListenerMixin",
+    "optimizations.sync_loads.EntityMixin",
     "optimizations.sync_loads.GroundPathNavigationMixin",
     "optimizations.sync_loads.MapItemMixin",
     "optimizations.sync_loads.RemoveBlockGoalMixin",
