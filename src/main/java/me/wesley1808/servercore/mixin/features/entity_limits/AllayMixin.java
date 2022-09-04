@@ -14,12 +14,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Allay.class)
 public abstract class AllayMixin extends PathfinderMob {
-    @Shadow
-    protected abstract void resetDuplicationCooldown();
-
     private AllayMixin(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
     }
+
+    @Shadow
+    protected abstract void resetDuplicationCooldown();
 
     @Inject(method = "duplicateAllay", at = @At("HEAD"), cancellable = true)
     public void servercore$cancelAllayDuplication(CallbackInfo ci) {

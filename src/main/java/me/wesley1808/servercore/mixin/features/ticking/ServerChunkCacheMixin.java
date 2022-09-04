@@ -23,13 +23,13 @@ import java.util.List;
 
 @Mixin(value = ServerChunkCache.class, priority = 900)
 public abstract class ServerChunkCacheMixin {
-    @Unique
-    private final ObjectArrayList<ServerChunkCache.ChunkAndHolder> active = new ObjectArrayList<>();
-    @Unique
-    private boolean trim;
     @Shadow
     @Final
     ServerLevel level;
+    @Unique
+    private final ObjectArrayList<ServerChunkCache.ChunkAndHolder> tickingChunks = new ObjectArrayList<>();
+    @Unique
+    private boolean trim;
 
     // Avoid unnecessary array allocations.
     @Redirect(
@@ -57,9 +57,9 @@ public abstract class ServerChunkCacheMixin {
             )
     )
     private List<?> servercore$replaceList(List<?> list) {
-        return this.active;
+        return this.tickingChunks;
     }
-    
+
     // Replaces chunk filtering with our own implementation.
     @Redirect(
             method = "tickChunks",
@@ -87,7 +87,7 @@ public abstract class ServerChunkCacheMixin {
         // NO-OP
     }
 
-    // Trim the active chunk ticking list periodically.
+    // Trim the ticking chunk list periodically.
     @Inject(method = "save", at = @At("TAIL"))
     private void onSave(boolean bl, CallbackInfo ci) {
         this.trim = true;
@@ -96,15 +96,15 @@ public abstract class ServerChunkCacheMixin {
     private void updateActiveChunks(Iterable<ChunkHolder> holders) {
         // Update active chunks once a second.
         if (this.level.getServer().getTickCount() % 20 == 0) {
-            // Clear cached chunks
-            this.active.clear();
+            // Clear ticking chunks
+            this.tickingChunks.clear();
 
-            // Add active chunks
+            // Add ticking chunks
             for (ChunkHolder holder : holders) {
                 LevelChunk chunk = holder.getTickingChunk();
                 if (chunk != null) {
                     if (DynamicManager.shouldTickChunk(holder.getPos(), this.level)) {
-                        this.active.add(new ServerChunkCache.ChunkAndHolder(chunk, holder));
+                        this.tickingChunks.add(new ServerChunkCache.ChunkAndHolder(chunk, holder));
                     } else {
                         // Send clients block updates from inactive chunks.
                         holder.broadcastChanges(chunk);
@@ -114,7 +114,7 @@ public abstract class ServerChunkCacheMixin {
 
             // Trim the list if necessary.
             if (this.trim) {
-                this.active.trim();
+                this.tickingChunks.trim();
                 this.trim = false;
             }
         }

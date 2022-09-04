@@ -119,6 +119,10 @@ The config file can be found at `/config/servercore.toml`
 	# (Default = [Max: 1.0, Min: 0.3]) Global multiplier that decides the percentage of the mobcap to be used.
 	max_mobcap = 1.0
 	min_mobcap = 0.3
+	# (Default = ["chunk_tick_distance", "mobcap_multiplier", "simulation_distance", "view_distance"])
+	# The order in which the settings will be decreased when the server is overloaded.
+	# Removing a setting from the list will disable it.
+	setting_order = ["chunk_tick_distance", "mobcap_multiplier", "simulation_distance", "view_distance"]
 
 # Stops animals / villagers from breeding if there are too many of the same type nearby.
 [entity_limits]
@@ -135,7 +139,8 @@ The config file can be found at `/config/servercore.toml`
 # These settings will only take effect after server restarts.
 [optimizations]
 	# (Default = true) Optimizes vanilla's per-player mobspawning by using PaperMC's PlayerMobDistanceMap.
-	# This may sometimes count mobs to a player's mobcap that would normally be just out of its range.
+	# This may sometimes count mobs to a player's mobcap that would normally be just out of its range (if there are multiple players near each other).
+	# Forcefully set to false by: VMP
 	use_distance_map = true
 	# (Default = true) Prevents many different lagspikes caused by loading chunks synchronously.
 	# This for example causes maps to only update loaded chunks, which depending on the viewdistance can be a smaller radius than vanilla.
