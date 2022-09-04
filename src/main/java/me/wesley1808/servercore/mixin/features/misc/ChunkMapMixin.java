@@ -2,7 +2,7 @@ package me.wesley1808.servercore.mixin.features.misc;
 
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import me.wesley1808.servercore.common.config.tables.FeatureConfig;
-import me.wesley1808.servercore.common.utils.DynamicManager;
+import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ChunkMap;
 import org.spongepowered.asm.mixin.Mixin;

@@ -5,6 +5,7 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.file.GenericBuilder;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.tables.*;
+import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.lang.reflect.Field;
@@ -38,7 +39,12 @@ public final class Config {
             Config.loadEntries(config.get(table.key), table.clazz);
         }
 
+        loadChanges();
         Config.save();
+    }
+
+    private static void loadChanges() {
+        DynamicManager.loadCustomSettingsOrder();
     }
 
     public static void save() {

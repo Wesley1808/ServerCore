@@ -3,6 +3,7 @@ package me.wesley1808.servercore.common.utils;
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.wesley1808.servercore.common.ServerCore;
+import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -110,6 +111,6 @@ public final class Statistics {
     }
 
     private static boolean isNearby(Player player, ChunkPos pos) {
-        return player.chunkPosition().getChessboardDistance(pos) <= DynamicManager.getViewDistance();
+        return player.chunkPosition().getChessboardDistance(pos) <= DynamicSetting.VIEW_DISTANCE.get();
     }
 }

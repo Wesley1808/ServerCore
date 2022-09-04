@@ -1,6 +1,10 @@
 package me.wesley1808.servercore.common.config.tables;
 
+import com.google.common.collect.Lists;
 import me.wesley1808.servercore.common.config.ConfigEntry;
+import me.wesley1808.servercore.common.dynamic.DynamicSetting;
+
+import java.util.ArrayList;
 
 public final class DynamicConfig {
     public static final ConfigEntry<Boolean> ENABLED = new ConfigEntry<>(false, "(Default = false) Enables this feature.");
@@ -15,4 +19,14 @@ public final class DynamicConfig {
     public static final ConfigEntry<Integer> MIN_VIEW_DISTANCE = new ConfigEntry<>(2, i -> i >= 2);
     public static final ConfigEntry<Double> MAX_MOBCAP = new ConfigEntry<>(1.0D, d -> d >= 0.1 && d <= 10.0, "(Default = [Max: 1.0, Min: 0.3]) Global multiplier that decides the percentage of the mobcap to be used.");
     public static final ConfigEntry<Double> MIN_MOBCAP = new ConfigEntry<>(0.3D, d -> d >= 0.1 && d <= 10.0);
+    public static final ConfigEntry<ArrayList<String>> SETTING_ORDER = new ConfigEntry<>(Lists.newArrayList("chunk_tick_distance", "mobcap_multiplier", "simulation_distance", "view_distance"), (settings) -> {
+        for (String key : settings) {
+            try {
+                DynamicSetting.valueOf(key.toUpperCase());
+            } catch (IllegalArgumentException ex) {
+                return false;
+            }
+        }
+        return true;
+    }, "(Default = [\"chunk_tick_distance\", \"mobcap_multiplier\", \"simulation_distance\", \"view_distance\"])\nThe order in which the settings will be decreased when the server is overloaded.\nRemoving a setting from the list will disable it.");
 }

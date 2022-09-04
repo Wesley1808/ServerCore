@@ -9,15 +9,15 @@ import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.ConfigEntry;
 import me.wesley1808.servercore.common.config.tables.CommandConfig;
+import me.wesley1808.servercore.common.dynamic.DynamicManager;
+import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.services.Formatter;
 import me.wesley1808.servercore.common.services.PermissionManager;
-import me.wesley1808.servercore.common.utils.DynamicManager;
 import me.wesley1808.servercore.common.utils.Util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 
-import java.math.BigDecimal;
 import java.util.function.Function;
 
 import static com.mojang.brigadier.arguments.BoolArgumentType.bool;
@@ -59,16 +59,17 @@ public final class ServerCoreCommand {
                 Config.forEachEntry(table.clazz(), (field, entry) -> {
                     String key = field.getName().toLowerCase();
                     Type type = getTypeFor(key, entry);
-
-                    child.then(literal(key)
-                            .executes(ctx -> sendInfo(ctx.getSource(), String.format("%s.%s", table.key(), key), entry))
-                            .then(argument(VALUE, type.argumentType)
-                                    .executes(type.function::apply)
-                                    .suggests((ctx, suggestionsBuilder) ->
-                                            Util.suggestAll(suggestionsBuilder, asString(entry.get()), asString(entry.getDefault()))
-                                    )
-                            )
-                    );
+                    if (type != null) {
+                        child.then(literal(key)
+                                .executes(ctx -> sendInfo(ctx.getSource(), String.format("%s.%s", table.key(), key), entry))
+                                .then(argument(VALUE, type.argumentType)
+                                        .executes(type.function::apply)
+                                        .suggests((ctx, suggestionsBuilder) ->
+                                                Util.suggestAll(suggestionsBuilder, asString(entry.get()), asString(entry.getDefault()))
+                                        )
+                                )
+                        );
+                    }
                 });
             } catch (Exception ex) {
                 ServerCore.getLogger().error("Exception thrown whilst registering commands!", ex);
@@ -112,9 +113,9 @@ public final class ServerCoreCommand {
 
     private static int setDistance(CommandSourceStack source, int value, int id, String setting) {
         switch (id) {
-            case 1 -> DynamicManager.setChunkTickDistance(value);
-            case 2 -> DynamicManager.modifyViewDistance(value);
-            case 3 -> DynamicManager.modifySimulationDistance(value);
+            case 1 -> DynamicSetting.CHUNK_TICK_DISTANCE.set(value);
+            case 2 -> DynamicSetting.VIEW_DISTANCE.set(value);
+            case 3 -> DynamicSetting.SIMULATION_DISTANCE.set(value);
         }
 
         sendMessage(source, setting, String.valueOf(value), true);
@@ -122,7 +123,7 @@ public final class ServerCoreCommand {
     }
 
     private static int setMobcaps(CommandSourceStack source, double value) {
-        DynamicManager.setModifier(BigDecimal.valueOf(value));
+        DynamicSetting.MOBCAP_MULTIPLIER.set(value);
 
         source.sendSuccess(Formatter.parse(String.format("<green>Mobcap multiplier <dark_aqua>has been set to <green>%.1f", value)), false);
         return Command.SINGLE_SUCCESS;
@@ -153,12 +154,10 @@ public final class ServerCoreCommand {
     private static Type getTypeFor(String key, ConfigEntry<Object> entry) {
         return switch (entry.getType().getSimpleName()) {
             case "Boolean" -> new Type(bool(), ctx -> modify(key, entry, getBool(ctx, VALUE), ctx.getSource()));
-            case "Integer" ->
-                    new Type(longArg(Integer.MIN_VALUE, Integer.MAX_VALUE), ctx -> modify(key, entry, (int) getLong(ctx, VALUE), ctx.getSource()));
+            case "Integer" -> new Type(longArg(Integer.MIN_VALUE, Integer.MAX_VALUE), ctx -> modify(key, entry, (int) getLong(ctx, VALUE), ctx.getSource()));
             case "Double" -> new Type(doubleArg(), ctx -> modify(key, entry, getDouble(ctx, VALUE), ctx.getSource()));
-            case "String" ->
-                    new Type(greedyString(), ctx -> modify(key, entry, getString(ctx, VALUE), ctx.getSource()));
-            default -> throw new IllegalStateException("Unsupported type: " + entry.getType().getSimpleName());
+            case "String" -> new Type(greedyString(), ctx -> modify(key, entry, getString(ctx, VALUE), ctx.getSource()));
+            default -> null;
         };
     }
 

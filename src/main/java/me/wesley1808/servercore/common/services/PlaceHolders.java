@@ -5,7 +5,8 @@ import com.google.common.cache.CacheBuilder;
 import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
-import me.wesley1808.servercore.common.utils.DynamicManager;
+import me.wesley1808.servercore.common.dynamic.DynamicManager;
+import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.utils.Statistics;
 import net.minecraft.resources.ResourceLocation;
 
@@ -22,15 +23,15 @@ public final class PlaceHolders {
 
     public static void register() {
         register("view_distance",
-                (ctx, arg) -> PlaceholderResult.value(String.valueOf(DynamicManager.getViewDistance()))
+                (ctx, arg) -> PlaceholderResult.value(String.valueOf(DynamicSetting.VIEW_DISTANCE.get()))
         );
 
         register("simulation_distance",
-                (ctx, arg) -> PlaceholderResult.value(String.valueOf(DynamicManager.getSimulationDistance()))
+                (ctx, arg) -> PlaceholderResult.value(String.valueOf(DynamicSetting.SIMULATION_DISTANCE.get()))
         );
 
         register("chunk_tick_distance",
-                (ctx, arg) -> PlaceholderResult.value(String.valueOf(DynamicManager.getChunkTickDistance()))
+                (ctx, arg) -> PlaceholderResult.value(String.valueOf(DynamicSetting.CHUNK_TICK_DISTANCE.get()))
         );
 
         register("mobcap_multiplier",

@@ -7,8 +7,8 @@ import me.wesley1808.servercore.common.commands.ServerCoreCommand;
 import me.wesley1808.servercore.common.commands.StatisticsCommand;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.tables.FeatureConfig;
+import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.utils.ChunkManager;
-import me.wesley1808.servercore.common.utils.DynamicManager;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -31,7 +31,7 @@ public final class Events {
 
     private static void onServerStarted(MinecraftServer server) {
         ServerCore.setServer(server);
-        DynamicManager.initValues(server.getPlayerList());
+        DynamicManager.initialize(server.getPlayerList());
 
         // Disable spawn chunks after the server starts up.
         // This is only used for dedicated servers.
