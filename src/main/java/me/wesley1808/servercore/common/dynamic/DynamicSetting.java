@@ -45,7 +45,6 @@ public enum DynamicSetting {
     private DynamicSetting prev;
     private DynamicSetting next;
 
-
     DynamicSetting(IntSupplier interval, Supplier<BigDecimal> increment, Supplier<BigDecimal> min, Supplier<BigDecimal> max) {
         this(interval, increment, min, max, null);
     }

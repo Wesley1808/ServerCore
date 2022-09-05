@@ -107,18 +107,22 @@ The config file can be found at `/config/servercore.toml`
 	# (Default = 150) The amount of seconds between dynamic viewdistance updates.
 	# This value is separate from the other checks because it makes all clients reload their chunks.
 	view_distance_update_rate = 150
-	# (Default = [Max: 10, Min: 2]) Distance in which random ticks and mobspawning can happen.
+	# (Default = [Max: 10, Min: 2, Increment: 1]) Distance in which random ticks and mobspawning can happen.
 	max_chunk_tick_distance = 10
 	min_chunk_tick_distance = 2
-	# (Default = [Max: 10, Min: 2]) Distance in which the world will tick, similar to no-tick-vd.
+	chunk_tick_distance_increment = 1
+	# (Default = [Max: 10, Min: 2, Increment: 1]) Distance in which the world will tick, similar to no-tick-vd.
 	max_simulation_distance = 10
 	min_simulation_distance = 2
-	# (Default = [Max: 10, Min: 2]) Distance in which the world will render.
+	simulation_distance_increment = 1
+	# (Default = [Max: 10, Min: 2, Increment: 1]) Distance in which the world will render.
 	max_view_distance = 10
 	min_view_distance = 2
-	# (Default = [Max: 1.0, Min: 0.3]) Global multiplier that decides the percentage of the mobcap to be used.
+	view_distance_increment = 1
+	# (Default = [Max: 1.0, Min: 0.3, Increment: 0.1]) Global multiplier that decides the percentage of the mobcap to be used.
 	max_mobcap = 1.0
 	min_mobcap = 0.3
+	mobcap_increment = 0.1
 	# (Default = ["chunk_tick_distance", "mobcap_multiplier", "simulation_distance", "view_distance"])
 	# The order in which the settings will be decreased when the server is overloaded.
 	# Removing a setting from the list will disable it.
@@ -156,13 +160,13 @@ The config file can be found at `/config/servercore.toml`
 	# Enables / disables the /mobcaps command.
 	command_mobcaps = true
 	# The title for the /mobcaps command.
-	mobcap_title = "<dark_aqua>${line} <aqua>Mobcaps</aqua> (<aqua>${mobcap_modifier}</aqua>) ${line}</dark_aqua>"
+	mobcap_title = "<dark_aqua>${line} <aqua>Mobcaps</aqua> (<aqua>${mobcap_percentage}</aqua>) ${line}</dark_aqua>"
 	# The content for the /mobcaps command. This is displayed for every existing spawngroup.
 	mobcap_content = "<dark_gray>» <dark_aqua>${name}:</dark_aqua> <green>${current}</green> / <green>${capacity}</green></dark_gray>"
 	# The title for the /servercore status command.
 	status_title = "<dark_aqua>${line} <aqua>ServerCore</aqua> ${line}</dark_aqua>"
 	# The content for the /servercore status command.
-	status_content = "<dark_gray>» <dark_aqua>Version:</dark_aqua> <green>${version}</green>\n» <dark_aqua>Chunk-Tick Distance:</dark_aqua> <green>${chunk_tick_distance}</green>\n» <dark_aqua>Simulation Distance:</dark_aqua> <green>${simulation_distance}</green>\n» <dark_aqua>View Distance:</dark_aqua> <green>${view_distance}</green>\n» <dark_aqua>Mobcap Multiplier:</dark_aqua> <green>${mobcap_modifier}</green></dark_gray>"
+	status_content = "<dark_gray>» <dark_aqua>Version:</dark_aqua> <green>${version}</green>\n» <dark_aqua>Mobcap Percentage:</dark_aqua> <green>${mobcap_percentage}</green>\n» <dark_aqua>Chunk-Tick Distance:</dark_aqua> <green>${chunk_tick_distance}</green>\n» <dark_aqua>Simulation Distance:</dark_aqua> <green>${simulation_distance}</green>\n» <dark_aqua>View Distance:</dark_aqua> <green>${view_distance}</green></dark_gray>"
 	# The title for the /statistics command.
 	stats_title = "<dark_aqua>${line} <aqua>Statistics</aqua> ${line}</dark_aqua>"
 	# The content for the /statistics command.
