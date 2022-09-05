@@ -12,6 +12,7 @@ public final class ConfigEntry<T> {
         this.defaultValue = defaultValue;
         this.constraint = constraint;
         this.comment = comment;
+        this.value = defaultValue;
     }
 
     public ConfigEntry(T defaultValue, Predicate<T> constraint) {

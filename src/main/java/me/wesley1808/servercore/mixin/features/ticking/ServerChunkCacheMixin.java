@@ -60,7 +60,6 @@ public abstract class ServerChunkCacheMixin {
         return this.tickingChunks;
     }
 
-    // Replaces chunk filtering with our own implementation.
     @Redirect(
             method = "tickChunks",
             at = @At(
@@ -69,8 +68,8 @@ public abstract class ServerChunkCacheMixin {
                     ordinal = 0
             )
     )
-    private Iterator<ChunkHolder> servercore$filterChunks(Iterable<ChunkHolder> holders) {
-        this.updateActiveChunks(holders);
+    private Iterator<ChunkHolder> servercore$updateTickingChunks(Iterable<ChunkHolder> holders) {
+        this.updateTickingChunks(holders);
         return Collections.emptyIterator();
     }
 
@@ -93,8 +92,7 @@ public abstract class ServerChunkCacheMixin {
         this.trim = true;
     }
 
-    private void updateActiveChunks(Iterable<ChunkHolder> holders) {
-        // Update active chunks once a second.
+    private void updateTickingChunks(Iterable<ChunkHolder> holders) {
         if (this.level.getServer().getTickCount() % 20 == 0) {
             // Clear ticking chunks
             this.tickingChunks.clear();

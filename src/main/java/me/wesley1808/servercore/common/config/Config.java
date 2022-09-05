@@ -7,6 +7,7 @@ import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.tables.*;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import net.fabricmc.loader.api.FabricLoader;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.nio.file.Path;
@@ -22,25 +23,37 @@ public final class Config {
             new Table(ActivationRangeConfig.class, "activation_range", "Stops entities from ticking if they are too far away.")
     };
 
-    private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml");
-    private static final GenericBuilder<CommentedConfig, CommentedFileConfig> BUILDER = CommentedFileConfig.builder(CONFIG_PATH).preserveInsertionOrder().sync();
+    @Nullable
+    private static GenericBuilder<CommentedConfig, CommentedFileConfig> configBuilder;
 
     static {
         // Required to generate the config with the correct order.
         System.setProperty("nightconfig.preserveInsertionOrder", "true");
+
+        // Initialize the config builder.
+        Path path = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml");
+        try {
+            configBuilder = CommentedFileConfig.builder(path).preserveInsertionOrder().sync();
+        } catch (Throwable throwable) {
+            ServerCore.getLogger().error("[ServerCore] Unable to load the config: {}", throwable.getMessage());
+            configBuilder = null;
+        }
     }
 
     public static void load() {
-        CommentedFileConfig config = BUILDER.build();
-        config.load();
+        if (configBuilder != null) {
+            CommentedFileConfig config = configBuilder.build();
+            config.load();
+            config.close();
 
-        for (Table table : TABLES) {
-            Config.validate(table, config);
-            Config.loadEntries(config.get(table.key), table.clazz);
+            for (Table table : TABLES) {
+                Config.validate(table, config);
+                Config.loadEntries(config.get(table.key), table.clazz);
+            }
+
+            loadChanges();
+            Config.save();
         }
-
-        loadChanges();
-        Config.save();
     }
 
     private static void loadChanges() {
@@ -48,16 +61,17 @@ public final class Config {
     }
 
     public static void save() {
-        CommentedFileConfig config = BUILDER.build();
+        if (configBuilder != null) {
+            CommentedFileConfig config = configBuilder.build();
+            for (Table table : TABLES) {
+                Config.validate(table, config);
+                Config.saveEntries(config.get(table.key), table.clazz);
+                config.setComment(table.key, " " + table.comment);
+            }
 
-        for (Table table : TABLES) {
-            Config.validate(table, config);
-            Config.saveEntries(config.get(table.key), table.clazz);
-            config.setComment(table.key, " " + table.comment);
+            config.save();
+            config.close();
         }
-
-        config.save();
-        config.close();
     }
 
     // Creates table when missing.
@@ -73,11 +87,11 @@ public final class Config {
                 final String key = field.getName().toLowerCase();
                 final Object value = config.getOrElse(key, entry.getDefault());
                 if (!entry.set(value)) {
-                    ServerCore.getLogger().error("[ServerCore] Invalid config entry found! {} = {}", key, value);
+                    ServerCore.getLogger().error("[ServerCore] Invalid config entry found! {} = {} (Reverting back to default: {})", key, value, entry.getDefault());
                 }
             });
-        } catch (Exception ex) {
-            ServerCore.getLogger().error("[ServerCore] Exception was thrown whilst loading configs!", ex);
+        } catch (Throwable throwable) {
+            ServerCore.getLogger().error("[ServerCore] An error occurred whilst loading config entries!", throwable);
         }
     }
 
@@ -92,8 +106,8 @@ public final class Config {
                     config.setComment(key, " " + comment.replace("\n", "\n "));
                 }
             });
-        } catch (Exception ex) {
-            ServerCore.getLogger().error("[ServerCore] Exception was thrown whilst saving configs!", ex);
+        } catch (Throwable throwable) {
+            ServerCore.getLogger().error("[ServerCore] An error occurred whilst saving configs!", throwable);
         }
     }
 
