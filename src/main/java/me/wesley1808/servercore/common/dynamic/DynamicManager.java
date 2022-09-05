@@ -69,22 +69,19 @@ public class DynamicManager {
         } else {
             averageTickTime = server.getAverageTickTime();
         }
+
+        count++;
     }
 
     private static void runPerformanceChecks() {
         final double targetMspt = TARGET_MSPT.get();
-        final double upperBound = targetMspt + 5;
-        final double lowerBound = Math.max(targetMspt - 5, 2);
+        final boolean decrease = averageTickTime > targetMspt + 5;
+        final boolean increase = averageTickTime < Math.max(targetMspt - 5, 2);
 
-        count++;
-        for (DynamicSetting setting : DynamicSetting.values()) {
-            if (averageTickTime > upperBound) {
-                if (setting.shouldRun(count) && setting.decrease()) {
-                    return;
-                }
-            } else if (averageTickTime < lowerBound) {
-                if (setting.shouldRun(count) && setting.increase()) {
-                    return;
+        if (decrease || increase) {
+            for (DynamicSetting setting : DynamicSetting.values()) {
+                if (setting.shouldRun(count) && setting.modify(increase)) {
+                    break;
                 }
             }
         }
@@ -122,17 +119,17 @@ public class DynamicManager {
     public static String createStatusReport(String title) {
         return title + "\n" + CommandConfig.STATUS_CONTENT.get()
                 .replace("${version}", ServerCore.getVersion())
-                .replace("${mobcap_modifier}", getModifierAsString())
-                .replace("${view_distance}", String.format("%.0f", VIEW_DISTANCE.get()))
+                .replace("${mobcap_percentage}", getModifierAsPercentage())
+                .replace("${chunk_tick_distance}", String.format("%.0f", CHUNK_TICK_DISTANCE.get()))
                 .replace("${simulation_distance}", String.format("%.0f", SIMULATION_DISTANCE.get()))
-                .replace("${chunk_tick_distance}", String.format("%.0f", CHUNK_TICK_DISTANCE.get()));
+                .replace("${view_distance}", String.format("%.0f", VIEW_DISTANCE.get()));
     }
 
     public static double getAverageTickTime() {
         return averageTickTime;
     }
 
-    public static String getModifierAsString() {
-        return String.format("%.1f", MOBCAP_MULTIPLIER.get());
+    public static String getModifierAsPercentage() {
+        return String.format("%.0f%%", MOBCAP_MULTIPLIER.get() * 100);
     }
 }

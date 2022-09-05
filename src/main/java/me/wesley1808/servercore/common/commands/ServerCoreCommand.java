@@ -85,10 +85,10 @@ public final class ServerCoreCommand {
 
     private static LiteralArgumentBuilder<CommandSourceStack> settings() {
         var settings = literal("settings").requires(src -> PermissionManager.hasPermission(src, "command.settings", 2));
-        settings.then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> setDistance(ctx.getSource(), getInteger(ctx, VALUE), 1, "Chunk-tick distance"))));
-        settings.then(literal("view_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> setDistance(ctx.getSource(), getInteger(ctx, VALUE), 2, "View distance"))));
-        settings.then(literal("simulation_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> setDistance(ctx.getSource(), getInteger(ctx, VALUE), 3, "Simulation distance"))));
-        settings.then(literal("mobcaps").then(argument(VALUE, doubleArg(0.1, 10.0)).executes(ctx -> setMobcaps(ctx.getSource(), getDouble(ctx, VALUE)))));
+        settings.then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modify(ctx.getSource(), getInteger(ctx, VALUE), 1, "Chunk-tick distance", false))));
+        settings.then(literal("view_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modify(ctx.getSource(), getInteger(ctx, VALUE), 2, "View distance", false))));
+        settings.then(literal("simulation_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modify(ctx.getSource(), getInteger(ctx, VALUE), 3, "Simulation distance", false))));
+        settings.then(literal("mobcaps").then(argument(VALUE, integer(1, 1000)).executes(ctx -> modify(ctx.getSource(), getInteger(ctx, VALUE), 4, "Mobcaps", true))));
         return settings;
     }
 
@@ -111,21 +111,15 @@ public final class ServerCoreCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int setDistance(CommandSourceStack source, int value, int id, String setting) {
+    private static int modify(CommandSourceStack source, int value, int id, String setting, boolean percentage) {
         switch (id) {
             case 1 -> DynamicSetting.CHUNK_TICK_DISTANCE.set(value);
             case 2 -> DynamicSetting.VIEW_DISTANCE.set(value);
             case 3 -> DynamicSetting.SIMULATION_DISTANCE.set(value);
+            case 4 -> DynamicSetting.MOBCAP_MULTIPLIER.set(value / 100D);
         }
 
-        sendMessage(source, setting, String.valueOf(value), true);
-        return Command.SINGLE_SUCCESS;
-    }
-
-    private static int setMobcaps(CommandSourceStack source, double value) {
-        DynamicSetting.MOBCAP_MULTIPLIER.set(value);
-
-        source.sendSuccess(Formatter.parse(String.format("<green>Mobcap multiplier <dark_aqua>has been set to <green>%.1f", value)), false);
+        sendMessage(source, setting, value + (percentage ? "%" : ""), true);
         return Command.SINGLE_SUCCESS;
     }
 

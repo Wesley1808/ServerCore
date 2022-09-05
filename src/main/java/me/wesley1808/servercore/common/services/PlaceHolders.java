@@ -34,8 +34,8 @@ public final class PlaceHolders {
                 (ctx, arg) -> PlaceholderResult.value(String.valueOf(DynamicSetting.CHUNK_TICK_DISTANCE.get()))
         );
 
-        register("mobcap_multiplier",
-                (ctx, arg) -> PlaceholderResult.value(DynamicManager.getModifierAsString())
+        register("mobcap_percentage",
+                (ctx, arg) -> PlaceholderResult.value(DynamicManager.getModifierAsPercentage())
         );
 
         register("chunk_count", (ctx, arg) -> {
