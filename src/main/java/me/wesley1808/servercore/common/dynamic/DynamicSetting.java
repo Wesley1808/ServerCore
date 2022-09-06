@@ -22,16 +22,17 @@ public enum DynamicSetting {
             (value) -> DynamicManager.modifySimulationDistance(value.intValue())
     ),
 
+    MOBCAP_MULTIPLIER(UPDATE_RATE::get,
+            () -> BigDecimal.valueOf(MOBCAP_INCREMENT.get()),
+            () -> BigDecimal.valueOf(MIN_MOBCAP.get()),
+            () -> BigDecimal.valueOf(MAX_MOBCAP.get()),
+            (value) -> DynamicManager.modifyMobcaps(value.doubleValue())
+    ),
+
     CHUNK_TICK_DISTANCE(UPDATE_RATE::get,
             () -> BigDecimal.valueOf(CHUNK_TICK_DISTANCE_INCREMENT.get()),
             () -> BigDecimal.valueOf(MIN_CHUNK_TICK_DISTANCE.get()),
             () -> BigDecimal.valueOf(MAX_CHUNK_TICK_DISTANCE.get())
-    ),
-
-    MOBCAP_MULTIPLIER(UPDATE_RATE::get,
-            () -> BigDecimal.valueOf(MOBCAP_INCREMENT.get()),
-            () -> BigDecimal.valueOf(MIN_MOBCAP.get()),
-            () -> BigDecimal.valueOf(MAX_MOBCAP.get())
     );
 
     private final Consumer<BigDecimal> onChanged;
@@ -55,7 +56,7 @@ public enum DynamicSetting {
         this.increment = increment;
         this.min = min;
         this.max = max;
-        this.set(max.get());
+        this.set(max.get(), false);
     }
 
     public void initialize(DynamicSetting prev, DynamicSetting next) {
@@ -71,23 +72,23 @@ public enum DynamicSetting {
         return count % this.interval.getAsInt() == 0;
     }
 
-    public void set(double value) {
-        this.set(BigDecimal.valueOf(value));
+    public void set(double value, boolean triggerChanges) {
+        this.set(BigDecimal.valueOf(value), triggerChanges);
     }
 
-    public void set(BigDecimal value) {
+    public void set(BigDecimal value, boolean triggerChanges) {
         this.value = value;
         this.cachedValue = value.doubleValue();
+
+        if (this.onChanged != null && triggerChanges) {
+            this.onChanged.accept(value);
+        }
     }
 
     public boolean modify(boolean increase) {
         BigDecimal value = this.newValue(increase);
         if (this.shouldModify(value)) {
-            this.set(value);
-
-            if (this.onChanged != null) {
-                this.onChanged.accept(value);
-            }
+            this.set(value, true);
             return true;
         }
         return false;

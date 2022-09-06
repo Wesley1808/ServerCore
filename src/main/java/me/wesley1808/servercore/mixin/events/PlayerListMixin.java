@@ -12,11 +12,11 @@ public abstract class PlayerListMixin {
 
     @Inject(method = "setViewDistance", at = @At("HEAD"))
     private void updateViewDistance(int i, CallbackInfo ci) {
-        DynamicSetting.VIEW_DISTANCE.set(i);
+        DynamicSetting.VIEW_DISTANCE.set(i, false);
     }
 
     @Inject(method = "setSimulationDistance", at = @At("HEAD"))
     private void updateSimulationDistance(int i, CallbackInfo ci) {
-        DynamicSetting.SIMULATION_DISTANCE.set(i);
+        DynamicSetting.SIMULATION_DISTANCE.set(i, false);
     }
 }

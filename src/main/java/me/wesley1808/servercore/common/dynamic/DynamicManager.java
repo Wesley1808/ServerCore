@@ -7,6 +7,7 @@ import me.lucko.spark.api.statistic.misc.DoubleAverageInfo;
 import me.lucko.spark.api.statistic.types.GenericStatistic;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.tables.CommandConfig;
+import me.wesley1808.servercore.common.interfaces.IMobCategory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
@@ -14,6 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameType;
 
@@ -98,6 +100,14 @@ public class DynamicManager {
         ServerCore.getServer().getPlayerList().setSimulationDistance(distance);
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             Minecraft.getInstance().options.simulationDistance().set(distance);
+        }
+    }
+
+    public static void modifyMobcaps(double modifier) {
+        for (MobCategory category : MobCategory.values()) {
+            if ((Object) category instanceof IMobCategory mobCategory) {
+                mobCategory.modifyMobcaps(modifier);
+            }
         }
     }
 
