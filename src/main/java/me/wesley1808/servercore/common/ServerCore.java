@@ -34,13 +34,12 @@ public class ServerCore implements ModInitializer {
     }
 
     public static void onLoadMixins() {
-        LOGGER.info("[ServerCore] Loading Mixins...");
+        LOGGER.info("[ServerCore] Loading...");
         Config.load();
     }
 
     @Override
     public void onInitialize() {
-        LOGGER.info("[ServerCore] Registering Events...");
         version = this.findVersion();
         PlaceHolders.register();
         Events.register();

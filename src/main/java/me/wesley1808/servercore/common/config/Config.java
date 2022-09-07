@@ -3,6 +3,7 @@ package me.wesley1808.servercore.common.config;
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.file.GenericBuilder;
+import com.electronwill.nightconfig.toml.TomlFormat;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.tables.*;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
@@ -31,11 +32,12 @@ public final class Config {
         System.setProperty("nightconfig.preserveInsertionOrder", "true");
 
         // Initialize the config builder.
-        Path path = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml");
         try {
-            configBuilder = CommentedFileConfig.builder(path).preserveInsertionOrder().sync();
+            Path path = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml");
+            configBuilder = CommentedFileConfig.builder(path, TomlFormat.instance()).preserveInsertionOrder().sync();
         } catch (Throwable throwable) {
-            ServerCore.getLogger().error("[ServerCore] Unable to load the config: {}", throwable.getMessage());
+            ServerCore.getLogger().error("[ServerCore] Unable to initialize config builder: {}", throwable.getMessage());
+            ServerCore.getLogger().error("[ServerCore] Load and save operations on the config file will not be available.");
             configBuilder = null;
         }
     }
@@ -56,10 +58,6 @@ public final class Config {
         }
     }
 
-    private static void loadChanges() {
-        DynamicManager.loadCustomSettingsOrder();
-    }
-
     public static void save() {
         if (configBuilder != null) {
             CommentedFileConfig config = configBuilder.build();
@@ -72,6 +70,14 @@ public final class Config {
             config.save();
             config.close();
         }
+    }
+
+    public static boolean isConfigAvailable() {
+        return configBuilder != null;
+    }
+
+    private static void loadChanges() {
+        DynamicManager.loadCustomSettingsOrder();
     }
 
     // Creates table when missing.

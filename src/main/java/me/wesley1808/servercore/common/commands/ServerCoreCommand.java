@@ -78,8 +78,11 @@ public final class ServerCoreCommand {
             config.then(child);
         }
 
-        config.then(literal("reload").executes(ctx -> saveOrReload(ctx.getSource(), false)));
-        config.then(literal("save").executes(ctx -> saveOrReload(ctx.getSource(), true)));
+        if (Config.isConfigAvailable()) {
+            config.then(literal("reload").executes(ctx -> saveOrReload(ctx.getSource(), false)));
+            config.then(literal("save").executes(ctx -> saveOrReload(ctx.getSource(), true)));
+        }
+
         return config;
     }
 
