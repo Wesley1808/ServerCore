@@ -23,7 +23,11 @@ public abstract class NaturalSpawnerMixin {
             )
     )
     private static Holder<Biome> servercore$fastBiomeLookup(ServerLevel level, BlockPos pos) {
-        LevelChunk chunk = ChunkManager.getChunkIfLoaded(level, pos);
-        return chunk != null ? ChunkManager.getRoughBiome(chunk, pos) : level.getBiome(pos);
+        final LevelChunk chunk = ChunkManager.getChunkIfLoaded(level, pos);
+        final int x = pos.getX() >> 2;
+        final int y = pos.getY() >> 2;
+        final int z = pos.getZ() >> 2;
+
+        return chunk != null ? chunk.getNoiseBiome(x, y, z) : level.getUncachedNoiseBiome(x, y, z);
     }
 }

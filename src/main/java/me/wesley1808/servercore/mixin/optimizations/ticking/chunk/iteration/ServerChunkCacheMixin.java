@@ -1,12 +1,17 @@
 package me.wesley1808.servercore.mixin.optimizations.ticking.chunk.iteration;
 
-import me.wesley1808.servercore.common.interfaces.IChunkMap;
+import me.wesley1808.servercore.common.collections.ChunkArrayList;
+import me.wesley1808.servercore.common.interfaces.IServerChunkCache;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -16,10 +21,12 @@ import java.util.Collections;
 import java.util.List;
 
 @Mixin(value = ServerChunkCache.class, priority = 900)
-public abstract class ServerChunkCacheMixin {
+public class ServerChunkCacheMixin implements IServerChunkCache {
+    @Unique
+    private final ChunkArrayList<ServerChunkCache.ChunkAndHolder> tickingChunks = new ChunkArrayList<>();
     @Shadow
     @Final
-    public ChunkMap chunkMap;
+    ServerLevel level;
 
     // Avoid unnecessary array allocations.
     @Redirect(
@@ -47,7 +54,7 @@ public abstract class ServerChunkCacheMixin {
             )
     )
     private List<?> servercore$replaceList(List<?> list) {
-        return ((IChunkMap) this.chunkMap).getTickingChunks();
+        return this.tickingChunks;
     }
 
     // Don't add chunks to the list.
@@ -73,5 +80,25 @@ public abstract class ServerChunkCacheMixin {
     )
     private void servercore$cancelShuffle(List<?> list) {
         // NO-OP
+    }
+
+    @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ChunkMap;anyPlayerCloseEnoughForSpawning(Lnet/minecraft/world/level/ChunkPos;)Z"))
+    private boolean servercore$shouldTickChunk(ChunkMap chunkMap, ChunkPos pos) {
+        return chunkMap.getDistanceManager().inBlockTickingRange(pos.toLong()) && chunkMap.anyPlayerCloseEnoughForSpawning(pos);
+    }
+
+    @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;shouldTickBlocksAt(J)Z"))
+    private boolean servercore$skipRangeCheck(ServerLevel level, long l) {
+        return true;
+    }
+
+    @Override
+    public void addTickingChunk(LevelChunk chunk, ChunkHolder holder) {
+        this.tickingChunks.addChunk(new ServerChunkCache.ChunkAndHolder(chunk, holder));
+    }
+
+    @Override
+    public void removeTickingChunk(ChunkPos pos) {
+        this.tickingChunks.removeChunk(chunkAndHolder -> pos.equals(chunkAndHolder.holder().getPos()));
     }
 }

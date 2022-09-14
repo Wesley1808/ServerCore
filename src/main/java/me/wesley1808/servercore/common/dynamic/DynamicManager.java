@@ -12,12 +12,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.GameType;
 
 import static me.wesley1808.servercore.common.config.tables.DynamicConfig.*;
 import static me.wesley1808.servercore.common.dynamic.DynamicSetting.*;
@@ -109,21 +105,6 @@ public class DynamicManager {
                 mobCategory.modifyMobcaps(modifier);
             }
         }
-    }
-
-    public static boolean shouldTickChunk(ChunkPos pos, ServerLevel level) {
-        double chunkTickDistance = CHUNK_TICK_DISTANCE.get();
-        if (chunkTickDistance >= VIEW_DISTANCE.get()) {
-            return true;
-        }
-
-        for (ServerPlayer player : level.players()) {
-            if (player.gameMode.getGameModeForPlayer() != GameType.SPECTATOR && player.chunkPosition().getChessboardDistance(pos) <= chunkTickDistance) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public static String createStatusReport(String title) {

@@ -1,7 +1,6 @@
 package me.wesley1808.servercore.common.utils;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerChunkCache;
@@ -11,17 +10,15 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Utility methods for getting chunks, blockstates and biomes.
+ * Utility methods for getting chunks.
  *
  * @author Wesley1808
  */
@@ -63,10 +60,6 @@ public final class ChunkManager {
     public static BlockState getStateIfLoaded(Level level, BlockPos pos) {
         final LevelChunk chunk = getChunkIfLoaded(level, pos);
         return chunk != null ? chunk.getBlockState(pos) : Blocks.AIR.defaultBlockState();
-    }
-
-    public static Holder<Biome> getRoughBiome(ChunkAccess chunk, BlockPos pos) {
-        return chunk.getNoiseBiome(pos.getX() >> 2, pos.getY() >> 2, pos.getZ() >> 2);
     }
 
     public static boolean isChunkLoaded(Level level, BlockPos pos) {

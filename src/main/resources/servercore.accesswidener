@@ -19,9 +19,11 @@ accessible field net/minecraft/world/level/Level blockEntityTickers Ljava/util/L
 
 # Miscellaneous
 accessible method net/minecraft/server/level/ServerPlayer fudgeSpawnLocation (Lnet/minecraft/server/level/ServerLevel;)V
+accessible method net/minecraft/server/level/ChunkMap anyPlayerCloseEnoughForSpawning (Lnet/minecraft/world/level/ChunkPos;)Z
 accessible method net/minecraft/server/level/ServerChunkCache getVisibleChunkIfPresent (J)Lnet/minecraft/server/level/ChunkHolder;
 accessible method net/minecraft/server/level/ServerChunkCache$ChunkAndHolder <init> (Lnet/minecraft/world/level/chunk/LevelChunk;Lnet/minecraft/server/level/ChunkHolder;)V
 
 accessible field net/minecraft/server/level/ChunkHolder UNLOADED_LEVEL_CHUNK_FUTURE Ljava/util/concurrent/CompletableFuture;
 accessible field net/minecraft/world/level/Level threadSafeRandom Lnet/minecraft/util/RandomSource;
+accessible field net/minecraft/server/level/ChunkMap level Lnet/minecraft/server/level/ServerLevel;
 accessible field net/minecraft/world/level/block/state/BlockBehaviour hasCollision Z
