@@ -44,7 +44,7 @@
     "features.spawn_chunks.PlayerListMixin",
     "features.spawn_chunks.ServerLevelMixin",
     "features.ticking.AcquirePoiMixin",
-    "features.ticking.ServerChunkCacheMixin",
+    "features.ticking.ChunkMapMixin",
     "features.ticking.VillagerMixin",
     "optimizations.misc.MapItemSavedDataMixin",
     "optimizations.mob_spawning.NaturalSpawnerMixin",
@@ -66,7 +66,10 @@
     "optimizations.ticking.EntityCallbacksMixin",
     "optimizations.ticking.chunk.LevelChunkMixin",
     "optimizations.ticking.chunk.ServerChunkCacheMixin",
-    "optimizations.ticking.chunk.ServerLevelMixin"
+    "optimizations.ticking.chunk.ServerLevelMixin",
+    "optimizations.ticking.chunk.iteration.ChunkHolderMixin",
+    "optimizations.ticking.chunk.iteration.ChunkMapMixin",
+    "optimizations.ticking.chunk.iteration.ServerChunkCacheMixin"
   ],
   "injectors": {
     "defaultRequire": 1

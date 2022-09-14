@@ -1,7 +1,8 @@
 package me.wesley1808.servercore.common.utils;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import net.minecraft.server.level.ChunkHolder;
@@ -24,11 +25,11 @@ import java.util.function.Function;
  */
 public final class Statistics {
 
-    public static ImmutableList<Entity> getAllEntities() {
+    public static List<Entity> getAllEntities() {
         return Statistics.getAll(ServerLevel::getAllEntities);
     }
 
-    public static ImmutableList<TickingBlockEntity> getAllBlockEntities() {
+    public static List<TickingBlockEntity> getAllBlockEntities() {
         return Statistics.getAll(level -> level.blockEntityTickers);
     }
 
@@ -48,13 +49,13 @@ public final class Statistics {
         return Statistics.getByPlayer(players, Statistics::getBlockEntitiesNear);
     }
 
-    private static <T> ImmutableList<T> getAll(Function<ServerLevel, Iterable<T>> function) {
-        ImmutableList.Builder<T> builder = ImmutableList.builder();
+    private static <T> List<T> getAll(Function<ServerLevel, Iterable<T>> function) {
+        List<T> list = new ObjectArrayList<>();
         for (ServerLevel level : ServerCore.getServer().getAllLevels()) {
-            builder.addAll(function.apply(level));
+            Iterables.addAll(list, function.apply(level));
         }
 
-        return builder.build();
+        return list;
     }
 
     private static <T> Map<String, Integer> getByType(Iterable<T> iterable, Function<T, String> function) {
@@ -75,26 +76,26 @@ public final class Statistics {
         return map;
     }
 
-    public static ImmutableList<Entity> getEntitiesNear(ServerPlayer player) {
-        ImmutableList.Builder<Entity> builder = ImmutableList.builder();
+    public static List<Entity> getEntitiesNear(ServerPlayer player) {
+        List<Entity> list = new ObjectArrayList<>();
         for (Entity entity : player.getLevel().getAllEntities()) {
             if (isNearby(player, entity.chunkPosition())) {
-                builder.add(entity);
+                list.add(entity);
             }
         }
 
-        return builder.build();
+        return list;
     }
 
-    public static ImmutableList<TickingBlockEntity> getBlockEntitiesNear(ServerPlayer player) {
-        ImmutableList.Builder<TickingBlockEntity> builder = ImmutableList.builder();
+    public static List<TickingBlockEntity> getBlockEntitiesNear(ServerPlayer player) {
+        List<TickingBlockEntity> list = new ObjectArrayList<>();
         for (TickingBlockEntity blockEntity : player.level.blockEntityTickers) {
             if (isNearby(player, new ChunkPos(blockEntity.getPos()))) {
-                builder.add(blockEntity);
+                list.add(blockEntity);
             }
         }
 
-        return builder.build();
+        return list;
     }
 
     public static int getLoadedChunkCount() {

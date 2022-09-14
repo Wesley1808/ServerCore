@@ -2,7 +2,7 @@ package me.wesley1808.servercore.mixin.optimizations.mob_spawning.distance_map;
 
 import com.mojang.authlib.GameProfile;
 import me.wesley1808.servercore.common.collections.PooledHashSets;
-import me.wesley1808.servercore.common.interfaces.IServerPlayer;
+import me.wesley1808.servercore.common.interfaces.distance_map.IServerPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

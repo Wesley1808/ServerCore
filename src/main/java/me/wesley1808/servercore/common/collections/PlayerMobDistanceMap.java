@@ -3,7 +3,7 @@ package me.wesley1808.servercore.common.collections;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
-import me.wesley1808.servercore.common.interfaces.IServerPlayer;
+import me.wesley1808.servercore.common.interfaces.distance_map.IServerPlayer;
 import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;

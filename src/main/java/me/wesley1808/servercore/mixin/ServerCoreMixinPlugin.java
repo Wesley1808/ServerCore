@@ -36,6 +36,11 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             return !this.isModLoaded("c3h6n6o6");
         }
 
+        // MCMT - Disables chunk iteration optimizations.
+        if (mixinClassName.startsWith(this.mixinPackage + "optimizations.ticking.chunk.iteration")) {
+            return !this.isModLoaded("mcmtfabric");
+        }
+
         // Very Many Players - Disabled distance maps for mobspawning, as VMP implements its own distance maps.
         if (mixinClassName.startsWith(this.mixinPackage + "optimizations.mob_spawning.distance_map")) {
             return OptimizationConfig.USE_DISTANCE_MAP.get() && !this.isModLoaded("vmp");

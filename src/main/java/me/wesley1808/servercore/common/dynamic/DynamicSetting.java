@@ -1,44 +1,48 @@
 package me.wesley1808.servercore.common.dynamic;
 
 import java.math.BigDecimal;
-import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
+import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
-import java.util.function.Supplier;
 
 import static me.wesley1808.servercore.common.config.tables.DynamicConfig.*;
 
 public enum DynamicSetting {
-    VIEW_DISTANCE(VIEW_DISTANCE_UPDATE_RATE::get,
-            () -> BigDecimal.valueOf(VIEW_DISTANCE_INCREMENT.get()),
-            () -> BigDecimal.valueOf(MIN_VIEW_DISTANCE.get()),
-            () -> BigDecimal.valueOf(MAX_VIEW_DISTANCE.get()),
-            (value) -> DynamicManager.modifyViewDistance(value.intValue())
+    VIEW_DISTANCE(
+            VIEW_DISTANCE_UPDATE_RATE::get,
+            VIEW_DISTANCE_INCREMENT::get,
+            MIN_VIEW_DISTANCE::get,
+            MAX_VIEW_DISTANCE::get,
+            (value) -> DynamicManager.modifyViewDistance((int) value)
     ),
 
-    SIMULATION_DISTANCE(UPDATE_RATE::get,
-            () -> BigDecimal.valueOf(SIMULATION_DISTANCE_INCREMENT.get()),
-            () -> BigDecimal.valueOf(MIN_SIMULATION_DISTANCE.get()),
-            () -> BigDecimal.valueOf(MAX_SIMULATION_DISTANCE.get()),
-            (value) -> DynamicManager.modifySimulationDistance(value.intValue())
+    SIMULATION_DISTANCE(
+            UPDATE_RATE::get,
+            SIMULATION_DISTANCE_INCREMENT::get,
+            MIN_SIMULATION_DISTANCE::get,
+            MAX_SIMULATION_DISTANCE::get,
+            (value) -> DynamicManager.modifySimulationDistance((int) value)
     ),
 
-    MOBCAP_MULTIPLIER(UPDATE_RATE::get,
-            () -> BigDecimal.valueOf(MOBCAP_INCREMENT.get()),
-            () -> BigDecimal.valueOf(MIN_MOBCAP.get()),
-            () -> BigDecimal.valueOf(MAX_MOBCAP.get()),
-            (value) -> DynamicManager.modifyMobcaps(value.doubleValue())
+    MOBCAP_MULTIPLIER(
+            UPDATE_RATE::get,
+            MOBCAP_INCREMENT::get,
+            MIN_MOBCAP::get,
+            MAX_MOBCAP::get,
+            DynamicManager::modifyMobcaps
     ),
 
-    CHUNK_TICK_DISTANCE(UPDATE_RATE::get,
-            () -> BigDecimal.valueOf(CHUNK_TICK_DISTANCE_INCREMENT.get()),
-            () -> BigDecimal.valueOf(MIN_CHUNK_TICK_DISTANCE.get()),
-            () -> BigDecimal.valueOf(MAX_CHUNK_TICK_DISTANCE.get())
+    CHUNK_TICK_DISTANCE(
+            UPDATE_RATE::get,
+            CHUNK_TICK_DISTANCE_INCREMENT::get,
+            MIN_CHUNK_TICK_DISTANCE::get,
+            MAX_CHUNK_TICK_DISTANCE::get
     );
 
-    private final Consumer<BigDecimal> onChanged;
-    private final Supplier<BigDecimal> min;
-    private final Supplier<BigDecimal> max;
-    private final Supplier<BigDecimal> increment;
+    private final DoubleConsumer onChanged;
+    private final DoubleSupplier increment;
+    private final DoubleSupplier min;
+    private final DoubleSupplier max;
     private final IntSupplier interval;
     private BigDecimal value;
     private double cachedValue;
@@ -46,17 +50,17 @@ public enum DynamicSetting {
     private DynamicSetting prev;
     private DynamicSetting next;
 
-    DynamicSetting(IntSupplier interval, Supplier<BigDecimal> increment, Supplier<BigDecimal> min, Supplier<BigDecimal> max) {
+    DynamicSetting(IntSupplier interval, DoubleSupplier increment, DoubleSupplier min, DoubleSupplier max) {
         this(interval, increment, min, max, null);
     }
 
-    DynamicSetting(IntSupplier interval, Supplier<BigDecimal> increment, Supplier<BigDecimal> min, Supplier<BigDecimal> max, Consumer<BigDecimal> onChanged) {
+    DynamicSetting(IntSupplier interval, DoubleSupplier increment, DoubleSupplier min, DoubleSupplier max, DoubleConsumer onChanged) {
         this.interval = interval;
         this.onChanged = onChanged;
         this.increment = increment;
         this.min = min;
         this.max = max;
-        this.set(max.get(), false);
+        this.set(max.getAsDouble(), false);
     }
 
     public void initialize(DynamicSetting prev, DynamicSetting next) {
@@ -81,7 +85,7 @@ public enum DynamicSetting {
         this.cachedValue = value.doubleValue();
 
         if (this.onChanged != null && triggerChanges) {
-            this.onChanged.accept(value);
+            this.onChanged.accept(this.cachedValue);
         }
     }
 
@@ -102,19 +106,20 @@ public enum DynamicSetting {
     }
 
     private BigDecimal newValue(boolean increase) {
+        BigDecimal increment = BigDecimal.valueOf(this.increment.getAsDouble());
         BigDecimal value;
-        BigDecimal bound;
+
         if (increase) {
-            value = this.value.add(this.increment.get());
-            bound = this.max.get();
-            if (value.compareTo(bound) > 0) {
-                return bound;
+            value = this.value.add(increment);
+            double maximum = this.max.getAsDouble();
+            if (value.doubleValue() > maximum) {
+                return BigDecimal.valueOf(maximum);
             }
         } else {
-            value = this.value.subtract(this.increment.get());
-            bound = this.min.get();
-            if (value.compareTo(bound) < 0) {
-                return bound;
+            value = this.value.subtract(increment);
+            double minimum = this.min.getAsDouble();
+            if (value.doubleValue() < minimum) {
+                return BigDecimal.valueOf(minimum);
             }
         }
 
@@ -122,10 +127,10 @@ public enum DynamicSetting {
     }
 
     private boolean isMinimum() {
-        return this.cachedValue <= this.min.get().doubleValue();
+        return this.cachedValue <= this.min.getAsDouble();
     }
 
     private boolean isMaximum() {
-        return this.cachedValue >= this.max.get().doubleValue();
+        return this.cachedValue >= this.max.getAsDouble();
     }
 }

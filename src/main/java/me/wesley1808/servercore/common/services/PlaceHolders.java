@@ -9,7 +9,9 @@ import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.utils.Statistics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -47,10 +49,10 @@ public final class PlaceHolders {
         });
 
         register("entity_count", (ctx, arg) -> {
-            if (ctx.hasPlayer()) {
-                if ("player".equals(arg)) {
-                    // noinspection ConstantConditions
-                    return PlaceholderResult.value(String.valueOf(Statistics.getEntitiesNear(ctx.player()).size()));
+            ServerPlayer player = ctx.player();
+            if (player != null) {
+                if (Objects.equals(arg, "player")) {
+                    return PlaceholderResult.value(String.valueOf(Statistics.getEntitiesNear(player).size()));
                 }
 
                 return cachedValue("entity_count", () -> String.valueOf(Statistics.getAllEntities().size()));
@@ -60,10 +62,10 @@ public final class PlaceHolders {
         });
 
         register("block_entity_count", (ctx, arg) -> {
-            if (ctx.hasPlayer()) {
-                if ("player".equals(arg)) {
-                    // noinspection ConstantConditions
-                    return PlaceholderResult.value(String.valueOf(Statistics.getBlockEntitiesNear(ctx.player()).size()));
+            ServerPlayer player = ctx.player();
+            if (player != null) {
+                if (Objects.equals(arg, "player")) {
+                    return PlaceholderResult.value(String.valueOf(Statistics.getBlockEntitiesNear(player).size()));
                 }
 
                 return cachedValue("block_entity_count", () -> String.valueOf(Statistics.getAllBlockEntities().size()));

@@ -26,7 +26,6 @@ public abstract class LevelChunkMixin implements ILevelChunk {
     @Unique
     private int lightningTick;
 
-    // shouldDoLightning compiles down to 29 bytes, which with the default of 35 byte inlining should guarantee an inline.
     @Override
     public final int shouldDoLightning(RandomSource randomSource) {
         if (this.lightningTick-- <= 0) {
