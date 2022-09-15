@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.mixin.optimizations.ticking.chunk.iteration;
 
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import me.wesley1808.servercore.common.collections.ChunkArrayList;
 import me.wesley1808.servercore.common.interfaces.IServerChunkCache;
 import net.minecraft.server.level.ChunkHolder;
@@ -8,9 +9,7 @@ import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.LevelChunk;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -19,14 +18,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Mixin(value = ServerChunkCache.class, priority = 900)
 public class ServerChunkCacheMixin implements IServerChunkCache {
     @Unique
+    private final ReferenceOpenHashSet<ChunkHolder> requiresBroadcast = new ReferenceOpenHashSet<>();
+    @Unique
     private final ChunkArrayList<ServerChunkCache.ChunkAndHolder> tickingChunks = new ChunkArrayList<>();
-    @Shadow
-    @Final
-    ServerLevel level;
 
     // Avoid unnecessary array allocations.
     @Redirect(
@@ -92,6 +91,24 @@ public class ServerChunkCacheMixin implements IServerChunkCache {
         return true;
     }
 
+    @Redirect(
+            method = "tickChunks",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V",
+                    ordinal = 0
+            )
+    )
+    private void servercore$broadcastChanges(List<ServerChunkCache.ChunkAndHolder> list, Consumer<ServerChunkCache.ChunkAndHolder> consumer) {
+        for (ChunkHolder holder : this.requiresBroadcast) {
+            LevelChunk chunk = holder.getTickingChunk();
+            if (chunk != null) {
+                holder.broadcastChanges(chunk);
+            }
+        }
+        this.requiresBroadcast.clear();
+    }
+
     @Override
     public void addTickingChunk(LevelChunk chunk, ChunkHolder holder) {
         this.tickingChunks.addChunk(new ServerChunkCache.ChunkAndHolder(chunk, holder));
@@ -100,5 +117,10 @@ public class ServerChunkCacheMixin implements IServerChunkCache {
     @Override
     public void removeTickingChunk(ChunkPos pos) {
         this.tickingChunks.removeChunk(chunkAndHolder -> pos.equals(chunkAndHolder.holder().getPos()));
+    }
+
+    @Override
+    public void addToBroadcast(ChunkHolder holder) {
+        this.requiresBroadcast.add(holder);
     }
 }

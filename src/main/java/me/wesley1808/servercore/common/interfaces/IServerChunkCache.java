@@ -8,4 +8,6 @@ public interface IServerChunkCache {
     void addTickingChunk(LevelChunk chunk, ChunkHolder holder);
 
     void removeTickingChunk(ChunkPos pos);
+
+    void addToBroadcast(ChunkHolder holder);
 }
