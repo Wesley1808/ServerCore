@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.mixin.optimizations.ticking.chunk;
+package me.wesley1808.servercore.mixin.optimizations.ticking.chunk.random;
 
 import me.wesley1808.servercore.common.interfaces.ILevelChunk;
 import me.wesley1808.servercore.common.interfaces.IServerLevel;

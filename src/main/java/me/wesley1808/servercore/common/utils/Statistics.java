@@ -5,7 +5,8 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
-import net.minecraft.server.level.ChunkHolder;
+import me.wesley1808.servercore.common.interfaces.IServerChunkCache;
+import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -24,6 +25,10 @@ import java.util.function.Function;
  * @author Wesley1808
  */
 public final class Statistics {
+
+    public static List<ServerChunkCache.ChunkAndHolder> getAllTickingChunks() {
+        return Statistics.getAll(level -> ((IServerChunkCache) level.getChunkSource()).getTickingChunks());
+    }
 
     public static List<Entity> getAllEntities() {
         return Statistics.getAll(ServerLevel::getAllEntities);
@@ -96,19 +101,6 @@ public final class Statistics {
         }
 
         return list;
-    }
-
-    public static int getLoadedChunkCount() {
-        int count = 0;
-        for (ServerLevel level : ServerCore.getServer().getAllLevels()) {
-            for (ChunkHolder holder : level.getChunkSource().chunkMap.getChunks()) {
-                if (ChunkManager.isChunkLoaded(holder)) {
-                    count++;
-                }
-            }
-        }
-
-        return count;
     }
 
     private static boolean isNearby(Player player, ChunkPos pos) {

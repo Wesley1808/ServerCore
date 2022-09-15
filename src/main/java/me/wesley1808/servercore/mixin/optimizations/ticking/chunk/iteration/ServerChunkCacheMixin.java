@@ -81,12 +81,24 @@ public class ServerChunkCacheMixin implements IServerChunkCache {
         // NO-OP
     }
 
-    @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ChunkMap;anyPlayerCloseEnoughForSpawning(Lnet/minecraft/world/level/ChunkPos;)Z"))
+    @Redirect(
+            method = "tickChunks",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/server/level/ChunkMap;anyPlayerCloseEnoughForSpawning(Lnet/minecraft/world/level/ChunkPos;)Z"
+            )
+    )
     private boolean servercore$shouldTickChunk(ChunkMap chunkMap, ChunkPos pos) {
         return chunkMap.getDistanceManager().inBlockTickingRange(pos.toLong()) && chunkMap.anyPlayerCloseEnoughForSpawning(pos);
     }
 
-    @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;shouldTickBlocksAt(J)Z"))
+    @Redirect(
+            method = "tickChunks",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/server/level/ServerLevel;shouldTickBlocksAt(J)Z"
+            )
+    )
     private boolean servercore$skipRangeCheck(ServerLevel level, long l) {
         return true;
     }
@@ -107,6 +119,11 @@ public class ServerChunkCacheMixin implements IServerChunkCache {
             }
         }
         this.requiresBroadcast.clear();
+    }
+
+    @Override
+    public List<ServerChunkCache.ChunkAndHolder> getTickingChunks() {
+        return this.tickingChunks;
     }
 
     @Override

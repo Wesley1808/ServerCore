@@ -42,10 +42,10 @@ public final class PlaceHolders {
 
         register("chunk_count", (ctx, arg) -> {
             if (ctx.hasPlayer()) {
-                return cachedValue("chunk_count", () -> String.valueOf(Statistics.getLoadedChunkCount()));
+                return cachedValue("chunk_count", () -> String.valueOf(Statistics.getAllTickingChunks().size()));
             }
 
-            return PlaceholderResult.value(String.valueOf(Statistics.getLoadedChunkCount()));
+            return PlaceholderResult.value(String.valueOf(Statistics.getAllTickingChunks().size()));
         });
 
         register("entity_count", (ctx, arg) -> {
