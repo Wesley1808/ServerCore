@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.mixin.optimizations.ticking.chunk.iteration;
 
 import com.mojang.datafixers.util.Either;
-import me.wesley1808.servercore.common.interfaces.IServerChunkCache;
+import me.wesley1808.servercore.common.interfaces.chunk.IServerChunkCache;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ChunkMap;

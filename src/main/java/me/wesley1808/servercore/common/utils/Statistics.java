@@ -3,9 +3,10 @@ package me.wesley1808.servercore.common.utils;
 import com.google.common.collect.Iterables;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectLists;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
-import me.wesley1808.servercore.common.interfaces.IServerChunkCache;
+import me.wesley1808.servercore.common.interfaces.chunk.IServerChunkCache;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,7 +28,13 @@ import java.util.function.Function;
 public final class Statistics {
 
     public static List<ServerChunkCache.ChunkAndHolder> getAllTickingChunks() {
-        return Statistics.getAll(level -> ((IServerChunkCache) level.getChunkSource()).getTickingChunks());
+        return Statistics.getAll(level -> {
+            if (level.getChunkSource() instanceof IServerChunkCache chunkCache) {
+                return chunkCache.getTickingChunks();
+            } else {
+                return ObjectLists.emptyList();
+            }
+        });
     }
 
     public static List<Entity> getAllEntities() {

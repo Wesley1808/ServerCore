@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.mixin.optimizations.misc;
+package me.wesley1808.servercore.mixin.optimizations.item_frames;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.LiteralContents;
@@ -17,12 +17,7 @@ public abstract class MapItemSavedDataMixin {
     @Shadow
     protected abstract void removeDecoration(String string);
 
-    /**
-     * Cancels inventory iteration from Maps in Item Frames to save performance.
-     *
-     * @return Boolean: whether moving player icons should be tracked by item frames.
-     */
-
+    // Cancels unnecessary inventory iteration from maps in item frames to improve performance.
     @Redirect(
             method = "tickCarriedBy",
             require = 0,

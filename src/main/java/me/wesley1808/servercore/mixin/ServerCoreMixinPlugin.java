@@ -41,21 +41,17 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             return !this.isModLoaded("mcmtfabric");
         }
 
-        // Very Many Players - Disabled distance maps for mobspawning, as VMP implements its own distance maps.
-        if (mixinClassName.startsWith(this.mixinPackage + "optimizations.mob_spawning.distance_map")) {
-            return OptimizationConfig.USE_DISTANCE_MAP.get() && !this.isModLoaded("vmp");
-        }
-
-        if (mixinClassName.startsWith(this.mixinPackage + "compat.vmp")) {
-            return this.isModLoaded("vmp");
-        }
-
         if (mixinClassName.startsWith(this.mixinPackage + "optimizations.sync_loads")) {
             return OptimizationConfig.REDUCE_SYNC_LOADS.get();
         }
 
-        if (mixinClassName.equals(this.mixinPackage + "optimizations.mob_spawning.NaturalSpawnerMixin")) {
+        if (mixinClassName.startsWith(this.mixinPackage + "optimizations.biome_lookups")) {
             return OptimizationConfig.FAST_BIOME_LOOKUPS.get();
+        }
+
+        // Very Many Players - Adds compatibility for /mobcaps.
+        if (mixinClassName.startsWith(this.mixinPackage + "compat.vmp")) {
+            return this.isModLoaded("vmp");
         }
 
         return true;

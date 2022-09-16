@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.mixin.optimizations.mob_spawning;
+package me.wesley1808.servercore.mixin.optimizations.biome_lookups;
 
 import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.core.BlockPos;

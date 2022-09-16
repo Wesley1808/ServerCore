@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.mixin.optimizations.ticking;
+package me.wesley1808.servercore.mixin.optimizations.ticking.entity;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Marker;

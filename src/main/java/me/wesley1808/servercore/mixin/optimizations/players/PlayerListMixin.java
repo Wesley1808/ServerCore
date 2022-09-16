@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.mixin.optimizations.player_login;
+package me.wesley1808.servercore.mixin.optimizations.players;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;

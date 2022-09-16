@@ -2,7 +2,7 @@ package me.wesley1808.servercore.mixin.optimizations.ticking.chunk.iteration;
 
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import me.wesley1808.servercore.common.collections.ChunkArrayList;
-import me.wesley1808.servercore.common.interfaces.IServerChunkCache;
+import me.wesley1808.servercore.common.interfaces.chunk.IServerChunkCache;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerChunkCache;
