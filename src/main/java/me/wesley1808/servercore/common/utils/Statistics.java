@@ -3,11 +3,9 @@ package me.wesley1808.servercore.common.utils;
 import com.google.common.collect.Iterables;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectLists;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
-import me.wesley1808.servercore.common.interfaces.chunk.IServerChunkCache;
-import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -26,16 +24,6 @@ import java.util.function.Function;
  * @author Wesley1808
  */
 public final class Statistics {
-
-    public static List<ServerChunkCache.ChunkAndHolder> getAllTickingChunks() {
-        return Statistics.getAll(level -> {
-            if (level.getChunkSource() instanceof IServerChunkCache chunkCache) {
-                return chunkCache.getTickingChunks();
-            } else {
-                return ObjectLists.emptyList();
-            }
-        });
-    }
 
     public static List<Entity> getAllEntities() {
         return Statistics.getAll(ServerLevel::getAllEntities);
@@ -109,6 +97,24 @@ public final class Statistics {
 
         return list;
     }
+
+    public static int getChunkCount(boolean onlyLoaded) {
+        int count = 0;
+        for (ServerLevel level : ServerCore.getServer().getAllLevels()) {
+            if (onlyLoaded) {
+                for (ChunkHolder holder : level.getChunkSource().chunkMap.getChunks()) {
+                    if (ChunkManager.isChunkLoaded(holder)) {
+                        count++;
+                    }
+                }
+            } else {
+                count += level.getChunkSource().getLoadedChunksCount();
+            }
+        }
+
+        return count;
+    }
+
 
     private static boolean isNearby(Player player, ChunkPos pos) {
         return player.chunkPosition().getChessboardDistance(pos) <= DynamicSetting.VIEW_DISTANCE.get();

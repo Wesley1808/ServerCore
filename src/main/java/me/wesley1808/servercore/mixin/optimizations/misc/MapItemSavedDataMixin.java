@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.mixin.optimizations.item_frames;
+package me.wesley1808.servercore.mixin.optimizations.misc;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.LiteralContents;

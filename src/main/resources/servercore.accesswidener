@@ -24,6 +24,8 @@ accessible method net/minecraft/server/level/ServerChunkCache getVisibleChunkIfP
 accessible method net/minecraft/server/level/ServerChunkCache$ChunkAndHolder <init> (Lnet/minecraft/world/level/chunk/LevelChunk;Lnet/minecraft/server/level/ChunkHolder;)V
 
 accessible field net/minecraft/server/level/ChunkHolder UNLOADED_LEVEL_CHUNK_FUTURE Ljava/util/concurrent/CompletableFuture;
+accessible field net/minecraft/world/level/StructureManager level Lnet/minecraft/world/level/LevelAccessor;
 accessible field net/minecraft/world/level/Level threadSafeRandom Lnet/minecraft/util/RandomSource;
 accessible field net/minecraft/server/level/ChunkMap level Lnet/minecraft/server/level/ServerLevel;
 accessible field net/minecraft/world/level/block/state/BlockBehaviour hasCollision Z
+accessible field net/minecraft/world/level/chunk/LevelChunk loaded Z

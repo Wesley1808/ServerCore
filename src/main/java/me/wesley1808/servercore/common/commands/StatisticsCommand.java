@@ -101,7 +101,7 @@ public final class StatisticsCommand {
         Component component = Formatter.parse(Formatter.line(CommandConfig.STATS_TITLE.get(), 40, Util.isPlayer(source)) + "\n" + CommandConfig.STATS_CONTENT.get()
                 .replace("${tps}", String.format("%.2f", tps))
                 .replace("${mspt}", String.format("%.2f", mspt))
-                .replace("${chunk_count}", String.valueOf(Statistics.getAllTickingChunks().size()))
+                .replace("${chunk_count}", String.valueOf(Statistics.getChunkCount(true)))
                 .replace("${entity_count}", String.valueOf(Statistics.getAllEntities().size()))
                 .replace("${block_entity_count}", String.valueOf(Statistics.getAllBlockEntities().size()))
         );

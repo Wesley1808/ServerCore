@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.common.utils;
 
+import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkHolder;
@@ -16,6 +17,8 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Utility methods for getting chunks.
@@ -39,12 +42,18 @@ public final class ChunkManager {
     }
 
     @Nullable
-    public static LevelChunk getChunkFromHolder(ChunkHolder holder) {
-        if (holder == null || holder.getFullChunkFuture() == ChunkHolder.UNLOADED_LEVEL_CHUNK_FUTURE) {
+    public static LevelChunk getChunkFromHolder(@Nullable ChunkHolder holder) {
+        return holder != null ? getChunkFromFuture(holder.getFullChunkFuture()) : null;
+    }
+
+    @Nullable
+    public static LevelChunk getChunkFromFuture(CompletableFuture<Either<LevelChunk, ChunkHolder.ChunkLoadingFailure>> chunkFuture) {
+        Either<LevelChunk, ChunkHolder.ChunkLoadingFailure> either;
+        if (chunkFuture == ChunkHolder.UNLOADED_LEVEL_CHUNK_FUTURE || (either = chunkFuture.getNow(null)) == null) {
             return null;
         }
 
-        return holder.getFullChunk();
+        return either.left().orElse(null);
     }
 
     @Nullable

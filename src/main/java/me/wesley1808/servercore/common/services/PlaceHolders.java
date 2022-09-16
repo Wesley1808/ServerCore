@@ -41,11 +41,12 @@ public final class PlaceHolders {
         );
 
         register("chunk_count", (ctx, arg) -> {
+            boolean onlyLoaded = Objects.equals(arg, "loaded");
             if (ctx.hasPlayer()) {
-                return cachedValue("chunk_count", () -> String.valueOf(Statistics.getAllTickingChunks().size()));
+                return cachedValue(onlyLoaded ? "chunk_count_loaded" : "chunk_count", () -> String.valueOf(Statistics.getChunkCount(onlyLoaded)));
             }
 
-            return PlaceholderResult.value(String.valueOf(Statistics.getAllTickingChunks().size()));
+            return PlaceholderResult.value(String.valueOf(Statistics.getChunkCount(onlyLoaded)));
         });
 
         register("entity_count", (ctx, arg) -> {

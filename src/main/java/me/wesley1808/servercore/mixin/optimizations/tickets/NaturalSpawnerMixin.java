@@ -1,9 +1,10 @@
-package me.wesley1808.servercore.mixin.optimizations.sync_loads;
+package me.wesley1808.servercore.mixin.optimizations.tickets;
 
 import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -12,13 +13,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class NaturalSpawnerMixin {
 
     @Redirect(
-            method = "isRightDistanceToPlayerAndSpawnPoint",
+            method = "isInNetherFortressBounds",
+            require = 0,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ServerLevel;isNaturalSpawningAllowed(Lnet/minecraft/core/BlockPos;)Z"
+                    target = "Lnet/minecraft/server/level/ServerLevel;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"
             )
     )
-    private static boolean servercore$onlySpawnIfLoaded(ServerLevel level, BlockPos pos) {
-        return level.isNaturalSpawningAllowed(pos) && ChunkManager.isChunkLoaded(level, pos);
+    private static BlockState servercore$preventAddingTickets(ServerLevel level, BlockPos pos) {
+        return ChunkManager.getStateIfLoaded(level, pos);
     }
 }

@@ -36,11 +36,6 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             return !this.isModLoaded("c3h6n6o6");
         }
 
-        // MCMT - Disables chunk iteration optimizations.
-        if (mixinClassName.startsWith(this.mixinPackage + "optimizations.ticking.chunk.iteration")) {
-            return !this.isModLoaded("mcmtfabric");
-        }
-
         if (mixinClassName.startsWith(this.mixinPackage + "optimizations.sync_loads")) {
             return OptimizationConfig.REDUCE_SYNC_LOADS.get();
         }
