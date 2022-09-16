@@ -87,9 +87,6 @@ The config file can be found at `/config/servercore.toml`
 	lobotomize_villagers = false
 	# (Default = 20) Decides the interval in between villager ticks when lobotomized.
 	lobotomized_tick_interval = 20
-	# (Default = -1) The threshold MSPT that the server is allowed to run mid-tick chunk saves at.
-	# Setting this value to negative will disable this threshold.
-	chunk_save_threshold = -1
 	# (Default = 5) The amount of minutes in between auto-save intervals when /save-on is active.
 	auto_save_interval = 5
 	# (Default = 0.5) Decides the radius in blocks that items / xp will merge at.
@@ -142,10 +139,6 @@ The config file can be found at `/config/servercore.toml`
 # Allows you to toggle specific optimizations that don't have full vanilla parity.
 # These settings will only take effect after server restarts.
 [optimizations]
-	# (Default = true) Optimizes vanilla's per-player mobspawning by using PaperMC's PlayerMobDistanceMap.
-	# This may sometimes count mobs to a player's mobcap that would normally be just out of its range (if there are multiple players near each other).
-	# Forcefully set to false by: VMP
-	use_distance_map = true
 	# (Default = true) Prevents many different lagspikes caused by loading chunks synchronously.
 	# This for example causes maps to only update loaded chunks, which depending on the viewdistance can be a smaller radius than vanilla.
 	reduce_sync_loads = true

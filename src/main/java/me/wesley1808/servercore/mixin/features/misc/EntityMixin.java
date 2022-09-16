@@ -21,6 +21,6 @@ public abstract class EntityMixin {
             )
     )
     private BlockPos servercore$fixSpawnHeight(ServerLevel level, Heightmap.Types types, BlockPos blockPos) {
-        return ChunkManager.isChunkLoaded(level, blockPos) ? level.getHeightmapPos(types, blockPos) : blockPos;
+        return ChunkManager.hasChunk(level, blockPos) ? level.getHeightmapPos(types, blockPos) : blockPos;
     }
 }

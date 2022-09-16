@@ -21,7 +21,7 @@ public abstract class MapItemMixin {
             )
     )
     private LevelChunk servercore$onlyUpdateIfLoaded(Level level, BlockPos pos) {
-        return ChunkManager.getChunkIfLoaded(level, pos);
+        return ChunkManager.getChunkNow(level, pos);
     }
 
     @Redirect(

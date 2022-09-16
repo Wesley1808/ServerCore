@@ -27,7 +27,7 @@ public abstract class SleepInBedMixin {
             )
     )
     private void servercore$onlyProcessIfLoaded(ServerLevel level, LivingEntity owner, CallbackInfoReturnable<Boolean> cir, Brain<?> brain, GlobalPos globalPos) {
-        if (!ChunkManager.isChunkLoaded(level, globalPos.pos())) {
+        if (!ChunkManager.hasChunk(level, globalPos.pos())) {
             cir.setReturnValue(false);
         }
     }

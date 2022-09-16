@@ -31,7 +31,7 @@ public abstract class BeeEnterHiveGoalMixin {
     )
     private void servercore$onlyStartIfLoaded(CallbackInfo ci) {
         // noinspection ConstantConditions
-        if (!ChunkManager.isChunkLoaded(this.field_20367.level, this.field_20367.getHivePos())) {
+        if (!ChunkManager.hasChunk(this.field_20367.level, this.field_20367.getHivePos())) {
             ci.cancel();
         }
     }
@@ -47,7 +47,7 @@ public abstract class BeeEnterHiveGoalMixin {
     )
     private void servercore$onlyUseIfLoaded(CallbackInfoReturnable<Boolean> cir) {
         // noinspection ConstantConditions
-        if (!ChunkManager.isChunkLoaded(this.field_20367.level, this.field_20367.getHivePos())) {
+        if (!ChunkManager.hasChunk(this.field_20367.level, this.field_20367.getHivePos())) {
             cir.setReturnValue(false);
         }
     }

@@ -21,6 +21,6 @@ public abstract class NaturalSpawnerMixin {
             )
     )
     private static BlockState servercore$preventAddingTickets(ServerLevel level, BlockPos pos) {
-        return ChunkManager.getStateIfLoaded(level, pos);
+        return ChunkManager.getBlockState(level, pos);
     }
 }

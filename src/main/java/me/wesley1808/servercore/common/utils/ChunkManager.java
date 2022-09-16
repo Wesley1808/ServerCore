@@ -4,15 +4,17 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkHolder;
-import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
@@ -27,23 +29,29 @@ import java.util.concurrent.CompletableFuture;
  */
 public final class ChunkManager {
 
-    @Nullable
-    public static LevelChunk getChunkIfLoaded(Level level, BlockPos pos) {
-        return getChunkIfLoaded(level, pos.getX() >> 4, pos.getZ() >> 4);
+    @NotNull
+    public static BlockState getBlockState(Level level, BlockPos pos) {
+        final LevelChunk chunk = getChunkNow(level, pos);
+        return chunk != null ? chunk.getBlockState(pos) : Blocks.AIR.defaultBlockState();
     }
 
     @Nullable
-    public static LevelChunk getChunkIfLoaded(Level level, int chunkX, int chunkZ) {
-        if (!level.isClientSide) {
-            return getChunkFromHolder(getChunkHolder(level, chunkX, chunkZ));
+    public static LevelChunk getChunkNow(Level level, BlockPos pos) {
+        return level.getChunkSource().getChunkNow(pos.getX() >> 4, pos.getZ() >> 4);
+    }
+
+    @Nullable
+    public static ChunkAccess getChunkNow(LevelReader levelReader, BlockPos pos) {
+        return getChunkNow(levelReader, pos.getX() >> 4, pos.getZ() >> 4);
+    }
+
+    @Nullable
+    public static ChunkAccess getChunkNow(LevelReader levelReader, int chunkX, int chunkZ) {
+        if (levelReader instanceof Level level) {
+            return level.getChunkSource().getChunkNow(chunkX, chunkZ);
         } else {
-            return level.getChunk(chunkX, chunkZ);
+            return levelReader.getChunk(chunkX, chunkZ, ChunkStatus.FULL, false);
         }
-    }
-
-    @Nullable
-    public static LevelChunk getChunkFromHolder(@Nullable ChunkHolder holder) {
-        return holder != null ? getChunkFromFuture(holder.getFullChunkFuture()) : null;
     }
 
     @Nullable
@@ -57,30 +65,24 @@ public final class ChunkManager {
     }
 
     @Nullable
-    private static ChunkHolder getChunkHolder(Level level, int chunkX, int chunkZ) {
-        if (level.getChunkSource() instanceof ServerChunkCache chunkCache) {
-            return chunkCache.getVisibleChunkIfPresent(ChunkPos.asLong(chunkX, chunkZ));
+    private static ChunkHolder getChunkHolder(ServerLevel level, int chunkX, int chunkZ) {
+        return level.getChunkSource().getVisibleChunkIfPresent(ChunkPos.asLong(chunkX, chunkZ));
+    }
+
+    public static boolean hasChunk(Level level, BlockPos pos) {
+        return hasChunk(level, pos.getX() >> 4, pos.getZ() >> 4);
+    }
+
+    public static boolean hasChunk(Level level, int chunkX, int chunkZ) {
+        if (level instanceof ServerLevel serverLevel) {
+            return hasChunk(getChunkHolder(serverLevel, chunkX, chunkZ));
+        } else {
+            return true;
         }
-
-        return null;
     }
 
-    @NotNull
-    public static BlockState getStateIfLoaded(Level level, BlockPos pos) {
-        final LevelChunk chunk = getChunkIfLoaded(level, pos);
-        return chunk != null ? chunk.getBlockState(pos) : Blocks.AIR.defaultBlockState();
-    }
-
-    public static boolean isChunkLoaded(Level level, BlockPos pos) {
-        return isChunkLoaded(level, pos.getX() >> 4, pos.getZ() >> 4);
-    }
-
-    public static boolean isChunkLoaded(Level level, int chunkX, int chunkZ) {
-        return level.isClientSide || isChunkLoaded(getChunkHolder(level, chunkX, chunkZ));
-    }
-
-    public static boolean isChunkLoaded(ChunkHolder holder) {
-        return getChunkFromHolder(holder) != null;
+    public static boolean hasChunk(ChunkHolder holder) {
+        return holder != null && getChunkFromFuture(holder.getFullChunkFuture()) != null;
     }
 
     public static void disableSpawnChunks(MinecraftServer server) {
@@ -105,7 +107,7 @@ public final class ChunkManager {
 
         for (int chunkX = minChunkX; chunkX <= maxChunkX; ++chunkX) {
             for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; ++chunkZ) {
-                if (!isChunkLoaded(level, chunkX, chunkZ)) {
+                if (!hasChunk(level, chunkX, chunkZ)) {
                     return false;
                 }
             }

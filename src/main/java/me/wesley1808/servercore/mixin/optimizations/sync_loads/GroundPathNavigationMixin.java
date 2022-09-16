@@ -21,7 +21,7 @@ public abstract class GroundPathNavigationMixin extends PathNavigation {
     // Don't load chunks for pathfinding.
     @Inject(method = "createPath(Lnet/minecraft/core/BlockPos;I)Lnet/minecraft/world/level/pathfinder/Path;", at = @At("HEAD"), cancellable = true)
     private void servercore$onlyPathfindIfLoaded(BlockPos target, int distance, CallbackInfoReturnable<Path> cir) {
-        if (!ChunkManager.isChunkLoaded(this.level, target)) {
+        if (!ChunkManager.hasChunk(this.level, target)) {
             cir.setReturnValue(null);
         }
     }

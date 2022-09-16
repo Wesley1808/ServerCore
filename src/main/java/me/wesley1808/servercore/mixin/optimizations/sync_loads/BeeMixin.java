@@ -28,7 +28,7 @@ public abstract class BeeMixin extends Animal {
 
     @Inject(method = "doesHiveHaveSpace", at = @At("HEAD"), cancellable = true)
     private void servercore$onlyCheckIfLoaded(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (!ChunkManager.isChunkLoaded(this.level, pos)) {
+        if (!ChunkManager.hasChunk(this.level, pos)) {
             cir.setReturnValue(false);
         }
     }
@@ -44,7 +44,7 @@ public abstract class BeeMixin extends Animal {
     )
     private void servercore$onlyCheckIfLoaded(CallbackInfoReturnable<Boolean> cir) {
         // noinspection ConstantConditions
-        if (!ChunkManager.isChunkLoaded(this.level, this.hivePos)) {
+        if (!ChunkManager.hasChunk(this.level, this.hivePos)) {
             cir.setReturnValue(false);
         }
     }
@@ -60,7 +60,7 @@ public abstract class BeeMixin extends Animal {
     )
     private void servercore$onlyValidateIfLoaded(CallbackInfoReturnable<Boolean> cir) {
         // noinspection ConstantConditions
-        if (!ChunkManager.isChunkLoaded(this.level, this.hivePos)) {
+        if (!ChunkManager.hasChunk(this.level, this.hivePos)) {
             cir.setReturnValue(true);
         }
     }

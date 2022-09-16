@@ -103,7 +103,7 @@ public final class Statistics {
         for (ServerLevel level : ServerCore.getServer().getAllLevels()) {
             if (onlyLoaded) {
                 for (ChunkHolder holder : level.getChunkSource().chunkMap.getChunks()) {
-                    if (ChunkManager.isChunkLoaded(holder)) {
+                    if (ChunkManager.hasChunk(holder)) {
                         count++;
                     }
                 }
