@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.mixin.features.ticking;
+package me.wesley1808.servercore.mixin.features.dynamic;
 
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import net.minecraft.server.level.ChunkMap;

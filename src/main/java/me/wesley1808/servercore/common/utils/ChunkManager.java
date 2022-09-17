@@ -2,6 +2,7 @@ package me.wesley1808.servercore.common.utils;
 
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
@@ -11,6 +12,7 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -28,6 +30,16 @@ import java.util.concurrent.CompletableFuture;
  * @author Wesley1808
  */
 public final class ChunkManager {
+
+    @NotNull
+    public static Holder<Biome> getRoughBiome(Level level, BlockPos pos) {
+        LevelChunk chunk = getChunkNow(level, pos);
+        int x = pos.getX() >> 2;
+        int y = pos.getY() >> 2;
+        int z = pos.getZ() >> 2;
+
+        return chunk != null ? chunk.getNoiseBiome(x, y, z) : level.getUncachedNoiseBiome(x, y, z);
+    }
 
     @NotNull
     public static BlockState getBlockState(Level level, BlockPos pos) {

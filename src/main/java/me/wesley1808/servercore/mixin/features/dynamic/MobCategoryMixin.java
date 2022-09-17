@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.mixin.features.misc;
+package me.wesley1808.servercore.mixin.features.dynamic;
 
 import me.wesley1808.servercore.common.interfaces.IMobCategory;
 import net.minecraft.world.entity.MobCategory;

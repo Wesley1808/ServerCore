@@ -51,7 +51,7 @@ in 1x1 spaces.
 \
 **- And more!**
 
-## Commands & Configuration
+## Commands, Placeholders and Configuration
 
 ### Commands
 
@@ -62,10 +62,35 @@ in 1x1 spaces.
 - /mobcaps - Displays current mobcaps for each spawn group.
 
 - /statistics entities | block-entities - Displays performance related statistics.
+
 ___
+
+### Placeholders
+
+- `%servercore:view_distance%` - The current view distance.
+- `%servercore:simulation_distance%` - The current simulation distance.
+- `%servercore:chunk_tick_distance%` - The current chunk tick distance.
+- `%servercore:mobcap_percentage%` - The global mobcap percentage that is currently being used.
+
+
+- `%servercore:chunk_count%` - The amount of chunks on the server (doesn't have to be fully loaded).
+- `%servercore:chunk_count loaded%` - The amount of fully loaded chunks on the server (expensive).
+
+
+- `%servercore:entity_count%` - The amount of loaded entities on the server.
+- `%servercore:entity_count nearby%` - The amount of loaded entities nearby.
+
+
+- `%servercore:block_entity_count%` - The amount of ticking block entities on the server.
+- `%servercore:block_entity_count nearby%` - The amount of ticking block entities nearby.
+
+___
+
 ### Config
+
 Most features are disabled by default and can be found in the config.\
 The config file can be found at `/config/servercore.toml`
+
 ```toml
 # Lets you enable / disable certain features and modify them.
 [features]

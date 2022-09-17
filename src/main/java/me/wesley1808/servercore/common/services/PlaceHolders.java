@@ -52,7 +52,7 @@ public final class PlaceHolders {
         register("entity_count", (ctx, arg) -> {
             ServerPlayer player = ctx.player();
             if (player != null) {
-                if (Objects.equals(arg, "player")) {
+                if (Objects.equals(arg, "nearby")) {
                     return PlaceholderResult.value(String.valueOf(Statistics.getEntitiesNear(player).size()));
                 }
 
@@ -65,7 +65,7 @@ public final class PlaceHolders {
         register("block_entity_count", (ctx, arg) -> {
             ServerPlayer player = ctx.player();
             if (player != null) {
-                if (Objects.equals(arg, "player")) {
+                if (Objects.equals(arg, "nearby")) {
                     return PlaceholderResult.value(String.valueOf(Statistics.getBlockEntitiesNear(player).size()));
                 }
 
