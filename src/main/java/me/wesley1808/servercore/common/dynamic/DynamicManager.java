@@ -102,7 +102,7 @@ public class DynamicManager {
     public static void modifyMobcaps(double modifier) {
         for (MobCategory category : MobCategory.values()) {
             if ((Object) category instanceof IMobCategory mobCategory) {
-                mobCategory.modifyMobcaps(modifier);
+                mobCategory.modifyCapacity(modifier);
             }
         }
     }

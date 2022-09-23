@@ -22,10 +22,6 @@ public abstract class AnimalMixin extends AgeableMob {
     @Shadow
     public abstract void resetLove();
 
-    /**
-     * Cancels animal breeding if there are too many animals of the same type in the surrounding area.
-     */
-
     @Inject(method = "spawnChildFromBreeding", at = @At("HEAD"), cancellable = true)
     public void servercore$cancelAnimalBreeding(ServerLevel level, Animal other, CallbackInfo ci) {
         if (BreedingCap.exceedsLimit(this, EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {

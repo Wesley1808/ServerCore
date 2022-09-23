@@ -33,7 +33,7 @@ public final class ChunkManager {
 
     @NotNull
     public static Holder<Biome> getRoughBiome(Level level, BlockPos pos) {
-        LevelChunk chunk = getChunkNow(level, pos);
+        ChunkAccess chunk = getChunkNow(level, pos);
         int x = pos.getX() >> 2;
         int y = pos.getY() >> 2;
         int z = pos.getZ() >> 2;
@@ -43,13 +43,8 @@ public final class ChunkManager {
 
     @NotNull
     public static BlockState getBlockState(Level level, BlockPos pos) {
-        final LevelChunk chunk = getChunkNow(level, pos);
+        ChunkAccess chunk = getChunkNow(level, pos);
         return chunk != null ? chunk.getBlockState(pos) : Blocks.AIR.defaultBlockState();
-    }
-
-    @Nullable
-    public static LevelChunk getChunkNow(Level level, BlockPos pos) {
-        return level.getChunkSource().getChunkNow(pos.getX() >> 4, pos.getZ() >> 4);
     }
 
     @Nullable
@@ -59,8 +54,8 @@ public final class ChunkManager {
 
     @Nullable
     public static ChunkAccess getChunkNow(LevelReader levelReader, int chunkX, int chunkZ) {
-        if (levelReader instanceof Level level) {
-            return level.getChunkSource().getChunkNow(chunkX, chunkZ);
+        if (levelReader instanceof ServerLevel level) {
+            return getChunkFromHolder(getChunkHolder(level, chunkX, chunkZ));
         } else {
             return levelReader.getChunk(chunkX, chunkZ, ChunkStatus.FULL, false);
         }
@@ -74,6 +69,11 @@ public final class ChunkManager {
         }
 
         return either.left().orElse(null);
+    }
+
+    @Nullable
+    public static LevelChunk getChunkFromHolder(ChunkHolder holder) {
+        return holder != null ? getChunkFromFuture(holder.getFullChunkFuture()) : null;
     }
 
     @Nullable
@@ -94,7 +94,7 @@ public final class ChunkManager {
     }
 
     public static boolean hasChunk(ChunkHolder holder) {
-        return holder != null && getChunkFromFuture(holder.getFullChunkFuture()) != null;
+        return getChunkFromHolder(holder) != null;
     }
 
     public static void disableSpawnChunks(MinecraftServer server) {

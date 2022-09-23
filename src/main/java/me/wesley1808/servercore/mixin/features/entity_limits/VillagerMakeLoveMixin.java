@@ -12,12 +12,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(VillagerMakeLove.class)
 public abstract class VillagerMakeLoveMixin {
 
-    /**
-     * Cancels villager breeding if there are too many villagers in the surrounding area.
-     *
-     * @return Double: distance to other villager.
-     */
-
     @Redirect(
             method = "tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/npc/Villager;J)V",
             at = @At(

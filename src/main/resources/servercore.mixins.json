@@ -7,7 +7,6 @@
   "mixins": [
     "compat.vmp.LocalMobCapCalculatorMixin",
     "compat.vmp.MobCountsMixin",
-    "events.PlayerListMixin",
     "features.activation_range.EntityMixin",
     "features.activation_range.LevelMixin",
     "features.activation_range.MoveToBlockGoalMixin",
@@ -30,6 +29,7 @@
     "features.activation_range.inactive_ticks.VillagerMixin",
     "features.dynamic.ChunkMapMixin",
     "features.dynamic.MobCategoryMixin",
+    "features.dynamic.PlayerListMixin",
     "features.entity_limits.AllayMixin",
     "features.entity_limits.AnimalMixin",
     "features.entity_limits.FrogSpawnBlockMixin",
@@ -60,6 +60,7 @@
     "optimizations.sync_loads.SleepInBedMixin",
     "optimizations.tickets.ChunkGeneratorMixin",
     "optimizations.tickets.NaturalSpawnerMixin",
+    "optimizations.tickets.ServerLevelMixin",
     "optimizations.ticking.chunk.iteration.ChunkHolderMixin",
     "optimizations.ticking.chunk.iteration.ServerChunkCacheMixin",
     "optimizations.ticking.chunk.random.LevelChunkMixin",

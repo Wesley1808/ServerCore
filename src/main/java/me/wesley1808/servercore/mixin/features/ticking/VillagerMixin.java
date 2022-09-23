@@ -11,7 +11,7 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -63,7 +63,7 @@ public abstract class VillagerMixin extends AbstractVillager {
     }
 
     private boolean canTravel(BlockPos pos) {
-        LevelChunk chunk = ChunkManager.getChunkNow(this.level, pos);
+        ChunkAccess chunk = ChunkManager.getChunkNow(this.level, pos);
         if (chunk == null) {
             return false;
         }
@@ -73,7 +73,7 @@ public abstract class VillagerMixin extends AbstractVillager {
     }
 
     private boolean canTravelTo(BlockPos pos, boolean canJump) {
-        LevelChunk chunk = ChunkManager.getChunkNow(this.level, pos);
+        ChunkAccess chunk = ChunkManager.getChunkNow(this.level, pos);
         if (chunk == null) {
             return false;
         }
@@ -98,7 +98,7 @@ public abstract class VillagerMixin extends AbstractVillager {
     }
 
     // Checks for collisions 2 blocks above the given position
-    private boolean noCollisionAbove(LevelChunk chunk, BlockPos pos) {
+    private boolean noCollisionAbove(ChunkAccess chunk, BlockPos pos) {
         return !chunk.getBlockState(pos.above(2)).getBlock().hasCollision;
     }
 }

@@ -25,14 +25,14 @@ public class MobCategoryMixin implements IMobCategory {
     }
 
     @Inject(method = "getMaxInstancesPerChunk", at = @At("HEAD"), cancellable = true)
-    private void servercore$modifyMobcaps(CallbackInfoReturnable<Integer> cir) {
+    private void servercore$getCapacity(CallbackInfoReturnable<Integer> cir) {
         if (this.capacity != this.max) {
             cir.setReturnValue(this.capacity);
         }
     }
 
     @Override
-    public void modifyMobcaps(double modifier) {
+    public void modifyCapacity(double modifier) {
         this.capacity = (int) (this.max * modifier);
     }
 }
