@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.mixin.optimizations.misc;
 
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.world.entity.player.Inventory;
@@ -7,15 +8,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(value = MapItemSavedData.class, priority = 900)
 public abstract class MapItemSavedDataMixin {
-
-    @Shadow
-    protected abstract void removeDecoration(String string);
 
     // Cancels unnecessary inventory iteration from maps in item frames to improve performance.
     @Redirect(
@@ -31,7 +28,7 @@ public abstract class MapItemSavedDataMixin {
     }
 
     // Fixes blinking player icons on player held maps.
-    @Redirect(
+    @WrapWithCondition(
             method = "tickCarriedBy",
             at = @At(
                     value = "INVOKE",
@@ -39,10 +36,8 @@ public abstract class MapItemSavedDataMixin {
                     ordinal = 0
             )
     )
-    private void servercore$removePlayerIcon(MapItemSavedData data, String id, Player player, ItemStack stack) {
-        if (!stack.isFramed()) {
-            this.removeDecoration(id);
-        }
+    private boolean servercore$shouldRemovePlayerIcon(MapItemSavedData data, String id, Player player, ItemStack stack) {
+        return !stack.isFramed();
     }
 
     @Redirect(

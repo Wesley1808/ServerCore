@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.mixin.features.ticking;
 
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.core.BlockPos;
@@ -15,7 +16,6 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 /**
  * From: Purpur (Lobotomize-stuck-villagers.patch)
@@ -33,17 +33,15 @@ public abstract class VillagerMixin extends AbstractVillager {
         super(entityType, level);
     }
 
-    @Redirect(
+    @WrapWithCondition(
             method = "customServerAiStep",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/entity/ai/Brain;tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;)V"
             )
     )
-    private void servercore$shouldTickBrain(Brain<Villager> brain, ServerLevel level, LivingEntity livingEntity) {
-        if (!FeatureConfig.LOBOTOMIZE_VILLAGERS.get() || !this.isLobotomized() || this.tickCount % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0) {
-            brain.tick(level, (Villager) (Object) this);
-        }
+    private boolean servercore$shouldTickBrain(Brain<Villager> brain, ServerLevel level, LivingEntity livingEntity) {
+        return !FeatureConfig.LOBOTOMIZE_VILLAGERS.get() || !this.isLobotomized() || this.tickCount % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0;
     }
 
     private boolean isLobotomized() {

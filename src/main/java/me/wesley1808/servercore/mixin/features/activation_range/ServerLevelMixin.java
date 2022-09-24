@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.mixin.features.activation_range;
 
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
 import me.wesley1808.servercore.common.interfaces.activation_range.ActivationEntity;
 import me.wesley1808.servercore.common.interfaces.activation_range.InactiveEntity;
@@ -43,45 +44,41 @@ public abstract class ServerLevelMixin {
         }
     }
 
-    @Redirect(
+    @WrapWithCondition(
             method = "tickNonPassenger",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/entity/Entity;tick()V"
             )
     )
-    public void servercore$shouldTickEntity(Entity entity) {
-        if (ActivationRange.checkIfActive(entity)) {
-            ((ActivationEntity) entity).setInactive(false);
-            entity.tickCount++;
-            entity.tick();
-        } else {
+    private boolean servercore$shouldTickEntity(Entity entity) {
+        if (!ActivationRange.checkIfActive(entity)) {
             ((ActivationEntity) entity).setInactive(true);
             ((InactiveEntity) entity).inactiveTick();
+            return false;
         }
+        return true;
     }
 
-    @Redirect(
+    @WrapWithCondition(
             method = "tickPassenger",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/entity/Entity;rideTick()V"
             )
     )
-    public void servercore$shouldTickPassenger(Entity entity) {
-        if (ActivationRange.checkIfActive(entity)) {
-            ((ActivationEntity) entity).setInactive(false);
-            entity.tickCount++;
-            entity.rideTick();
-        } else {
-            entity.setDeltaMovement(Vec3.ZERO);
-            ((ActivationEntity) entity).setInactive(true);
-            ((InactiveEntity) entity).inactiveTick();
-            Entity vehicle = entity.getVehicle();
-            if (vehicle != null) {
-                vehicle.positionRider(entity);
-            }
+    public boolean servercore$shouldTickPassenger(Entity passenger) {
+        if (!ActivationRange.checkIfActive(passenger)) {
+            passenger.setDeltaMovement(Vec3.ZERO);
+
+            ((ActivationEntity) passenger).setInactive(true);
+            ((InactiveEntity) passenger).inactiveTick();
+
+            Entity vehicle = passenger.getVehicle();
+            if (vehicle != null) vehicle.positionRider(passenger);
+            return false;
         }
+        return true;
     }
 
     // ServerCore - Only increase tick count when ticked.

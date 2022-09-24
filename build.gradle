@@ -8,6 +8,7 @@ repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://maven.nucleoid.xyz/" }
     maven { url "https://maven.parchmentmc.org" }
+    maven { url 'https://jitpack.io' }
     mavenCentral()
 }
 
@@ -54,6 +55,10 @@ dependencies {
     // Night Config
     implementation(include("com.electronwill.night-config:core:${nightconfig}"))
     implementation(include("com.electronwill.night-config:toml:${nightconfig}"))
+
+    // Mixin Extras
+    implementation(include("com.github.LlamaLad7:MixinExtras:${mixin_extras}"))
+    annotationProcessor("com.github.LlamaLad7:MixinExtras:${mixin_extras}")
 }
 
 processResources {

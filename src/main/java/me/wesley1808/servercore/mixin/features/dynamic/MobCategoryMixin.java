@@ -20,7 +20,7 @@ public class MobCategoryMixin implements IMobCategory {
     private int capacity;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void onInit(String enumName, int index, String name, int max, boolean isFriendly, boolean isPersistent, int despawnDistance, CallbackInfo ci) {
+    private void servercore$onInit(String enumName, int index, String name, int max, boolean isFriendly, boolean isPersistent, int despawnDistance, CallbackInfo ci) {
         this.capacity = max;
     }
 

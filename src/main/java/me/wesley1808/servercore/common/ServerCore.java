@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.common;
 
+import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import com.mojang.logging.LogUtils;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.services.Events;
@@ -35,6 +36,7 @@ public class ServerCore implements ModInitializer {
 
     public static void onLoadMixins() {
         LOGGER.info("[ServerCore] Loading...");
+        MixinExtrasBootstrap.init();
         Config.load();
     }
 

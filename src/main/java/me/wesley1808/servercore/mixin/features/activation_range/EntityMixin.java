@@ -26,6 +26,9 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
     @Shadow
     public Level level;
 
+    @Shadow
+    public int tickCount;
+    
     @Unique
     private int activatedTick = Integer.MIN_VALUE;
 
@@ -49,6 +52,12 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
         final Entity entity = (Entity) (Object) this;
         this.activationType = ActivationRange.initializeEntityActivationType(entity);
         this.excluded = level == null || ActivationRange.isExcluded(entity);
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void servercore$onTick(CallbackInfo ci) {
+        this.isInactive = false;
+        this.tickCount++;
     }
 
     @Inject(
