@@ -47,6 +47,7 @@
     "features.ticking.VillagerMixin",
     "optimizations.biome_lookups.NaturalSpawnerMixin",
     "optimizations.misc.MapItemSavedDataMixin",
+    "optimizations.misc.PathFinderMixin",
     "optimizations.players.PlayerAdvancementsMixin",
     "optimizations.players.PlayerListMixin",
     "optimizations.players.ServerPlayerMixin",
@@ -64,6 +65,7 @@
     "optimizations.ticking.chunk.iteration.ChunkHolderMixin",
     "optimizations.ticking.chunk.iteration.ServerChunkCacheMixin",
     "optimizations.ticking.chunk.random.LevelChunkMixin",
+    "optimizations.ticking.chunk.random.LiquidBlockMixin",
     "optimizations.ticking.chunk.random.ServerChunkCacheMixin",
     "optimizations.ticking.chunk.random.ServerLevelMixin",
     "optimizations.ticking.entity.EntityCallbacksMixin"
