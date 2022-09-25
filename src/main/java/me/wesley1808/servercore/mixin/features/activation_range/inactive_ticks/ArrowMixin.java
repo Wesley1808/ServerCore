@@ -8,7 +8,8 @@ import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 
 /**
- * From: Spigot (Entity-Activation-Range.patch)
+ * Based on: Spigot (Entity-Activation-Range.patch)
+ * Patch Author: Aikar (aikar@aikar.co)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 

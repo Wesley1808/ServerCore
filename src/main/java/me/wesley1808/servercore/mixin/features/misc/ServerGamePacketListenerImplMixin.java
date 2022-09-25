@@ -24,7 +24,8 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * From: PaperMC (Add-option-to-prevent-players-from-moving-into-unloaded-chunks.patch)
+ * Based on: Paper (Add-option-to-prevent-players-from-moving-into-unloaded-chunks.patch)
+ * Patch Author: Gabriele C (sgdc3.mail@gmail.com)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 

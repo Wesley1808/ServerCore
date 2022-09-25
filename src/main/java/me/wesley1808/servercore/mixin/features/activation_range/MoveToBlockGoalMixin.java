@@ -14,7 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 /**
- * From: PaperMC (Entity-Activation-Range-2.0.patch)
+ * Based on: Paper (Entity-Activation-Range-2.0.patch)
+ * Patch Author: Aikar (aikar@aikar.co)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 

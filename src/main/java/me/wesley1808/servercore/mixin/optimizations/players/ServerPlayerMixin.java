@@ -7,7 +7,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 /**
- * From: PaperMC (Don-t-move-existing-players-to-world-spawn.patch)
+ * Based on: Paper (Don-t-move-existing-players-to-world-spawn.patch)
+ * Patch Author: Aikar (aikar@aikar.co)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 

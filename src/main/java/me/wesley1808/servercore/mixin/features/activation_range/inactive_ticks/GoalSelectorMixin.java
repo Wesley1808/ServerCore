@@ -11,7 +11,8 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.Set;
 
 /**
- * From: PaperMC (Entity-Activation-Range-2.0.patch)
+ * Based on: Paper (Entity-Activation-Range-2.0.patch)
+ * Patch Author: Aikar (aikar@aikar.co)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 

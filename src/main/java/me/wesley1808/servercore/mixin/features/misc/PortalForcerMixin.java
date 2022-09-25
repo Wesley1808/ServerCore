@@ -7,7 +7,8 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 /**
- * From: PaperMC (Add-configurable-portal-search-radius.patch)
+ * Based on: Paper (Add-configurable-portal-search-radius.patch)
+ * Patch Author: Joseph Hirschfeld (joe@ibj.io)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 

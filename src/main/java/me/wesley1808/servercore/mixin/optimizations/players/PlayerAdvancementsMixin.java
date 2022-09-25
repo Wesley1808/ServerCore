@@ -12,7 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * From: PaperMC (Optimize-the-advancement-data-player-iteration-to-be-O(N)-rather-than-O(N^2).patch)
+ * Based on: Paper (Optimize-the-advancement-data-player-iteration-to-be-O(N)-rather-than-O(N^2).patch)
+ * Patch Author: Wyatt Childers (wchilders@nearce.com)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 

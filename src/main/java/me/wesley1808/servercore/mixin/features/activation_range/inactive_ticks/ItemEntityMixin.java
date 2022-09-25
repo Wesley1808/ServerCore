@@ -10,7 +10,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 /**
- * From: Spigot (Entity-Activation-Range.patch)
+ * Based on: Spigot (Entity-Activation-Range.patch)
+ * Patch Author: Aikar (aikar@aikar.co)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 

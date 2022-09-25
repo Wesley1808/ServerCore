@@ -19,7 +19,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.function.Supplier;
 
 /**
- * From: Airplane (Optimize-random-calls-in-chunk-ticking.patch)
+ * Based on: Airplane (Optimize-random-calls-in-chunk-ticking.patch)
+ * Patch Author: Paul Sauve (paul@technove.co)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 

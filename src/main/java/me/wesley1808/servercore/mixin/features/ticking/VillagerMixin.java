@@ -18,7 +18,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
- * From: Purpur (Lobotomize-stuck-villagers.patch)
+ * Based on: Purpur (Lobotomize-stuck-villagers.patch)
+ * Patch Author: William Blake Galbreath (Blake.Galbreath@GMail.com)
  */
 
 @Mixin(Villager.class)

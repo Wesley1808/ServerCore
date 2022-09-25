@@ -14,7 +14,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * From: PaperMC (Do-not-allow-bees-to-load-chunks-for-beehives.patch)
+ * Based on: Paper (Do-not-allow-bees-to-load-chunks-for-beehives.patch)
+ * Patch Author: chickeneer (emcchickeneer@gmail.com)
  */
 
 @Mixin(Bee.class)

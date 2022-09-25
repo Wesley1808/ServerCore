@@ -11,7 +11,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * From: Airplane (Skip-POI-finding-if-stuck-in-vehicle.patch)
+ * Based on: Airplane (Skip-POI-finding-if-stuck-in-vehicle.patch)
+ * Patch Author: Paul Sauve (paul@technove.co)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 

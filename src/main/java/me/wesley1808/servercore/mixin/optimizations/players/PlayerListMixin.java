@@ -19,7 +19,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Optional;
 
 /**
- * From: PaperMC (Don-t-move-existing-players-to-world-spawn.patch)
+ * Based on: Paper (Don-t-move-existing-players-to-world-spawn.patch)
+ * Patch Author: Aikar (aikar@aikar.co)
  * License: GPL-3.0 (licenses/GPL.md)
  */
 
