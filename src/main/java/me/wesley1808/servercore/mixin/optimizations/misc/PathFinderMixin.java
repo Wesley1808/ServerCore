@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.mixin.optimizations.misc;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Mob;
@@ -12,6 +12,7 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -29,6 +30,12 @@ import java.util.stream.Stream;
 
 @Mixin(PathFinder.class)
 public abstract class PathFinderMixin {
+    @Unique
+    private static final Comparator<Path> DEFAULT_COMPARATOR = Comparator.comparingInt(Path::getNodeCount);
+
+    @Unique
+    private static final Comparator<Path> REACHED_COMPARATOR = Comparator.comparingDouble(Path::getDistToTarget).thenComparingInt(Path::getNodeCount);
+
     @Shadow
     @Final
     private NodeEvaluator nodeEvaluator;
@@ -118,7 +125,7 @@ public abstract class PathFinderMixin {
             )
     )
     private Set<Target> servercore$replaceSet(Set<Target> nullSet, ProfilerFiller profiler, Node node, Map<Target, BlockPos> positions, float maxRange, int accuracy, float searchDepthMultiplier) {
-        return new ObjectOpenHashSet<>(positions.size());
+        return new ObjectArraySet<>();
     }
 
     @Inject(
@@ -132,15 +139,13 @@ public abstract class PathFinderMixin {
                     ordinal = 1
             )
     )
-    private void servercore$reduceStreams(ProfilerFiller profiler, Node node, Map<Target, BlockPos> positions, float maxRange, int accuracy, float searchDepthMultiplier, CallbackInfoReturnable<@Nullable Path> cir, Set<Target> original, Set<Target> targets) {
-        boolean empty = targets.isEmpty();
-        Comparator<Path> comparator = empty
-                ? Comparator.comparingInt(Path::getNodeCount)
-                : Comparator.comparingDouble(Path::getDistToTarget).thenComparingInt(Path::getNodeCount);
+    private void servercore$reduceStreams(ProfilerFiller profiler, Node node, Map<Target, BlockPos> positions, float maxRange, int accuracy, float searchDepthMultiplier, CallbackInfoReturnable<@Nullable Path> cir, Set<Target> allTargets, Set<Target> reachedTargets) {
+        boolean reachedEmpty = reachedTargets.isEmpty();
+        Comparator<Path> comparator = reachedEmpty ? DEFAULT_COMPARATOR : REACHED_COMPARATOR;
 
         Path best = null;
-        for (Target target : empty ? original : targets) {
-            Path path = this.reconstructPath(target.getBestNode(), positions.get(target), empty);
+        for (Target target : reachedEmpty ? allTargets : reachedTargets) {
+            Path path = this.reconstructPath(target.getBestNode(), positions.get(target), reachedEmpty);
             if (best == null || comparator.compare(path, best) < 0) {
                 best = path;
             }
