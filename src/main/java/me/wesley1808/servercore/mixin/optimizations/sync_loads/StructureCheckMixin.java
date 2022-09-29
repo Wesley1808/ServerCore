@@ -1,23 +1,25 @@
 package me.wesley1808.servercore.mixin.optimizations.sync_loads;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.QuartPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureCheck;
+import net.minecraft.world.level.levelgen.structure.StructureCheckResult;
 import net.minecraft.world.level.levelgen.structure.structures.BuriedTreasureStructure;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
 
 @Mixin(StructureCheck.class)
-public class StructureCheckMixin {
+public abstract class StructureCheckMixin {
     @Shadow
     @Final
     private ChunkGenerator chunkGenerator;
@@ -26,44 +28,49 @@ public class StructureCheckMixin {
     @Final
     private RandomState randomState;
 
+    @Inject(
+            method = "checkStart",
+            cancellable = true,
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/levelgen/structure/StructureCheck;tryLoadFromStorage(Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/world/level/levelgen/structure/Structure;ZJ)Lnet/minecraft/world/level/levelgen/structure/StructureCheckResult;",
+                    shift = At.Shift.BEFORE
+            )
+    )
+    private void servercore$skipInvalidBiomes(ChunkPos chunkPos, Structure structure, boolean skipKnownStructures, CallbackInfoReturnable<StructureCheckResult> cir) {
+        // Quick checks to validate the biome for certain structures without performing expensive noise calculations.
+        // This is mainly done to significantly speed up locating buried treasures.
+        BlockPos pos = this.getRoughStructurePosition(structure, chunkPos);
+        if (pos != null && !this.isBiomeValid(structure, pos)) {
+            cir.setReturnValue(StructureCheckResult.START_NOT_PRESENT);
+        }
+    }
+
     /**
      * Always check for biomes before loading chunks to find structures.
      * This way we can skip all chunk loads inside biomes that cannot generate the given structure.
      */
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Redirect(
             method = "canCreateStructure",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/levelgen/structure/Structure;findGenerationPoint(Lnet/minecraft/world/level/levelgen/structure/Structure$GenerationContext;)Ljava/util/Optional;"
+                    target = "Ljava/util/Optional;isPresent()Z"
             )
     )
-    private Optional<Structure.GenerationStub> servercore$skipInvalidBiomes(Structure structure, Structure.GenerationContext context, ChunkPos chunkPos, Structure structure2) {
-        // Quick checks to find the structure position inside the chunk without performing expensive noise calculations.
-        BlockPos pos = this.getStructurePosition(structure, chunkPos);
-        if (pos != null && this.cannotGenerateAt(structure, pos)) {
-            return Optional.empty();
-        }
-
-        // Locates the (accurate) structure position inside the chunk.
-        Optional<Structure.GenerationStub> optional = structure.findGenerationPoint(context);
-        if (optional.isEmpty() || this.cannotGenerateAt(structure, optional.get().position())) {
-            return Optional.empty();
-        }
-
-        return optional;
+    private boolean servercore$skipInvalidBiomes(Optional<Structure.GenerationStub> optional, ChunkPos chunkPos, Structure structure) {
+        return optional.isPresent() && this.isBiomeValid(structure, optional.get().position());
     }
 
-    private boolean cannotGenerateAt(Structure structure, BlockPos pos) {
-        int x = QuartPos.fromBlock(pos.getX());
-        int y = QuartPos.fromBlock(pos.getY());
-        int z = QuartPos.fromBlock(pos.getZ());
-
-        return !structure.biomes().contains(this.chunkGenerator.getBiomeSource().getNoiseBiome(x, y, z, this.randomState.sampler()));
+    private boolean isBiomeValid(Structure structure, BlockPos pos) {
+        return structure.biomes().contains(this.chunkGenerator.getBiomeSource().getNoiseBiome(pos.getX() >> 2, pos.getY() >> 2, pos.getZ() >> 2, this.randomState.sampler()));
     }
 
-    private BlockPos getStructurePosition(Structure structure, ChunkPos pos) {
+    private BlockPos getRoughStructurePosition(Structure structure, ChunkPos chunkPos) {
+        // The height isn't always guaranteed to be correct, but it's only used for biome checks.
+        // There might be an extremely small chance that it will return the wrong biome, but it's arguably better than watchdog crashing the server.
         if (structure instanceof BuriedTreasureStructure) {
-            return pos.getMiddleBlockPosition(this.chunkGenerator.getSeaLevel());
+            return chunkPos.getMiddleBlockPosition(this.chunkGenerator.getSeaLevel());
         }
 
         return null;
