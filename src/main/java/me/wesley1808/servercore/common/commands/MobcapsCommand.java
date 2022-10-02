@@ -4,8 +4,6 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import me.wesley1808.servercore.common.config.tables.CommandConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
-import me.wesley1808.servercore.common.interfaces.compat.ILocalMobCapCalculator;
-import me.wesley1808.servercore.common.interfaces.compat.IMobCounts;
 import me.wesley1808.servercore.common.services.Formatter;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,10 +30,11 @@ public final class MobcapsCommand {
 
         NaturalSpawner.SpawnState state = player.getLevel().getChunkSource().getLastSpawnState();
         if (state != null) {
+            LocalMobCapCalculator.MobCounts mobCounts = state.localMobCapCalculator.playerMobCounts.getOrDefault(player, EMPTY_MOBCOUNTS);
             for (MobCategory category : MobCategory.values()) {
                 builder.append("\n").append(CommandConfig.MOBCAP_CONTENT.get()
                         .replace("${name}", category.getName())
-                        .replace("${current}", String.valueOf(getMobcount(player, category, state.localMobCapCalculator)))
+                        .replace("${current}", String.valueOf(mobCounts.counts.getOrDefault(category, 0)))
                         .replace("${capacity}", String.valueOf(category.getMaxInstancesPerChunk()))
                 );
             }
@@ -43,15 +42,5 @@ public final class MobcapsCommand {
 
         player.sendSystemMessage(Formatter.parse(builder.toString()));
         return Command.SINGLE_SUCCESS;
-    }
-
-    private static int getMobcount(ServerPlayer player, MobCategory category, LocalMobCapCalculator mobcapCalculator) {
-        if (mobcapCalculator instanceof ILocalMobCapCalculator calculator) {
-            IMobCounts mobCounts = calculator.getMobCounts(player, EMPTY_MOBCOUNTS);
-            return mobCounts.getMobcount(category);
-        } else {
-            LocalMobCapCalculator.MobCounts mobCounts = mobcapCalculator.playerMobCounts.getOrDefault(player, EMPTY_MOBCOUNTS);
-            return mobCounts.counts.getOrDefault(category, 0);
-        }
     }
 }

@@ -44,11 +44,6 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             return OptimizationConfig.FAST_BIOME_LOOKUPS.get();
         }
 
-        // Very Many Players - Adds compatibility for /mobcaps.
-        if (mixinClassName.startsWith(this.mixinPackage + "compat.vmp")) {
-            return this.isModLoaded("vmp");
-        }
-
         return true;
     }
 
