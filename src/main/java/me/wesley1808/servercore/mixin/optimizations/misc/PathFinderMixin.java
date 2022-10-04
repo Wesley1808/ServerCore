@@ -6,21 +6,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.PathNavigationRegion;
-import net.minecraft.world.level.pathfinder.*;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.pathfinder.Node;
+import net.minecraft.world.level.pathfinder.NodeEvaluator;
+import net.minecraft.world.level.pathfinder.PathFinder;
+import net.minecraft.world.level.pathfinder.Target;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -30,23 +27,10 @@ import java.util.stream.Stream;
 
 @Mixin(PathFinder.class)
 public abstract class PathFinderMixin {
-    @Unique
-    private static final Comparator<Path> DEFAULT_COMPARATOR = Comparator.comparingInt(Path::getNodeCount);
-
-    @Unique
-    private static final Comparator<Path> REACHED_COMPARATOR = Comparator.comparingDouble(Path::getDistToTarget).thenComparingInt(Path::getNodeCount);
-
     @Shadow
     @Final
     private NodeEvaluator nodeEvaluator;
 
-    @Shadow
-    protected abstract Path reconstructPath(Node point, BlockPos targetPos, boolean reachesTarget);
-
-    /**
-     * Removes streams from {@link PathFinder#findPath(PathNavigationRegion, Mob, Set, float, int, float)}
-     * And replaces the map with fastutil.
-     */
     @Redirect(
             method = "findPath(Lnet/minecraft/world/level/PathNavigationRegion;Lnet/minecraft/world/entity/Mob;Ljava/util/Set;FIF)Lnet/minecraft/world/level/pathfinder/Path;",
             at = @At(
@@ -98,10 +82,6 @@ public abstract class PathFinderMixin {
         return map;
     }
 
-    /**
-     * Removes streams from {@link PathFinder#findPath(ProfilerFiller, Node, Map, float, int, float)}
-     * And replaces the hashset with fastutil.
-     */
     @Redirect(
             method = "findPath(Lnet/minecraft/util/profiling/ProfilerFiller;Lnet/minecraft/world/level/pathfinder/Node;Ljava/util/Map;FIF)Lnet/minecraft/world/level/pathfinder/Path;",
             at = @At(
@@ -126,32 +106,5 @@ public abstract class PathFinderMixin {
     )
     private Set<Target> servercore$replaceSet(Set<Target> nullSet, ProfilerFiller profiler, Node node, Map<Target, BlockPos> positions, float maxRange, int accuracy, float searchDepthMultiplier) {
         return new ObjectArraySet<>();
-    }
-
-    @Inject(
-            method = "findPath(Lnet/minecraft/util/profiling/ProfilerFiller;Lnet/minecraft/world/level/pathfinder/Node;Ljava/util/Map;FIF)Lnet/minecraft/world/level/pathfinder/Path;",
-            locals = LocalCapture.CAPTURE_FAILHARD,
-            cancellable = true,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Ljava/util/Set;isEmpty()Z",
-                    shift = At.Shift.BEFORE,
-                    ordinal = 1
-            )
-    )
-    private void servercore$reduceStreams(ProfilerFiller profiler, Node node, Map<Target, BlockPos> positions, float maxRange, int accuracy, float searchDepthMultiplier, CallbackInfoReturnable<@Nullable Path> cir, Set<Target> allTargets, Set<Target> reachedTargets) {
-        boolean reachedEmpty = reachedTargets.isEmpty();
-        Comparator<Path> comparator = reachedEmpty ? DEFAULT_COMPARATOR : REACHED_COMPARATOR;
-
-        Path best = null;
-        for (Target target : reachedEmpty ? allTargets : reachedTargets) {
-            Path path = this.reconstructPath(target.getBestNode(), positions.get(target), reachedEmpty);
-            if (best == null || comparator.compare(path, best) < 0) {
-                best = path;
-            }
-        }
-
-        profiler.pop();
-        cir.setReturnValue(best);
     }
 }
