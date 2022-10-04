@@ -44,6 +44,10 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             return OptimizationConfig.FAST_BIOME_LOOKUPS.get();
         }
 
+        if (mixinClassName.startsWith(this.mixinPackage + "optimizations.ticking.chunk.cache")) {
+            return OptimizationConfig.CACHE_TICKING_CHUNKS.get();
+        }
+
         return true;
     }
 

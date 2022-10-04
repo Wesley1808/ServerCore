@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.mixin.optimizations.ticking.chunk.iteration;
+package me.wesley1808.servercore.mixin.optimizations.ticking.chunk.broadcast;
 
 import me.wesley1808.servercore.common.interfaces.chunk.IServerChunkCache;
 import net.minecraft.core.BlockPos;

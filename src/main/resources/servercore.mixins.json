@@ -61,12 +61,13 @@
     "optimizations.tickets.ChunkGeneratorMixin",
     "optimizations.tickets.NaturalSpawnerMixin",
     "optimizations.tickets.ServerLevelMixin",
-    "optimizations.ticking.chunk.iteration.ChunkHolderMixin",
-    "optimizations.ticking.chunk.iteration.ServerChunkCacheMixin",
+    "optimizations.ticking.chunk.broadcast.ChunkHolderMixin",
+    "optimizations.ticking.chunk.broadcast.ServerChunkCacheMixin",
     "optimizations.ticking.chunk.random.LevelChunkMixin",
     "optimizations.ticking.chunk.random.LiquidBlockMixin",
     "optimizations.ticking.chunk.random.ServerChunkCacheMixin",
     "optimizations.ticking.chunk.random.ServerLevelMixin",
+    "optimizations.ticking.chunk.cache.ServerChunkCacheMixin",
     "optimizations.ticking.entity.EntityCallbacksMixin"
   ],
   "injectors": {

@@ -1,9 +1,7 @@
-package me.wesley1808.servercore.mixin.optimizations.ticking.chunk.iteration;
+package me.wesley1808.servercore.mixin.optimizations.ticking.chunk.cache;
 
 import com.mojang.datafixers.DataFixer;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import me.wesley1808.servercore.common.collections.CachedChunkList;
-import me.wesley1808.servercore.common.interfaces.chunk.IServerChunkCache;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerChunkCache;
@@ -18,7 +16,9 @@ import net.minecraft.world.level.entity.ChunkStatusUpdateListener;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.level.storage.LevelStorageSource;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,21 +32,21 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Mixin(value = ServerChunkCache.class, priority = 900)
-public class ServerChunkCacheMixin implements IServerChunkCache {
-    @Unique
-    private final ReferenceOpenHashSet<ChunkHolder> requiresBroadcast = new ReferenceOpenHashSet<>();
+public class ServerChunkCacheMixin {
+    @Shadow
+    @Final
+    public ChunkMap chunkMap;
     @Unique
     private CachedChunkList cachedChunks;
     @Unique
     private boolean isChunkLoaded;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void servercore$onInit(ServerLevel level, LevelStorageSource.LevelStorageAccess storageAccess, DataFixer dataFixer, StructureTemplateManager structureTemplateManager, Executor executor, ChunkGenerator chunkGenerator, int i, int j, boolean bl, ChunkProgressListener chunkProgressListener, ChunkStatusUpdateListener chunkStatusUpdateListener, Supplier supplier, CallbackInfo ci) {
-        this.cachedChunks = new CachedChunkList(level);
+    private void servercore$onInit(ServerLevel level, LevelStorageSource.LevelStorageAccess storageAccess, DataFixer dataFixer, StructureTemplateManager structureTemplateManager, Executor executor, ChunkGenerator chunkGenerator, int i, int j, boolean bl, ChunkProgressListener chunkProgressListener, ChunkStatusUpdateListener chunkStatusUpdateListener, Supplier<?> supplier, CallbackInfo ci) {
+        this.cachedChunks = new CachedChunkList(this.chunkMap);
     }
 
     @Inject(method = "save", at = @At("RETURN"))
@@ -88,13 +88,13 @@ public class ServerChunkCacheMixin implements IServerChunkCache {
             method = "tickChunks",
             at = @At(
                     value = "INVOKE",
-                    target = "Ljava/lang/Iterable;iterator()Ljava/util/Iterator;",
+                    target = "Lnet/minecraft/server/level/ChunkMap;getChunks()Ljava/lang/Iterable;",
                     ordinal = 0
             )
     )
-    private Iterator<ChunkHolder> servercore$updateCachedChunks(Iterable<ChunkHolder> holders) {
-        this.cachedChunks.update(holders);
-        return Collections.emptyIterator();
+    private Iterable<ChunkHolder> servercore$updateCachedChunks(ChunkMap chunkMap) {
+        this.cachedChunks.update();
+        return Collections::emptyIterator;
     }
 
     // Don't shuffle the chunk list.
@@ -119,7 +119,7 @@ public class ServerChunkCacheMixin implements IServerChunkCache {
                     shift = At.Shift.BEFORE
             )
     )
-    private void servercore$setLoaded(CallbackInfo ci, long l, long m, boolean bl, LevelData levelData, ProfilerFiller profilerFiller, int i, boolean bl2, int j, NaturalSpawner.SpawnState spawnState, List list, boolean bl3, Iterator var14, ServerChunkCache.ChunkAndHolder chunkAndHolder, LevelChunk chunk, ChunkPos pos) {
+    private void servercore$setLoaded(CallbackInfo ci, long l, long m, boolean bl, LevelData levelData, ProfilerFiller profilerFiller, int i, boolean bl2, int j, NaturalSpawner.SpawnState spawnState, List<?> list, boolean bl3, Iterator<?> var14, ServerChunkCache.ChunkAndHolder chunkAndHolder, LevelChunk chunk, ChunkPos pos) {
         this.isChunkLoaded = chunk.loaded;
     }
 
@@ -143,28 +143,5 @@ public class ServerChunkCacheMixin implements IServerChunkCache {
     )
     private boolean servercore$skipCheck(ChunkMap chunkMap, ChunkPos pos) {
         return true;
-    }
-
-    @Redirect(
-            method = "tickChunks",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V",
-                    ordinal = 0
-            )
-    )
-    private void servercore$broadcastChanges(List<ServerChunkCache.ChunkAndHolder> list, Consumer<ServerChunkCache.ChunkAndHolder> consumer) {
-        for (ChunkHolder holder : this.requiresBroadcast) {
-            LevelChunk chunk = holder.getTickingChunk();
-            if (chunk != null) {
-                holder.broadcastChanges(chunk);
-            }
-        }
-        this.requiresBroadcast.clear();
-    }
-
-    @Override
-    public void requiresBroadcast(ChunkHolder holder) {
-        this.requiresBroadcast.add(holder);
     }
 }
