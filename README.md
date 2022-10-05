@@ -167,6 +167,10 @@ The config file can be found at `/config/servercore.toml`
 	# (Default = true) Prevents many different lagspikes caused by loading chunks synchronously.
 	# This for example causes maps to only update loaded chunks, which depending on the viewdistance can be a smaller radius than vanilla.
 	reduce_sync_loads = true
+	# (Default = true) Can significantly reduce the time spent on chunk iteration by caching ticking chunks every second.
+	# This is especially useful for servers with a high playercount and / or viewdistance.
+	# Note: The list of ticking chunks is only updated every second, rather than every tick (but that is very unlikely to matter).
+	cache_ticking_chunks = true
 	# (Default = false) Can significantly reduce time spent on mobspawning, but isn't as accurate as vanilla on biome borders.
 	# This may cause mobs from another biome to spawn a few blocks across a biome border (this does not affect structure spawning!).
 	fast_biome_lookups = false

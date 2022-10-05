@@ -46,7 +46,7 @@ public class ServerChunkCacheMixin {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void servercore$onInit(ServerLevel level, LevelStorageSource.LevelStorageAccess storageAccess, DataFixer dataFixer, StructureTemplateManager structureTemplateManager, Executor executor, ChunkGenerator chunkGenerator, int i, int j, boolean bl, ChunkProgressListener chunkProgressListener, ChunkStatusUpdateListener chunkStatusUpdateListener, Supplier<?> supplier, CallbackInfo ci) {
-        this.cachedChunks = new CachedChunkList(this.chunkMap);
+        this.cachedChunks = new CachedChunkList();
     }
 
     @Inject(method = "save", at = @At("RETURN"))
@@ -93,7 +93,7 @@ public class ServerChunkCacheMixin {
             )
     )
     private Iterable<ChunkHolder> servercore$updateCachedChunks(ChunkMap chunkMap) {
-        this.cachedChunks.update();
+        this.cachedChunks.update(chunkMap);
         return Collections::emptyIterator;
     }
 

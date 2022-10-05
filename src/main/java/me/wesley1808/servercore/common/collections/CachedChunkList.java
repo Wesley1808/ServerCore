@@ -11,13 +11,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CachedChunkList extends ObjectArrayList<ServerChunkCache.ChunkAndHolder> {
     private static final AtomicInteger COUNTER = new AtomicInteger();
-    private final ChunkMap chunkMap;
     private boolean trim;
     private int tickCount;
 
-    public CachedChunkList(ChunkMap chunkMap) {
+    public CachedChunkList() {
         super(1024);
-        this.chunkMap = chunkMap;
         this.tickCount = COUNTER.incrementAndGet();
     }
 
@@ -25,13 +23,13 @@ public class CachedChunkList extends ObjectArrayList<ServerChunkCache.ChunkAndHo
         this.trim = true;
     }
 
-    public void update() {
+    public void update(ChunkMap chunkMap) {
         if (this.tickCount++ % 20 == 0) {
             this.clear();
 
-            for (ChunkHolder holder : this.chunkMap.visibleChunkMap.values()) {
+            for (ChunkHolder holder : chunkMap.visibleChunkMap.values()) {
                 LevelChunk chunk = ChunkManager.getChunkFromFuture(holder.getEntityTickingChunkFuture());
-                if (chunk != null && this.chunkMap.anyPlayerCloseEnoughForSpawning(holder.getPos())) {
+                if (chunk != null && chunkMap.anyPlayerCloseEnoughForSpawning(holder.getPos())) {
                     this.add(new ServerChunkCache.ChunkAndHolder(chunk, holder));
                 }
             }
