@@ -1,8 +1,6 @@
 package me.wesley1808.servercore.mixin.features.activation_range.inactive_ticks;
 
 import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
-import me.wesley1808.servercore.common.interfaces.activation_range.InactiveEntity;
-import me.wesley1808.servercore.common.utils.ActivationRange;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
@@ -17,7 +15,7 @@ import org.spongepowered.asm.mixin.Shadow;
  */
 
 @Mixin(Villager.class)
-public abstract class VillagerMixin extends AbstractVillager implements InactiveEntity {
+public abstract class VillagerMixin extends AbstractVillager {
     private VillagerMixin(EntityType<? extends AbstractVillager> entityType, Level level) {
         super(entityType, level);
     }
@@ -31,6 +29,8 @@ public abstract class VillagerMixin extends AbstractVillager implements Inactive
 
     @Override
     public void inactiveTick() {
+        super.inactiveTick();
+
         if (this.getUnhappyCounter() > 0) {
             this.setUnhappyCounter(this.getUnhappyCounter() - 1);
         }
@@ -41,8 +41,5 @@ public abstract class VillagerMixin extends AbstractVillager implements Inactive
         }
 
         this.maybeDecayGossip();
-        this.noActionTime++;
-        ActivationRange.updateAge(this);
-        ActivationRange.updateGoalSelectors(this);
     }
 }

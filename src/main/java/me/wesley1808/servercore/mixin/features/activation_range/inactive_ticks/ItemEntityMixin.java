@@ -1,6 +1,5 @@
 package me.wesley1808.servercore.mixin.features.activation_range.inactive_ticks;
 
-import me.wesley1808.servercore.common.interfaces.activation_range.InactiveEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -16,7 +15,7 @@ import org.spongepowered.asm.mixin.Shadow;
  */
 
 @Mixin(ItemEntity.class)
-public abstract class ItemEntityMixin extends Entity implements InactiveEntity {
+public abstract class ItemEntityMixin extends Entity {
     @Shadow
     @Final
     private static int INFINITE_PICKUP_DELAY;
@@ -41,6 +40,8 @@ public abstract class ItemEntityMixin extends Entity implements InactiveEntity {
 
     @Override
     public void inactiveTick() {
+        super.inactiveTick();
+
         if (this.pickupDelay > 0 && this.pickupDelay != INFINITE_PICKUP_DELAY) {
             this.pickupDelay--;
         }

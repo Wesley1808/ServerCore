@@ -2,7 +2,6 @@ package me.wesley1808.servercore.mixin.features.activation_range;
 
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.interfaces.activation_range.ActivationEntity;
-import me.wesley1808.servercore.common.interfaces.activation_range.InactiveEntity;
 import me.wesley1808.servercore.common.utils.ActivationRange;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -23,13 +22,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
+public abstract class EntityMixin implements ActivationEntity {
     @Shadow
     public Level level;
 
-    @Shadow
-    public int tickCount;
-    
     @Unique
     private int activatedTick = Integer.MIN_VALUE;
 
@@ -53,12 +49,6 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
         final Entity entity = (Entity) (Object) this;
         this.activationType = ActivationRange.initializeEntityActivationType(entity);
         this.excluded = level == null || ActivationRange.isExcluded(entity);
-    }
-
-    @Inject(method = "tick", at = @At("HEAD"))
-    private void servercore$onTick(CallbackInfo ci) {
-        this.isInactive = false;
-        this.tickCount++;
     }
 
     @Inject(
@@ -128,9 +118,5 @@ public abstract class EntityMixin implements ActivationEntity, InactiveEntity {
     @Override
     public void incFullTickCount() {
         this.fullTickCount++;
-    }
-
-    @Override
-    public void inactiveTick() {
     }
 }

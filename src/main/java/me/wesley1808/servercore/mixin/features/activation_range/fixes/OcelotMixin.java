@@ -1,6 +1,5 @@
 package me.wesley1808.servercore.mixin.features.activation_range.fixes;
 
-import me.wesley1808.servercore.common.interfaces.activation_range.ActivationEntity;
 import net.minecraft.world.entity.animal.Ocelot;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,6 +18,6 @@ public abstract class OcelotMixin {
             )
     )
     private int servercore$fixOcelotDespawning(Ocelot ocelot) {
-        return ((ActivationEntity) ocelot).getFullTickCount();
+        return ocelot.getFullTickCount();
     }
 }

@@ -33,6 +33,12 @@
   "custom": {
     "lithium:options": {
       "mixin.alloc.chunk_ticking": false
+    },
+    "loom:injected_interfaces": {
+      "net/minecraft/class_1297": [
+        "me/wesley1808/servercore/common/interfaces/activation_range/InactiveEntity",
+        "me/wesley1808/servercore/common/interfaces/activation_range/ActivationEntity"
+      ]
     }
   }
 }

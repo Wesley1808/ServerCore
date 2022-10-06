@@ -17,7 +17,9 @@ public interface ActivationEntity {
 
     void setInactive(boolean active);
 
-    int getFullTickCount();
-
     void incFullTickCount();
+
+    default int getFullTickCount() {
+        return 0;
+    }
 }

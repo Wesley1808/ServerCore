@@ -1,7 +1,6 @@
 package me.wesley1808.servercore.mixin.features.activation_range.fixes;
 
 import me.wesley1808.servercore.common.ServerCore;
-import me.wesley1808.servercore.common.interfaces.activation_range.ActivationEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -40,10 +39,9 @@ public abstract class PistonMovingBlockEntityMixin {
     )
     private static void servercore$onPushEntity(Level level, BlockPos blockPos, float f, PistonMovingBlockEntity pistonMovingBlockEntity, CallbackInfo ci, Direction direction, double d, VoxelShape voxelShape, AABB aABB, List list, List list2, boolean bl, Iterator var12, Entity entity, Vec3 vec3, double e, double g, double h) {
         if (!level.isClientSide) {
-            final int ticks = ServerCore.getServer().getTickCount() + 10;
-            final ActivationEntity activationEntity = (ActivationEntity) entity;
-            activationEntity.setActivatedTick(Math.max(activationEntity.getActivatedTick(), ticks));
-            activationEntity.setActivatedImmunityTick(Math.max(activationEntity.getActivatedImmunityTick(), ticks));
+            final int tick = ServerCore.getServer().getTickCount() + 10;
+            entity.setActivatedTick(Math.max(entity.getActivatedTick(), tick));
+            entity.setActivatedImmunityTick(Math.max(entity.getActivatedImmunityTick(), tick));
         }
     }
 }

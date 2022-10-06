@@ -2,8 +2,6 @@ package me.wesley1808.servercore.mixin.features.activation_range;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
-import me.wesley1808.servercore.common.interfaces.activation_range.ActivationEntity;
-import me.wesley1808.servercore.common.interfaces.activation_range.InactiveEntity;
 import me.wesley1808.servercore.common.utils.ActivationRange;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -53,12 +51,15 @@ public abstract class ServerLevelMixin {
             )
     )
     private boolean servercore$shouldTickEntity(Entity entity) {
-        if (!ActivationRange.checkIfActive(entity)) {
-            ((ActivationEntity) entity).setInactive(true);
-            ((InactiveEntity) entity).inactiveTick();
+        if (ActivationRange.checkIfActive(entity)) {
+            entity.setInactive(false);
+            entity.tickCount++;
+            return true;
+        } else {
+            entity.setInactive(true);
+            entity.inactiveTick();
             return false;
         }
-        return true;
     }
 
     @WrapWithCondition(
@@ -69,17 +70,19 @@ public abstract class ServerLevelMixin {
             )
     )
     public boolean servercore$shouldTickPassenger(Entity passenger) {
-        if (!ActivationRange.checkIfActive(passenger)) {
+        if (ActivationRange.checkIfActive(passenger)) {
+            passenger.setInactive(false);
+            passenger.tickCount++;
+            return true;
+        } else {
             passenger.setDeltaMovement(Vec3.ZERO);
-
-            ((ActivationEntity) passenger).setInactive(true);
-            ((InactiveEntity) passenger).inactiveTick();
+            passenger.setInactive(true);
+            passenger.inactiveTick();
 
             Entity vehicle = passenger.getVehicle();
             if (vehicle != null) vehicle.positionRider(passenger);
             return false;
         }
-        return true;
     }
 
     // ServerCore - Only increase tick count when ticked.
@@ -93,6 +96,6 @@ public abstract class ServerLevelMixin {
             )
     )
     public void servercore$redirectTickCount(Entity entity, int value) {
-        ((ActivationEntity) entity).incFullTickCount();
+        entity.incFullTickCount();
     }
 }
