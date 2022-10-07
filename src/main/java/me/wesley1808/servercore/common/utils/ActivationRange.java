@@ -1,6 +1,5 @@
 package me.wesley1808.servercore.common.utils;
 
-import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
 import me.wesley1808.servercore.common.interfaces.activation_range.IGoalSelector;
 import me.wesley1808.servercore.common.interfaces.activation_range.ILevel;
@@ -108,13 +107,13 @@ public final class ActivationRange {
                 || entity instanceof Ghast
                 || entity instanceof Warden
                 || entity instanceof MinecartHopper;
-
     }
 
     /**
      * Activates entities in {@param world} that are close enough to players.
      */
     public static void activateEntities(ServerLevel level) {
+        int currentTick = level.getServer().getTickCount();
         int maxRange = Integer.MIN_VALUE;
         for (ActivationType type : ActivationType.values()) {
             maxRange = Math.max(type.activationRange.getAsInt(), maxRange);
@@ -126,7 +125,7 @@ public final class ActivationRange {
         info.setRemainingMonsters(Math.min(info.getRemainingMonsters() + 1, ActivationRangeConfig.MONSTER_WAKEUP_MAX.get()));
         info.setRemainingFlying(Math.min(info.getRemainingFlying() + 1, ActivationRangeConfig.FLYING_WAKEUP_MAX.get()));
 
-        maxRange = Math.min((ServerCore.getServer().getPlayerList().getViewDistance() << 4) - 8, maxRange);
+        maxRange = Math.min((level.getServer().getPlayerList().getViewDistance() << 4) - 8, maxRange);
         for (ServerPlayer player : level.players()) {
             if (player.isSpectator()) {
                 continue;
@@ -150,14 +149,12 @@ public final class ActivationRange {
             }
 
             for (Entity entity : level.getEntities(player, maxBB)) {
-                activateEntity(entity);
+                activateEntity(entity, currentTick);
             }
         }
     }
 
-    private static void activateEntity(Entity entity) {
-        final int currentTick = ServerCore.getServer().getTickCount();
-
+    private static void activateEntity(Entity entity, int currentTick) {
         if (currentTick > entity.getActivatedTick()) {
             if (entity.isExcluded() || entity.getActivationType().boundingBox.intersects(entity.getBoundingBox())) {
                 entity.setActivatedTick(currentTick + 19);
@@ -171,8 +168,8 @@ public final class ActivationRange {
      * @param entity: The entity to check immunities for
      * @return Integer: the amount of ticks an entity should be immune for activation range checks.
      */
-    public static int checkEntityImmunities(Entity entity) {
-        final int inactiveWakeUpImmunity = checkInactiveWakeup(entity);
+    public static int checkEntityImmunities(Entity entity, int currentTick) {
+        final int inactiveWakeUpImmunity = checkInactiveWakeup(entity, currentTick);
         if (inactiveWakeUpImmunity > -1) {
             return inactiveWakeUpImmunity;
         }
@@ -181,7 +178,7 @@ public final class ActivationRange {
             return 2;
         }
 
-        if (entity.getActivatedImmunityTick() >= ServerCore.getServer().getTickCount()) {
+        if (entity.getActivatedImmunityTick() >= currentTick) {
             return 1;
         }
 
@@ -243,7 +240,7 @@ public final class ActivationRange {
                 }
 
                 final int immunityAfter = ActivationRangeConfig.VILLAGER_WORK_IMMUNITY_AFTER.get();
-                if (immunityAfter > 0 && (ServerCore.getServer().getTickCount() - entity.getActivatedTick()) >= immunityAfter) {
+                if (immunityAfter > 0 && (currentTick - entity.getActivatedTick()) >= immunityAfter) {
                     if (brain.isActive(Activity.WORK)) {
                         return ActivationRangeConfig.VILLAGER_WORK_IMMUNITY_FOR.get();
                     }
@@ -281,16 +278,14 @@ public final class ActivationRange {
      * @param entity: The ticking entity
      * @return Boolean: whether the entity should tick.
      */
-    public static boolean checkIfActive(Entity entity) {
+    public static boolean checkIfActive(Entity entity, int currentTick) {
         if (shouldTick(entity)) return true;
 
-        final int currentTick = ServerCore.getServer().getTickCount();
-        final boolean active = entity.getActivatedTick() >= currentTick;
-
+        boolean active = entity.getActivatedTick() >= currentTick;
         if (!active) {
             if ((currentTick - entity.getActivatedTick() - 1) % 20 == 0) {
                 // Check immunities every 20 inactive ticks.
-                final int immunity = checkEntityImmunities(entity);
+                final int immunity = checkEntityImmunities(entity, currentTick);
                 if (immunity >= 0) {
                     entity.setActivatedTick(currentTick + immunity);
                     return true;
@@ -299,7 +294,7 @@ public final class ActivationRange {
                 return entity.getActivationType().tickInactive.getAsBoolean();
             }
             // Spigot - Add a little performance juice to active entities. Skip 1/4 if not immune.
-        } else if (ActivationRangeConfig.SKIP_NON_IMMUNE.get() && entity.getFullTickCount() % 4 == 0 && checkEntityImmunities(entity) < 0) {
+        } else if (ActivationRangeConfig.SKIP_NON_IMMUNE.get() && entity.getFullTickCount() % 4 == 0 && checkEntityImmunities(entity, currentTick) < 0) {
             return false;
         }
 
@@ -313,10 +308,10 @@ public final class ActivationRange {
                 || (entity instanceof LivingEntity living && living.hurtTime > 0); // Attacked mobs
     }
 
-    private static int checkInactiveWakeup(Entity entity) {
+    private static int checkInactiveWakeup(Entity entity, int currentTick) {
         final ActivationType type = entity.getActivationType();
         final ILevel info = (ILevel) entity.level;
-        long inactiveFor = ServerCore.getServer().getTickCount() - entity.getActivatedTick();
+        long inactiveFor = currentTick - entity.getActivatedTick();
 
         if (type == ActivationType.VILLAGER) {
             if (inactiveFor > ActivationRangeConfig.VILLAGER_WAKEUP_INTERVAL.get() * 20 && info.getRemainingVillagers() > 0) {

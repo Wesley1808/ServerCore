@@ -1,13 +1,14 @@
 package me.wesley1808.servercore.common.services;
 
 import com.mojang.brigadier.CommandDispatcher;
-import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.commands.MobcapsCommand;
 import me.wesley1808.servercore.common.commands.ServerCoreCommand;
 import me.wesley1808.servercore.common.commands.StatisticsCommand;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
+import me.wesley1808.servercore.common.dynamic.DynamicSetting;
+import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
 import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -21,7 +22,7 @@ public final class Events {
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(Events::onTick);
         ServerLifecycleEvents.SERVER_STARTED.register(Events::onServerStarted);
-        ServerLifecycleEvents.SERVER_STOPPING.register(Events::onShutdown);
+        ServerLifecycleEvents.SERVER_STOPPED.register(Events::onShutdown);
         CommandRegistrationCallback.EVENT.register(Events::registerCommands);
     }
 
@@ -30,8 +31,7 @@ public final class Events {
     }
 
     private static void onServerStarted(MinecraftServer server) {
-        ServerCore.setServer(server);
-        DynamicManager.initialize(server.getPlayerList());
+        ((IMinecraftServer) server).onStarted();
 
         // Disable spawn chunks after the server starts up.
         // This is only used for dedicated servers.
@@ -41,6 +41,7 @@ public final class Events {
     }
 
     private static void onShutdown(MinecraftServer server) {
+        DynamicSetting.resetAll();
         Config.save();
     }
 

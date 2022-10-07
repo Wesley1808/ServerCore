@@ -6,7 +6,7 @@ import com.electronwill.nightconfig.core.file.GenericBuilder;
 import com.electronwill.nightconfig.toml.TomlFormat;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.tables.*;
-import me.wesley1808.servercore.common.dynamic.DynamicManager;
+import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,7 +77,7 @@ public final class Config {
     }
 
     private static void loadChanges() {
-        DynamicManager.loadCustomSettingsOrder();
+        DynamicSetting.loadCustomOrder();
     }
 
     // Creates table when missing.

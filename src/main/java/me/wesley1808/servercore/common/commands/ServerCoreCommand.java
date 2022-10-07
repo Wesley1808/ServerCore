@@ -115,11 +115,12 @@ public final class ServerCoreCommand {
     }
 
     private static int modify(CommandSourceStack source, int value, int id, String setting, boolean percentage) {
+        DynamicManager manager = DynamicManager.getInstance(source.getServer());
         switch (id) {
-            case 1 -> DynamicSetting.CHUNK_TICK_DISTANCE.set(value, true);
-            case 2 -> DynamicSetting.VIEW_DISTANCE.set(value, true);
-            case 3 -> DynamicSetting.SIMULATION_DISTANCE.set(value, true);
-            case 4 -> DynamicSetting.MOBCAP_MULTIPLIER.set(value / 100D, true);
+            case 1 -> DynamicSetting.CHUNK_TICK_DISTANCE.set(value, manager);
+            case 2 -> DynamicSetting.VIEW_DISTANCE.set(value, manager);
+            case 3 -> DynamicSetting.SIMULATION_DISTANCE.set(value, manager);
+            case 4 -> DynamicSetting.MOBCAP_MULTIPLIER.set(value / 100D, manager);
         }
 
         sendMessage(source, setting, value + (percentage ? "%" : ""), true);

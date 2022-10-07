@@ -3,8 +3,9 @@ package me.wesley1808.servercore.common.utils;
 import com.google.common.collect.Iterables;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
+import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,41 +25,50 @@ import java.util.function.Function;
  * @author Wesley1808
  */
 public final class Statistics {
+    private final MinecraftServer server;
 
-    public static List<Entity> getAllEntities() {
-        return Statistics.getAll(ServerLevel::getAllEntities);
+    public Statistics(MinecraftServer server) {
+        this.server = server;
     }
 
-    public static List<TickingBlockEntity> getAllBlockEntities() {
-        return Statistics.getAll(level -> level.blockEntityTickers);
+    public static Statistics getInstance(MinecraftServer server) {
+        return ((IMinecraftServer) server).getStatistics();
     }
 
-    public static Map<String, Integer> getEntitiesByType(Iterable<Entity> entities) {
-        return Statistics.getByType(entities, (entity) -> EntityType.getKey(entity.getType()).toString());
+    public List<Entity> getAllEntities() {
+        return this.getAll(ServerLevel::getAllEntities);
     }
 
-    public static Map<String, Integer> getBlockEntitiesByType(Iterable<TickingBlockEntity> blockEntities) {
-        return Statistics.getByType(blockEntities, TickingBlockEntity::getType);
+    public List<TickingBlockEntity> getAllBlockEntities() {
+        return this.getAll(level -> level.blockEntityTickers);
     }
 
-    public static Map<String, Integer> getEntitiesByPlayer(Iterable<ServerPlayer> players) {
-        return Statistics.getByPlayer(players, Statistics::getEntitiesNear);
+    public Map<String, Integer> getEntitiesByType(Iterable<Entity> entities) {
+        return this.getByType(entities, (entity) -> EntityType.getKey(entity.getType()).toString());
     }
 
-    public static Map<String, Integer> getBlockEntitiesByPlayer(Iterable<ServerPlayer> players) {
-        return Statistics.getByPlayer(players, Statistics::getBlockEntitiesNear);
+    public Map<String, Integer> getBlockEntitiesByType(Iterable<TickingBlockEntity> blockEntities) {
+        return this.getByType(blockEntities, TickingBlockEntity::getType);
     }
 
-    private static <T> List<T> getAll(Function<ServerLevel, Iterable<T>> function) {
+    public Map<String, Integer> getEntitiesByPlayer(Iterable<ServerPlayer> players) {
+        return this.getByPlayer(players, this::getEntitiesNear);
+    }
+
+    public Map<String, Integer> getBlockEntitiesByPlayer(Iterable<ServerPlayer> players) {
+        return this.getByPlayer(players, this::getBlockEntitiesNear);
+    }
+
+    private <T> List<T> getAll(Function<ServerLevel, Iterable<T>> function) {
         List<T> list = new ObjectArrayList<>();
-        for (ServerLevel level : ServerCore.getServer().getAllLevels()) {
+        for (ServerLevel level : this.server.getAllLevels()) {
             Iterables.addAll(list, function.apply(level));
         }
 
         return list;
     }
 
-    private static <T> Map<String, Integer> getByType(Iterable<T> iterable, Function<T, String> function) {
+    private <T> Map<String, Integer> getByType(Iterable<T> iterable, Function<T, String> function) {
         Object2IntOpenHashMap<String> map = new Object2IntOpenHashMap<>();
         for (T value : iterable) {
             map.addTo(function.apply(value), 1);
@@ -67,7 +77,7 @@ public final class Statistics {
         return map;
     }
 
-    private static Map<String, Integer> getByPlayer(Iterable<ServerPlayer> players, Function<ServerPlayer, List<?>> function) {
+    private Map<String, Integer> getByPlayer(Iterable<ServerPlayer> players, Function<ServerPlayer, List<?>> function) {
         Object2IntOpenHashMap<String> map = new Object2IntOpenHashMap<>();
         for (ServerPlayer player : players) {
             map.put(player.getScoreboardName(), function.apply(player).size());
@@ -76,10 +86,10 @@ public final class Statistics {
         return map;
     }
 
-    public static List<Entity> getEntitiesNear(ServerPlayer player) {
+    public List<Entity> getEntitiesNear(ServerPlayer player) {
         List<Entity> list = new ObjectArrayList<>();
         for (Entity entity : player.getLevel().getAllEntities()) {
-            if (isNearby(player, entity.chunkPosition())) {
+            if (this.isNearby(player, entity.chunkPosition())) {
                 list.add(entity);
             }
         }
@@ -87,10 +97,10 @@ public final class Statistics {
         return list;
     }
 
-    public static List<TickingBlockEntity> getBlockEntitiesNear(ServerPlayer player) {
+    public List<TickingBlockEntity> getBlockEntitiesNear(ServerPlayer player) {
         List<TickingBlockEntity> list = new ObjectArrayList<>();
         for (TickingBlockEntity blockEntity : player.level.blockEntityTickers) {
-            if (isNearby(player, new ChunkPos(blockEntity.getPos()))) {
+            if (this.isNearby(player, new ChunkPos(blockEntity.getPos()))) {
                 list.add(blockEntity);
             }
         }
@@ -98,9 +108,9 @@ public final class Statistics {
         return list;
     }
 
-    public static int getChunkCount(boolean onlyLoaded) {
+    public int getChunkCount(boolean onlyLoaded) {
         int count = 0;
-        for (ServerLevel level : ServerCore.getServer().getAllLevels()) {
+        for (ServerLevel level : this.server.getAllLevels()) {
             if (onlyLoaded) {
                 for (ChunkHolder holder : level.getChunkSource().chunkMap.visibleChunkMap.values()) {
                     if (ChunkManager.hasChunk(holder)) {
@@ -116,7 +126,7 @@ public final class Statistics {
     }
 
 
-    private static boolean isNearby(Player player, ChunkPos pos) {
+    private boolean isNearby(Player player, ChunkPos pos) {
         return player.chunkPosition().getChessboardDistance(pos) <= DynamicSetting.VIEW_DISTANCE.get();
     }
 }

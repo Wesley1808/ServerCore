@@ -41,38 +41,41 @@ public final class PlaceHolders {
         );
 
         register("chunk_count", (ctx, arg) -> {
+            Statistics statistics = Statistics.getInstance(ctx.server());
             boolean onlyLoaded = Objects.equals(arg, "loaded");
             if (ctx.hasPlayer()) {
-                return cachedValue(onlyLoaded ? "chunk_count_loaded" : "chunk_count", () -> String.valueOf(Statistics.getChunkCount(onlyLoaded)));
+                return cachedValue(onlyLoaded ? "chunk_count_loaded" : "chunk_count", () -> String.valueOf(statistics.getChunkCount(onlyLoaded)));
             }
 
-            return PlaceholderResult.value(String.valueOf(Statistics.getChunkCount(onlyLoaded)));
+            return PlaceholderResult.value(String.valueOf(statistics.getChunkCount(onlyLoaded)));
         });
 
         register("entity_count", (ctx, arg) -> {
+            Statistics statistics = Statistics.getInstance(ctx.server());
             ServerPlayer player = ctx.player();
             if (player != null) {
                 if (Objects.equals(arg, "nearby")) {
-                    return PlaceholderResult.value(String.valueOf(Statistics.getEntitiesNear(player).size()));
+                    return PlaceholderResult.value(String.valueOf(statistics.getEntitiesNear(player).size()));
                 }
 
-                return cachedValue("entity_count", () -> String.valueOf(Statistics.getAllEntities().size()));
+                return cachedValue("entity_count", () -> String.valueOf(statistics.getAllEntities().size()));
             }
 
-            return PlaceholderResult.value(String.valueOf(Statistics.getAllEntities().size()));
+            return PlaceholderResult.value(String.valueOf(statistics.getAllEntities().size()));
         });
 
         register("block_entity_count", (ctx, arg) -> {
+            Statistics statistics = Statistics.getInstance(ctx.server());
             ServerPlayer player = ctx.player();
             if (player != null) {
                 if (Objects.equals(arg, "nearby")) {
-                    return PlaceholderResult.value(String.valueOf(Statistics.getBlockEntitiesNear(player).size()));
+                    return PlaceholderResult.value(String.valueOf(statistics.getBlockEntitiesNear(player).size()));
                 }
 
-                return cachedValue("block_entity_count", () -> String.valueOf(Statistics.getAllBlockEntities().size()));
+                return cachedValue("block_entity_count", () -> String.valueOf(statistics.getAllBlockEntities().size()));
             }
 
-            return PlaceholderResult.value(String.valueOf(Statistics.getAllBlockEntities().size()));
+            return PlaceholderResult.value(String.valueOf(statistics.getAllBlockEntities().size()));
         });
     }
 

@@ -20,11 +20,10 @@ import org.spongepowered.asm.mixin.Shadow;
 public abstract class MobMixin extends LivingEntity {
     @Shadow
     @Final
-    protected GoalSelector goalSelector;
-
+    public GoalSelector targetSelector;
     @Shadow
     @Final
-    public GoalSelector targetSelector;
+    protected GoalSelector goalSelector;
 
     private MobMixin(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);

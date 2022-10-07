@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Ocelot.class)
-public abstract class OcelotMixin {
+public class OcelotMixin {
 
     @Redirect(
             method = "removeWhenFarAway",

@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_16",
   "plugin": "me.wesley1808.servercore.mixin.ServerCoreMixinPlugin",
   "mixins": [
+    "MinecraftServerMixin",
     "features.activation_range.EntityMixin",
     "features.activation_range.LevelMixin",
     "features.activation_range.MoveToBlockGoalMixin",
@@ -63,11 +64,11 @@
     "optimizations.tickets.ServerLevelMixin",
     "optimizations.ticking.chunk.broadcast.ChunkHolderMixin",
     "optimizations.ticking.chunk.broadcast.ServerChunkCacheMixin",
+    "optimizations.ticking.chunk.cache.ServerChunkCacheMixin",
     "optimizations.ticking.chunk.random.LevelChunkMixin",
     "optimizations.ticking.chunk.random.LiquidBlockMixin",
     "optimizations.ticking.chunk.random.ServerChunkCacheMixin",
     "optimizations.ticking.chunk.random.ServerLevelMixin",
-    "optimizations.ticking.chunk.cache.ServerChunkCacheMixin",
     "optimizations.ticking.entity.EntityCallbacksMixin"
   ],
   "injectors": {

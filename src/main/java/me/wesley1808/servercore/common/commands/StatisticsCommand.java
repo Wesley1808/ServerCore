@@ -12,6 +12,7 @@ import me.wesley1808.servercore.common.utils.Statistics;
 import me.wesley1808.servercore.common.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,15 +96,16 @@ public final class StatisticsCommand {
     }
 
     private static int displayOverview(CommandSourceStack source) {
-        final double mspt = DynamicManager.getAverageTickTime();
+        final double mspt = DynamicManager.getInstance(source.getServer()).getAverageTickTime();
         final double tps = mspt != 0 ? Math.min((1000 / mspt), 20) : 20;
 
+        Statistics statistics = Statistics.getInstance(source.getServer());
         Component component = Formatter.parse(Formatter.line(CommandConfig.STATS_TITLE.get(), 40, Util.isPlayer(source)) + "\n" + CommandConfig.STATS_CONTENT.get()
                 .replace("${tps}", String.format("%.2f", tps))
                 .replace("${mspt}", String.format("%.2f", mspt))
-                .replace("${chunk_count}", String.valueOf(Statistics.getChunkCount(true)))
-                .replace("${entity_count}", String.valueOf(Statistics.getAllEntities().size()))
-                .replace("${block_entity_count}", String.valueOf(Statistics.getAllBlockEntities().size()))
+                .replace("${chunk_count}", String.valueOf(statistics.getChunkCount(true)))
+                .replace("${entity_count}", String.valueOf(statistics.getAllEntities().size()))
+                .replace("${block_entity_count}", String.valueOf(statistics.getAllBlockEntities().size()))
         );
 
         source.sendSuccess(component, false);
@@ -111,11 +113,13 @@ public final class StatisticsCommand {
     }
 
     private static int displayEntities(CommandContext<CommandSourceStack> context, boolean byPlayer, int page, @Nullable ServerPlayer player) {
+        MinecraftServer server = context.getSource().getServer();
+        Statistics statistics = Statistics.getInstance(server);
         Map<String, Integer> map;
         if (byPlayer) {
-            map = Statistics.getEntitiesByPlayer(context.getSource().getServer().getPlayerList().getPlayers());
+            map = statistics.getEntitiesByPlayer(server.getPlayerList().getPlayers());
         } else {
-            map = Statistics.getEntitiesByType(player == null ? Statistics.getAllEntities() : Statistics.getEntitiesNear(player));
+            map = statistics.getEntitiesByType(player == null ? statistics.getAllEntities() : statistics.getEntitiesNear(player));
         }
 
         displayFeedback(context, map, false, byPlayer, page, player);
@@ -123,11 +127,13 @@ public final class StatisticsCommand {
     }
 
     private static int displayBlockEntities(CommandContext<CommandSourceStack> context, boolean byPlayer, int page, @Nullable ServerPlayer player) {
+        MinecraftServer server = context.getSource().getServer();
+        Statistics statistics = Statistics.getInstance(server);
         Map<String, Integer> map;
         if (byPlayer) {
-            map = Statistics.getBlockEntitiesByPlayer(context.getSource().getServer().getPlayerList().getPlayers());
+            map = statistics.getBlockEntitiesByPlayer(server.getPlayerList().getPlayers());
         } else {
-            map = Statistics.getBlockEntitiesByType(player == null ? Statistics.getAllBlockEntities() : Statistics.getBlockEntitiesNear(player));
+            map = statistics.getBlockEntitiesByType(player == null ? statistics.getAllBlockEntities() : statistics.getBlockEntitiesNear(player));
         }
 
         displayFeedback(context, map, true, byPlayer, page, player);

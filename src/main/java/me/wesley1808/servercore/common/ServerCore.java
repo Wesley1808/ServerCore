@@ -8,14 +8,12 @@ import me.wesley1808.servercore.common.services.PlaceHolders;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.server.MinecraftServer;
 import org.slf4j.Logger;
 
 import java.util.Optional;
 
 public class ServerCore implements ModInitializer {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static MinecraftServer server;
     private static String version;
 
     public static String getVersion() {
@@ -24,14 +22,6 @@ public class ServerCore implements ModInitializer {
 
     public static Logger getLogger() {
         return LOGGER;
-    }
-
-    public static MinecraftServer getServer() {
-        return server;
-    }
-
-    public static void setServer(MinecraftServer server) {
-        ServerCore.server = server;
     }
 
     public static void onLoadMixins() {

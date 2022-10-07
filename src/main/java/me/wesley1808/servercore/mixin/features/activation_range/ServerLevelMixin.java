@@ -51,7 +51,7 @@ public abstract class ServerLevelMixin {
             )
     )
     private boolean servercore$shouldTickEntity(Entity entity) {
-        if (ActivationRange.checkIfActive(entity)) {
+        if (ActivationRange.checkIfActive(entity, this.server.getTickCount())) {
             entity.setInactive(false);
             entity.tickCount++;
             return true;
@@ -70,7 +70,7 @@ public abstract class ServerLevelMixin {
             )
     )
     public boolean servercore$shouldTickPassenger(Entity passenger) {
-        if (ActivationRange.checkIfActive(passenger)) {
+        if (ActivationRange.checkIfActive(passenger, this.server.getTickCount())) {
             passenger.setInactive(false);
             passenger.tickCount++;
             return true;
