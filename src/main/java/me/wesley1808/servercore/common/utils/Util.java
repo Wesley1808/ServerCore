@@ -4,12 +4,17 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.GoalSelector;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 public final class Util {
 
@@ -52,5 +57,18 @@ public final class Util {
         }
 
         return builder.buildFuture();
+    }
+
+    public static boolean hasTasks(GoalSelector selector) {
+        return hasTasks(selector, null);
+    }
+
+    public static boolean hasTasks(GoalSelector selector, @Nullable Predicate<Goal> predicate) {
+        for (WrappedGoal wrapped : selector.getAvailableGoals()) {
+            if (wrapped.isRunning() && (predicate == null || predicate.test(wrapped.getGoal()))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

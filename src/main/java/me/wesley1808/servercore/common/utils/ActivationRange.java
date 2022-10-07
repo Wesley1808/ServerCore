@@ -1,14 +1,12 @@
 package me.wesley1808.servercore.common.utils;
 
 import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
-import me.wesley1808.servercore.common.interfaces.activation_range.IGoalSelector;
-import me.wesley1808.servercore.common.interfaces.activation_range.ILevel;
-import me.wesley1808.servercore.common.interfaces.activation_range.IPathFinderMob;
-import net.minecraft.core.BlockPos;
+import me.wesley1808.servercore.common.interfaces.activation_range.LevelInfo;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ambient.AmbientCreature;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Animal;
@@ -40,6 +38,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.IntSupplier;
+import java.util.function.Predicate;
 
 /**
  * Based on: Paper & Spigot (Entity-Activation-Range.patch)
@@ -48,6 +47,7 @@ import java.util.function.IntSupplier;
  */
 
 public final class ActivationRange {
+    private static final Predicate<Goal> BEE_GOAL_IMMUNITIES = goal -> goal instanceof Bee.BeeGoToKnownFlowerGoal || goal instanceof Bee.BeeGoToHiveGoal;
     private static final Activity[] VILLAGER_PANIC_IMMUNITIES = {
             Activity.HIDE,
             Activity.PRE_RAID,
@@ -119,7 +119,7 @@ public final class ActivationRange {
             maxRange = Math.max(type.activationRange.getAsInt(), maxRange);
         }
 
-        ILevel info = (ILevel) level;
+        LevelInfo info = (LevelInfo) level;
         info.setRemainingAnimals(Math.min(info.getRemainingAnimals() + 1, ActivationRangeConfig.ANIMAL_WAKEUP_MAX.get()));
         info.setRemainingVillagers(Math.min(info.getRemainingVillagers() + 1, ActivationRangeConfig.VILLAGER_WAKEUP_MAX.get()));
         info.setRemainingMonsters(Math.min(info.getRemainingMonsters() + 1, ActivationRangeConfig.MONSTER_WAKEUP_MAX.get()));
@@ -218,14 +218,8 @@ public final class ActivationRange {
                 return 20;
             }
 
-            if (entity instanceof Bee bee) {
-                BlockPos movingTarget = ((IPathFinderMob) bee).getMovingTarget();
-                if (bee.isAngry()
-                        || (bee.getHivePos() != null && bee.getHivePos().equals(movingTarget))
-                        || (bee.getSavedFlowerPos() != null && bee.getSavedFlowerPos().equals(movingTarget))
-                ) {
-                    return 20;
-                }
+            if (entity instanceof Bee bee && (bee.beePollinateGoal.isPollinating() || bee.isAngry() || Util.hasTasks(bee.getGoalSelector(), BEE_GOAL_IMMUNITIES))) {
+                return 20;
             }
 
             if (entity instanceof Villager villager) {
@@ -265,7 +259,7 @@ public final class ActivationRange {
                 return 20;
             }
 
-            if (entity instanceof Mob mob && ((IGoalSelector) mob.targetSelector).hasTasks()) {
+            if (entity instanceof Mob mob && Util.hasTasks(mob.targetSelector)) {
                 return 0;
             }
         }
@@ -310,7 +304,7 @@ public final class ActivationRange {
 
     private static int checkInactiveWakeup(Entity entity, int currentTick) {
         final ActivationType type = entity.getActivationType();
-        final ILevel info = (ILevel) entity.level;
+        final LevelInfo info = (LevelInfo) entity.level;
         long inactiveFor = currentTick - entity.getActivatedTick();
 
         if (type == ActivationType.VILLAGER) {

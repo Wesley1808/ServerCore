@@ -36,8 +36,11 @@
     },
     "loom:injected_interfaces": {
       "net/minecraft/class_1297": [
-        "me/wesley1808/servercore/common/interfaces/activation_range/InactiveEntity",
+        "me/wesley1808/servercore/common/interfaces/activation_range/Inactive",
         "me/wesley1808/servercore/common/interfaces/activation_range/ActivationEntity"
+      ],
+      "net/minecraft/class_1355": [
+        "me/wesley1808/servercore/common/interfaces/activation_range/Inactive"
       ]
     }
   }

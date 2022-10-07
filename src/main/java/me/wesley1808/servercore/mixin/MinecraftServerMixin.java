@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(MinecraftServer.class)
-public abstract class MinecraftServerMixin implements IMinecraftServer {
+public class MinecraftServerMixin implements IMinecraftServer {
     @Unique
     private DynamicManager dynamicManager;
     @Unique

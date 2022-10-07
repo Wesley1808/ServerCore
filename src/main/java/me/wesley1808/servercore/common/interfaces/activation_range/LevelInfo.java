@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.common.interfaces.activation_range;
 
-public interface ILevel {
+public interface LevelInfo {
     int getRemainingVillagers();
 
     void setRemainingVillagers(int count);

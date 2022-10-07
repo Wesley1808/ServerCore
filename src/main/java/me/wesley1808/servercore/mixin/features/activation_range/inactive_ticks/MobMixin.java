@@ -1,6 +1,5 @@
 package me.wesley1808.servercore.mixin.features.activation_range.inactive_ticks;
 
-import me.wesley1808.servercore.common.interfaces.activation_range.IGoalSelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -32,13 +31,7 @@ public abstract class MobMixin extends LivingEntity {
     @Override
     public void inactiveTick() {
         super.inactiveTick();
-
-        if (((IGoalSelector) this.goalSelector).inactiveTick()) {
-            this.goalSelector.tick();
-        }
-
-        if (((IGoalSelector) this.targetSelector).inactiveTick()) {
-            this.targetSelector.tick();
-        }
+        this.goalSelector.inactiveTick();
+        this.targetSelector.inactiveTick();
     }
 }

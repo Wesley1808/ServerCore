@@ -8,8 +8,6 @@
     "MinecraftServerMixin",
     "features.activation_range.EntityMixin",
     "features.activation_range.LevelMixin",
-    "features.activation_range.MoveToBlockGoalMixin",
-    "features.activation_range.PathFinderMobMixin",
     "features.activation_range.ServerLevelMixin",
     "features.activation_range.fixes.CatMixin",
     "features.activation_range.fixes.OcelotMixin",

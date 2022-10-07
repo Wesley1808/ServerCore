@@ -69,7 +69,7 @@ public abstract class ServerLevelMixin {
                     target = "Lnet/minecraft/world/entity/Entity;rideTick()V"
             )
     )
-    public boolean servercore$shouldTickPassenger(Entity passenger) {
+    public boolean servercore$shouldTickPassenger(Entity passenger, Entity vehicle, Entity ignored) {
         if (ActivationRange.checkIfActive(passenger, this.server.getTickCount())) {
             passenger.setInactive(false);
             passenger.tickCount++;
@@ -78,9 +78,7 @@ public abstract class ServerLevelMixin {
             passenger.setDeltaMovement(Vec3.ZERO);
             passenger.setInactive(true);
             passenger.inactiveTick();
-
-            Entity vehicle = passenger.getVehicle();
-            if (vehicle != null) vehicle.positionRider(passenger);
+            vehicle.positionRider(passenger);
             return false;
         }
     }

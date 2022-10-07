@@ -29,8 +29,6 @@ public abstract class VillagerMixin extends AbstractVillager {
 
     @Override
     public void inactiveTick() {
-        super.inactiveTick();
-
         if (this.getUnhappyCounter() > 0) {
             this.setUnhappyCounter(this.getUnhappyCounter() - 1);
         }
@@ -41,5 +39,6 @@ public abstract class VillagerMixin extends AbstractVillager {
         }
 
         this.maybeDecayGossip();
+        super.inactiveTick();
     }
 }

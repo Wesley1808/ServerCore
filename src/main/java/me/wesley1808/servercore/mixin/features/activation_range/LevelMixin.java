@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.activation_range;
 
-import me.wesley1808.servercore.common.interfaces.activation_range.ILevel;
+import me.wesley1808.servercore.common.interfaces.activation_range.LevelInfo;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Unique;
  */
 
 @Mixin(Level.class)
-public abstract class LevelMixin implements ILevel {
+public abstract class LevelMixin implements LevelInfo {
     @Unique
     private int remainingAnimals;
 
