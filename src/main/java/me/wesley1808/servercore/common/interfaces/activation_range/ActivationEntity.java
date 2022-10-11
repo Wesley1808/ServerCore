@@ -1,9 +1,9 @@
 package me.wesley1808.servercore.common.interfaces.activation_range;
 
-import me.wesley1808.servercore.common.utils.ActivationRange;
+import me.wesley1808.servercore.common.activation_range.ActivationType;
 
 public interface ActivationEntity {
-    ActivationRange.ActivationType getActivationType();
+    ActivationType getActivationType();
 
     boolean isExcluded();
 

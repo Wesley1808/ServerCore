@@ -2,7 +2,7 @@ package me.wesley1808.servercore.mixin.features.activation_range;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
-import me.wesley1808.servercore.common.utils.ActivationRange;
+import me.wesley1808.servercore.common.activation_range.ActivationRange;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

@@ -1,7 +1,8 @@
 package me.wesley1808.servercore.mixin.features.activation_range;
 
+import me.wesley1808.servercore.common.activation_range.ActivationRange;
+import me.wesley1808.servercore.common.activation_range.ActivationType;
 import me.wesley1808.servercore.common.interfaces.activation_range.ActivationEntity;
-import me.wesley1808.servercore.common.utils.ActivationRange;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -36,7 +37,7 @@ public abstract class EntityMixin implements ActivationEntity {
     private boolean isInactive = false;
 
     @Unique
-    private ActivationRange.ActivationType activationType;
+    private ActivationType activationType;
 
     @Unique
     private boolean excluded = false;
@@ -77,7 +78,7 @@ public abstract class EntityMixin implements ActivationEntity {
     }
 
     @Override
-    public ActivationRange.ActivationType getActivationType() {
+    public ActivationType getActivationType() {
         return this.activationType;
     }
 

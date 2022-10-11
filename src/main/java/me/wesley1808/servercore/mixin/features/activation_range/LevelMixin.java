@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.mixin.features.activation_range;
 
+import me.wesley1808.servercore.common.activation_range.ActivationType;
 import me.wesley1808.servercore.common.interfaces.activation_range.LevelInfo;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,56 +13,17 @@ import org.spongepowered.asm.mixin.Unique;
  */
 
 @Mixin(Level.class)
-public abstract class LevelMixin implements LevelInfo {
+public class LevelMixin implements LevelInfo {
     @Unique
-    private int remainingAnimals;
-
-    @Unique
-    private int remainingFlying;
-
-    @Unique
-    private int remainingMonsters;
-
-    @Unique
-    private int remainingVillagers;
+    private final int[] remaining = new int[ActivationType.Wakeup.values().length];
 
     @Override
-    public int getRemainingVillagers() {
-        return this.remainingVillagers;
+    public int getRemaining(ActivationType.Wakeup key) {
+        return this.remaining[key.ordinal()];
     }
 
     @Override
-    public void setRemainingVillagers(int count) {
-        this.remainingVillagers = count;
-    }
-
-    @Override
-    public int getRemainingMonsters() {
-        return this.remainingMonsters;
-    }
-
-    @Override
-    public void setRemainingMonsters(int count) {
-        this.remainingMonsters = count;
-    }
-
-    @Override
-    public int getRemainingAnimals() {
-        return this.remainingAnimals;
-    }
-
-    @Override
-    public void setRemainingAnimals(int count) {
-        this.remainingAnimals = count;
-    }
-
-    @Override
-    public int getRemainingFlying() {
-        return this.remainingFlying;
-    }
-
-    @Override
-    public void setRemainingFlying(int count) {
-        this.remainingFlying = count;
+    public void setRemaining(ActivationType.Wakeup key, int value) {
+        this.remaining[key.ordinal()] = value;
     }
 }

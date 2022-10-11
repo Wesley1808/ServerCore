@@ -1,19 +1,9 @@
 package me.wesley1808.servercore.common.interfaces.activation_range;
 
+import me.wesley1808.servercore.common.activation_range.ActivationType;
+
 public interface LevelInfo {
-    int getRemainingVillagers();
+    int getRemaining(ActivationType.Wakeup key);
 
-    void setRemainingVillagers(int count);
-
-    int getRemainingAnimals();
-
-    void setRemainingAnimals(int count);
-
-    int getRemainingFlying();
-
-    void setRemainingFlying(int count);
-
-    int getRemainingMonsters();
-
-    void setRemainingMonsters(int count);
+    void setRemaining(ActivationType.Wakeup key, int value);
 }

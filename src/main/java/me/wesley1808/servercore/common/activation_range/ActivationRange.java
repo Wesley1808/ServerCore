@@ -1,7 +1,8 @@
-package me.wesley1808.servercore.common.utils;
+package me.wesley1808.servercore.common.activation_range;
 
 import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
 import me.wesley1808.servercore.common.interfaces.activation_range.LevelInfo;
+import me.wesley1808.servercore.common.utils.Util;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
@@ -36,8 +37,6 @@ import net.minecraft.world.entity.vehicle.MinecartHopper;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.IntSupplier;
 import java.util.function.Predicate;
 
 /**
@@ -110,7 +109,7 @@ public final class ActivationRange {
     }
 
     /**
-     * Activates entities in {@param world} that are close enough to players.
+     * Activates entities in {@param level} that are close enough to players.
      */
     public static void activateEntities(ServerLevel level) {
         int currentTick = level.getServer().getTickCount();
@@ -120,10 +119,9 @@ public final class ActivationRange {
         }
 
         LevelInfo info = (LevelInfo) level;
-        info.setRemainingAnimals(Math.min(info.getRemainingAnimals() + 1, ActivationRangeConfig.ANIMAL_WAKEUP_MAX.get()));
-        info.setRemainingVillagers(Math.min(info.getRemainingVillagers() + 1, ActivationRangeConfig.VILLAGER_WAKEUP_MAX.get()));
-        info.setRemainingMonsters(Math.min(info.getRemainingMonsters() + 1, ActivationRangeConfig.MONSTER_WAKEUP_MAX.get()));
-        info.setRemainingFlying(Math.min(info.getRemainingFlying() + 1, ActivationRangeConfig.FLYING_WAKEUP_MAX.get()));
+        for (ActivationType.Wakeup wakeup : ActivationType.Wakeup.values()) {
+            info.setRemaining(wakeup, Math.min(info.getRemaining(wakeup) + 1, wakeup.max.getAsInt()));
+        }
 
         maxRange = Math.min((level.getServer().getPlayerList().getViewDistance() << 4) - 8, maxRange);
         for (ServerPlayer player : level.players()) {
@@ -303,61 +301,16 @@ public final class ActivationRange {
     }
 
     private static int checkInactiveWakeup(Entity entity, int currentTick) {
-        final ActivationType type = entity.getActivationType();
-        final LevelInfo info = (LevelInfo) entity.level;
-        long inactiveFor = currentTick - entity.getActivatedTick();
-
-        if (type == ActivationType.VILLAGER) {
-            if (inactiveFor > ActivationRangeConfig.VILLAGER_WAKEUP_INTERVAL.get() * 20 && info.getRemainingVillagers() > 0) {
-                info.setRemainingVillagers(info.getRemainingVillagers() - 1);
-                return 100;
-            }
-        } else if (type == ActivationType.ANIMAL || type == ActivationType.NEUTRAL) {
-            if (inactiveFor > ActivationRangeConfig.ANIMAL_WAKEUP_INTERVAL.get() * 20 && info.getRemainingAnimals() > 0) {
-                info.setRemainingAnimals(info.getRemainingAnimals() - 1);
-                return 100;
-            }
-        } else if (type == ActivationType.FLYING) {
-            if (inactiveFor > ActivationRangeConfig.FLYING_WAKEUP_INTERVAL.get() * 20 && info.getRemainingFlying() > 0) {
-                info.setRemainingFlying(info.getRemainingFlying() - 1);
-                return 100;
-            }
-        } else if (type == ActivationType.MONSTER || type == ActivationType.MONSTER_BELOW || type == ActivationType.RAIDER || type == ActivationType.ZOMBIE) {
-            if (inactiveFor > ActivationRangeConfig.MONSTER_WAKEUP_INTERVAL.get() * 20 && info.getRemainingMonsters() > 0) {
-                info.setRemainingMonsters(info.getRemainingMonsters() - 1);
+        ActivationType.Wakeup wakeup = entity.getActivationType().wakeup;
+        if (wakeup != null && currentTick - entity.getActivatedTick() >= wakeup.interval.getAsInt() * 20L) {
+            LevelInfo info = (LevelInfo) entity.level;
+            int remaining = info.getRemaining(wakeup);
+            if (remaining > 0) {
+                info.setRemaining(wakeup, remaining - 1);
                 return 100;
             }
         }
+
         return -1;
-    }
-
-    public enum ActivationType {
-        VILLAGER(ActivationRangeConfig.VILLAGER_ACTIVATION_RANGE::get, ActivationRangeConfig.VILLAGER_TICK_INACTIVE::get),
-        ZOMBIE(ActivationRangeConfig.ZOMBIE_ACTIVATION_RANGE::get, ActivationRangeConfig.ZOMBIE_TICK_INACTIVE::get, true, false),
-        MONSTER(ActivationRangeConfig.MONSTER_ACTIVATION_RANGE::get, ActivationRangeConfig.MONSTER_TICK_INACTIVE::get, true, false),
-        MONSTER_BELOW(ActivationRangeConfig.MONSTER_ACTIVATION_RANGE::get, ActivationRangeConfig.MONSTER_TICK_INACTIVE::get, true, true),
-        NEUTRAL(ActivationRangeConfig.NEUTRAL_ACTIVATION_RANGE::get, ActivationRangeConfig.NEUTRAL_TICK_INACTIVE::get),
-        ANIMAL(ActivationRangeConfig.ANIMAL_ACTIVATION_RANGE::get, ActivationRangeConfig.ANIMAL_TICK_INACTIVE::get),
-        WATER(ActivationRangeConfig.WATER_ACTIVATION_RANGE::get, ActivationRangeConfig.WATER_TICK_INACTIVE::get),
-        FLYING(ActivationRangeConfig.FLYING_ACTIVATION_RANGE::get, ActivationRangeConfig.FLYING_TICK_INACTIVE::get, true, false),
-        RAIDER(ActivationRangeConfig.RAIDER_ACTIVATION_RANGE::get, ActivationRangeConfig.RAIDER_TICK_INACTIVE::get, true, false),
-        MISC(ActivationRangeConfig.MISC_ACTIVATION_RANGE::get, ActivationRangeConfig.MISC_TICK_INACTIVE::get);
-
-        private final IntSupplier activationRange;
-        private final BooleanSupplier tickInactive;
-        private final boolean extraHeightUp;
-        private final boolean extraHeightDown;
-        private AABB boundingBox = new AABB(0, 0, 0, 0, 0, 0);
-
-        ActivationType(IntSupplier activationRange, BooleanSupplier tickInactive, boolean extraHeightUp, boolean extraHeightDown) {
-            this.activationRange = activationRange;
-            this.tickInactive = tickInactive;
-            this.extraHeightUp = extraHeightUp;
-            this.extraHeightDown = extraHeightDown;
-        }
-
-        ActivationType(IntSupplier activationRange, BooleanSupplier tickInactive) {
-            this(activationRange, tickInactive, false, false);
-        }
     }
 }
