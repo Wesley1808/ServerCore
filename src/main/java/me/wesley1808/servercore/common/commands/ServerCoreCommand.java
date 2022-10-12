@@ -12,7 +12,7 @@ import me.wesley1808.servercore.common.config.tables.CommandConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.services.Formatter;
-import me.wesley1808.servercore.common.services.PermissionManager;
+import me.wesley1808.servercore.common.services.Permission;
 import me.wesley1808.servercore.common.utils.Util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -50,7 +50,7 @@ public final class ServerCoreCommand {
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> config() {
-        var config = literal("config").requires(src -> PermissionManager.hasPermission(src, "command.config", 2));
+        var config = literal("config").requires(Permission.require("command.config", 2));
 
         for (Config.Table table : Config.TABLES) {
             var child = literal(table.key());
@@ -87,7 +87,7 @@ public final class ServerCoreCommand {
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> settings() {
-        var settings = literal("settings").requires(src -> PermissionManager.hasPermission(src, "command.settings", 2));
+        var settings = literal("settings").requires(Permission.require("command.settings", 2));
         settings.then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modify(ctx.getSource(), getInteger(ctx, VALUE), 1, "Chunk-tick distance", false))));
         settings.then(literal("view_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modify(ctx.getSource(), getInteger(ctx, VALUE), 2, "View distance", false))));
         settings.then(literal("simulation_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modify(ctx.getSource(), getInteger(ctx, VALUE), 3, "Simulation distance", false))));

@@ -3,6 +3,7 @@ package me.wesley1808.servercore.mixin.features.activation_range;
 import me.wesley1808.servercore.common.activation_range.ActivationRange;
 import me.wesley1808.servercore.common.activation_range.ActivationType;
 import me.wesley1808.servercore.common.interfaces.activation_range.ActivationEntity;
+import me.wesley1808.servercore.common.interfaces.activation_range.Inactive;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -23,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements ActivationEntity {
+public abstract class EntityMixin implements Inactive, ActivationEntity {
     @Shadow
     public Level level;
 
@@ -120,5 +121,9 @@ public abstract class EntityMixin implements ActivationEntity {
     @Override
     public void incFullTickCount() {
         this.fullTickCount++;
+    }
+
+    @Override
+    public void inactiveTick() {
     }
 }

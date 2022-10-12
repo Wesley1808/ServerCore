@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.wesley1808.servercore.common.config.tables.CommandConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.services.Formatter;
-import me.wesley1808.servercore.common.services.PermissionManager;
+import me.wesley1808.servercore.common.services.Permission;
 import me.wesley1808.servercore.common.utils.Statistics;
 import me.wesley1808.servercore.common.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
@@ -32,7 +32,7 @@ public final class StatisticsCommand {
     };
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        var statistics = literal("statistics").requires(src -> PermissionManager.hasPermission(src, "command.statistics", 2));
+        var statistics = literal("statistics").requires(Permission.require("command.statistics", 2));
         statistics.executes(ctx -> displayOverview(ctx.getSource()));
 
         for (int i = 0; i < SUB_COMMANDS.length; i++) {
