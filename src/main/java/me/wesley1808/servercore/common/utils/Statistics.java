@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
@@ -100,7 +101,8 @@ public final class Statistics {
     public List<TickingBlockEntity> getBlockEntitiesNear(ServerPlayer player) {
         List<TickingBlockEntity> list = new ObjectArrayList<>();
         for (TickingBlockEntity blockEntity : player.level.blockEntityTickers) {
-            if (this.isNearby(player, new ChunkPos(blockEntity.getPos()))) {
+            BlockPos pos = blockEntity.getPos();
+            if (pos != null && this.isNearby(player, new ChunkPos(blockEntity.getPos()))) {
                 list.add(blockEntity);
             }
         }
