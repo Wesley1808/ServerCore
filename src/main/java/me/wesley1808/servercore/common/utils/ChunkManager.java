@@ -104,7 +104,7 @@ public final class ChunkManager {
     }
 
     // Utility method from PaperMC (MC-Utils.patch)
-    public static boolean areChunksLoadedForMove(Level level, AABB box) {
+    public static boolean areChunksLoadedForMove(ServerLevel level, AABB box) {
         int minBlockX = Mth.floor(box.minX - 1.0E-7D) - 3;
         int maxBlockX = Mth.floor(box.maxX + 1.0E-7D) + 3;
 

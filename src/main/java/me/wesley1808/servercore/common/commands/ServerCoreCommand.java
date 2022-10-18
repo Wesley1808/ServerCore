@@ -136,7 +136,7 @@ public final class ServerCoreCommand {
     }
 
     private static int getStatus(CommandSourceStack source) {
-        Component component = Formatter.parse(DynamicManager.createStatusReport(Formatter.line(CommandConfig.STATUS_TITLE.get(), 40, Util.isPlayer(source))));
+        Component component = Formatter.parse(DynamicManager.createStatusReport(Formatter.line(CommandConfig.STATUS_TITLE.get(), 40, source.isPlayer())));
         source.sendSuccess(component, false);
         return Command.SINGLE_SUCCESS;
     }

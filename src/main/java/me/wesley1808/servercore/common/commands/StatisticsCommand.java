@@ -3,7 +3,6 @@ package me.wesley1808.servercore.common.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.wesley1808.servercore.common.config.tables.CommandConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.services.Formatter;
@@ -70,10 +69,10 @@ public final class StatisticsCommand {
         dispatcher.register(statistics);
     }
 
-    private static int display(CommandContext<CommandSourceStack> context, int index, int page) throws CommandSyntaxException {
-        CommandSourceStack source = context.getSource();
-        if (Util.isPlayer(source)) {
-            return display(context, index, false, page, source.getPlayerOrException());
+    private static int display(CommandContext<CommandSourceStack> context, int index, int page) {
+        ServerPlayer player = context.getSource().getPlayer();
+        if (player != null) {
+            return display(context, index, false, page, player);
         } else {
             return display(context, index, false, page);
         }
@@ -100,7 +99,7 @@ public final class StatisticsCommand {
         final double tps = mspt != 0 ? Math.min((1000 / mspt), 20) : 20;
 
         Statistics statistics = Statistics.getInstance(source.getServer());
-        Component component = Formatter.parse(Formatter.line(CommandConfig.STATS_TITLE.get(), 40, Util.isPlayer(source)) + "\n" + CommandConfig.STATS_CONTENT.get()
+        Component component = Formatter.parse(Formatter.line(CommandConfig.STATS_TITLE.get(), 40, source.isPlayer()) + "\n" + CommandConfig.STATS_CONTENT.get()
                 .replace("${tps}", String.format("%.2f", tps))
                 .replace("${mspt}", String.format("%.2f", mspt))
                 .replace("${chunk_count}", String.valueOf(statistics.getChunkCount(true)))
@@ -143,7 +142,7 @@ public final class StatisticsCommand {
     private static void displayFeedback(CommandContext<CommandSourceStack> context, Map<String, Integer> map, boolean isBlockEntity, boolean byPlayer, int page, @Nullable ServerPlayer player) {
         CommandSourceStack source = context.getSource();
 
-        StringBuilder builder = new StringBuilder(createHeader(isBlockEntity, byPlayer, Util.isPlayer(source), player));
+        StringBuilder builder = new StringBuilder(createHeader(isBlockEntity, byPlayer, source.isPlayer(), player));
         boolean success = Util.iteratePage(Util.sortByValue(map), page, 8, (entry, index) -> builder.append(createEntry(entry, index, isBlockEntity, byPlayer)));
 
         if (success) {
@@ -187,6 +186,6 @@ public final class StatisticsCommand {
             command += " %page_nr%";
         }
 
-        return Formatter.line(Formatter.page(title, command, page), isBlockEntity ? 40 : 38, Util.isPlayer(context.getSource()));
+        return Formatter.line(Formatter.page(title, command, page), isBlockEntity ? 40 : 38, context.getSource().isPlayer());
     }
 }

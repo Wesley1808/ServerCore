@@ -3,11 +3,9 @@ package me.wesley1808.servercore.common.utils;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -39,10 +37,6 @@ public final class Util {
 
     public static int getPage(int index, int pageSize) {
         return (index + pageSize - 1) / pageSize;
-    }
-
-    public static boolean isPlayer(CommandSourceStack source) {
-        return source.getEntity() instanceof Player;
     }
 
     public static <K, V extends Comparable<V>> List<Map.Entry<K, V>> sortByValue(Map<K, V> map) {

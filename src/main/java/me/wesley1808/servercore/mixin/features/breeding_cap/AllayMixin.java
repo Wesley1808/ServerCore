@@ -1,6 +1,5 @@
-package me.wesley1808.servercore.mixin.features.entity_limits;
+package me.wesley1808.servercore.mixin.features.breeding_cap;
 
-import me.wesley1808.servercore.common.config.tables.EntityLimitConfig;
 import me.wesley1808.servercore.common.utils.BreedingCap;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
@@ -22,8 +21,8 @@ public abstract class AllayMixin extends PathfinderMob {
     protected abstract void resetDuplicationCooldown();
 
     @Inject(method = "duplicateAllay", at = @At("HEAD"), cancellable = true)
-    public void servercore$cancelAllayDuplication(CallbackInfo ci) {
-        if (BreedingCap.exceedsLimit(this, EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {
+    public void servercore$enforceBreedCap(CallbackInfo ci) {
+        if (BreedingCap.exceedsLimit(this, BreedingCap.Info.ANIMAL)) {
             this.resetDuplicationCooldown();
             ci.cancel();
         }

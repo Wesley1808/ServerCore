@@ -102,7 +102,7 @@ public final class Statistics {
         List<TickingBlockEntity> list = new ObjectArrayList<>();
         for (TickingBlockEntity blockEntity : player.level.blockEntityTickers) {
             BlockPos pos = blockEntity.getPos();
-            if (pos != null && this.isNearby(player, new ChunkPos(blockEntity.getPos()))) {
+            if (pos != null && this.isNearby(player, new ChunkPos(pos))) {
                 list.add(blockEntity);
             }
         }

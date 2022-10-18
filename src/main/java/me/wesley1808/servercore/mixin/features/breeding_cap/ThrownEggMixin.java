@@ -1,6 +1,5 @@
-package me.wesley1808.servercore.mixin.features.entity_limits;
+package me.wesley1808.servercore.mixin.features.breeding_cap;
 
-import me.wesley1808.servercore.common.config.tables.EntityLimitConfig;
 import me.wesley1808.servercore.common.utils.BreedingCap;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
@@ -25,11 +24,12 @@ public abstract class ThrownEggMixin extends ThrowableItemProjectile {
                     ordinal = 0
             )
     )
-    public int servercore$cancelEggSpawns(RandomSource randomSource, int i) {
-        if (BreedingCap.exceedsLimit(EntityType.CHICKEN, this.level, this.blockPosition(), EntityLimitConfig.ANIMAL_COUNT.get(), EntityLimitConfig.ANIMAL_RANGE.get())) {
+    public int servercore$enforceBreedCap(RandomSource random, int i) {
+        int value = random.nextInt(i);
+        if (value == 0 && BreedingCap.exceedsLimit(EntityType.CHICKEN, this.level, this.blockPosition(), BreedingCap.Info.ANIMAL)) {
             return 1;
-        } else {
-            return randomSource.nextInt(8);
         }
+
+        return value;
     }
 }
