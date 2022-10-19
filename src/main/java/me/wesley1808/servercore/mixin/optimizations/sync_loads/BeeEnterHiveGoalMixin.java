@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 
 @Mixin(targets = "net/minecraft/world/entity/animal/Bee$BeeEnterHiveGoal")
-public abstract class BeeEnterHiveGoalMixin {
+public class BeeEnterHiveGoalMixin {
     @Shadow
     @Final
     Bee field_20367;

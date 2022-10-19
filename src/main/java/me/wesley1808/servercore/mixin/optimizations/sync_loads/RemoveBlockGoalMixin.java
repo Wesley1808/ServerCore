@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(RemoveBlockGoal.class)
-public abstract class RemoveBlockGoalMixin {
+public class RemoveBlockGoalMixin {
 
     @Redirect(method = "isValidTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/LevelReader;getChunk(IILnet/minecraft/world/level/chunk/ChunkStatus;Z)Lnet/minecraft/world/level/chunk/ChunkAccess;"))
     private ChunkAccess servercore$onlyValidateIfLoaded(LevelReader level, int x, int z, ChunkStatus status, boolean create) {

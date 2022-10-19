@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 
 @Mixin(LevelChunk.class)
-public abstract class LevelChunkMixin implements ILevelChunk {
+public class LevelChunkMixin implements ILevelChunk {
     // Instead of using a random every time the chunk is ticked, define when lightning strikes preemptively.
     @Unique
     private int lightningTick;

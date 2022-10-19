@@ -1,8 +1,8 @@
 package me.wesley1808.servercore.mixin.features.activation_range;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
-import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
 import me.wesley1808.servercore.common.activation_range.ActivationRange;
+import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -25,7 +25,7 @@ import java.util.function.BooleanSupplier;
  */
 
 @Mixin(ServerLevel.class)
-public abstract class ServerLevelMixin {
+public class ServerLevelMixin {
     @Shadow
     @Final
     private MinecraftServer server;
@@ -37,7 +37,7 @@ public abstract class ServerLevelMixin {
                     target = "Lnet/minecraft/world/level/entity/EntityTickList;forEach(Ljava/util/function/Consumer;)V"
             )
     )
-    public void servercore$activateEntities(BooleanSupplier booleanSupplier, CallbackInfo ci) {
+    private void servercore$activateEntities(BooleanSupplier booleanSupplier, CallbackInfo ci) {
         if (ActivationRangeConfig.ENABLED.get() && this.server.getTickCount() % 20 == 0) {
             ActivationRange.activateEntities((ServerLevel) (Object) this);
         }
@@ -69,7 +69,7 @@ public abstract class ServerLevelMixin {
                     target = "Lnet/minecraft/world/entity/Entity;rideTick()V"
             )
     )
-    public boolean servercore$shouldTickPassenger(Entity passenger, Entity vehicle, Entity ignored) {
+    private boolean servercore$shouldTickPassenger(Entity passenger, Entity vehicle, Entity ignored) {
         if (ActivationRange.checkIfActive(passenger, this.server.getTickCount())) {
             passenger.setInactive(false);
             passenger.tickCount++;
@@ -93,7 +93,7 @@ public abstract class ServerLevelMixin {
                     opcode = Opcodes.PUTFIELD
             )
     )
-    public void servercore$redirectTickCount(Entity entity, int value) {
+    private void servercore$redirectTickCount(Entity entity, int value) {
         entity.incFullTickCount();
     }
 }

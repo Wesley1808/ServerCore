@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(NaturalSpawner.class)
-public abstract class NaturalSpawnerMixin {
+public class NaturalSpawnerMixin {
 
     @Redirect(
             method = "isInNetherFortressBounds",

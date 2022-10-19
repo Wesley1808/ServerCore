@@ -25,7 +25,7 @@ import java.util.Optional;
  */
 
 @Mixin(PlayerList.class)
-public abstract class PlayerListMixin {
+public class PlayerListMixin {
 
     // Paper - Finds random spawn location for new players.
     @Inject(
@@ -37,7 +37,7 @@ public abstract class PlayerListMixin {
                     shift = At.Shift.BEFORE
             )
     )
-    private void servercore$moveToSpawn(Connection connection, ServerPlayer serverPlayer, CallbackInfo ci, GameProfile gameProfile, GameProfileCache gameProfileCache, Optional optional, String string, CompoundTag compoundTag, ResourceKey resourceKey, ServerLevel serverLevel, ServerLevel serverLevel2) {
+    private void servercore$moveToSpawn(Connection connection, ServerPlayer serverPlayer, CallbackInfo ci, GameProfile gameProfile, GameProfileCache gameProfileCache, Optional<?> optional, String string, CompoundTag compoundTag, ResourceKey<?> resourceKey, ServerLevel serverLevel, ServerLevel serverLevel2) {
         if (compoundTag == null) serverPlayer.fudgeSpawnLocation(serverLevel2);
     }
 
@@ -52,7 +52,7 @@ public abstract class PlayerListMixin {
                     ordinal = 0
             )
     )
-    private void servercore$moveToSpawn(ServerPlayer oldPlayer, boolean bl, CallbackInfoReturnable<ServerPlayer> cir, BlockPos blockPos, float f, boolean bl2, ServerLevel serverLevel, Optional optional, ServerLevel serverLevel2, ServerPlayer newPlayer) {
+    private void servercore$moveToSpawn(ServerPlayer oldPlayer, boolean bl, CallbackInfoReturnable<ServerPlayer> cir, BlockPos blockPos, float f, boolean bl2, ServerLevel serverLevel, Optional<?> optional, ServerLevel serverLevel2, ServerPlayer newPlayer) {
         if (optional.isEmpty()) newPlayer.fudgeSpawnLocation(serverLevel2);
     }
 }

@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 
 @Mixin(AcquirePoi.class)
-public abstract class AcquirePoiMixin {
+public class AcquirePoiMixin {
     @Shadow
     private long nextScheduledStart;
 

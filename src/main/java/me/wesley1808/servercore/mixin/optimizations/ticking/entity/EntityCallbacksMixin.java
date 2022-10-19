@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(targets = "net/minecraft/server/level/ServerLevel$EntityCallbacks")
-public abstract class EntityCallbacksMixin {
+public class EntityCallbacksMixin {
 
     // Prevents markers from being added to the entity tick list.
     // Markers have no tick logic, but still need to be iterated over every tick.

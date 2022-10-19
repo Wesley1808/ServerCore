@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(SleepInBed.class)
-public abstract class SleepInBedMixin {
+public class SleepInBedMixin {
 
-    // Don't load chunks to find beds
+    // Don't load chunks to find beds.
     @Inject(
             method = "checkExtraStartConditions",
             locals = LocalCapture.CAPTURE_FAILHARD,

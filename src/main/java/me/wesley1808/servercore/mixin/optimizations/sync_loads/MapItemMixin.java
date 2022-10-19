@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(MapItem.class)
-public abstract class MapItemMixin {
+public class MapItemMixin {
 
     // Stop maps from loading chunks.
     @Redirect(

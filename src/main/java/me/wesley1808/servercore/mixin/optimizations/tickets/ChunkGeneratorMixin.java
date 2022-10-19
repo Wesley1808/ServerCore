@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.Map;
 
 @Mixin(ChunkGenerator.class)
-public abstract class ChunkGeneratorMixin {
+public class ChunkGeneratorMixin {
 
     @Redirect(
             method = "getMobsAt",

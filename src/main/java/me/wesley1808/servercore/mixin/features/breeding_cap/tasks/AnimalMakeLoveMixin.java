@@ -19,7 +19,7 @@ public class AnimalMakeLoveMixin {
             )
     )
     private boolean servercore$enforceBreedCap(Animal owner, ServerLevel level, Animal mate) {
-        if (BreedingCap.exceedsLimit(owner, BreedingCap.Info.ANIMAL)) {
+        if (BreedingCap.ANIMAL.exceedsLimit(owner)) {
             BreedingCap.resetLove(owner, mate);
             return false;
         }

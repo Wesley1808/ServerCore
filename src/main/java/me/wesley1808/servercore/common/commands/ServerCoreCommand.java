@@ -52,16 +52,16 @@ public final class ServerCoreCommand {
     private static LiteralArgumentBuilder<CommandSourceStack> config() {
         var config = literal("config").requires(Permission.require("command.config", 2));
 
-        for (Config.Table table : Config.TABLES) {
-            var child = literal(table.key());
+        for (Config.Table table : Config.Table.values()) {
+            var child = literal(table.key);
 
             try {
-                Config.forEachEntry(table.clazz(), (field, entry) -> {
+                Config.forEachEntry(table.clazz, (field, entry) -> {
                     String key = field.getName().toLowerCase();
                     Type type = getTypeFor(key, entry);
                     if (type != null) {
                         child.then(literal(key)
-                                .executes(ctx -> sendInfo(ctx.getSource(), String.format("%s.%s", table.key(), key), entry))
+                                .executes(ctx -> sendInfo(ctx.getSource(), String.format("%s.%s", table.key, key), entry))
                                 .then(argument(VALUE, type.argumentType)
                                         .executes(type.function::apply)
                                         .suggests((ctx, suggestionsBuilder) ->

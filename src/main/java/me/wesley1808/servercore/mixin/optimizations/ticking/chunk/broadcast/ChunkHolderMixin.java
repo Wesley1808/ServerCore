@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ChunkHolder.class)
-public abstract class ChunkHolderMixin {
+public class ChunkHolderMixin {
     @Shadow
     @Final
     private LevelHeightAccessor levelHeightAccessor;

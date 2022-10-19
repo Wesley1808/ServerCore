@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(VillagerMakeLove.class)
-public abstract class VillagerMakeLoveMixin {
+public class VillagerMakeLoveMixin {
 
     @Inject(
             method = "tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/npc/Villager;J)V",
@@ -24,7 +24,7 @@ public abstract class VillagerMakeLoveMixin {
             )
     )
     private void servercore$enforceBreedCap(ServerLevel level, Villager owner, long gameTime, CallbackInfo ci, Villager mate) {
-        if (BreedingCap.exceedsLimit(owner, BreedingCap.Info.VILLAGER)) {
+        if (BreedingCap.VILLAGER.exceedsLimit(owner)) {
             BreedingCap.resetAge(owner, mate);
             ci.cancel();
         }

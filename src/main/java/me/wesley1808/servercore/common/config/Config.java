@@ -15,15 +15,6 @@ import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
 public final class Config {
-    public static final Table[] TABLES = {
-            new Table(FeatureConfig.class, "features", "Lets you enable / disable certain features and modify them."),
-            new Table(DynamicConfig.class, "dynamic", "Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT."),
-            new Table(EntityLimitConfig.class, "entity_limits", "Stops animals / villagers from breeding if there are too many of the same type nearby."),
-            new Table(OptimizationConfig.class, "optimizations", "Allows you to toggle specific optimizations that don't have full vanilla parity.\n These settings will only take effect after server restarts."),
-            new Table(CommandConfig.class, "commands", "Allows you to disable specific commands and modify the way some of them are formatted."),
-            new Table(ActivationRangeConfig.class, "activation_range", "Stops entities from ticking if they are too far away.")
-    };
-
     @Nullable
     private static GenericBuilder<CommentedConfig, CommentedFileConfig> configBuilder;
 
@@ -48,7 +39,7 @@ public final class Config {
             config.load();
             config.close();
 
-            for (Table table : TABLES) {
+            for (Table table : Table.values()) {
                 Config.validate(table, config);
                 Config.loadEntries(config.get(table.key), table.clazz);
             }
@@ -61,10 +52,10 @@ public final class Config {
     public static void save() {
         if (configBuilder != null) {
             CommentedFileConfig config = configBuilder.build();
-            for (Table table : TABLES) {
+            for (Table table : Table.values()) {
                 Config.validate(table, config);
                 Config.saveEntries(config.get(table.key), table.clazz);
-                config.setComment(table.key, " " + table.comment);
+                config.setComment(table.key, table.comment);
             }
 
             config.save();
@@ -126,6 +117,22 @@ public final class Config {
         }
     }
 
-    public record Table(Class<?> clazz, String key, String comment) {
+    public enum Table {
+        FEATURES(FeatureConfig.class, "Lets you enable / disable certain features and modify them."),
+        DYNAMIC(DynamicConfig.class, "Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT."),
+        BREEDING_CAP(EntityLimitConfig.class, "Stops animals / villagers from breeding if there are too many of the same type nearby."),
+        OPTIMIZATIONS(OptimizationConfig.class, "Allows you to toggle specific optimizations that don't have full vanilla parity.\nThese settings will only take effect after server restarts."),
+        COMMANDS(CommandConfig.class, "Allows you to disable specific commands and modify the way some of them are formatted."),
+        ACTIVATION_RANGE(ActivationRangeConfig.class, "Stops entities from ticking if they are too far away.");
+
+        public final String key;
+        public final String comment;
+        public final Class<?> clazz;
+
+        Table(Class<?> clazz, String comment) {
+            this.key = this.name().toLowerCase();
+            this.comment = " " + comment.replace("\n", "\n ");
+            this.clazz = clazz;
+        }
     }
 }

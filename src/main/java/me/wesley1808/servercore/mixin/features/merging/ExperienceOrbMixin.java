@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(ExperienceOrb.class)
-public abstract class ExperienceOrbMixin {
+public class ExperienceOrbMixin {
 
     @ModifyConstant(method = "canMerge(Lnet/minecraft/world/entity/ExperienceOrb;II)Z", constant = @Constant(intValue = 40), require = 0)
     private static int servercore$modifyMergeChance(int constant) {

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ServerLevel.class)
-public abstract class ServerLevelMixin {
+public class ServerLevelMixin {
 
     @WrapWithCondition(
             method = "setDefaultSpawnPos",

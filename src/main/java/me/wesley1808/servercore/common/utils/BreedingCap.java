@@ -14,10 +14,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.IntSupplier;
 
-public final class BreedingCap {
+public enum BreedingCap {
+    ANIMAL(EntityLimitConfig.ANIMAL_COUNT::get, EntityLimitConfig.ANIMAL_RANGE::get),
+    VILLAGER(EntityLimitConfig.VILLAGER_COUNT::get, EntityLimitConfig.VILLAGER_RANGE::get);
+
     private static final Map<EntityType<?>, Set<EntityType<?>>> CUSTOM_TYPES = Map.of(
             EntityType.FROG, Set.of(EntityType.TADPOLE, EntityType.FROG)
     );
+
+    private final IntSupplier limit;
+    private final IntSupplier range;
+
+    BreedingCap(IntSupplier limit, IntSupplier range) {
+        this.limit = limit;
+        this.range = range;
+    }
 
     public static void resetLove(Animal owner, Animal mate) {
         resetAge(owner, mate);
@@ -30,43 +41,30 @@ public final class BreedingCap {
         mate.setAge(6000);
     }
 
-    public static boolean exceedsLimit(EntityType<?> type, Level level, BlockPos pos, Info info) {
+    public boolean exceedsLimit(EntityType<?> type, Level level, BlockPos pos) {
         if (!EntityLimitConfig.ENABLED.get()) {
             return false;
         }
 
-        AABB box = getBox(pos, info.range.getAsInt());
+        AABB area = this.getAreaAt(pos);
         Set<EntityType<?>> set = CUSTOM_TYPES.get(type);
 
         int count;
         if (set != null && !set.isEmpty()) {
-            count = level.getEntities((Entity) null, box, (entity) -> set.contains(entity.getType())).size();
+            count = level.getEntities((Entity) null, area, (entity) -> set.contains(entity.getType())).size();
         } else {
-            count = level.getEntities(type, box, EntitySelector.NO_SPECTATORS).size();
+            count = level.getEntities(type, area, EntitySelector.NO_SPECTATORS).size();
         }
 
-        return info.limit.getAsInt() <= count;
+        return this.limit.getAsInt() <= count;
     }
 
-    public static boolean exceedsLimit(Entity entity, Info info) {
-        return exceedsLimit(entity.getType(), entity.getLevel(), entity.blockPosition(), info);
+    public boolean exceedsLimit(Entity entity) {
+        return this.exceedsLimit(entity.getType(), entity.getLevel(), entity.blockPosition());
     }
 
-    private static AABB getBox(BlockPos pos, int range) {
+    private AABB getAreaAt(BlockPos pos) {
+        int range = this.range.getAsInt();
         return new AABB(pos.offset(range, range, range), pos.offset(-range, -range, -range));
     }
-
-    public enum Info {
-        ANIMAL(EntityLimitConfig.ANIMAL_COUNT::get, EntityLimitConfig.ANIMAL_RANGE::get),
-        VILLAGER(EntityLimitConfig.VILLAGER_COUNT::get, EntityLimitConfig.VILLAGER_RANGE::get);
-
-        private final IntSupplier limit;
-        private final IntSupplier range;
-
-        Info(IntSupplier limit, IntSupplier range) {
-            this.limit = limit;
-            this.range = range;
-        }
-    }
-
 }

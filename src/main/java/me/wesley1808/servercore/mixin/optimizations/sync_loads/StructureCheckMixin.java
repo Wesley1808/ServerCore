@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Optional;
 
 @Mixin(StructureCheck.class)
-public abstract class StructureCheckMixin {
+public class StructureCheckMixin {
     @Shadow
     @Final
     private ChunkGenerator chunkGenerator;
@@ -50,7 +50,6 @@ public abstract class StructureCheckMixin {
      * Always check for biomes before loading chunks to find structures.
      * This way we can skip all chunk loads inside biomes that cannot generate the given structure.
      */
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Redirect(
             method = "canCreateStructure",
             at = @At(

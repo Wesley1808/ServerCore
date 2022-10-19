@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(value = MapItemSavedData.class, priority = 900)
-public abstract class MapItemSavedDataMixin {
+public class MapItemSavedDataMixin {
 
     // Cancels unnecessary inventory iteration from maps in item frames to improve performance.
     @Redirect(
@@ -23,7 +23,7 @@ public abstract class MapItemSavedDataMixin {
                     target = "Lnet/minecraft/world/entity/player/Inventory;contains(Lnet/minecraft/world/item/ItemStack;)Z"
             )
     )
-    private boolean servercore$cancelInventoryIteration(Inventory inventory, ItemStack stack) {
+    private boolean servercore$reduceInventoryIteration(Inventory inventory, ItemStack stack) {
         return !stack.isFramed() && inventory.contains(stack);
     }
 

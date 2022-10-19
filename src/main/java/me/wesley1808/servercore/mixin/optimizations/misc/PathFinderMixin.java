@@ -26,7 +26,7 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 @Mixin(PathFinder.class)
-public abstract class PathFinderMixin {
+public class PathFinderMixin {
     @Shadow
     @Final
     private NodeEvaluator nodeEvaluator;

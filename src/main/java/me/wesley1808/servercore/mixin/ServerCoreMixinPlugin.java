@@ -26,11 +26,6 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
 
     @Override // Disables specific mixins for mod compatibility.
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        // Lithium - Disabled configurable portal radius in favor of portal / POI optimizations.
-        if (mixinClassName.equals(this.mixinPackage + "features.misc.PortalForcerMixin")) {
-            return !this.isModLoaded("lithium");
-        }
-
         // Cyclonite - Disabled activation range as it attempts to multithread entities.
         if (mixinClassName.startsWith(this.mixinPackage + "features.activation_range")) {
             return !this.isModLoaded("c3h6n6o6");

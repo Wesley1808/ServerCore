@@ -22,7 +22,7 @@ public abstract class AllayMixin extends PathfinderMob {
 
     @Inject(method = "duplicateAllay", at = @At("HEAD"), cancellable = true)
     public void servercore$enforceBreedCap(CallbackInfo ci) {
-        if (BreedingCap.exceedsLimit(this, BreedingCap.Info.ANIMAL)) {
+        if (BreedingCap.ANIMAL.exceedsLimit(this)) {
             this.resetDuplicationCooldown();
             ci.cancel();
         }

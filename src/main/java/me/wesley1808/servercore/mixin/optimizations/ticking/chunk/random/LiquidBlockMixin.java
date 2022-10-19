@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LiquidBlock.class)
-public abstract class LiquidBlockMixin {
+public class LiquidBlockMixin {
 
     /**
      * Liquid blocks already run their fluid random ticks in {@link ServerLevel#tickChunk(LevelChunk, int)}

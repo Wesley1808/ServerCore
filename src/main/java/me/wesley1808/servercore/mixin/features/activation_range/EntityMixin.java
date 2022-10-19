@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements Inactive, ActivationEntity {
+public class EntityMixin implements Inactive, ActivationEntity {
     @Shadow
     public Level level;
 

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin {
+public class EntityMixin {
 
     // Fall back to default spawn position if the spawn chunks aren't loaded.
     @Redirect(

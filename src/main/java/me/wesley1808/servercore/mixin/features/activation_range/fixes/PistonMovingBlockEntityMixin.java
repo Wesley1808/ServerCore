@@ -25,7 +25,7 @@ import java.util.List;
  */
 
 @Mixin(value = PistonMovingBlockEntity.class, priority = 900)
-public abstract class PistonMovingBlockEntityMixin {
+public class PistonMovingBlockEntityMixin {
 
     // Paper - Fix items getting stuck in slime pushed by a piston
     @Inject(
@@ -37,7 +37,7 @@ public abstract class PistonMovingBlockEntityMixin {
                     shift = At.Shift.AFTER
             )
     )
-    private static void servercore$onPushEntity(Level level, BlockPos blockPos, float f, PistonMovingBlockEntity pistonMovingBlockEntity, CallbackInfo ci, Direction direction, double d, VoxelShape voxelShape, AABB aABB, List list, List list2, boolean bl, Iterator var12, Entity entity, Vec3 vec3, double e, double g, double h) {
+    private static void servercore$onPushEntity(Level level, BlockPos blockPos, float f, PistonMovingBlockEntity pistonMovingBlockEntity, CallbackInfo ci, Direction direction, double d, VoxelShape voxelShape, AABB aABB, List<?> list, List<?> list2, boolean bl, Iterator<?> var12, Entity entity, Vec3 vec3, double e, double g, double h) {
         MinecraftServer server = level.getServer();
         if (server != null) {
             final int tick = server.getTickCount() + 10;

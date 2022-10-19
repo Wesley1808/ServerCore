@@ -27,7 +27,7 @@ public class BreedGoalMixin {
             )
     )
     private boolean servercore$enforceBreedCap(BreedGoal goal) {
-        if (BreedingCap.exceedsLimit(this.animal, BreedingCap.Info.ANIMAL)) {
+        if (BreedingCap.ANIMAL.exceedsLimit(this.animal)) {
             BreedingCap.resetLove(this.animal, this.partner);
             return false;
         }

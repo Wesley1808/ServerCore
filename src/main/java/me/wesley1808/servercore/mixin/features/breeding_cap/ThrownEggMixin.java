@@ -26,7 +26,7 @@ public abstract class ThrownEggMixin extends ThrowableItemProjectile {
     )
     public int servercore$enforceBreedCap(RandomSource random, int i) {
         int value = random.nextInt(i);
-        if (value == 0 && BreedingCap.exceedsLimit(EntityType.CHICKEN, this.level, this.blockPosition(), BreedingCap.Info.ANIMAL)) {
+        if (value == 0 && BreedingCap.ANIMAL.exceedsLimit(EntityType.CHICKEN, this.level, this.blockPosition())) {
             return 1;
         }
 
