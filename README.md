@@ -100,14 +100,6 @@ The config file can be found at `/config/servercore.toml`
 	fast_xp_merging = false
 	# (Default = false) Prevents lagspikes caused by players moving into unloaded chunks.
 	prevent_moving_into_unloaded_chunks = false
-	# (Default = 128) The radius at which the game will look for other portals. Lower values can reduce lagspikes.
-	# Does not work if lithium is installed.
-	portal_search_radius = 128
-	# (Default = 16) The radius at which the game will try to create new portals.
-	# It is recommended to make this smaller than the search radius.
-	portal_create_radius = 16
-	# (Default = true) Whether the custom portal radius will use the vanilla dimension scale.
-	portal_search_vanilla_scaling = true
 	# (Default = false) Makes villagers tick less often if they are stuck in a 1x1 space.
 	lobotomize_villagers = false
 	# (Default = 20) Decides the interval in between villager ticks when lobotomized.
@@ -151,7 +143,7 @@ The config file can be found at `/config/servercore.toml`
 	setting_order = ["chunk_tick_distance", "mobcap_multiplier", "simulation_distance", "view_distance"]
 
 # Stops animals / villagers from breeding if there are too many of the same type nearby.
-[entity_limits]
+[breeding_cap]
 	# (Default = false) Enables this feature.
 	enabled = false
 	# (Default = [Villager: 24, Animals: 32]) Maximum count before stopping entities of the same type from breeding.
