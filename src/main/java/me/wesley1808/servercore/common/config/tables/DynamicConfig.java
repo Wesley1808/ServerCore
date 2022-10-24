@@ -6,7 +6,7 @@ import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 
 import java.util.ArrayList;
 
-public final class DynamicConfig {
+public class DynamicConfig {
     public static final ConfigEntry<Boolean> ENABLED = new ConfigEntry<>(false, "(Default = false) Enables this feature.");
     public static final ConfigEntry<Integer> TARGET_MSPT = new ConfigEntry<>(35, i -> i >= 1, "(Default = 35) The average MSPT to target.");
     public static final ConfigEntry<Integer> UPDATE_RATE = new ConfigEntry<>(15, i -> i >= 1, "(Default = 15) The amount of seconds between dynamic performance updates.");

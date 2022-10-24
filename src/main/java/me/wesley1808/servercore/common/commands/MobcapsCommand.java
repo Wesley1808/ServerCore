@@ -13,7 +13,7 @@ import net.minecraft.world.level.NaturalSpawner;
 
 import static net.minecraft.commands.Commands.literal;
 
-public final class MobcapsCommand {
+public class MobcapsCommand {
     private static final LocalMobCapCalculator.MobCounts EMPTY_MOBCOUNTS = new LocalMobCapCalculator.MobCounts();
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {

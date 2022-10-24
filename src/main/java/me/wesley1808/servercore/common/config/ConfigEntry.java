@@ -2,7 +2,7 @@ package me.wesley1808.servercore.common.config;
 
 import java.util.function.Predicate;
 
-public final class ConfigEntry<T> {
+public class ConfigEntry<T> {
     private final Predicate<T> constraint;
     private final T defaultValue;
     private final String comment;

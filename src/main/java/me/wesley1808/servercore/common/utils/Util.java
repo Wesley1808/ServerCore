@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
-public final class Util {
+public class Util {
 
     public static <T> boolean iteratePage(List<T> list, int page, int pageSize, BiConsumer<T, Integer> consumer) {
         int index = getIndex(page, pageSize);

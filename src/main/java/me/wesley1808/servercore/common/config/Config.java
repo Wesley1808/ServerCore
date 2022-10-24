@@ -7,14 +7,14 @@ import com.electronwill.nightconfig.toml.TomlFormat;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.tables.*;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
-import net.fabricmc.loader.api.FabricLoader;
+import me.wesley1808.servercore.common.services.Environment;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
-public final class Config {
+public class Config {
     @Nullable
     private static GenericBuilder<CommentedConfig, CommentedFileConfig> configBuilder;
 
@@ -24,7 +24,7 @@ public final class Config {
 
         // Initialize the config builder.
         try {
-            Path path = FabricLoader.getInstance().getConfigDir().resolve("servercore.toml");
+            Path path = Environment.CONFIG_DIR.resolve("servercore.toml");
             configBuilder = CommentedFileConfig.builder(path, TomlFormat.instance()).preserveInsertionOrder().sync();
         } catch (Throwable throwable) {
             ServerCore.getLogger().error("[ServerCore] Unable to initialize config builder: {}", throwable.getMessage());

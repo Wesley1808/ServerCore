@@ -4,12 +4,10 @@ import me.lucko.spark.api.SparkProvider;
 import me.lucko.spark.api.statistic.StatisticWindow;
 import me.lucko.spark.api.statistic.misc.DoubleAverageInfo;
 import me.lucko.spark.api.statistic.types.GenericStatistic;
-import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.tables.CommandConfig;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
 import me.wesley1808.servercore.common.interfaces.IMobCategory;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
+import me.wesley1808.servercore.common.services.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.MobCategory;
@@ -18,7 +16,6 @@ import static me.wesley1808.servercore.common.config.tables.DynamicConfig.*;
 import static me.wesley1808.servercore.common.dynamic.DynamicSetting.*;
 
 public class DynamicManager {
-    private static final boolean SPARK_LOADED = FabricLoader.getInstance().isModLoaded("spark");
     private final MinecraftServer server;
     private GenericStatistic<DoubleAverageInfo, StatisticWindow.MillisPerTick> tickStatistics;
     private double averageTickTime;
@@ -50,7 +47,7 @@ public class DynamicManager {
 
     public static String createStatusReport(String title) {
         return title + "\n" + CommandConfig.STATUS_CONTENT.get()
-                .replace("${version}", ServerCore.getVersion())
+                .replace("${version}", Environment.VERSION)
                 .replace("${mobcap_percentage}", getModifierAsPercentage())
                 .replace("${chunk_tick_distance}", String.format("%.0f", CHUNK_TICK_DISTANCE.get()))
                 .replace("${simulation_distance}", String.format("%.0f", SIMULATION_DISTANCE.get()))
@@ -69,7 +66,7 @@ public class DynamicManager {
     }
 
     private void updateValues() {
-        if (SPARK_LOADED && this.tickStatistics == null) {
+        if (Environment.SPARK && this.tickStatistics == null) {
             this.tickStatistics = SparkProvider.get().mspt();
         }
 
@@ -98,14 +95,14 @@ public class DynamicManager {
 
     public void modifyViewDistance(int distance) {
         this.server.getPlayerList().setViewDistance(distance);
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+        if (Environment.CLIENT) {
             Minecraft.getInstance().options.renderDistance().set(distance);
         }
     }
 
     public void modifySimulationDistance(int distance) {
         this.server.getPlayerList().setSimulationDistance(distance);
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+        if (Environment.CLIENT) {
             Minecraft.getInstance().options.simulationDistance().set(distance);
         }
     }

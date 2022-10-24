@@ -25,7 +25,7 @@ import java.util.function.Function;
  *
  * @author Wesley1808
  */
-public final class Statistics {
+public class Statistics {
     private final MinecraftServer server;
 
     public Statistics(MinecraftServer server) {

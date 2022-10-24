@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public final class PlaceHolders {
+public class PlaceHolders {
     // Caches expensive to calculate global values for 1 tick.
     // This way we won't have to re-calculate these values for every single player on the same tick.
     private static final Cache<String, String> CACHE = CacheBuilder.newBuilder()
@@ -24,6 +24,11 @@ public final class PlaceHolders {
             .build();
 
     public static void register() {
+        PlaceHolders.registerDynamic();
+        PlaceHolders.registerStatistics();
+    }
+
+    private static void registerDynamic() {
         register("view_distance",
                 (ctx, arg) -> PlaceholderResult.value(String.valueOf(DynamicSetting.VIEW_DISTANCE.get()))
         );
@@ -39,43 +44,33 @@ public final class PlaceHolders {
         register("mobcap_percentage",
                 (ctx, arg) -> PlaceholderResult.value(DynamicManager.getModifierAsPercentage())
         );
+    }
 
+    private static void registerStatistics() {
         register("chunk_count", (ctx, arg) -> {
             Statistics statistics = Statistics.getInstance(ctx.server());
             boolean onlyLoaded = Objects.equals(arg, "loaded");
-            if (ctx.hasPlayer()) {
-                return cachedValue(onlyLoaded ? "chunk_count_loaded" : "chunk_count", () -> String.valueOf(statistics.getChunkCount(onlyLoaded)));
-            }
-
-            return PlaceholderResult.value(String.valueOf(statistics.getChunkCount(onlyLoaded)));
+            return cachedValue(onlyLoaded ? "chunk_count_loaded" : "chunk_count", () -> String.valueOf(statistics.getChunkCount(onlyLoaded)));
         });
 
         register("entity_count", (ctx, arg) -> {
             Statistics statistics = Statistics.getInstance(ctx.server());
             ServerPlayer player = ctx.player();
-            if (player != null) {
-                if (Objects.equals(arg, "nearby")) {
-                    return PlaceholderResult.value(String.valueOf(statistics.getEntitiesNear(player).size()));
-                }
-
-                return cachedValue("entity_count", () -> String.valueOf(statistics.getAllEntities().size()));
+            if (player != null && Objects.equals(arg, "nearby")) {
+                return PlaceholderResult.value(String.valueOf(statistics.getEntitiesNear(player).size()));
             }
 
-            return PlaceholderResult.value(String.valueOf(statistics.getAllEntities().size()));
+            return cachedValue("entity_count", () -> String.valueOf(statistics.getAllEntities().size()));
         });
 
         register("block_entity_count", (ctx, arg) -> {
             Statistics statistics = Statistics.getInstance(ctx.server());
             ServerPlayer player = ctx.player();
-            if (player != null) {
-                if (Objects.equals(arg, "nearby")) {
-                    return PlaceholderResult.value(String.valueOf(statistics.getBlockEntitiesNear(player).size()));
-                }
-
-                return cachedValue("block_entity_count", () -> String.valueOf(statistics.getAllBlockEntities().size()));
+            if (player != null && Objects.equals(arg, "nearby")) {
+                return PlaceholderResult.value(String.valueOf(statistics.getBlockEntitiesNear(player).size()));
             }
 
-            return PlaceholderResult.value(String.valueOf(statistics.getAllBlockEntities().size()));
+            return cachedValue("block_entity_count", () -> String.valueOf(statistics.getAllBlockEntities().size()));
         });
     }
 

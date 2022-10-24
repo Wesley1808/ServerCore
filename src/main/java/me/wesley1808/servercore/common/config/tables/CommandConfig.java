@@ -2,7 +2,7 @@ package me.wesley1808.servercore.common.config.tables;
 
 import me.wesley1808.servercore.common.config.ConfigEntry;
 
-public final class CommandConfig {
+public class CommandConfig {
     public static final ConfigEntry<Boolean> COMMAND_STATUS = new ConfigEntry<>(true, "Enables / disables the /servercore status command.");
     public static final ConfigEntry<Boolean> COMMAND_MOBCAPS = new ConfigEntry<>(true, "Enables / disables the /mobcaps command.");
     public static final ConfigEntry<String> MOBCAP_TITLE = new ConfigEntry<>("<dark_aqua>${line} <aqua>Mobcaps</aqua> (<aqua>${mobcap_percentage}</aqua>) ${line}</dark_aqua>", "The title for the /mobcaps command.");

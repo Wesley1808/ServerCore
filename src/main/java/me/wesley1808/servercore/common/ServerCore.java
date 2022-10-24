@@ -6,19 +6,10 @@ import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.services.Events;
 import me.wesley1808.servercore.common.services.PlaceHolders;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
 import org.slf4j.Logger;
-
-import java.util.Optional;
 
 public class ServerCore implements ModInitializer {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static String version;
-
-    public static String getVersion() {
-        return version;
-    }
 
     public static Logger getLogger() {
         return LOGGER;
@@ -32,13 +23,7 @@ public class ServerCore implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        version = this.findVersion();
         PlaceHolders.register();
         Events.register();
-    }
-
-    private String findVersion() {
-        Optional<ModContainer> optional = FabricLoader.getInstance().getModContainer("servercore");
-        return optional.map(container -> container.getMetadata().getVersion().getFriendlyString()).orElse("Unknown");
     }
 }

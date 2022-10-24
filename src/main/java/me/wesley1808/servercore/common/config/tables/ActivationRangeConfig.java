@@ -2,7 +2,7 @@ package me.wesley1808.servercore.common.config.tables;
 
 import me.wesley1808.servercore.common.config.ConfigEntry;
 
-public final class ActivationRangeConfig {
+public class ActivationRangeConfig {
     public static final ConfigEntry<Boolean> ENABLED = new ConfigEntry<>(false, "(Default = false) Enables this feature.");
     public static final ConfigEntry<Boolean> USE_VERTICAL_RANGE = new ConfigEntry<>(false, "(Default = false) Enables vertical range checks. By default, activation ranges only work horizontally.\nThis can greatly improve performance on taller worlds, but might break a few very specific ai-based mobfarms.");
     public static final ConfigEntry<Boolean> SKIP_NON_IMMUNE = new ConfigEntry<>(false, "(Default = false) Skips 1/4th of entity ticks whilst not immune.\nThis affects entities that are within the activation range, but not immune (for example by falling or being in water).");

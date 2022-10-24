@@ -33,7 +33,7 @@ import static com.mojang.brigadier.arguments.StringArgumentType.greedyString;
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
-public final class ServerCoreCommand {
+public class ServerCoreCommand {
     private static final String VALUE = "value";
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {

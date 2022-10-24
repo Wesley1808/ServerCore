@@ -18,7 +18,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.MinecraftServer;
 
-public final class Events {
+public class Events {
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(Events::onTick);
         ServerLifecycleEvents.SERVER_STARTED.register(Events::onServerStarted);

@@ -29,7 +29,7 @@ import java.util.concurrent.CompletableFuture;
  *
  * @author Wesley1808
  */
-public final class ChunkManager {
+public class ChunkManager {
 
     @NotNull
     public static Holder<Biome> getRoughBiome(Level level, BlockPos pos) {

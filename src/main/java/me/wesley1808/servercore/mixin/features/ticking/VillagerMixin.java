@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -61,30 +62,37 @@ public abstract class VillagerMixin extends AbstractVillager {
         return this.lobotomized;
     }
 
-    private boolean canTravel(BlockPos pos) {
-        ChunkAccess chunk = ChunkManager.getChunkNow(this.level, pos);
+    private boolean canTravel(BlockPos center) {
+        ChunkAccess chunk = ChunkManager.getChunkNow(this.level, center);
         if (chunk == null) {
             return false;
         }
 
-        boolean canJump = this.noCollisionAbove(chunk, pos);
-        return this.canTravelTo(pos.east(), canJump) || this.canTravelTo(pos.west(), canJump) || this.canTravelTo(pos.north(), canJump) || this.canTravelTo(pos.south(), canJump);
+        BlockPos.MutableBlockPos mutable = center.mutable();
+        boolean canJump = !this.hasCollisionAt(chunk, mutable.move(Direction.UP, 2));
+
+        for (Direction direction : Direction.Plane.HORIZONTAL) {
+            if (this.canTravelTo(mutable.setWithOffset(center, direction), canJump)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    private boolean canTravelTo(BlockPos pos, boolean canJump) {
-        ChunkAccess chunk = ChunkManager.getChunkNow(this.level, pos);
+    private boolean canTravelTo(BlockPos.MutableBlockPos mutable, boolean canJump) {
+        ChunkAccess chunk = ChunkManager.getChunkNow(this.level, mutable);
         if (chunk == null) {
             return false;
         }
 
-        Block bottom = chunk.getBlockState(pos).getBlock();
+        Block bottom = chunk.getBlockState(mutable).getBlock();
         if (bottom instanceof BedBlock) {
             // Allows iron farms to function normally
             return true;
         }
 
-        Block top = chunk.getBlockState(pos.above()).getBlock();
-        if (top.hasCollision) {
+        if (this.hasCollisionAt(chunk, mutable.move(Direction.UP))) {
+            // Early return if the top block has collision.
             return false;
         }
 
@@ -93,11 +101,10 @@ public abstract class VillagerMixin extends AbstractVillager {
         // - There is no collision above the top block
         // - The bottom block is short enough to jump on
         boolean isTallBlock = bottom instanceof FenceBlock || bottom instanceof FenceGateBlock || bottom instanceof WallBlock;
-        return !bottom.hasCollision || (canJump && !isTallBlock && this.noCollisionAbove(chunk, pos));
+        return !bottom.hasCollision || (canJump && !isTallBlock && !this.hasCollisionAt(chunk, mutable.move(Direction.UP)));
     }
 
-    // Checks for collisions 2 blocks above the given position
-    private boolean noCollisionAbove(ChunkAccess chunk, BlockPos pos) {
-        return !chunk.getBlockState(pos.above(2)).getBlock().hasCollision;
+    private boolean hasCollisionAt(ChunkAccess chunk, BlockPos pos) {
+        return chunk.getBlockState(pos).getBlock().hasCollision;
     }
 }

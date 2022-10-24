@@ -17,36 +17,42 @@ A fabric mod that aims to optimize the minecraft server.
 
 #### Optimizations
 
-Most optimizations in this mod are focused on getting rid of the majority of random lagspikes on servers.\
-Besides that, it also includes optimizations for chunk ticking, mob spawning, maps and player logins.
+A lot of the optimizations in this mod are focused on getting rid of the majority of random lagspikes on servers.\
+Other than that, it also includes plenty of optimizations for things like chunk ticking, mob spawning, item frames and
+player logins.
 
 ___
 #### Entity Activation Range
 
-A very configurable and optional feature that allows you to drastically cut down on the amount of entities that have to
-be processed on the server.\
-This is a port based off of Spigot's and PaperMC's implementation, with extra features.
-
-___
-
-#### Chunk ticking distance
-
-A setting that allows you to reduce the distance at which chunks can tick (mob spawns & random ticks).\
-This allows for higher viewdistances at lower costs.
+A very configurable feature that allows you to drastically cut down on the amount of entities that have to be processed
+on the server.\
+This is a port based off of Spigot's and PaperMC's implementation, but more configurable with additional (optional) features.
 
 ___
 
 #### Dynamic performance checks
 
-Allows the server to automatically adjust the current settings depending on the MSPT and config.\
-These include: Chunk-tick distance, View distance, Simulation distance & mobcaps.
+Allows the server to automatically adjust the current settings depending on the tick time and config.\
+These include: Chunk-tick distance, View distance, Simulation distance & Mobcaps.
 
 ___
 
 #### Villager lobotomization
 
-Allows the server to cut down on villager lag from large trading halls, by slowing down the tick rate of villagers stuck
-in 1x1 spaces.
+Allows the server to cut down on villager lag from large trading halls, by making villagers stuck inside 1x1 spaces tick less often.
+
+___
+
+#### Breeding Caps
+
+A feature that allows you to set a cap on the amount of mobs of the same type that can be bred within a certain radius.\
+This can be useful to prevent players from breeding thousands of animals like chickens or cows in a small area.
+
+___
+
+#### Chunk ticking distance
+
+A setting that allows you to reduce the distance at which chunks can tick (mob spawns & random ticks).
 \
 \
 **- And more!**
@@ -59,7 +65,7 @@ in 1x1 spaces.
 
 - /servercore status - Gives information about the current dynamic settings.
 
-- /mobcaps - Displays current mobcaps for each spawn group.
+- /mobcaps - Displays current per-player mobcaps for each spawn group.
 
 - /statistics entities | block-entities - Displays performance related statistics.
 
@@ -253,5 +259,5 @@ The config file can be found at `/config/servercore.toml`
 ```
 ## License
 
-ServerCore includes ports of patches from repositories such as PaperMC and Purpur.\
+ServerCore contains several ports based on patches from repositories such as PaperMC, Purpur and Airplane.\
 If a file uses the GPL-3.0 license it will be stated at the top. All other files are licensed under MIT.

@@ -6,7 +6,7 @@ import net.minecraft.commands.SharedSuggestionProvider;
 
 import java.util.function.Predicate;
 
-public final class Permission {
+public class Permission {
 
     public static boolean check(SharedSuggestionProvider source, String perm, int level) {
         return Permissions.check(source, permission(perm), level);

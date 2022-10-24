@@ -45,7 +45,7 @@ import java.util.function.Predicate;
  * License: GPL-3.0 (licenses/GPL.md)
  */
 
-public final class ActivationRange {
+public class ActivationRange {
     private static final Predicate<Goal> BEE_GOAL_IMMUNITIES = goal -> goal instanceof Bee.BeeGoToKnownFlowerGoal || goal instanceof Bee.BeeGoToHiveGoal;
     private static final Activity[] VILLAGER_PANIC_IMMUNITIES = {
             Activity.HIDE,

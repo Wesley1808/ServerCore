@@ -24,7 +24,7 @@ import static net.minecraft.commands.Commands.literal;
 import static net.minecraft.commands.arguments.EntityArgument.getPlayer;
 import static net.minecraft.commands.arguments.EntityArgument.player;
 
-public final class StatisticsCommand {
+public class StatisticsCommand {
     private static final String[] SUB_COMMANDS = {
             "entities",
             "block-entities"
