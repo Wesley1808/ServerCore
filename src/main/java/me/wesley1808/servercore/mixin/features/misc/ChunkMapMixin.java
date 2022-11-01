@@ -86,7 +86,7 @@ public class ChunkMapMixin {
                     final int neighborChunkZ = chunkZ + z;
                     final int distX = Math.abs(playerChunkX - neighborChunkX);
                     final int distZ = Math.abs(playerChunkZ - neighborChunkZ);
-                    if (Math.max(distX, distZ) > this.viewDistance) {
+                    if (Math.max(distX, distZ) > this.viewDistance - 1) {
                         continue;
                     }
 
