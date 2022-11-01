@@ -87,7 +87,8 @@ public class PathFinderMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lcom/google/common/collect/Sets;newHashSetWithExpectedSize(I)Ljava/util/HashSet;",
-                    ordinal = 0
+                    ordinal = 0,
+                    remap = false
             )
     )
     private HashSet<?> servercore$noHashSet(int expectedSize) {
