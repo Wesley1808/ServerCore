@@ -25,10 +25,11 @@ import java.util.Set;
 
 /**
  * Based on: Paper (Add-option-to-prevent-players-from-moving-into-unloaded-chunks.patch)
+ * <p>
  * Patch Author: Gabriele C (sgdc3.mail@gmail.com)
+ * <br>
  * License: GPL-3.0 (licenses/GPL.md)
  */
-
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class ServerGamePacketListenerImplMixin {
     @Shadow

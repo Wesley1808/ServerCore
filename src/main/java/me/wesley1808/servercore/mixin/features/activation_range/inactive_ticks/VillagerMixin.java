@@ -10,10 +10,11 @@ import org.spongepowered.asm.mixin.Shadow;
 
 /**
  * Based on: Paper & Spigot (Entity-Activation-Range.patch)
+ * <p>
  * Patch Author: Aikar (aikar@aikar.co)
+ * <br>
  * License: GPL-3.0 (licenses/GPL.md)
  */
-
 @Mixin(Villager.class)
 public abstract class VillagerMixin extends AbstractVillager {
     private VillagerMixin(EntityType<? extends AbstractVillager> entityType, Level level) {

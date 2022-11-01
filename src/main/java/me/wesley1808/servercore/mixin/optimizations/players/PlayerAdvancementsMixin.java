@@ -13,10 +13,11 @@ import java.util.Set;
 
 /**
  * Based on: Paper (Optimize-the-advancement-data-player-iteration-to-be-O(N)-rather-than-O(N^2).patch)
+ * <p>
  * Patch Author: Wyatt Childers (wchilders@nearce.com)
+ * <br>
  * License: GPL-3.0 (licenses/GPL.md)
  */
-
 @Mixin(value = PlayerAdvancements.class, priority = 900)
 public abstract class PlayerAdvancementsMixin {
     private static final int PARENT_OF_ITERATOR = 2;

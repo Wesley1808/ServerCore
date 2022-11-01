@@ -20,10 +20,11 @@ import java.util.function.BooleanSupplier;
 
 /**
  * Based on: Paper & Spigot (Entity-Activation-Range.patch)
+ * <p>
  * Patch Author: Aikar (aikar@aikar.co)
+ * <br>
  * License: GPL-3.0 (licenses/GPL.md)
  */
-
 @Mixin(ServerLevel.class)
 public class ServerLevelMixin {
     @Shadow

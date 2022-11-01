@@ -9,10 +9,11 @@ import org.spongepowered.asm.mixin.Shadow;
 
 /**
  * Based on: Spigot (Entity-Activation-Range.patch)
+ * <p>
  * Patch Author: Aikar (aikar@aikar.co)
+ * <br>
  * License: GPL-3.0 (licenses/GPL.md)
  */
-
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
     @Shadow

@@ -20,10 +20,11 @@ import java.util.List;
 
 /**
  * Based on: Paper (Entity-Activation-Range-2.0.patch)
+ * <p>
  * Patch Author: Aikar (aikar@aikar.co)
+ * <br>
  * License: GPL-3.0 (licenses/GPL.md)
  */
-
 @Mixin(value = PistonMovingBlockEntity.class, priority = 900)
 public class PistonMovingBlockEntityMixin {
 

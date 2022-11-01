@@ -12,10 +12,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * Based on: Airplane (Skip-POI-finding-if-stuck-in-vehicle.patch)
+ * <p>
  * Patch Author: Paul Sauve (paul@technove.co)
+ * <br>
  * License: GPL-3.0 (licenses/GPL.md)
  */
-
 @Mixin(AcquirePoi.class)
 public class AcquirePoiMixin {
     @Shadow

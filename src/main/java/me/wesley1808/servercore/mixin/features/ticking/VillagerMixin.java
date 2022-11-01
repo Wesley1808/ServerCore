@@ -20,9 +20,9 @@ import org.spongepowered.asm.mixin.injection.At;
 
 /**
  * Based on: Purpur (Lobotomize-stuck-villagers.patch)
+ * <p>
  * Patch Author: William Blake Galbreath (Blake.Galbreath@GMail.com)
  */
-
 @Mixin(Villager.class)
 public abstract class VillagerMixin extends AbstractVillager {
     @Unique

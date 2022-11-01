@@ -8,10 +8,11 @@ import org.spongepowered.asm.mixin.Unique;
 
 /**
  * Based on: Paper (Entity-Activation-Range-2.0.patch)
+ * <p>
  * Patch Author: Aikar (aikar@aikar.co)
+ * <br>
  * License: GPL-3.0 (licenses/GPL.md)
  */
-
 @Mixin(GoalSelector.class)
 public abstract class GoalSelectorMixin implements Inactive {
     @Unique

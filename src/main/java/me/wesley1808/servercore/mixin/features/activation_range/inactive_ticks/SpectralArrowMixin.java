@@ -8,10 +8,11 @@ import org.spongepowered.asm.mixin.Mixin;
 
 /**
  * Based on: Spigot (Entity-Activation-Range.patch)
+ * <p>
  * Patch Author: Aikar (aikar@aikar.co)
+ * <br>
  * License: GPL-3.0 (licenses/GPL.md)
  */
-
 @Mixin(SpectralArrow.class)
 public abstract class SpectralArrowMixin extends AbstractArrow {
     private SpectralArrowMixin(EntityType<? extends AbstractArrow> entityType, Level level) {

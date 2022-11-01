@@ -25,11 +25,23 @@ import java.util.BitSet;
 
 /**
  * Based on: Paper (Workaround-for-client-lag-spikes-MC-162253.patch)
- * Patch Author: MeFisto94 (MeFisto94@users.noreply.github.com)
+ * <p>
+ * When crossing certain chunk boundaries, the client needlessly
+ * calculates light maps for chunk neighbours. In some specific map
+ * configurations, these calculations cause a 500ms+ freeze on the Client.
+ * <p>
+ * This patch basically serves as a workaround by sending light maps
+ * to the client, so that it doesn't attempt to calculate them.
+ * This mitigates the frametime impact to a minimum (but it's still there).
+ * <p>
+ * Patch Author: Brokkonaut (hannos17@gmx.de)
+ * <br>
+ * Original Patch Author: MeFisto94 (MeFisto94@users.noreply.github.com)
+ * <br>
  * Co-authored By: Daniel Goossens (daniel@goossens.ch)
+ * <br>
  * Co-authored By: Nassim Jahnke (nassim@njahnke.dev)
  */
-
 @Mixin(ChunkMap.class)
 public class ChunkMapMixin {
     @Shadow
@@ -55,8 +67,10 @@ public class ChunkMapMixin {
             return;
         }
 
-        final int playerChunkX = player.getBlockX() >> 4;
-        final int playerChunkZ = player.getBlockZ() >> 4;
+        final int chunkX = chunk.getPos().x;
+        final int chunkZ = chunk.getPos().z;
+        final int playerChunkX = player.chunkPosition().x;
+        final int playerChunkZ = player.chunkPosition().z;
 
         // For all loaded neighbours, send skylight for empty sections above highest non-empty section (+1) of the center chunk
         // otherwise the client will try to calculate lighting there on its own
@@ -68,8 +82,8 @@ public class ChunkMapMixin {
                         continue;
                     }
 
-                    final int neighborChunkX = chunk.getPos().x + x;
-                    final int neighborChunkZ = chunk.getPos().z + z;
+                    final int neighborChunkX = chunkX + x;
+                    final int neighborChunkZ = chunkZ + z;
                     final int distX = Math.abs(playerChunkX - neighborChunkX);
                     final int distZ = Math.abs(playerChunkZ - neighborChunkZ);
                     if (Math.max(distX, distZ) > this.viewDistance) {
