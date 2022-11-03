@@ -17,6 +17,9 @@
   "entrypoints": {
     "main": [
       "me.wesley1808.servercore.common.ServerCore"
+    ],
+    "preLaunch": [
+      "com.llamalad7.mixinextras.MixinExtrasBootstrap::init"
     ]
   },
   "mixins": [
