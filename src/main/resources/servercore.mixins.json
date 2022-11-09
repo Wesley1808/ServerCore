@@ -40,7 +40,6 @@
     "features.misc.ServerGamePacketListenerImplMixin",
     "features.spawn_chunks.PlayerListMixin",
     "features.spawn_chunks.ServerLevelMixin",
-    "features.ticking.AcquirePoiMixin",
     "features.ticking.VillagerMixin",
     "optimizations.biome_lookups.NaturalSpawnerMixin",
     "optimizations.misc.MapItemSavedDataMixin",
