@@ -18,10 +18,10 @@ public interface BlockGetterMixin {
 
     // Don't load chunks for raytracing.
     @Inject(method = "method_17743", at = @At("HEAD"), cancellable = true)
-    private void servercore$onlyRaytraceIfLoaded(ClipContext traverseContext, BlockPos traversePos, CallbackInfoReturnable<BlockHitResult> cir) {
-        if (this instanceof Level level && !ChunkManager.hasChunk(level, traversePos)) {
-            Vec3 vec3d = traverseContext.getFrom().subtract(traverseContext.getTo());
-            cir.setReturnValue(BlockHitResult.miss(traverseContext.getTo(), Direction.getNearest(vec3d.x, vec3d.y, vec3d.z), new BlockPos(traverseContext.getTo())));
+    private void servercore$onlyRaytraceIfLoaded(ClipContext context, BlockPos pos, CallbackInfoReturnable<BlockHitResult> cir) {
+        if (this instanceof Level level && !ChunkManager.hasChunk(level, pos)) {
+            Vec3 vec3 = context.getFrom().subtract(context.getTo());
+            cir.setReturnValue(BlockHitResult.miss(context.getTo(), Direction.getNearest(vec3.x, vec3.y, vec3.z), new BlockPos(context.getTo())));
         }
     }
 }

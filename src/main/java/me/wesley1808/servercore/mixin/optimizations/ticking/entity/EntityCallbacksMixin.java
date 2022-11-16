@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.mixin.optimizations.ticking.entity;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Marker;
+import net.minecraft.world.entity.EntityType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,7 +14,7 @@ public class EntityCallbacksMixin {
     // Markers have no tick logic, but still need to be iterated over every tick.
     @Inject(method = "onTickingStart(Lnet/minecraft/world/entity/Entity;)V", at = @At("HEAD"), cancellable = true)
     private void servercore$cancelMarkerTicks(Entity entity, CallbackInfo ci) {
-        if (entity instanceof Marker) {
+        if (entity.getType() == EntityType.MARKER) {
             ci.cancel();
         }
     }

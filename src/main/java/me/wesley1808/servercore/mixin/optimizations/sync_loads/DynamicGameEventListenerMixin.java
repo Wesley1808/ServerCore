@@ -12,7 +12,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(DynamicGameEventListener.class)
 public class DynamicGameEventListenerMixin {
 
-    @Redirect(method = "ifChunkExists",
+    // Don't load chunks for dynamic game events.
+    // Doing so can cause the server to freeze indefinitely.
+    @Redirect(
+            method = "ifChunkExists",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/level/LevelReader;getChunk(IILnet/minecraft/world/level/chunk/ChunkStatus;Z)Lnet/minecraft/world/level/chunk/ChunkAccess;"

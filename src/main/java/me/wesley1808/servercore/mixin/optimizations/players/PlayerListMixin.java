@@ -44,8 +44,8 @@ public class PlayerListMixin {
                     shift = At.Shift.BEFORE
             )
     )
-    private void servercore$moveToSpawn(Connection connection, ServerPlayer serverPlayer, CallbackInfo ci, GameProfile gameProfile, GameProfileCache gameProfileCache, Optional<?> optional, String string, CompoundTag compoundTag, ResourceKey<?> resourceKey, ServerLevel serverLevel, ServerLevel serverLevel2) {
-        if (compoundTag == null) serverPlayer.fudgeSpawnLocation(serverLevel2);
+    private void servercore$moveToSpawn(Connection connection, ServerPlayer player, CallbackInfo ci, GameProfile gameProfile, GameProfileCache gameProfileCache, Optional<?> optional, String string, CompoundTag playerData, ResourceKey<?> resourceKey, ServerLevel ignored, ServerLevel level) {
+        if (playerData == null) player.fudgeSpawnLocation(level);
     }
 
     // ServerCore - Finds random spawn location for respawning players without spawnpoint.
@@ -59,7 +59,7 @@ public class PlayerListMixin {
                     ordinal = 0
             )
     )
-    private void servercore$moveToSpawn(ServerPlayer oldPlayer, boolean bl, CallbackInfoReturnable<ServerPlayer> cir, BlockPos blockPos, float f, boolean bl2, ServerLevel serverLevel, Optional<?> optional, ServerLevel serverLevel2, ServerPlayer newPlayer) {
-        if (optional.isEmpty()) newPlayer.fudgeSpawnLocation(serverLevel2);
+    private void servercore$moveToSpawn(ServerPlayer oldPlayer, boolean bl, CallbackInfoReturnable<ServerPlayer> cir, BlockPos blockPos, float f, boolean bl2, ServerLevel ignored, Optional<?> spawnPoint, ServerLevel level, ServerPlayer player) {
+        if (spawnPoint.isEmpty()) player.fudgeSpawnLocation(level);
     }
 }
