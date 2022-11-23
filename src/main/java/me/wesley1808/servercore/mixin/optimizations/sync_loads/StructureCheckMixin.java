@@ -46,21 +46,6 @@ public class StructureCheckMixin {
         }
     }
 
-    /**
-     * Always check for biomes before loading chunks to find structures.
-     * This way we can skip all chunk loads inside biomes that cannot generate the given structure.
-     */
-    @Redirect(
-            method = "canCreateStructure",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Ljava/util/Optional;isPresent()Z"
-            )
-    )
-    private boolean servercore$skipInvalidBiomes(Optional<Structure.GenerationStub> optional, ChunkPos chunkPos, Structure structure) {
-        return optional.isPresent() && this.isBiomeValid(structure, optional.get().position());
-    }
-
     private boolean isBiomeValid(Structure structure, BlockPos pos) {
         return structure.biomes().contains(this.chunkGenerator.getBiomeSource().getNoiseBiome(pos.getX() >> 2, pos.getY() >> 2, pos.getZ() >> 2, this.randomState.sampler()));
     }
