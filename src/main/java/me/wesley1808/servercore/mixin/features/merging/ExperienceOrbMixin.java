@@ -11,7 +11,7 @@ public class ExperienceOrbMixin {
 
     @ModifyConstant(method = "canMerge(Lnet/minecraft/world/entity/ExperienceOrb;II)Z", constant = @Constant(intValue = 40), require = 0)
     private static int servercore$modifyMergeChance(int constant) {
-        return FeatureConfig.FAST_XP_MERGING.get() ? 8 : constant;
+        return FeatureConfig.XP_MERGE_CHANCE.get();
     }
 
     @ModifyConstant(method = "scanForEntities", constant = @Constant(doubleValue = 0.5), require = 0)

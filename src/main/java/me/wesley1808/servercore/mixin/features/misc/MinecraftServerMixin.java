@@ -11,6 +11,6 @@ public class MinecraftServerMixin {
 
     @ModifyConstant(method = "tickServer", constant = @Constant(intValue = 6000), require = 0)
     public int servercore$modifyAutoSaveInterval(int constant) {
-        return FeatureConfig.AUTO_SAVE_INTERVAL.get() * 1200;
+        return FeatureConfig.AUTOSAVE_INTERVAL.get();
     }
 }
