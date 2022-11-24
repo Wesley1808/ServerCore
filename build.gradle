@@ -43,22 +43,22 @@ dependencies {
         modImplementation(include(fabricApi.module(it, project.fabric_api)))
     }
 
-    // Spark API
-    modImplementation(include("me.lucko:spark-api:${spark_api}"))
-
     // Permission API
-    modImplementation(include("me.lucko:fabric-permissions-api:${permission_api}"))
+    modImplementation(include("me.lucko:fabric-permissions-api:${project.permission_api}"))
 
     // Placeholder API
-    modImplementation(include("eu.pb4:placeholder-api:${placeholder_api}"))
+    modImplementation(include("eu.pb4:placeholder-api:${project.placeholder_api}"))
+
+    // Spark API
+    modCompileOnly("me.lucko:spark-api:${project.spark_api}")
 
     // Night Config
-    implementation(include("com.electronwill.night-config:core:${nightconfig}"))
-    implementation(include("com.electronwill.night-config:toml:${nightconfig}"))
+    implementation(include("com.electronwill.night-config:core:${project.nightconfig}"))
+    implementation(include("com.electronwill.night-config:toml:${project.nightconfig}"))
 
     // Mixin Extras
-    implementation(include("com.github.LlamaLad7:MixinExtras:${mixin_extras}"))
-    annotationProcessor("com.github.LlamaLad7:MixinExtras:${mixin_extras}")
+    implementation(include("com.github.LlamaLad7:MixinExtras:${project.mixin_extras}"))
+    annotationProcessor("com.github.LlamaLad7:MixinExtras:${project.mixin_extras}")
 }
 
 processResources {

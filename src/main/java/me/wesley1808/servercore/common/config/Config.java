@@ -108,7 +108,7 @@ public class Config {
         }
     }
 
-    @SuppressWarnings("all")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static <T> void forEachEntry(Class<?> clazz, BiConsumer<Field, ConfigEntry<T>> consumer) throws IllegalAccessException {
         for (Field field : clazz.getFields()) {
             if (field.get(clazz) instanceof ConfigEntry entry) {

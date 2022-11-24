@@ -41,10 +41,11 @@ import java.util.function.Predicate;
 
 /**
  * Based on: Paper & Spigot (Entity-Activation-Range.patch)
+ * <p>
  * Patch Author: Aikar (aikar@aikar.co)
+ * <br>
  * License: GPL-3.0 (licenses/GPL.md)
  */
-
 public class ActivationRange {
     private static final Predicate<Goal> BEE_GOAL_IMMUNITIES = goal -> goal instanceof Bee.BeeGoToKnownFlowerGoal || goal instanceof Bee.BeeGoToHiveGoal;
     private static final Activity[] VILLAGER_PANIC_IMMUNITIES = {

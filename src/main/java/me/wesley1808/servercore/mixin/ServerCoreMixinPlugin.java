@@ -2,7 +2,6 @@ package me.wesley1808.servercore.mixin;
 
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.tables.OptimizationConfig;
-import me.wesley1808.servercore.common.services.Environment;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -27,11 +26,6 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
     @Override // Disables specific mixins for mod compatibility.
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         String path = mixinClassName.substring(this.mixinPackage.length());
-
-        // Cyclonite - Disabled activation range as it attempts to multithread entities.
-        if (path.startsWith("features.activation_range")) {
-            return !Environment.CYCLONITE;
-        }
 
         if (path.startsWith("optimizations.sync_loads")) {
             return OptimizationConfig.REDUCE_SYNC_LOADS.get();

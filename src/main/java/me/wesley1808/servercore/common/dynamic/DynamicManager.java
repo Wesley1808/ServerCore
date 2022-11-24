@@ -1,9 +1,5 @@
 package me.wesley1808.servercore.common.dynamic;
 
-import me.lucko.spark.api.SparkProvider;
-import me.lucko.spark.api.statistic.StatisticWindow;
-import me.lucko.spark.api.statistic.misc.DoubleAverageInfo;
-import me.lucko.spark.api.statistic.types.GenericStatistic;
 import me.wesley1808.servercore.common.config.tables.CommandConfig;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
 import me.wesley1808.servercore.common.interfaces.IMobCategory;
@@ -17,7 +13,6 @@ import static me.wesley1808.servercore.common.dynamic.DynamicSetting.*;
 
 public class DynamicManager {
     private final MinecraftServer server;
-    private GenericStatistic<DoubleAverageInfo, StatisticWindow.MillisPerTick> tickStatistics;
     private double averageTickTime;
     private int count;
 
@@ -66,17 +61,12 @@ public class DynamicManager {
     }
 
     private void updateValues() {
-        if (Environment.SPARK && this.tickStatistics == null) {
-            this.tickStatistics = SparkProvider.get().mspt();
-        }
-
-        if (this.tickStatistics != null) {
-            this.averageTickTime = this.tickStatistics.poll(StatisticWindow.MillisPerTick.SECONDS_10).median();
-        } else {
-            this.averageTickTime = this.server.getAverageTickTime();
-        }
-
+        this.averageTickTime = this.calculateAverageTickTime();
         this.count++;
+    }
+
+    protected double calculateAverageTickTime() {
+        return this.server.getAverageTickTime();
     }
 
     private void runPerformanceChecks() {
