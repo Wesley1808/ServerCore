@@ -71,8 +71,8 @@ public class ServerCoreCommand {
                         );
                     }
                 });
-            } catch (Exception ex) {
-                ServerCore.getLogger().error("Exception thrown whilst registering commands!", ex);
+            } catch (Throwable throwable) {
+                ServerCore.LOGGER.error("Exception thrown whilst registering commands!", throwable);
             }
 
             config.then(child);

@@ -4,15 +4,44 @@ import me.wesley1808.servercore.common.config.ConfigEntry;
 
 public class ActivationRangeConfig {
     public static final ConfigEntry<Boolean> ENABLED = new ConfigEntry<>(false, "(Default = false) Enables this feature.");
-    public static final ConfigEntry<Boolean> USE_VERTICAL_RANGE = new ConfigEntry<>(false, "(Default = false) Enables vertical range checks. By default, activation ranges only work horizontally.\nThis can greatly improve performance on taller worlds, but might break a few very specific ai-based mobfarms.");
-    public static final ConfigEntry<Boolean> SKIP_NON_IMMUNE = new ConfigEntry<>(false, "(Default = false) Skips 1/4th of entity ticks whilst not immune.\nThis affects entities that are within the activation range, but not immune (for example by falling or being in water).");
 
-    public static final ConfigEntry<Boolean> VILLAGER_TICK_PANIC = new ConfigEntry<>(true, "(Default = true) Allows villagers to tick regardless of the activation range when panicking.");
-    public static final ConfigEntry<Boolean> VILLAGER_TICK_ALWAYS = new ConfigEntry<>(false, "(Default = false) Allows villagers to tick regardless of the activation range.");
-    public static final ConfigEntry<Integer> VILLAGER_WORK_IMMUNITY_AFTER = new ConfigEntry<>(20, "(Default = 20) The time in seconds that a villager needs to be inactive for before obtaining work immunity (if it has work tasks).");
-    public static final ConfigEntry<Integer> VILLAGER_WORK_IMMUNITY_FOR = new ConfigEntry<>(20, "(Default = 20) The amount of ticks an inactive villager will wake up for when it has work immunity.");
+    public static final ConfigEntry<Boolean> USE_VERTICAL_RANGE = new ConfigEntry<>(
+            false, """
+            (Default = false) Enables vertical range checks. By default, activation ranges only work horizontally.
+            This can greatly improve performance on taller worlds, but might break a few very specific ai-based mobfarms."""
+    );
 
-    public static final ConfigEntry<Integer> VILLAGER_ACTIVATION_RANGE = new ConfigEntry<>(16, "Activation Range = The range an entity is required to be in from a player to tick.\nTick Inactive = Whether an entity is allowed to tick once per second whilst inactive.\nWakeup Max = The maximum amount of entities in the same group and world that are allowed to be awakened at the same time.\nWakeup Interval = The interval between inactive entity wake ups in seconds.\nActivation range settings for villagers.");
+    public static final ConfigEntry<Boolean> SKIP_NON_IMMUNE = new ConfigEntry<>(
+            false, """
+            (Default = false) Skips 1/4th of entity ticks whilst not immune.
+            This affects entities that are within the activation range, but not immune (for example by falling or being in water)."""
+    );
+
+    public static final ConfigEntry<Boolean> VILLAGER_TICK_PANIC = new ConfigEntry<>(
+            true, "(Default = true) Allows villagers to tick regardless of the activation range when panicking."
+    );
+
+    public static final ConfigEntry<Boolean> VILLAGER_TICK_ALWAYS = new ConfigEntry<>(
+            false, "(Default = false) Allows villagers to tick regardless of the activation range."
+    );
+
+    public static final ConfigEntry<Integer> VILLAGER_WORK_IMMUNITY_AFTER = new ConfigEntry<>(
+            20, "(Default = 20) The time in seconds that a villager needs to be inactive for before obtaining work immunity (if it has work tasks)."
+    );
+
+    public static final ConfigEntry<Integer> VILLAGER_WORK_IMMUNITY_FOR = new ConfigEntry<>(
+            20, "(Default = 20) The amount of ticks an inactive villager will wake up for when it has work immunity."
+    );
+
+    public static final ConfigEntry<Integer> VILLAGER_ACTIVATION_RANGE = new ConfigEntry<>(
+            16, """
+            Activation Range = The range an entity is required to be in from a player to tick.
+            Tick Inactive = Whether an entity is allowed to tick once per second whilst inactive.
+            Wakeup Max = The maximum amount of entities in the same group and world that are allowed to be awakened at the same time.
+            Wakeup Interval = The interval between inactive entity wake ups in seconds.
+            Activation range settings for villagers."""
+    );
+
     public static final ConfigEntry<Boolean> VILLAGER_TICK_INACTIVE = new ConfigEntry<>(true);
     public static final ConfigEntry<Integer> VILLAGER_WAKEUP_MAX = new ConfigEntry<>(4);
     public static final ConfigEntry<Integer> VILLAGER_WAKEUP_INTERVAL = new ConfigEntry<>(30);

@@ -27,8 +27,8 @@ public class Config {
             Path path = Environment.CONFIG_DIR.resolve("servercore.toml");
             configBuilder = CommentedFileConfig.builder(path, TomlFormat.instance()).preserveInsertionOrder().sync();
         } catch (Throwable throwable) {
-            ServerCore.getLogger().error("[ServerCore] Unable to initialize config builder: {}", throwable.getMessage());
-            ServerCore.getLogger().error("[ServerCore] Load and save operations on the config file will not be available.");
+            ServerCore.LOGGER.error("[ServerCore] Unable to initialize config builder: {}", throwable.getMessage());
+            ServerCore.LOGGER.error("[ServerCore] Load and save operations on the config file will not be available.");
             configBuilder = null;
         }
     }
@@ -84,11 +84,11 @@ public class Config {
                 final String key = field.getName().toLowerCase();
                 final Object value = config.getOrElse(key, entry.getDefault());
                 if (!entry.set(value)) {
-                    ServerCore.getLogger().error("[ServerCore] Invalid config entry found! {} = {} (Reverting back to default: {})", key, value, entry.getDefault());
+                    ServerCore.LOGGER.error("[ServerCore] Invalid config entry found! {} = {} (Reverting back to default: {})", key, value, entry.getDefault());
                 }
             });
         } catch (Throwable throwable) {
-            ServerCore.getLogger().error("[ServerCore] An error occurred whilst loading config entries!", throwable);
+            ServerCore.LOGGER.error("[ServerCore] An error occurred whilst loading config entries!", throwable);
         }
     }
 
@@ -104,7 +104,7 @@ public class Config {
                 }
             });
         } catch (Throwable throwable) {
-            ServerCore.getLogger().error("[ServerCore] An error occurred whilst saving configs!", throwable);
+            ServerCore.LOGGER.error("[ServerCore] An error occurred whilst saving configs!", throwable);
         }
     }
 

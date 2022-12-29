@@ -3,6 +3,7 @@ package me.wesley1808.servercore.common.services;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.DetectedVersion;
 
 import java.nio.file.Path;
 import java.util.Optional;
@@ -15,6 +16,6 @@ public class Environment {
 
     private static String getVersion() {
         Optional<ModContainer> optional = FabricLoader.getInstance().getModContainer("servercore");
-        return optional.map(container -> container.getMetadata().getVersion().getFriendlyString()).orElse("Unknown");
+        return optional.map(container -> container.getMetadata().getVersion().getFriendlyString()).orElse(DetectedVersion.BUILT_IN.getName());
     }
 }
