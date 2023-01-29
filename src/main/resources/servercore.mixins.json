@@ -44,7 +44,6 @@
     "optimizations.misc.BlockGetterMixin",
     "optimizations.misc.MapItemSavedDataMixin",
     "optimizations.misc.PathFinderMixin",
-    "optimizations.players.PlayerAdvancementsMixin",
     "optimizations.players.PlayerListMixin",
     "optimizations.players.ServerPlayerMixin",
     "optimizations.sync_loads.BeeMixin",

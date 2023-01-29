@@ -4,13 +4,13 @@ import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundMoveVehiclePacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.network.protocol.game.ServerboundMoveVehiclePacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,13 +34,13 @@ import java.util.Set;
 public abstract class ServerGamePacketListenerImplMixin {
     @Shadow
     @Final
-    public Connection connection;
+    private Connection connection;
 
     @Shadow
     public ServerPlayer player;
 
     @Shadow
-    public abstract void teleport(double d, double e, double f, float g, float h, Set<ClientboundPlayerPositionPacket.RelativeArgument> set, boolean bl);
+    public abstract void teleport(double x, double y, double z, float yaw, float pitch, Set<RelativeMovement> relativeSet, boolean dismountVehicle);
 
     @Inject(
             method = "handleMoveVehicle",
@@ -79,7 +79,7 @@ public abstract class ServerGamePacketListenerImplMixin {
 
     private boolean shouldPreventMovement(ServerLevel level, Entity entity, double fromX, double fromZ, double toX, double toY, double toZ) {
         return FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get()
-                && (fromX != toX || fromZ != toZ)
-                && !ChunkManager.areChunksLoadedForMove(level, entity.getBoundingBox().expandTowards(new Vec3(toX, toY, toZ).subtract(entity.position())));
+               && (fromX != toX || fromZ != toZ)
+               && !ChunkManager.areChunksLoadedForMove(level, entity.getBoundingBox().expandTowards(new Vec3(toX, toY, toZ).subtract(entity.position())));
     }
 }
