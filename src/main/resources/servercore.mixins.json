@@ -63,8 +63,7 @@
     "optimizations.ticking.chunk.random.LevelChunkMixin",
     "optimizations.ticking.chunk.random.LiquidBlockMixin",
     "optimizations.ticking.chunk.random.ServerChunkCacheMixin",
-    "optimizations.ticking.chunk.random.ServerLevelMixin",
-    "optimizations.ticking.entity.EntityCallbacksMixin"
+    "optimizations.ticking.chunk.random.ServerLevelMixin"
   ],
   "client": [
     "features.spawn_chunks.PlayerListMixin"
