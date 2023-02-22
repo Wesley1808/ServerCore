@@ -35,7 +35,7 @@ public abstract class ServerLevelMixin extends Level {
             return super.clip(context);
         } else {
             Vec3 vec3 = context.getFrom().subtract(to);
-            return BlockHitResult.miss(to, Direction.getNearest(vec3.x, vec3.y, vec3.z), new BlockPos(to));
+            return BlockHitResult.miss(to, Direction.getNearest(vec3.x, vec3.y, vec3.z), BlockPos.containing(to));
         }
     }
 }

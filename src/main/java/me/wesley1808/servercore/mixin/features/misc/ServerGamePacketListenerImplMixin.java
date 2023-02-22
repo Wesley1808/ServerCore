@@ -40,7 +40,7 @@ public abstract class ServerGamePacketListenerImplMixin {
     public ServerPlayer player;
 
     @Shadow
-    public abstract void teleport(double x, double y, double z, float yaw, float pitch, Set<RelativeMovement> relativeSet, boolean dismountVehicle);
+    public abstract void teleport(double x, double y, double z, float yaw, float pitch, Set<RelativeMovement> relativeSet);
 
     @Inject(
             method = "handleMoveVehicle",
@@ -72,7 +72,7 @@ public abstract class ServerGamePacketListenerImplMixin {
     )
     private void servercore$handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double toX, double toY, double toZ, float yRot, float xRot, double fromX, double fromY, double fromZ, double l) {
         if (this.shouldPreventMovement(serverLevel, this.player, fromX, fromZ, toX, toY, toZ)) {
-            this.teleport(fromX, fromY, fromZ, yRot, xRot, Collections.emptySet(), true);
+            this.teleport(fromX, fromY, fromZ, yRot, xRot, Collections.emptySet());
             ci.cancel();
         }
     }
