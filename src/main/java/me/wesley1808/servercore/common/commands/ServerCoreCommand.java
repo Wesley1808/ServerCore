@@ -129,7 +129,7 @@ public class ServerCoreCommand {
 
     private static int saveOrReload(CommandSourceStack source, boolean saved) {
         if (saved) Config.save();
-        else Config.load();
+        else Config.load(true);
 
         source.sendSuccess(Component.literal(saved ? "Config saved!" : "Config reloaded!").withStyle(ChatFormatting.GREEN), false);
         return Command.SINGLE_SUCCESS;

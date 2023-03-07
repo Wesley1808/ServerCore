@@ -33,7 +33,7 @@ public class Config {
         }
     }
 
-    public static void load() {
+    public static void load(boolean afterMixinLoad) {
         if (configBuilder != null) {
             CommentedFileConfig config = configBuilder.build();
             config.load();
@@ -41,11 +41,13 @@ public class Config {
 
             for (Table table : Table.values()) {
                 Config.validate(table, config);
-                Config.loadEntries(config.get(table.key), table.clazz);
+
+                if (afterMixinLoad || table.loadBeforeMixins) {
+                    Config.loadEntries(config.get(table.key), table.clazz);
+                }
             }
 
-            loadChanges();
-            Config.save();
+            Config.loadChanges();
         }
     }
 
@@ -118,21 +120,23 @@ public class Config {
     }
 
     public enum Table {
-        FEATURES(FeatureConfig.class, "Lets you enable / disable certain features and modify them."),
-        DYNAMIC(DynamicConfig.class, "Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT."),
-        BREEDING_CAP(EntityLimitConfig.class, "Stops animals / villagers from breeding if there are too many of the same type nearby."),
-        OPTIMIZATIONS(OptimizationConfig.class, "Allows you to toggle specific optimizations that don't have full vanilla parity.\nThese settings will only take effect after server restarts."),
-        COMMANDS(CommandConfig.class, "Allows you to disable specific commands and modify the way some of them are formatted."),
-        ACTIVATION_RANGE(ActivationRangeConfig.class, "Stops entities from ticking if they are too far away.");
+        FEATURES(FeatureConfig.class, false, "Lets you enable / disable certain features and modify them."),
+        DYNAMIC(DynamicConfig.class, false, "Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT."),
+        BREEDING_CAP(EntityLimitConfig.class, false, "Stops animals / villagers from breeding if there are too many of the same type nearby."),
+        OPTIMIZATIONS(OptimizationConfig.class, true, "Allows you to toggle specific optimizations that don't have full vanilla parity.\nThese settings will only take effect after server restarts."),
+        COMMANDS(CommandConfig.class, false, "Allows you to disable specific commands and modify the way some of them are formatted."),
+        ACTIVATION_RANGE(ActivationRangeConfig.class, false, "Stops entities from ticking if they are too far away.");
 
         public final String key;
         public final String comment;
         public final Class<?> clazz;
+        public final boolean loadBeforeMixins;
 
-        Table(Class<?> clazz, String comment) {
+        Table(Class<?> clazz, boolean loadBeforeMixins, String comment) {
             this.key = this.name().toLowerCase();
             this.comment = " " + comment.replace("\n", "\n ");
             this.clazz = clazz;
+            this.loadBeforeMixins = loadBeforeMixins;
         }
     }
 }

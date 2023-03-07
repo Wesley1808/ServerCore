@@ -15,7 +15,7 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
     @Override
     public void onLoad(String mixinPackage) {
         this.mixinPackage = mixinPackage + ".";
-        Config.load();
+        Config.load(false);
     }
 
     @Override

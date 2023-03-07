@@ -15,6 +15,7 @@
     "features.activation_range.inactive_ticks.AgeableMobMixin",
     "features.activation_range.inactive_ticks.AreaEffectCloudMixin",
     "features.activation_range.inactive_ticks.ArrowMixin",
+    "features.activation_range.inactive_ticks.BeeMixin",
     "features.activation_range.inactive_ticks.ChickenMixin",
     "features.activation_range.inactive_ticks.GoalSelectorMixin",
     "features.activation_range.inactive_ticks.ItemEntityMixin",
