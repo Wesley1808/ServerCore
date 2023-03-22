@@ -24,7 +24,7 @@ public abstract class BeeMixin extends Animal {
 
     @Override
     public void inactiveTick() {
-        if (this.tickCount++ % 20 == 0 && !this.isHiveValid()) {
+        if (this.getFullTickCount() % 20 == 0 && !this.isHiveValid()) {
             this.hivePos = null;
         }
 

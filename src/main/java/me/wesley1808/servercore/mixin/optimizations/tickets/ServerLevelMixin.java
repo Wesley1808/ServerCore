@@ -24,7 +24,8 @@ public abstract class ServerLevelMixin extends Level {
 
     @Override
     public int getHeight(@NotNull Heightmap.Types types, int blockX, int blockZ) {
-        if (blockX >= -30000000 && blockZ >= -30000000 && blockX < 30000000 && blockZ < 30000000) {
+        final int max = Level.MAX_LEVEL_SIZE;
+        if (blockX >= -max && blockZ >= -max && blockX < max && blockZ < max) {
             ChunkAccess chunk = ChunkManager.getChunkNow(this, blockX >> 4, blockZ >> 4);
             return chunk == null ? this.getMinBuildHeight() : chunk.getHeight(types, blockX & 15, blockZ & 15) + 1;
         } else {

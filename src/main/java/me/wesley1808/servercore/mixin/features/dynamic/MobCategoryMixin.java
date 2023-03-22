@@ -24,6 +24,7 @@ public class MobCategoryMixin implements IMobCategory {
         this.capacity = max;
     }
 
+    // Should be @ModifyReturnValue to remove callback info allocations, however carpet mod.
     @Inject(method = "getMaxInstancesPerChunk", at = @At("HEAD"), cancellable = true)
     private void servercore$getCapacity(CallbackInfoReturnable<Integer> cir) {
         if (this.capacity != this.max) {
