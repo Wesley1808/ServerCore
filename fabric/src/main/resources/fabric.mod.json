@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "id": "servercore",
+  "version": "${version}",
+  "name": "ServerCore",
+  "description": "A fabric mod that aims to optimize the minecraft server.",
+  "authors": [
+    "Wesley1808"
+  ],
+  "contact": {
+    "sources": "https://github.com/Wesley1808/ServerCore",
+    "issues": "https://github.com/Wesley1808/ServerCore/issues"
+  },
+  "icon": "assets/servercore/icon.png",
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "me.wesley1808.servercore.fabric.ServerCoreFabric"
+    ],
+    "preLaunch": [
+      "com.llamalad7.mixinextras.MixinExtrasBootstrap::init"
+    ]
+  },
+  "mixins": [
+    "servercore.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.18",
+    "minecraft": ">=1.19.4"
+  },
+  "breaks": {
+    "cardboard": "*"
+  },
+  "custom": {
+    "lithium:options": {
+      "mixin.alloc.chunk_ticking": false
+    },
+    "loom:injected_interfaces": {
+      "net/minecraft/class_1297": [
+        "me/wesley1808/servercore/common/interfaces/activation_range/Inactive",
+        "me/wesley1808/servercore/common/interfaces/activation_range/ActivationEntity"
+      ],
+      "net/minecraft/class_1355": [
+        "me/wesley1808/servercore/common/interfaces/activation_range/Inactive"
+      ]
+    }
+  }
+}

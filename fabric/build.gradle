@@ -1,0 +1,56 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+}
+
+archivesBaseName = "${archives_base_name}-fabric-${mod_version}"
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+}
+
+dependencies {
+    // Fabric Loader
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_version}"
+
+    // Common
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+
+    // Fabric API
+    Set<String> modules = ['fabric-api-base', 'fabric-command-api-v2', 'fabric-lifecycle-events-v1']
+    modules.forEach {
+        modImplementation(include(fabricApi.module(it, project.fabric_api)))
+    }
+
+    // Permission API
+    modImplementation(include("me.lucko:fabric-permissions-api:${project.permission_api}"))
+
+    // Placeholder API
+    modImplementation(include("eu.pb4:placeholder-api:${project.placeholder_api}"))
+
+    // Night Config
+    include "com.electronwill.night-config:core:${project.nightconfig}"
+    include "com.electronwill.night-config:toml:${project.nightconfig}"
+
+    // Mixin Extras
+    include "com.github.LlamaLad7:MixinExtras:${project.mixin_extras}"
+}
+
+processResources {
+    inputs.property "version", mod_version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": mod_version
+    }
+
+    from(project(":common").sourceSets.main.resources)
+}

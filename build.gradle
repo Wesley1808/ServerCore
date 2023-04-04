@@ -1,101 +1,68 @@
 plugins {
-    id 'fabric-loom' version '1.0-SNAPSHOT'
-    id 'io.github.juuxel.loom-quiltflower' version '1.8.0'
-    id 'maven-publish'
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "1.1-SNAPSHOT" apply false
+    id "io.github.juuxel.loom-quiltflower" version "1.8.0" apply false
 }
 
-repositories {
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    maven { url "https://maven.nucleoid.xyz/" }
-    maven { url "https://maven.parchmentmc.org" }
-    maven { url 'https://jitpack.io' }
-    mavenCentral()
-}
+subprojects {
+    apply plugin: "dev.architectury.loom"
+    apply plugin: "io.github.juuxel.loom-quiltflower"
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-version = "${mod_version}-${minecraft}"
-archivesBaseName = project.archives_base_name
-group = project.maven_group
-
-loom {
-    accessWidenerPath.set(file("src/main/resources/servercore.accesswidener"))
-}
-
-dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft}"
-    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader}"
-
-    // Mappings
-    if (project.parchment.isEmpty()) {
-        mappings loom.officialMojangMappings()
-    } else {
-        mappings loom.layered() {
-            officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-${project.parchment}@zip")
-        }
+    loom {
+        silentMojangMappingsLicense()
+        accessWidenerPath.set(project(":common").file("src/main/resources/servercore.accesswidener"))
     }
 
-    // Fabric API
-    Set<String> modules = ['fabric-api-base', 'fabric-command-api-v2', 'fabric-lifecycle-events-v1']
-    modules.forEach {
-        modImplementation(include(fabricApi.module(it, project.fabric_api)))
-    }
-
-    // Permission API
-    modImplementation(include("me.lucko:fabric-permissions-api:${project.permission_api}"))
-
-    // Placeholder API
-    modImplementation(include("eu.pb4:placeholder-api:${project.placeholder_api}"))
-
-    // Spark API
-    modCompileOnly("me.lucko:spark-api:${project.spark_api}")
-
-    // Night Config
-    implementation(include("com.electronwill.night-config:core:${project.nightconfig}"))
-    implementation(include("com.electronwill.night-config:toml:${project.nightconfig}"))
-
-    // Mixin Extras
-    implementation(include("com.github.LlamaLad7:MixinExtras:${project.mixin_extras}"))
-    annotationProcessor("com.github.LlamaLad7:MixinExtras:${project.mixin_extras}")
-}
-
-processResources {
-    inputs.property "version", version
-
-    filesMatching("fabric.mod.json") {
-        expand "version": version
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    // noinspection all
-    it.options.release = 17
-}
-
-java {
-    withSourcesJar()
-}
-
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
+        maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url "https://maven.nucleoid.xyz/" }
+        maven { url "https://maven.parchmentmc.org" }
+        maven { url 'https://jitpack.io' }
+        mavenCentral()
+    }
+
+    dependencies {
+        minecraft "com.mojang:minecraft:${project.minecraft}"
+
+        // Mappings
+        if (project.parchment.isEmpty()) {
+            mappings loom.officialMojangMappings()
+        } else {
+            mappings loom.layered() {
+                officialMojangMappings()
+                parchment("org.parchmentmc.data:parchment-${project.parchment}@zip")
+            }
+        }
+
+        // Spark API
+        compileOnly "me.lucko:spark-api:${project.spark_api}"
+
+        // Night Config
+        implementation "com.electronwill.night-config:core:${project.nightconfig}"
+        implementation "com.electronwill.night-config:toml:${project.nightconfig}"
+
+        // Mixin Extras
+        implementation "com.github.LlamaLad7:MixinExtras:${project.mixin_extras}"
+        annotationProcessor "com.github.LlamaLad7:MixinExtras:${project.mixin_extras}"
+    }
+}
+
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
+
+    group = project.maven_group
+    mod_version = "${mod_version}+${minecraft}"
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+        options.release.set(17)
+    }
+
+    java {
+        toolchain.languageVersion = JavaLanguageVersion.of(17)
+        withSourcesJar()
     }
 }
