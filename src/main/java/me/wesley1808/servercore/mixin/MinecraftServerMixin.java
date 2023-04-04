@@ -20,7 +20,7 @@ public class MinecraftServerMixin implements IMinecraftServer {
     @Override
     public void onStarted() {
         MinecraftServer server = (MinecraftServer) (Object) this;
-        this.dynamicManager = Environment.SPARK ? new SparkDynamicManager(server) : new DynamicManager(server);
+        this.dynamicManager = Environment.INSTANCE.isModLoaded("spark") ? new SparkDynamicManager(server) : new DynamicManager(server);
         this.statistics = new Statistics(server);
     }
 

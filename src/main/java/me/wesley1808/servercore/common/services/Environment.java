@@ -1,21 +1,32 @@
 package me.wesley1808.servercore.common.services;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
+import me.wesley1808.servercore.common.ServerCore;
 
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.ServiceLoader;
 
-public class Environment {
-    public static final String VERSION = getVersion();
-    public static final Path CONFIG_DIR = FabricLoader.getInstance().getConfigDir();
-    public static final boolean CLIENT = FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
-    public static final boolean SPARK = FabricLoader.getInstance().isModLoaded("spark");
-    public static final boolean IMMERSIVE_PORTALS = FabricLoader.getInstance().isModLoaded("immersive_portals");
+public interface Environment {
+    Environment INSTANCE = Environment.load();
 
-    private static String getVersion() {
-        Optional<ModContainer> optional = FabricLoader.getInstance().getModContainer("servercore");
-        return optional.map(container -> container.getMetadata().getVersion().getFriendlyString()).orElse("Unknown");
+    boolean isModLoaded(String modId);
+
+    Path getConfigDir();
+
+    String getVersion();
+
+    private static Environment load() {
+        Optional<Environment> optional = ServiceLoader.load(Environment.class).findFirst();
+        if (optional.isPresent()) {
+            return optional.get();
+        } else {
+            // This should never happen.
+            ServerCore.LOGGER.error("-----------------------------------------------------------------------------------");
+            ServerCore.LOGGER.error("");
+            ServerCore.LOGGER.error("[ServerCore] Unable to find valid environment. This will cause the server to crash!");
+            ServerCore.LOGGER.error("");
+            ServerCore.LOGGER.error("-----------------------------------------------------------------------------------");
+            throw new NullPointerException("Unable to find valid environment!");
+        }
     }
 }

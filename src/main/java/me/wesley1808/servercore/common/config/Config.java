@@ -24,7 +24,7 @@ public class Config {
 
         // Initialize the config builder.
         try {
-            Path path = Environment.CONFIG_DIR.resolve("servercore.toml");
+            Path path = Environment.INSTANCE.getConfigDir().resolve("servercore.toml");
             configBuilder = CommentedFileConfig.builder(path, TomlFormat.instance()).preserveInsertionOrder().sync();
         } catch (Throwable throwable) {
             ServerCore.LOGGER.error("[ServerCore] Unable to initialize config builder: {}", throwable.getMessage());

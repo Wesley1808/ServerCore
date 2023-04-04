@@ -16,7 +16,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "me.wesley1808.servercore.common.ServerCore"
+      "me.wesley1808.servercore.common.ServerCoreFabric"
     ],
     "preLaunch": [
       "com.llamalad7.mixinextras.MixinExtrasBootstrap::init"

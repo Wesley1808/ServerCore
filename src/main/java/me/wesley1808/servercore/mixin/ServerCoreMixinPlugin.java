@@ -3,7 +3,6 @@ package me.wesley1808.servercore.mixin;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.tables.OptimizationConfig;
 import me.wesley1808.servercore.common.services.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -43,7 +42,7 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
 
         // Immersive Portals
         if (path.equalsIgnoreCase("features.misc.ChunkMapMixin")) {
-            return !Environment.IMMERSIVE_PORTALS;
+            return !Environment.INSTANCE.isModLoaded("immersive_portals");
         }
 
         return true;

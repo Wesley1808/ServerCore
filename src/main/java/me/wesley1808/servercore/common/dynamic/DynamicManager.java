@@ -13,11 +13,13 @@ import static me.wesley1808.servercore.common.dynamic.DynamicSetting.*;
 
 public class DynamicManager {
     private final MinecraftServer server;
+    private final boolean isClient;
     private double averageTickTime;
     private int count;
 
     public DynamicManager(MinecraftServer server) {
         this.server = server;
+        this.isClient = server.isSingleplayer();
 
         if (ENABLED.get()) {
             final int maxViewDistance = MAX_VIEW_DISTANCE.get();
@@ -42,7 +44,7 @@ public class DynamicManager {
 
     public static String createStatusReport(String title) {
         return title + "\n" + CommandConfig.STATUS_CONTENT.get()
-                .replace("${version}", Environment.VERSION)
+                .replace("${version}", Environment.INSTANCE.getVersion())
                 .replace("${mobcap_percentage}", getModifierAsPercentage())
                 .replace("${chunk_tick_distance}", String.format("%.0f", CHUNK_TICK_DISTANCE.get()))
                 .replace("${simulation_distance}", String.format("%.0f", SIMULATION_DISTANCE.get()))
@@ -85,14 +87,14 @@ public class DynamicManager {
 
     public void modifyViewDistance(int distance) {
         this.server.getPlayerList().setViewDistance(distance);
-        if (Environment.CLIENT) {
+        if (this.isClient) {
             Minecraft.getInstance().options.renderDistance().set(distance);
         }
     }
 
     public void modifySimulationDistance(int distance) {
         this.server.getPlayerList().setSimulationDistance(distance);
-        if (Environment.CLIENT) {
+        if (this.isClient) {
             Minecraft.getInstance().options.simulationDistance().set(distance);
         }
     }
