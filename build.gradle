@@ -43,8 +43,7 @@ subprojects {
         implementation "com.electronwill.night-config:toml:${project.nightconfig}"
 
         // Mixin Extras
-        implementation "com.github.LlamaLad7:MixinExtras:${project.mixin_extras}"
-        annotationProcessor "com.github.LlamaLad7:MixinExtras:${project.mixin_extras}"
+        implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${project.mixin_extras}"))
     }
 }
 

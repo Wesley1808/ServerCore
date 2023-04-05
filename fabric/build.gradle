@@ -40,7 +40,7 @@ dependencies {
     include("com.electronwill.night-config:toml:${project.nightconfig}")
 
     // Mixin Extras
-    include("com.github.LlamaLad7:MixinExtras:${project.mixin_extras}")
+    include("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixin_extras}")
 }
 
 tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {

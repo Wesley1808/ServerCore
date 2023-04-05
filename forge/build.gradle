@@ -33,7 +33,7 @@ dependencies {
     shadowCommon("com.electronwill.night-config:toml:${project.nightconfig}") { transitive false }
 
     // Mixin Extras
-    include(forgeRuntimeLibrary("com.github.LlamaLad7:MixinExtras:${project.mixin_extras}"))
+    include(forgeRuntimeLibrary("com.github.llamalad7.mixinextras:mixinextras-forge:${project.mixin_extras}"))
 
     // Adventure Text
     shadowCommon(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-serializer-gson:${project.adventure_text}"))) { exclude group: "com.google.code.gson" }
