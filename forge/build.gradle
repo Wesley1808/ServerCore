@@ -6,14 +6,19 @@ architectury {
     forge()
 }
 
-archivesBaseName = "${archives_base_name}-forge-${mod_version}"
-
 configurations {
     common
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentForge.extendsFrom common
+}
+
+loom {
+    forge {
+        mixinConfig "servercore.common.mixins.json"
+        convertAccessWideners.set true
+    }
 }
 
 dependencies {
@@ -24,15 +29,37 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
 
     // Night Config
-    include "com.electronwill.night-config:core:${project.nightconfig}"
-    include "com.electronwill.night-config:toml:${project.nightconfig}"
+    shadowCommon("com.electronwill.night-config:core:${project.nightconfig}") { transitive false }
+    shadowCommon("com.electronwill.night-config:toml:${project.nightconfig}") { transitive false }
 
     // Mixin Extras
-    include "com.github.LlamaLad7:MixinExtras:${project.mixin_extras}"
+    include(forgeRuntimeLibrary("com.github.LlamaLad7:MixinExtras:${project.mixin_extras}"))
 
     // Adventure Text
-    include(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-serializer-gson:${project.adventure_text}")))
-    include(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-minimessage:${project.adventure_text}")))
+    shadowCommon(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-serializer-gson:${project.adventure_text}"))) { exclude group: "com.google.code.gson" }
+    shadowCommon(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-minimessage:${project.adventure_text}")))
+}
+
+tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
+    archiveAppendix.set("forge")
+}
+
+shadowJar {
+    exclude "architectury.common.json"
+
+    relocate("com.electronwill", "sc_libs.com.electronwill")
+    relocate("net.kyori", "sc_libs.net.kyori")
+    relocate("org.jetbrains", "sc_libs.org.jetbrains")
+    relocate("org.intellij", "sc_libs.org.intellij")
+
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier.set "dev-shadow"
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier.set null
 }
 
 processResources {

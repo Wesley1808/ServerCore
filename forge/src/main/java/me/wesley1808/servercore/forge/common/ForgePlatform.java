@@ -48,13 +48,17 @@ public class ForgePlatform implements Platform {
 
     @Override
     public boolean hasPermission(CommandSourceStack source, String node, int level) {
-        PermissionNode<Boolean> permission = ForgePermissions.getPermissionNode(node);
-        ServerPlayer player = source.getPlayer();
-        if (player != null && permission != null) {
-            return source.hasPermission(level) || PermissionAPI.getPermission(player, permission);
-        } else {
-            return source.hasPermission(level);
+        if (source.hasPermission(level)) {
+            return true;
         }
+
+        ServerPlayer player = source.getPlayer();
+        PermissionNode<Boolean> permission = ForgePermissions.getPermissionNode(node);
+        if (player == null || permission == null) {
+            return false;
+        }
+
+        return PermissionAPI.getPermission(player, permission);
     }
 
     @Override

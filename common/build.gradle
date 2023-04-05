@@ -4,8 +4,6 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.fabric_version}"
 }
 
-archivesBaseName = "${archives_base_name}-common-${mod_version}"
-
 architectury {
     common(project.enabled_platforms.split(","))
 }

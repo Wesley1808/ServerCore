@@ -55,14 +55,16 @@ allprojects {
 
     group = project.maven_group
     mod_version = "${mod_version}+${minecraft}"
+    archivesBaseName = archives_base_name
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
         options.release.set(17)
     }
 
-    java {
-        toolchain.languageVersion = JavaLanguageVersion.of(17)
-        withSourcesJar()
+    tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
+        archiveVersion.set(mod_version)
     }
+
+    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 }

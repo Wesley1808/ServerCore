@@ -2,8 +2,6 @@ plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-archivesBaseName = "${archives_base_name}-fabric-${mod_version}"
-
 architectury {
     platformSetupLoomIde()
     fabric()
@@ -38,11 +36,28 @@ dependencies {
     modImplementation(include("eu.pb4:placeholder-api:${project.placeholder_api}"))
 
     // Night Config
-    include "com.electronwill.night-config:core:${project.nightconfig}"
-    include "com.electronwill.night-config:toml:${project.nightconfig}"
+    include("com.electronwill.night-config:core:${project.nightconfig}")
+    include("com.electronwill.night-config:toml:${project.nightconfig}")
 
     // Mixin Extras
-    include "com.github.LlamaLad7:MixinExtras:${project.mixin_extras}"
+    include("com.github.LlamaLad7:MixinExtras:${project.mixin_extras}")
+}
+
+tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
+    archiveAppendix.set("fabric")
+}
+
+shadowJar {
+    exclude "architectury.common.json"
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier.set "dev-shadow"
+}
+
+remapJar {
+    injectAccessWidener = true
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier.set null
 }
 
 processResources {

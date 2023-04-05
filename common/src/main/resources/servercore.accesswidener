@@ -31,3 +31,9 @@ accessible field net/minecraft/world/level/Level threadSafeRandom Lnet/minecraft
 accessible field net/minecraft/server/level/ChunkMap level Lnet/minecraft/server/level/ServerLevel;
 accessible field net/minecraft/world/level/block/state/BlockBehaviour hasCollision Z
 accessible field net/minecraft/world/level/chunk/LevelChunk loaded Z
+
+# Forge
+accessible class net/minecraft/world/level/LocalMobCapCalculator$MobCounts
+accessible class net/minecraft/server/level/ServerChunkCache$ChunkAndHolder
+accessible class net/minecraft/world/level/NaturalSpawner$SpawnState
+accessible class net/minecraft/world/entity/animal/Bee$BeePollinateGoal
