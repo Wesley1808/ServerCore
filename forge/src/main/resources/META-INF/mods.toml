@@ -1,0 +1,30 @@
+modLoader = "javafml"
+loaderVersion = "[45,)"
+license = "MIT"
+issueTrackerURL = "https://github.com/Wesley1808/ServerCore/issues"
+
+[[mods]]
+modId = "servercore"
+version = "${version}"
+displayName = "ServerCore"
+displayURL="https://github.com/Wesley1808/ServerCore"
+logoFile = "assets/servercore/icon.png"
+authors="Wesley1808"
+
+description = '''
+A forge mod that aims to optimize the minecraft server.
+'''
+
+[[dependencies.servercore]]
+modId = "forge"
+mandatory = true
+versionRange = "[45,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.servercore]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.19.4,)"
+ordering = "NONE"
+side = "BOTH"

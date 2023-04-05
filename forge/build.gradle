@@ -1,0 +1,46 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+}
+architectury {
+    platformSetupLoomIde()
+    forge()
+}
+
+archivesBaseName = "${archives_base_name}-forge-${mod_version}"
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentForge.extendsFrom common
+}
+
+dependencies {
+    forge "net.minecraftforge:forge:${minecraft}-${project.forge_version}"
+
+    // Common
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
+
+    // Night Config
+    include "com.electronwill.night-config:core:${project.nightconfig}"
+    include "com.electronwill.night-config:toml:${project.nightconfig}"
+
+    // Mixin Extras
+    include "com.github.LlamaLad7:MixinExtras:${project.mixin_extras}"
+
+    // Adventure Text
+    include(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-serializer-gson:${project.adventure_text}")))
+    include(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-minimessage:${project.adventure_text}")))
+}
+
+processResources {
+    inputs.property "version", mod_version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": mod_version
+    }
+
+    from(project(":common").sourceSets.main.resources)
+}

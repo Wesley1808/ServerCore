@@ -3,23 +3,14 @@ package me.wesley1808.servercore.mixin.features.merging;
 import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import net.minecraft.world.entity.item.ItemEntity;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(ItemEntity.class)
 public class ItemEntityMixin {
 
-    @ModifyArgs(
-            method = "mergeWithNeighbours",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/phys/AABB;inflate(DDD)Lnet/minecraft/world/phys/AABB;"
-            )
-    )
-    private void servercore$modifyMergeRadius(Args args) {
-        double mergeRadius = FeatureConfig.ITEM_MERGE_RADIUS.get();
-        args.set(0, mergeRadius);
-        args.set(2, mergeRadius);
+    @ModifyConstant(method = "mergeWithNeighbours", require = 0, constant = @Constant(doubleValue = 0.5))
+    private double servercore$modifyMergeRadius(double constant) {
+        return FeatureConfig.ITEM_MERGE_RADIUS.get();
     }
 }

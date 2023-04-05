@@ -1,11 +1,12 @@
-package me.wesley1808.servercore.fabric;
+package me.wesley1808.servercore.fabric.common;
 
 import eu.pb4.placeholders.api.TextParserUtils;
 import me.lucko.fabric.api.permissions.v0.Permissions;
+import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.services.Platform;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 
 import java.nio.file.Path;
@@ -36,7 +37,8 @@ public class FabricPlatform implements Platform {
     }
 
     @Override
-    public boolean hasPermission(SharedSuggestionProvider source, String permission, int level) {
+    public boolean hasPermission(CommandSourceStack source, String node, int level) {
+        String permission = "servercore." + node;
         return Permissions.check(source, permission, level);
     }
 
@@ -46,7 +48,7 @@ public class FabricPlatform implements Platform {
     }
 
     private String getVersionString() {
-        Optional<ModContainer> optional = FabricLoader.getInstance().getModContainer("servercore");
+        Optional<ModContainer> optional = FabricLoader.getInstance().getModContainer(ServerCore.MODID);
         return optional.map(container -> container.getMetadata().getVersion().getFriendlyString()).orElse("Unknown");
     }
 }

@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.fabric;
+package me.wesley1808.servercore.fabric.common;
 
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.services.Events;
@@ -11,17 +11,14 @@ public class ServerCoreFabric extends ServerCore implements ModInitializer {
     @Override
     public void onInitialize() {
         this.initialize();
-    }
 
-    @Override
-    public void register() {
+        // Placeholders
+        PlaceHolders.register();
+
         // Events
         ServerTickEvents.END_SERVER_TICK.register(Events::onTick);
         ServerLifecycleEvents.SERVER_STARTED.register(Events::onServerStarted);
         ServerLifecycleEvents.SERVER_STOPPED.register(Events::onShutdown);
         CommandRegistrationCallback.EVENT.register(Events::registerCommands);
-
-        // Placeholders
-        PlaceHolders.register();
     }
 }

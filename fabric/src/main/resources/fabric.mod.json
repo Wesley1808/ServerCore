@@ -16,14 +16,12 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "me.wesley1808.servercore.fabric.ServerCoreFabric"
-    ],
-    "preLaunch": [
-      "com.llamalad7.mixinextras.MixinExtrasBootstrap::init"
+      "me.wesley1808.servercore.fabric.common.ServerCoreFabric"
     ]
   },
   "mixins": [
-    "servercore.mixins.json"
+    "servercore.mixins.json",
+    "servercore-fabric.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.14.18",

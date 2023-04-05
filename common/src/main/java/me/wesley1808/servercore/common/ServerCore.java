@@ -7,14 +7,12 @@ import org.slf4j.Logger;
 
 public abstract class ServerCore {
     public static final Logger LOGGER = LogUtils.getLogger();
+    public static final String MODID = "servercore";
 
     public final void initialize() {
-        this.register();
         Config.load(true);
         Config.save();
 
         LOGGER.info("[ServerCore] Loaded V{}!", Platform.INSTANCE.getVersion());
     }
-
-    public abstract void register();
 }

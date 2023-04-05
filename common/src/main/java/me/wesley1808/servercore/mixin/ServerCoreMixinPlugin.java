@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.mixin;
 
+import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.tables.OptimizationConfig;
 import me.wesley1808.servercore.common.services.Platform;
@@ -15,6 +16,7 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
     @Override
     public void onLoad(String mixinPackage) {
         this.mixinPackage = mixinPackage + ".";
+        MixinExtrasBootstrap.init();
         Config.load(false);
     }
 

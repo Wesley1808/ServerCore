@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.fabric;
+package me.wesley1808.servercore.fabric.common;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;

@@ -42,7 +42,6 @@
     "features.spawn_chunks.ServerLevelMixin",
     "features.ticking.VillagerMixin",
     "optimizations.biome_lookups.NaturalSpawnerMixin",
-    "optimizations.misc.BlockGetterMixin",
     "optimizations.misc.MapItemSavedDataMixin",
     "optimizations.misc.PathFinderMixin",
     "optimizations.players.PlayerListMixin",
