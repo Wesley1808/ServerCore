@@ -60,12 +60,16 @@ remapJar {
     archiveClassifier.set null
 }
 
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
 processResources {
     inputs.property "version", mod_version
 
     filesMatching("fabric.mod.json") {
         expand "version": mod_version
     }
-
-    from(project(":common").sourceSets.main.resources)
 }

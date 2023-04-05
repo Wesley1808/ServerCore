@@ -4,7 +4,6 @@
   "package": "me.wesley1808.servercore.mixin",
   "compatibilityLevel": "JAVA_16",
   "plugin": "me.wesley1808.servercore.mixin.ServerCoreMixinPlugin",
-  "refmap": "servercore-common-refmap.json",
   "mixins": [
     "MinecraftServerMixin",
     "features.activation_range.EntityMixin",
