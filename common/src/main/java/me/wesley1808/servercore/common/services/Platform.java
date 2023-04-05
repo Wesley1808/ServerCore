@@ -17,6 +17,10 @@ public interface Platform {
 
     String getVersion();
 
+    Component parseText(String input);
+
+    boolean hasPermission(CommandSourceStack source, String node, int level);
+
     private static Platform load() {
         Optional<Platform> optional = ServiceLoader.load(Platform.class).findFirst();
         if (optional.isPresent()) {
@@ -31,8 +35,4 @@ public interface Platform {
             throw new NullPointerException("Unable to find valid platform!");
         }
     }
-
-    Component parseText(String input);
-
-    boolean hasPermission(CommandSourceStack source, String node, int level);
 }

@@ -10,7 +10,7 @@
 ![Curseforge](http://cf.way2muchnoise.eu/full_550579_Downloads.svg)
 ](https://www.curseforge.com/minecraft/mc-mods/servercore)
 
-A fabric mod that aims to optimize the minecraft server.\
+A mod that aims to optimize the minecraft server.\
 Works on both dedicated servers and singleplayer!
 
 #### This includes:

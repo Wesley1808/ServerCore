@@ -23,4 +23,5 @@ jobs:
                 with:
                     name: ServerCore
                     path: |
-                        **/build/libs/
+                        fabric/build/libs/*
+                        forge/build/libs/*
