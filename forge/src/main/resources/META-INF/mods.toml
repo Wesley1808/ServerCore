@@ -7,9 +7,9 @@ issueTrackerURL = "https://github.com/Wesley1808/ServerCore/issues"
 modId = "servercore"
 version = "${version}"
 displayName = "ServerCore"
-displayURL="https://github.com/Wesley1808/ServerCore"
+displayURL = "https://github.com/Wesley1808/ServerCore"
 logoFile = "assets/servercore/icon.png"
-authors="Wesley1808"
+authors = "Wesley1808"
 
 description = '''
 A forge mod that aims to optimize the minecraft server.

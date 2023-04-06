@@ -90,23 +90,23 @@ public class ActivationRange {
      */
     public static boolean isExcluded(Entity entity) {
         return entity.getActivationType().activationRange.getAsInt() <= 0
-                || entity instanceof Player
-                || entity instanceof ThrowableItemProjectile
-                || entity instanceof EnderDragon
-                || entity instanceof EnderDragonPart
-                || entity instanceof WitherBoss
-                || entity instanceof Fireball
-                || entity instanceof LightningBolt
-                || entity instanceof PrimedTnt
-                || entity instanceof EndCrystal
-                || entity instanceof FireworkRocketEntity
-                || entity instanceof EyeOfEnder
-                || entity instanceof ThrownTrident
+               || entity instanceof Player
+               || entity instanceof ThrowableItemProjectile
+               || entity instanceof EnderDragon
+               || entity instanceof EnderDragonPart
+               || entity instanceof WitherBoss
+               || entity instanceof Fireball
+               || entity instanceof LightningBolt
+               || entity instanceof PrimedTnt
+               || entity instanceof EndCrystal
+               || entity instanceof FireworkRocketEntity
+               || entity instanceof EyeOfEnder
+               || entity instanceof ThrownTrident
 
-                // ServerCore
-                || entity instanceof Ghast
-                || entity instanceof Warden
-                || entity instanceof MinecartHopper;
+               // ServerCore
+               || entity instanceof Ghast
+               || entity instanceof Warden
+               || entity instanceof MinecartHopper;
     }
 
     /**
@@ -296,9 +296,9 @@ public class ActivationRange {
 
     private static boolean shouldTick(Entity entity) {
         return !ActivationRangeConfig.ENABLED.get() || entity.isExcluded() || entity.isInsidePortal || entity.isOnPortalCooldown()
-                || (entity.tickCount < 200 && entity.getActivationType() == ActivationType.MISC) // New misc entities
-                || (entity instanceof Mob mob && mob.leashHolder instanceof Player) // Player leashed mobs
-                || (entity instanceof LivingEntity living && living.hurtTime > 0); // Attacked mobs
+               || (entity.tickCount < 200 && entity.getActivationType() == ActivationType.MISC) // New misc entities
+               || (entity instanceof Mob mob && mob.leashHolder instanceof Player) // Player leashed mobs
+               || (entity instanceof LivingEntity living && living.hurtTime > 0); // Attacked mobs
     }
 
     private static int checkInactiveWakeup(Entity entity, int currentTick) {

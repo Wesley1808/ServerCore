@@ -35,12 +35,12 @@ dependencies {
     // Placeholder API
     modImplementation(include("eu.pb4:placeholder-api:${project.placeholder_api}"))
 
+    // Mixin Extras
+    runtimeOnly(include("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixin_extras}"))
+
     // Night Config
     include("com.electronwill.night-config:core:${project.nightconfig}")
     include("com.electronwill.night-config:toml:${project.nightconfig}")
-
-    // Mixin Extras
-    include("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixin_extras}")
 }
 
 tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {

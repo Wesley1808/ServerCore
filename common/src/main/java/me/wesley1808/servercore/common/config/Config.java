@@ -23,8 +23,8 @@ public class Config {
         System.setProperty("nightconfig.preserveInsertionOrder", "true");
 
         // Initialize the config builder.
+        Path path = Platform.INSTANCE.getConfigDir().resolve("servercore.toml");
         try {
-            Path path = Platform.INSTANCE.getConfigDir().resolve("servercore.toml");
             configBuilder = CommentedFileConfig.builder(path, TomlFormat.instance()).preserveInsertionOrder().sync();
         } catch (Throwable throwable) {
             ServerCore.LOGGER.error("[ServerCore] Unable to initialize config builder: {}", throwable.getMessage());

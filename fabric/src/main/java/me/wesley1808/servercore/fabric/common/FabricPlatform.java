@@ -38,7 +38,7 @@ public class FabricPlatform implements Platform {
 
     @Override
     public boolean hasPermission(CommandSourceStack source, String node, int level) {
-        String permission = "servercore." + node;
+        String permission = String.format("%s.%s", ServerCore.MODID, node);
         return Permissions.check(source, permission, level);
     }
 

@@ -128,8 +128,8 @@ public enum DynamicSetting {
     private boolean shouldModify(BigDecimal value) {
         int compared = value.compareTo(this.value);
         return compared != 0 && (this.next != null || this.prev != null)
-                && (compared < 0 || (!this.isMaximum() && (this.next == null || this.next.isMaximum())))
-                && (compared > 0 || (!this.isMinimum() && (this.prev == null || this.prev.isMinimum())));
+               && (compared < 0 || (!this.isMaximum() && (this.next == null || this.next.isMaximum())))
+               && (compared > 0 || (!this.isMinimum() && (this.prev == null || this.prev.isMinimum())));
     }
 
     private BigDecimal newValue(boolean increase) {
