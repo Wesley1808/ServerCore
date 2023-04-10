@@ -50,7 +50,7 @@ public abstract class VillagerMixin extends AbstractVillager {
         // Check half as often if not lobotomized for the last 3+ consecutive checks
         if (this.tickCount % (this.notLobotomizedCount > 3 ? 600 : 300) == 0) {
             // Offset Y for short blocks like dirt_path/farmland
-            this.lobotomized = this.isPassenger() || !this.canTravel(BlockPos.containing(this.getX(), this.getY() + 0.0625D, this.getZ()));
+            this.lobotomized = this.isPassenger() || !this.canTravel(new BlockPos(this.getX(), this.getY() + 0.0625D, this.getZ()));
 
             if (this.lobotomized) {
                 this.notLobotomizedCount = 0;
