@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[44,)"
+loaderVersion = "[42,)"
 license = "MIT"
 issueTrackerURL = "https://github.com/Wesley1808/ServerCore/issues"
 
@@ -18,6 +18,6 @@ A forge mod that aims to optimize the minecraft server.
 [[dependencies.servercore]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.3]"
+versionRange = "[1.19.1,)"
 ordering = "NONE"
 side = "BOTH"

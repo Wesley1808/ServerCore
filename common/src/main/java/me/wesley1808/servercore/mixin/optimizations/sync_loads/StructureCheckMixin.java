@@ -13,7 +13,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Optional;
 
 @Mixin(StructureCheck.class)
 public class StructureCheckMixin {
@@ -24,6 +27,21 @@ public class StructureCheckMixin {
     @Shadow
     @Final
     private RandomState randomState;
+
+    /**
+     * Always check for biomes before loading chunks to find structures.
+     * This way we can skip all chunk loads inside biomes that cannot generate the given structure.
+     */
+    @Redirect(
+            method = "canCreateStructure",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/Optional;isPresent()Z"
+            )
+    )
+    private boolean servercore$skipInvalidBiomes(Optional<Structure.GenerationStub> optional, ChunkPos chunkPos, Structure structure) {
+        return optional.isPresent() && this.isBiomeValid(structure, optional.get().position());
+    }
 
     @Inject(
             method = "checkStart",

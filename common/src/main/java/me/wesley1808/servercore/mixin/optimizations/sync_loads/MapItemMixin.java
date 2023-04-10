@@ -1,6 +1,7 @@
 package me.wesley1808.servercore.mixin.optimizations.sync_loads;
 
 import me.wesley1808.servercore.common.utils.ChunkManager;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -16,11 +17,11 @@ public class MapItemMixin {
             method = "update",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/Level;getChunk(II)Lnet/minecraft/world/level/chunk/LevelChunk;"
+                    target = "Lnet/minecraft/world/level/Level;getChunkAt(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/chunk/LevelChunk;"
             )
     )
-    private LevelChunk servercore$onlyUpdateIfLoaded(Level level, int chunkX, int chunkZ) {
-        return (LevelChunk) ChunkManager.getChunkNow(level, chunkX, chunkZ);
+    private LevelChunk servercore$onlyUpdateIfLoaded(Level level, BlockPos pos) {
+        return (LevelChunk) ChunkManager.getChunkNow(level, pos);
     }
 
     @Redirect(
