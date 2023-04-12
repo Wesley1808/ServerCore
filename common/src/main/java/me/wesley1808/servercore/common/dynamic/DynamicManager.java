@@ -3,7 +3,7 @@ package me.wesley1808.servercore.common.dynamic;
 import me.wesley1808.servercore.common.config.tables.CommandConfig;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
 import me.wesley1808.servercore.common.interfaces.IMobCategory;
-import me.wesley1808.servercore.common.services.Platform;
+import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.MobCategory;
@@ -44,7 +44,7 @@ public class DynamicManager {
 
     public static String createStatusReport(String title) {
         return title + "\n" + CommandConfig.STATUS_CONTENT.get()
-                .replace("${version}", Platform.INSTANCE.getVersion())
+                .replace("${version}", PlatformHelper.getVersion())
                 .replace("${mobcap_percentage}", getModifierAsPercentage())
                 .replace("${chunk_tick_distance}", String.format("%.0f", CHUNK_TICK_DISTANCE.get()))
                 .replace("${simulation_distance}", String.format("%.0f", SIMULATION_DISTANCE.get()))

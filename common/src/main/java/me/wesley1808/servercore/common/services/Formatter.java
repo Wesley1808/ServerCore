@@ -1,11 +1,12 @@
 package me.wesley1808.servercore.common.services;
 
+import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import net.minecraft.network.chat.Component;
 
 public class Formatter {
 
     public static Component parse(String input) {
-        return Platform.INSTANCE.parseText(input);
+        return PlatformHelper.parseText(input);
     }
 
     public static String line(String input, int targetLength, boolean isPlayer) {
