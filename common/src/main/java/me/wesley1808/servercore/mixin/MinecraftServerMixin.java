@@ -3,7 +3,7 @@ package me.wesley1808.servercore.mixin;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.SparkDynamicManager;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
-import me.wesley1808.servercore.common.services.Platform;
+import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import me.wesley1808.servercore.common.utils.Statistics;
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +20,7 @@ public class MinecraftServerMixin implements IMinecraftServer {
     @Override
     public void onStarted() {
         MinecraftServer server = (MinecraftServer) (Object) this;
-        this.dynamicManager = Platform.INSTANCE.isModLoaded("spark") ? new SparkDynamicManager(server) : new DynamicManager(server);
+        this.dynamicManager = PlatformHelper.isModLoaded("spark") ? new SparkDynamicManager(server) : new DynamicManager(server);
         this.statistics = new Statistics(server);
     }
 

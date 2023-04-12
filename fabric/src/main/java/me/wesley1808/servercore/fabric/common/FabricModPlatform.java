@@ -1,22 +1,18 @@
 package me.wesley1808.servercore.fabric.common;
 
-import eu.pb4.placeholders.api.TextParserUtils;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import me.wesley1808.servercore.common.ServerCore;
-import me.wesley1808.servercore.common.services.Platform;
+import me.wesley1808.servercore.common.services.platform.ModPlatform;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.Component;
 
 import java.nio.file.Path;
 import java.util.Optional;
 
-public class FabricPlatform implements Platform {
+public class FabricModPlatform implements ModPlatform {
     private final String version;
     private final Path configDir;
 
-    public FabricPlatform() {
+    public FabricModPlatform() {
         this.version = this.getVersionString();
         this.configDir = FabricLoader.getInstance().getConfigDir();
     }
@@ -34,17 +30,6 @@ public class FabricPlatform implements Platform {
     @Override
     public String getVersion() {
         return this.version;
-    }
-
-    @Override
-    public boolean hasPermission(CommandSourceStack source, String node, int level) {
-        String permission = String.format("%s.%s", ServerCore.MODID, node);
-        return Permissions.check(source, permission, level);
-    }
-
-    @Override
-    public Component parseText(String input) {
-        return TextParserUtils.formatText(input);
     }
 
     private String getVersionString() {
