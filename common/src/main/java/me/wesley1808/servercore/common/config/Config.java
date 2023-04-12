@@ -7,7 +7,7 @@ import com.electronwill.nightconfig.toml.TomlFormat;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.tables.*;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
-import me.wesley1808.servercore.common.services.Platform;
+import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
@@ -23,7 +23,7 @@ public class Config {
         System.setProperty("nightconfig.preserveInsertionOrder", "true");
 
         // Initialize the config builder.
-        Path path = Platform.INSTANCE.getConfigDir().resolve("servercore.toml");
+        Path path = PlatformHelper.getConfigDir().resolve("servercore.toml");
         try {
             configBuilder = CommentedFileConfig.builder(path, TomlFormat.instance()).preserveInsertionOrder().sync();
         } catch (Throwable throwable) {
