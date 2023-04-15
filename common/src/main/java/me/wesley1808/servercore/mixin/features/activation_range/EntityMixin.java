@@ -10,12 +10,16 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Set;
 
 /**
  * Based on: Paper & Spigot (Entity-Activation-Range.patch)
@@ -26,6 +30,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(Entity.class)
 public class EntityMixin implements Inactive, ActivationEntity {
+    @Shadow
+    @Final
+    private Set<String> tags;
+
     @Shadow
     public Level level;
 
@@ -77,6 +85,17 @@ public class EntityMixin implements Inactive, ActivationEntity {
         if (this.isInactive && !this.level.isClientSide) {
             ci.cancel();
         }
+    }
+
+    // ServerCore - Add a simple way to exclude certain entities from activation range.
+    @Inject(method = "load", at = @At("RETURN"))
+    private void servercore$onLoadNbt(CallbackInfo ci) {
+        this.excluded |= this.tags.contains("exclude_ear");
+    }
+
+    @Inject(method = "addTag", at = @At("HEAD"))
+    private void servercore$onTagAdded(String tag, CallbackInfoReturnable<Boolean> cir) {
+        this.excluded |= tag.equals("exclude_ear");
     }
 
     @Override

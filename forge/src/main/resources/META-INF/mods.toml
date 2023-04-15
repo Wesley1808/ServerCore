@@ -16,13 +16,6 @@ A forge mod that aims to optimize the minecraft server.
 '''
 
 [[dependencies.servercore]]
-modId = "forge"
-mandatory = true
-versionRange = "[45,)"
-ordering = "NONE"
-side = "BOTH"
-
-[[dependencies.servercore]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.19.4,)"
