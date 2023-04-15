@@ -1,7 +1,6 @@
 package me.wesley1808.servercore.mixin.optimizations.ticking.chunk.random;
 
 import me.wesley1808.servercore.common.interfaces.chunk.ILevelChunk;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -14,6 +13,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Random;
 
 /**
  * Based on: Airplane (Optimize-random-calls-in-chunk-ticking.patch)
@@ -43,9 +44,9 @@ public class LevelChunkMixin implements ILevelChunk {
     private int lightningTick;
 
     @Override
-    public final int shouldDoLightning(RandomSource randomSource) {
+    public final int shouldDoLightning(Random random) {
         if (this.lightningTick-- <= 0) {
-            this.lightningTick = randomSource.nextInt(100000) << 1;
+            this.lightningTick = random.nextInt(100000) << 1;
             return 0;
         }
         return -1;
@@ -53,6 +54,6 @@ public class LevelChunkMixin implements ILevelChunk {
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/world/level/chunk/UpgradeData;Lnet/minecraft/world/ticks/LevelChunkTicks;Lnet/minecraft/world/ticks/LevelChunkTicks;J[Lnet/minecraft/world/level/chunk/LevelChunkSection;Lnet/minecraft/world/level/chunk/LevelChunk$PostLoadProcessor;Lnet/minecraft/world/level/levelgen/blending/BlendingData;)V", at = @At("RETURN"))
     private void servercore$initLightingTick(Level level, ChunkPos chunkPos, UpgradeData upgradeData, LevelChunkTicks<?> levelChunkTicks, LevelChunkTicks<?> levelChunkTicks2, long l, LevelChunkSection[] levelChunkSections, LevelChunk.PostLoadProcessor postLoadProcessor, BlendingData blendingData, CallbackInfo ci) {
-        this.lightningTick = level.threadSafeRandom.nextInt(100000) << 1;
+        this.lightningTick = level.random.nextInt(100000) << 1;
     }
 }

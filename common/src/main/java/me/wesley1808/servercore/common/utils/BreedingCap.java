@@ -10,17 +10,11 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.function.IntSupplier;
 
 public enum BreedingCap {
     ANIMAL(EntityLimitConfig.ANIMAL_COUNT::get, EntityLimitConfig.ANIMAL_RANGE::get),
     VILLAGER(EntityLimitConfig.VILLAGER_COUNT::get, EntityLimitConfig.VILLAGER_RANGE::get);
-
-    private static final Map<EntityType<?>, Set<EntityType<?>>> CUSTOM_TYPES = Map.of(
-            EntityType.FROG, Set.of(EntityType.TADPOLE, EntityType.FROG)
-    );
 
     private final IntSupplier limit;
     private final IntSupplier range;
@@ -47,15 +41,7 @@ public enum BreedingCap {
         }
 
         AABB area = this.getAreaAt(pos);
-        Set<EntityType<?>> set = CUSTOM_TYPES.get(type);
-
-        int count;
-        if (set != null && !set.isEmpty()) {
-            count = level.getEntities((Entity) null, area, (entity) -> set.contains(entity.getType())).size();
-        } else {
-            count = level.getEntities(type, area, EntitySelector.NO_SPECTATORS).size();
-        }
-
+        int count = level.getEntities(type, area, EntitySelector.NO_SPECTATORS).size();
         return this.limit.getAsInt() <= count;
     }
 

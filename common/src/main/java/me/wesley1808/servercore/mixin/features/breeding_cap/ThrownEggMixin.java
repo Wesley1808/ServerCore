@@ -19,7 +19,7 @@ public abstract class ThrownEggMixin extends ThrowableItemProjectile {
             method = "onHit",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/util/RandomSource;nextInt(I)I",
+                    target = "Ljava/util/Random;nextInt(I)I",
                     ordinal = 0
             )
     )

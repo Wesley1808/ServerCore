@@ -11,6 +11,7 @@ import me.wesley1808.servercore.common.utils.Statistics;
 import me.wesley1808.servercore.common.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
@@ -70,8 +71,7 @@ public class StatisticsCommand {
     }
 
     private static int display(CommandContext<CommandSourceStack> context, int index, int page) {
-        ServerPlayer player = context.getSource().getPlayer();
-        if (player != null) {
+        if (context.getSource().getEntity() instanceof ServerPlayer player) {
             return display(context, index, false, page, player);
         } else {
             return display(context, index, false, page);
@@ -99,7 +99,7 @@ public class StatisticsCommand {
         final double tps = mspt != 0 ? Math.min((1000 / mspt), 20) : 20;
 
         Statistics statistics = Statistics.getInstance(source.getServer());
-        Component component = Formatter.parse(Formatter.line(CommandConfig.STATS_TITLE.get(), 40, source.isPlayer()) + "\n" + CommandConfig.STATS_CONTENT.get()
+        Component component = Formatter.parse(Formatter.line(CommandConfig.STATS_TITLE.get(), 40, source.getEntity() instanceof ServerPlayer) + "\n" + CommandConfig.STATS_CONTENT.get()
                 .replace("${tps}", String.format("%.2f", tps))
                 .replace("${mspt}", String.format("%.2f", mspt))
                 .replace("${chunk_count}", String.valueOf(statistics.getChunkCount(true)))
@@ -142,16 +142,16 @@ public class StatisticsCommand {
     private static void displayFeedback(CommandContext<CommandSourceStack> context, Map<String, Integer> map, boolean isBlockEntity, boolean byPlayer, int page, @Nullable ServerPlayer player) {
         CommandSourceStack source = context.getSource();
 
-        StringBuilder builder = new StringBuilder(createHeader(isBlockEntity, byPlayer, source.isPlayer(), player));
+        StringBuilder builder = new StringBuilder(createHeader(isBlockEntity, byPlayer, source.getEntity() instanceof ServerPlayer, player));
         boolean success = Util.iteratePage(Util.sortByValue(map), page, 8, (entry, index) -> builder.append(createEntry(entry, index, isBlockEntity, byPlayer)));
 
         if (success) {
             builder.append("\n").append(createFooter(page, Util.getPage(map.size(), 8), isBlockEntity, context));
             source.sendSuccess(Formatter.parse(builder.toString()), false);
         } else if (page == 1) {
-            source.sendFailure(Component.literal(isBlockEntity ? "No block entities were found!" : "No entities were found!"));
+            source.sendFailure(new TextComponent(isBlockEntity ? "No block entities were found!" : "No entities were found!"));
         } else {
-            source.sendFailure(Component.literal("Page doesn't exist!"));
+            source.sendFailure(new TextComponent("Page doesn't exist!"));
         }
     }
 
@@ -186,6 +186,6 @@ public class StatisticsCommand {
             command += " %page_nr%";
         }
 
-        return Formatter.line(Formatter.page(title, command, page), isBlockEntity ? 40 : 38, context.getSource().isPlayer());
+        return Formatter.line(Formatter.page(title, command, page), isBlockEntity ? 40 : 38, context.getSource().getEntity() instanceof ServerPlayer);
     }
 }

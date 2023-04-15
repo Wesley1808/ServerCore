@@ -88,14 +88,14 @@ public class DynamicManager {
     public void modifyViewDistance(int distance) {
         this.server.getPlayerList().setViewDistance(distance);
         if (this.isClient) {
-            Minecraft.getInstance().options.renderDistance().set(distance);
+            Minecraft.getInstance().options.renderDistance = distance;
         }
     }
 
     public void modifySimulationDistance(int distance) {
         this.server.getPlayerList().setSimulationDistance(distance);
         if (this.isClient) {
-            Minecraft.getInstance().options.simulationDistance().set(distance);
+            Minecraft.getInstance().options.simulationDistance = distance;
         }
     }
 

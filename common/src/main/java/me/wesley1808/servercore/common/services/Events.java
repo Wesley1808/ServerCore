@@ -10,9 +10,7 @@ import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
 import me.wesley1808.servercore.common.utils.ChunkManager;
-import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
 import net.minecraft.server.MinecraftServer;
 
 public class Events {
@@ -36,7 +34,7 @@ public class Events {
         Config.save();
     }
 
-    public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, Commands.CommandSelection environment) {
+    public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
         ServerCoreCommand.register(dispatcher);
         StatisticsCommand.register(dispatcher);
         MobcapsCommand.register(dispatcher);

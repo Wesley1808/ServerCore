@@ -6,6 +6,7 @@ import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.server.permission.PermissionAPI;
 import net.minecraftforge.server.permission.nodes.PermissionNode;
 
@@ -16,9 +17,9 @@ public class ForgeMinecraftPlatform implements MinecraftPlatform {
             return true;
         }
 
-        ServerPlayer player = source.getPlayer();
+        Entity entity = source.getEntity();
         PermissionNode<Boolean> permission = ForgePermissions.getPermissionNode(node);
-        if (player == null || permission == null) {
+        if (permission == null || !(entity instanceof ServerPlayer player)) {
             return false;
         }
 

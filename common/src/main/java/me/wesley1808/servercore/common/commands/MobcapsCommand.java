@@ -40,7 +40,7 @@ public class MobcapsCommand {
             }
         }
 
-        player.sendSystemMessage(Formatter.parse(builder.toString()));
+        player.displayClientMessage(Formatter.parse(builder.toString()), false);
         return Command.SINGLE_SUCCESS;
     }
 }

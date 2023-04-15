@@ -17,6 +17,8 @@ import me.wesley1808.servercore.common.utils.Util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.function.Function;
 
@@ -131,12 +133,12 @@ public class ServerCoreCommand {
         if (saved) Config.save();
         else Config.load(true);
 
-        source.sendSuccess(Component.literal(saved ? "Config saved!" : "Config reloaded!").withStyle(ChatFormatting.GREEN), false);
+        source.sendSuccess(new TextComponent(saved ? "Config saved!" : "Config reloaded!").withStyle(ChatFormatting.GREEN), false);
         return Command.SINGLE_SUCCESS;
     }
 
     private static int getStatus(CommandSourceStack source) {
-        Component component = Formatter.parse(DynamicManager.createStatusReport(Formatter.line(CommandConfig.STATUS_TITLE.get(), 40, source.isPlayer())));
+        Component component = Formatter.parse(DynamicManager.createStatusReport(Formatter.line(CommandConfig.STATUS_TITLE.get(), 40, source.getEntity() instanceof ServerPlayer)));
         source.sendSuccess(component, false);
         return Command.SINGLE_SUCCESS;
     }
@@ -145,7 +147,7 @@ public class ServerCoreCommand {
         if (success) {
             source.sendSuccess(Formatter.parse(String.format("<green>%s <dark_aqua>has been set to <green>%s", key, value)), false);
         } else {
-            source.sendFailure(Component.literal(String.format("%s cannot be set to %s!", key, value)));
+            source.sendFailure(new TextComponent(String.format("%s cannot be set to %s!", key, value)));
         }
     }
 

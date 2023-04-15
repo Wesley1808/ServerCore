@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.fabric.common;
 
-import eu.pb4.placeholders.api.TextParserUtils;
+import eu.pb4.placeholders.TextParser;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.services.platform.MinecraftPlatform;
@@ -16,6 +16,6 @@ public class FabricMinecraftPlatform implements MinecraftPlatform {
 
     @Override
     public Component parseText(String input) {
-        return TextParserUtils.formatText(input);
+        return TextParser.parse(input);
     }
 }

@@ -26,7 +26,6 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.hoglin.Hoglin;
-import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.*;
@@ -105,7 +104,6 @@ public class ActivationRange {
 
                // ServerCore
                || entity instanceof Ghast
-               || entity instanceof Warden
                || entity instanceof MinecartHopper;
     }
 

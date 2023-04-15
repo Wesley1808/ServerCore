@@ -2,9 +2,9 @@ package me.wesley1808.servercore.fabric.common;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import eu.pb4.placeholders.api.PlaceholderHandler;
-import eu.pb4.placeholders.api.PlaceholderResult;
-import eu.pb4.placeholders.api.Placeholders;
+import eu.pb4.placeholders.PlaceholderAPI;
+import eu.pb4.placeholders.PlaceholderHandler;
+import eu.pb4.placeholders.PlaceholderResult;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.utils.Statistics;
@@ -30,43 +30,43 @@ public class PlaceHolders {
 
     private static void registerDynamic() {
         register("view_distance",
-                (ctx, arg) -> PlaceholderResult.value(String.valueOf(DynamicSetting.VIEW_DISTANCE.get()))
+                (ctx) -> PlaceholderResult.value(String.valueOf(DynamicSetting.VIEW_DISTANCE.get()))
         );
 
         register("simulation_distance",
-                (ctx, arg) -> PlaceholderResult.value(String.valueOf(DynamicSetting.SIMULATION_DISTANCE.get()))
+                (ctx) -> PlaceholderResult.value(String.valueOf(DynamicSetting.SIMULATION_DISTANCE.get()))
         );
 
         register("chunk_tick_distance",
-                (ctx, arg) -> PlaceholderResult.value(String.valueOf(DynamicSetting.CHUNK_TICK_DISTANCE.get()))
+                (ctx) -> PlaceholderResult.value(String.valueOf(DynamicSetting.CHUNK_TICK_DISTANCE.get()))
         );
 
         register("mobcap_percentage",
-                (ctx, arg) -> PlaceholderResult.value(DynamicManager.getModifierAsPercentage())
+                (ctx) -> PlaceholderResult.value(DynamicManager.getModifierAsPercentage())
         );
     }
 
     private static void registerStatistics() {
-        register("chunk_count", (ctx, arg) -> {
-            Statistics statistics = Statistics.getInstance(ctx.server());
-            boolean onlyLoaded = Objects.equals(arg, "loaded");
+        register("chunk_count", (ctx) -> {
+            Statistics statistics = Statistics.getInstance(ctx.getServer());
+            boolean onlyLoaded = Objects.equals(ctx.getArgument(), "loaded");
             return cachedValue(onlyLoaded ? "chunk_count_loaded" : "chunk_count", () -> String.valueOf(statistics.getChunkCount(onlyLoaded)));
         });
 
-        register("entity_count", (ctx, arg) -> {
-            Statistics statistics = Statistics.getInstance(ctx.server());
-            ServerPlayer player = ctx.player();
-            if (player != null && Objects.equals(arg, "nearby")) {
+        register("entity_count", (ctx) -> {
+            Statistics statistics = Statistics.getInstance(ctx.getServer());
+            ServerPlayer player = ctx.getPlayer();
+            if (player != null && Objects.equals(ctx.getArgument(), "nearby")) {
                 return PlaceholderResult.value(String.valueOf(statistics.getEntitiesNear(player).size()));
             }
 
             return cachedValue("entity_count", () -> String.valueOf(statistics.getAllEntities().size()));
         });
 
-        register("block_entity_count", (ctx, arg) -> {
-            Statistics statistics = Statistics.getInstance(ctx.server());
-            ServerPlayer player = ctx.player();
-            if (player != null && Objects.equals(arg, "nearby")) {
+        register("block_entity_count", (ctx) -> {
+            Statistics statistics = Statistics.getInstance(ctx.getServer());
+            ServerPlayer player = ctx.getPlayer();
+            if (player != null && Objects.equals(ctx.getArgument(), "nearby")) {
                 return PlaceholderResult.value(String.valueOf(statistics.getBlockEntitiesNear(player).size()));
             }
 
@@ -83,6 +83,6 @@ public class PlaceHolders {
     }
 
     private static void register(String name, PlaceholderHandler handler) {
-        Placeholders.register(new ResourceLocation("servercore", name), handler);
+        PlaceholderAPI.register(new ResourceLocation("servercore", name), handler);
     }
 }
