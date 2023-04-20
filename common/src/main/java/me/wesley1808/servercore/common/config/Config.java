@@ -47,7 +47,9 @@ public class Config {
                 }
             }
 
-            Config.loadChanges();
+            if (afterMixinLoad) {
+                Config.loadChanges();
+            }
         }
     }
 
