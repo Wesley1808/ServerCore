@@ -3,13 +3,6 @@ package me.wesley1808.servercore.common.config.tables;
 import me.wesley1808.servercore.common.config.ConfigEntry;
 
 public class FeatureConfig {
-    public static final ConfigEntry<Boolean> FIX_CLIENT_LAG_ON_CHUNKBORDERS = new ConfigEntry<>(
-            true, """
-            (Default = true) Fixes MC-162253, preventing long freezes on the client when crossing chunkborders.
-            Performing this workaround does require a tiny bit more CPU on the server than it would without it.
-            Incompatible with Immersive Portals."""
-    );
-
     public static final ConfigEntry<Boolean> DISABLE_SPAWN_CHUNKS = new ConfigEntry<>(
             false, "(Default = false) Stops the server from loading spawn chunks."
     );
