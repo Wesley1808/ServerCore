@@ -1,6 +1,9 @@
 # ServerCore
 
 [
+![Discord](https://img.shields.io/discord/998162243852173402?style=flat&label=Discord&logo=discord&color=7289DA)
+](https://discord.gg/Y9nC7Peq4m)
+[
 ![Build Status](https://github.com/Wesley1808/ServerCore/actions/workflows/gradle.yml/badge.svg)
 ](https://github.com/Wesley1808/ServerCore/actions/workflows/gradle.yml)
 [
@@ -111,10 +114,6 @@ The config file can be found at `/config/servercore.toml`
 ```toml
 # Lets you enable / disable certain features and modify them.
 [features]
-    # (Default = true) Fixes MC-162253, preventing long freezes on the client when crossing chunkborders.
-    # Performing this workaround does require a tiny bit more CPU on the server than it would without it.
-    # Incompatible with Immersive Portals.
-    fix_client_lag_on_chunkborders = true
     # (Default = false) Stops the server from loading spawn chunks.
     disable_spawn_chunks = false
     # (Default = false) Prevents lagspikes caused by players moving into unloaded chunks.
