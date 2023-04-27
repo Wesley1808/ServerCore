@@ -89,7 +89,7 @@ public class Statistics {
 
     public List<Entity> getEntitiesNear(ServerPlayer player) {
         List<Entity> list = new ObjectArrayList<>();
-        for (Entity entity : player.getLevel().getAllEntities()) {
+        for (Entity entity : player.serverLevel().getAllEntities()) {
             if (this.isNearby(player, entity.chunkPosition())) {
                 list.add(entity);
             }
@@ -100,7 +100,7 @@ public class Statistics {
 
     public List<TickingBlockEntity> getBlockEntitiesNear(ServerPlayer player) {
         List<TickingBlockEntity> list = new ObjectArrayList<>();
-        for (TickingBlockEntity blockEntity : player.level.blockEntityTickers) {
+        for (TickingBlockEntity blockEntity : player.level().blockEntityTickers) {
             BlockPos pos = blockEntity.getPos();
             if (pos != null && this.isNearby(player, new ChunkPos(pos))) {
                 list.add(blockEntity);

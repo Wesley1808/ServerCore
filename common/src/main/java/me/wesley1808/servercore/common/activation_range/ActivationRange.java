@@ -200,7 +200,7 @@ public class ActivationRange {
         }
 
         if (!(entity instanceof AbstractArrow projectile)) {
-            if (!entity.isOnGround() && !entity.isInWater() && !(entity instanceof FlyingMob || entity instanceof Bat)) {
+            if (!entity.onGround() && !entity.isInWater() && !(entity instanceof FlyingMob || entity instanceof Bat)) {
                 return 10;
             }
         } else if (!projectile.inGround) {
@@ -304,7 +304,7 @@ public class ActivationRange {
     private static int checkInactiveWakeup(Entity entity, int currentTick) {
         ActivationType.Wakeup wakeup = entity.getActivationType().wakeup;
         if (wakeup != null && currentTick - entity.getActivatedTick() >= wakeup.interval.getAsInt() * 20L) {
-            LevelInfo info = (LevelInfo) entity.level;
+            LevelInfo info = (LevelInfo) entity.level();
             int remaining = info.getRemaining(wakeup);
             if (remaining > 0) {
                 info.setRemaining(wakeup, remaining - 1);

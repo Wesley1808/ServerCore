@@ -35,7 +35,7 @@ public class EntityMixin implements Inactive, ActivationEntity {
     private Set<String> tags;
 
     @Shadow
-    public Level level;
+    private Level level;
 
     @Unique
     private int activatedTick = Integer.MIN_VALUE;

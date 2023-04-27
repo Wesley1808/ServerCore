@@ -60,7 +60,7 @@ public enum BreedingCap {
     }
 
     public boolean exceedsLimit(Entity entity) {
-        return this.exceedsLimit(entity.getType(), entity.getLevel(), entity.blockPosition());
+        return this.exceedsLimit(entity.getType(), entity.level(), entity.blockPosition());
     }
 
     private AABB getAreaAt(BlockPos pos) {

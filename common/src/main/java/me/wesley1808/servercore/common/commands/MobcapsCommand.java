@@ -28,7 +28,7 @@ public class MobcapsCommand {
                 50, true
         ));
 
-        NaturalSpawner.SpawnState state = player.getLevel().getChunkSource().getLastSpawnState();
+        NaturalSpawner.SpawnState state = player.serverLevel().getChunkSource().getLastSpawnState();
         if (state != null) {
             LocalMobCapCalculator.MobCounts mobCounts = state.localMobCapCalculator.playerMobCounts.getOrDefault(player, EMPTY_MOBCOUNTS);
             for (MobCategory category : MobCategory.values()) {

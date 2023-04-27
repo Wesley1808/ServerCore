@@ -40,7 +40,7 @@ public class PlayerListMixin {
             locals = LocalCapture.CAPTURE_FAILHARD,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ServerPlayer;setLevel(Lnet/minecraft/server/level/ServerLevel;)V",
+                    target = "Lnet/minecraft/server/level/ServerPlayer;setServerLevel(Lnet/minecraft/server/level/ServerLevel;)V",
                     shift = At.Shift.BEFORE
             )
     )

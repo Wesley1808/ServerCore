@@ -63,7 +63,7 @@ public abstract class VillagerMixin extends AbstractVillager {
     }
 
     private boolean canTravel(BlockPos center) {
-        ChunkAccess chunk = ChunkManager.getChunkNow(this.level, center);
+        ChunkAccess chunk = ChunkManager.getChunkNow(this.level(), center);
         if (chunk == null) {
             return false;
         }
@@ -80,7 +80,7 @@ public abstract class VillagerMixin extends AbstractVillager {
     }
 
     private boolean canTravelTo(BlockPos.MutableBlockPos mutable, boolean canJump) {
-        ChunkAccess chunk = ChunkManager.getChunkNow(this.level, mutable);
+        ChunkAccess chunk = ChunkManager.getChunkNow(this.level(), mutable);
         if (chunk == null) {
             return false;
         }
