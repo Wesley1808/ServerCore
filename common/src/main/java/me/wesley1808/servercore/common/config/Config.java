@@ -16,59 +16,80 @@ import java.util.function.BiConsumer;
 
 public class Config {
     @Nullable
-    private static GenericBuilder<CommentedConfig, CommentedFileConfig> configBuilder;
+    private static final GenericBuilder<CommentedConfig, CommentedFileConfig> CONFIG_BUILDER;
+    private static boolean dirty = false;
 
     static {
         // Required to generate the config with the correct order.
         System.setProperty("nightconfig.preserveInsertionOrder", "true");
 
         // Initialize the config builder.
+        GenericBuilder<CommentedConfig, CommentedFileConfig> builder;
         Path path = PlatformHelper.getConfigDir().resolve("servercore.toml");
         try {
-            configBuilder = CommentedFileConfig.builder(path, TomlFormat.instance()).preserveInsertionOrder().sync();
+            builder = CommentedFileConfig.builder(path, TomlFormat.instance()).preserveInsertionOrder().sync();
         } catch (Throwable throwable) {
             ServerCore.LOGGER.error("[ServerCore] Unable to initialize config builder: {}", throwable.getMessage());
             ServerCore.LOGGER.error("[ServerCore] Load and save operations on the config file will not be available.");
-            configBuilder = null;
+            builder = null;
         }
+
+        CONFIG_BUILDER = builder;
     }
 
     public static void load(boolean afterMixinLoad) {
-        if (configBuilder != null) {
-            CommentedFileConfig config = configBuilder.build();
-            config.load();
-            config.close();
+        if (CONFIG_BUILDER != null) {
+            try {
+                CommentedFileConfig config = CONFIG_BUILDER.build();
+                config.load();
+                config.close();
 
-            for (Table table : Table.values()) {
-                Config.validate(table, config);
+                for (Table table : Table.values()) {
+                    Config.validate(table, config);
 
-                if (afterMixinLoad || table.loadBeforeMixins) {
-                    Config.loadEntries(config.get(table.key), table.clazz);
+                    if (afterMixinLoad || table.loadBeforeMixins) {
+                        Config.loadEntries(config.get(table.key), table.clazz);
+                    }
                 }
-            }
 
-            if (afterMixinLoad) {
-                Config.loadChanges();
+                if (afterMixinLoad) {
+                    Config.loadChanges();
+                }
+            } catch (Throwable throwable) {
+                ServerCore.LOGGER.error("[ServerCore] An error occurred whilst loading the config!", throwable);
             }
         }
     }
 
     public static void save() {
-        if (configBuilder != null) {
-            CommentedFileConfig config = configBuilder.build();
-            for (Table table : Table.values()) {
-                Config.validate(table, config);
-                Config.saveEntries(config.get(table.key), table.clazz);
-                config.setComment(table.key, table.comment);
-            }
+        Config.save(false);
+    }
 
-            config.save();
-            config.close();
+    public static void save(boolean force) {
+        if (CONFIG_BUILDER != null && (dirty || force)) {
+            try {
+                CommentedFileConfig config = CONFIG_BUILDER.build();
+                for (Table table : Table.values()) {
+                    Config.validate(table, config);
+                    Config.saveEntries(config.get(table.key), table.clazz);
+                    config.setComment(table.key, table.comment);
+                }
+
+                config.save();
+                config.close();
+                dirty = false;
+            } catch (Throwable throwable) {
+                ServerCore.LOGGER.error("[ServerCore] An error occurred whilst saving the config!", throwable);
+            }
         }
     }
 
     public static boolean isConfigAvailable() {
-        return configBuilder != null;
+        return CONFIG_BUILDER != null;
+    }
+
+    public static void setDirty() {
+        dirty = true;
     }
 
     private static void loadChanges() {
@@ -82,34 +103,26 @@ public class Config {
         }
     }
 
-    private static void loadEntries(CommentedConfig config, Class<?> clazz) {
-        try {
-            Config.forEachEntry(clazz, (field, entry) -> {
-                final String key = field.getName().toLowerCase();
-                final Object value = config.getOrElse(key, entry.getDefault());
-                if (!entry.set(value)) {
-                    ServerCore.LOGGER.error("[ServerCore] Invalid config entry found! {} = {} (Reverting back to default: {})", key, value, entry.getDefault());
-                }
-            });
-        } catch (Throwable throwable) {
-            ServerCore.LOGGER.error("[ServerCore] An error occurred whilst loading config entries!", throwable);
-        }
+    private static void loadEntries(CommentedConfig config, Class<?> clazz) throws IllegalAccessException {
+        Config.forEachEntry(clazz, (field, entry) -> {
+            final String key = field.getName().toLowerCase();
+            final Object value = config.getOrElse(key, entry.getDefault());
+            if (!entry.set(value)) {
+                ServerCore.LOGGER.error("[ServerCore] Invalid config entry found! {} = {} (Reverting back to default: {})", key, value, entry.getDefault());
+            }
+        });
     }
 
-    private static void saveEntries(CommentedConfig config, Class<?> clazz) {
-        try {
-            config.clear();
-            Config.forEachEntry(clazz, (field, entry) -> {
-                final String key = field.getName().toLowerCase();
-                final String comment = entry.getComment();
-                config.set(key, entry.get());
-                if (comment != null) {
-                    config.setComment(key, " " + comment.replace("\n", "\n "));
-                }
-            });
-        } catch (Throwable throwable) {
-            ServerCore.LOGGER.error("[ServerCore] An error occurred whilst saving configs!", throwable);
-        }
+    private static void saveEntries(CommentedConfig config, Class<?> clazz) throws IllegalAccessException {
+        config.clear();
+        Config.forEachEntry(clazz, (field, entry) -> {
+            final String key = field.getName().toLowerCase();
+            final String comment = entry.getComment();
+            config.set(key, entry.get());
+            if (comment != null) {
+                config.setComment(key, " " + comment.replace("\n", "\n "));
+            }
+        });
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

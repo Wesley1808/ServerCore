@@ -26,8 +26,6 @@ import static com.mojang.brigadier.arguments.DoubleArgumentType.doubleArg;
 import static com.mojang.brigadier.arguments.DoubleArgumentType.getDouble;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
-import static com.mojang.brigadier.arguments.LongArgumentType.getLong;
-import static com.mojang.brigadier.arguments.LongArgumentType.longArg;
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 import static com.mojang.brigadier.arguments.StringArgumentType.greedyString;
 import static net.minecraft.commands.Commands.argument;
@@ -88,10 +86,10 @@ public class ServerCoreCommand {
 
     private static LiteralArgumentBuilder<CommandSourceStack> settings() {
         var settings = literal("settings").requires(Permission.require("command.settings", 2));
-        settings.then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modify(ctx.getSource(), getInteger(ctx, VALUE), 1, "Chunk-tick distance", false))));
-        settings.then(literal("view_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modify(ctx.getSource(), getInteger(ctx, VALUE), 2, "View distance", false))));
-        settings.then(literal("simulation_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modify(ctx.getSource(), getInteger(ctx, VALUE), 3, "Simulation distance", false))));
-        settings.then(literal("mobcaps").then(argument(VALUE, integer(1, 1000)).executes(ctx -> modify(ctx.getSource(), getInteger(ctx, VALUE), 4, "Mobcaps", true))));
+        settings.then(literal("chunk_tick_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modifyDynamic(ctx.getSource(), getInteger(ctx, VALUE), 1, "Chunk-tick distance", false))));
+        settings.then(literal("view_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modifyDynamic(ctx.getSource(), getInteger(ctx, VALUE), 2, "View distance", false))));
+        settings.then(literal("simulation_distance").then(argument(VALUE, integer(2, 128)).executes(ctx -> modifyDynamic(ctx.getSource(), getInteger(ctx, VALUE), 3, "Simulation distance", false))));
+        settings.then(literal("mobcaps").then(argument(VALUE, integer(1, 1000)).executes(ctx -> modifyDynamic(ctx.getSource(), getInteger(ctx, VALUE), 4, "Mobcaps", true))));
         return settings;
     }
 
@@ -107,14 +105,15 @@ public class ServerCoreCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int modify(String key, ConfigEntry<Object> entry, Object value, CommandSourceStack source) {
+    private static int modifyConfig(String key, ConfigEntry<Object> entry, Object value, CommandSourceStack source) {
         if (value instanceof String val) value = val.replace("#N", "\n");
-
         sendMessage(source, key, String.valueOf(value), entry.set(value));
+
+        Config.setDirty();
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int modify(CommandSourceStack source, int value, int id, String setting, boolean percentage) {
+    private static int modifyDynamic(CommandSourceStack source, int value, int id, String setting, boolean percentage) {
         DynamicManager manager = DynamicManager.getInstance(source.getServer());
         switch (id) {
             case 1 -> DynamicSetting.CHUNK_TICK_DISTANCE.set(value, manager);
@@ -151,10 +150,18 @@ public class ServerCoreCommand {
 
     private static Type getTypeFor(String key, ConfigEntry<Object> entry) {
         return switch (entry.getType().getSimpleName()) {
-            case "Boolean" -> new Type(bool(), ctx -> modify(key, entry, getBool(ctx, VALUE), ctx.getSource()));
-            case "Integer" -> new Type(longArg(Integer.MIN_VALUE, Integer.MAX_VALUE), ctx -> modify(key, entry, (int) getLong(ctx, VALUE), ctx.getSource()));
-            case "Double" -> new Type(doubleArg(), ctx -> modify(key, entry, getDouble(ctx, VALUE), ctx.getSource()));
-            case "String" -> new Type(greedyString(), ctx -> modify(key, entry, getString(ctx, VALUE), ctx.getSource()));
+            case "Boolean" -> new Type(
+                    bool(), ctx -> modifyConfig(key, entry, getBool(ctx, VALUE), ctx.getSource())
+            );
+            case "Integer" -> new Type(
+                    integer(), ctx -> modifyConfig(key, entry, getInteger(ctx, VALUE), ctx.getSource())
+            );
+            case "Double" -> new Type(
+                    doubleArg(), ctx -> modifyConfig(key, entry, getDouble(ctx, VALUE), ctx.getSource())
+            );
+            case "String" -> new Type(
+                    greedyString(), ctx -> modifyConfig(key, entry, getString(ctx, VALUE), ctx.getSource())
+            );
             default -> null;
         };
     }

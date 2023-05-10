@@ -12,7 +12,7 @@ public abstract class ServerCore {
     public final void initialize() {
         PlatformHelper.initialize();
         Config.load(true);
-        Config.save();
+        Config.save(true);
 
         LOGGER.info("[ServerCore] Loaded V{}!", PlatformHelper.getVersion());
     }
