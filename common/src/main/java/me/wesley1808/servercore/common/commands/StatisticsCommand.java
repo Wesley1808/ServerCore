@@ -99,15 +99,14 @@ public class StatisticsCommand {
         final double tps = mspt != 0 ? Math.min((1000 / mspt), 20) : 20;
 
         Statistics statistics = Statistics.getInstance(source.getServer());
-        Component component = Formatter.parse(Formatter.line(CommandConfig.STATS_TITLE.get(), 40, source.isPlayer()) + "\n" + CommandConfig.STATS_CONTENT.get()
+        source.sendSuccess(() -> Formatter.parse(Formatter.line(CommandConfig.STATS_TITLE.get(), 40, source.isPlayer()) + "\n" + CommandConfig.STATS_CONTENT.get()
                 .replace("${tps}", String.format("%.2f", tps))
                 .replace("${mspt}", String.format("%.2f", mspt))
                 .replace("${chunk_count}", String.valueOf(statistics.getChunkCount(true)))
                 .replace("${entity_count}", String.valueOf(statistics.getAllEntities().size()))
                 .replace("${block_entity_count}", String.valueOf(statistics.getAllBlockEntities().size()))
-        );
+        ), false);
 
-        source.sendSuccess(component, false);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -147,7 +146,7 @@ public class StatisticsCommand {
 
         if (success) {
             builder.append("\n").append(createFooter(page, Util.getPage(map.size(), 8), isBlockEntity, context));
-            source.sendSuccess(Formatter.parse(builder.toString()), false);
+            source.sendSuccess(() -> Formatter.parse(builder.toString()), false);
         } else if (page == 1) {
             source.sendFailure(Component.literal(isBlockEntity ? "No block entities were found!" : "No entities were found!"));
         } else {

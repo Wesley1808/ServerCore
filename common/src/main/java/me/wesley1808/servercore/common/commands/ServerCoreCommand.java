@@ -101,7 +101,7 @@ public class ServerCoreCommand {
                 entry.getType().getSimpleName()
         );
 
-        source.sendSuccess(Formatter.parse(message), false);
+        source.sendSuccess(() -> Formatter.parse(message), false);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -130,19 +130,18 @@ public class ServerCoreCommand {
         if (saved) Config.save();
         else Config.load(true);
 
-        source.sendSuccess(Component.literal(saved ? "Config saved!" : "Config reloaded!").withStyle(ChatFormatting.GREEN), false);
+        source.sendSuccess(() -> Component.literal(saved ? "Config saved!" : "Config reloaded!").withStyle(ChatFormatting.GREEN), false);
         return Command.SINGLE_SUCCESS;
     }
 
     private static int getStatus(CommandSourceStack source) {
-        Component component = Formatter.parse(DynamicManager.createStatusReport(Formatter.line(CommandConfig.STATUS_TITLE.get(), 40, source.isPlayer())));
-        source.sendSuccess(component, false);
+        source.sendSuccess(() -> Formatter.parse(DynamicManager.createStatusReport(Formatter.line(CommandConfig.STATUS_TITLE.get(), 40, source.isPlayer()))), false);
         return Command.SINGLE_SUCCESS;
     }
 
     private static void sendMessage(CommandSourceStack source, String key, String value, boolean success) {
         if (success) {
-            source.sendSuccess(Formatter.parse(String.format("<green>%s <dark_aqua>has been set to <green>%s", key, value)), false);
+            source.sendSuccess(() -> Formatter.parse(String.format("<green>%s <dark_aqua>has been set to <green>%s", key, value)), false);
         } else {
             source.sendFailure(Component.literal(String.format("%s cannot be set to %s!", key, value)));
         }
