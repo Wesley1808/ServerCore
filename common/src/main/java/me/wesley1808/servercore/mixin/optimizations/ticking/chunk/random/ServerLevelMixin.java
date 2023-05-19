@@ -58,8 +58,8 @@ public abstract class ServerLevelMixin extends Level implements IServerLevel {
                     ordinal = 0
             )
     )
-    private int servercore$replaceLightningCheck(RandomSource randomSource, int i, LevelChunk chunk, int i2) {
-        return ((ILevelChunk) chunk).shouldDoLightning(randomSource);
+    private int servercore$replaceLightningCheck(RandomSource randomSource, int thunderChance, LevelChunk chunk, int randomTickSpeed) {
+        return ((ILevelChunk) chunk).shouldDoLightning(randomSource, thunderChance);
     }
 
     @Redirect(

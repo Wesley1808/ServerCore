@@ -43,9 +43,9 @@ public class LevelChunkMixin implements ILevelChunk {
     private int lightningTick;
 
     @Override
-    public final int shouldDoLightning(RandomSource randomSource) {
+    public final int shouldDoLightning(RandomSource randomSource, int thunderChance) {
         if (this.lightningTick-- <= 0) {
-            this.lightningTick = randomSource.nextInt(100000) << 1;
+            this.lightningTick = randomSource.nextInt(thunderChance) << 1;
             return 0;
         }
         return -1;
