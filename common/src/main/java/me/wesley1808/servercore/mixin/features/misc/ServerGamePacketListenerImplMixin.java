@@ -70,7 +70,7 @@ public abstract class ServerGamePacketListenerImplMixin {
                     ordinal = 0
             )
     )
-    private void servercore$handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double toX, double toY, double toZ, float yRot, float xRot, double fromX, double fromY, double fromZ, double l) {
+    private void servercore$handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double toX, double toY, double toZ, float yRot, float xRot, double fromX, double fromY, double fromZ) {
         if (this.shouldPreventMovement(serverLevel, this.player, fromX, fromZ, toX, toY, toZ)) {
             this.teleport(fromX, fromY, fromZ, yRot, xRot, Collections.emptySet());
             ci.cancel();
