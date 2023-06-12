@@ -36,7 +36,7 @@ public class ServerCoreForge extends ServerCore {
     }
 
     @SubscribeEvent
-    public void onServerStopped(RegisterCommandsEvent event) {
+    public void onRegisterCommands(RegisterCommandsEvent event) {
         Events.registerCommands(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
     }
 

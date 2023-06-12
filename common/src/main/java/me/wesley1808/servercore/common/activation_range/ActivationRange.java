@@ -90,6 +90,7 @@ public class ActivationRange {
      */
     public static boolean isExcluded(Entity entity) {
         return entity.getActivationType().activationRange.getAsInt() <= 0
+               || entity.getActivationType().tickInterval.getAsInt() == 0
                || entity instanceof Player
                || entity instanceof ThrowableItemProjectile
                || entity instanceof EnderDragon
@@ -276,7 +277,9 @@ public class ActivationRange {
 
         boolean active = entity.getActivatedTick() >= currentTick;
         if (!active) {
-            if ((currentTick - entity.getActivatedTick() - 1) % 20 == 0) {
+            final int tickInterval = entity.getActivationType().tickInterval.getAsInt();
+
+            if ((currentTick - entity.getActivatedTick() - 1) % tickInterval == 0) {
                 // Check immunities every 20 inactive ticks.
                 final int immunity = checkEntityImmunities(entity, currentTick);
                 if (immunity >= 0) {
@@ -284,7 +287,7 @@ public class ActivationRange {
                     return true;
                 }
 
-                return entity.getActivationType().tickInactive.getAsBoolean();
+                return tickInterval > 0;
             }
             // Spigot - Add a little performance juice to active entities. Skip 1/4 if not immune.
         } else if (ActivationRangeConfig.SKIP_NON_IMMUNE.get() && entity.getFullTickCount() % 4 == 0 && checkEntityImmunities(entity, currentTick) < 0) {

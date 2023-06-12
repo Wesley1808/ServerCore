@@ -140,7 +140,7 @@ public class Config {
         BREEDING_CAP(EntityLimitConfig.class, false, "Stops animals / villagers from breeding if there are too many of the same type nearby."),
         OPTIMIZATIONS(OptimizationConfig.class, true, "Allows you to toggle specific optimizations that don't have full vanilla parity.\nThese settings will only take effect after server restarts."),
         COMMANDS(CommandConfig.class, false, "Allows you to disable specific commands and modify the way some of them are formatted."),
-        ACTIVATION_RANGE(ActivationRangeConfig.class, false, "Stops entities from ticking if they are too far away.");
+        ACTIVATION_RANGE(ActivationRangeConfig.class, false, "Ticks entities less often when they are further away from players.");
 
         public final String key;
         public final String comment;
