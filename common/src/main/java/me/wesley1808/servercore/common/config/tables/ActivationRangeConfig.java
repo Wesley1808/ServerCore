@@ -1,6 +1,12 @@
 package me.wesley1808.servercore.common.config.tables;
 
+import com.google.common.collect.Lists;
 import me.wesley1808.servercore.common.config.ConfigEntry;
+import net.minecraft.world.entity.EntityType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class ActivationRangeConfig {
     public static final ConfigEntry<Boolean> ENABLED = new ConfigEntry<>(false, "(Default = false) Enables this feature.");
@@ -31,6 +37,26 @@ public class ActivationRangeConfig {
 
     public static final ConfigEntry<Integer> VILLAGER_WORK_IMMUNITY_FOR = new ConfigEntry<>(
             20, "(Default = 20) The amount of ticks an inactive villager will wake up for when it has work immunity."
+    );
+
+    public static final ConfigEntry<List<String>> EXCLUDED_ENTITY_TYPES = new ConfigEntry<>(
+            Lists.newArrayList(
+                    EntityType.getKey(EntityType.HOPPER_MINECART).toString(),
+                    EntityType.getKey(EntityType.WARDEN).toString(),
+                    EntityType.getKey(EntityType.GHAST).toString()
+            ),
+            (types) -> {
+                for (String type : types) {
+                    Optional<?> optional = EntityType.byString(type);
+                    if (optional.isEmpty()) {
+                        return false;
+                    }
+                }
+                return true;
+            },
+            """
+            (Default = ["minecraft:hopper_minecart", "minecraft:warden", "minecraft:ghast"])
+            A list of entity types that should be excluded from activation range checks."""
     );
 
     public static final ConfigEntry<Integer> VILLAGER_ACTIVATION_RANGE = new ConfigEntry<>(

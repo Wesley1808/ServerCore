@@ -213,7 +213,7 @@ The config file can be found at `/config/servercore.toml`
     # The footer for the /statistics (block) entities command.
     stats_page_footer = "<dark_aqua>${line} <green>${prev_page}</green> Page <aqua>${page}</aqua> of <aqua>${page_count}</aqua> <green>${next_page}</green> ${line}"
 
-# Stops entities from ticking if they are too far away.
+# Ticks entities less often when they are further away from players.
 [activation_range]
     # (Default = false) Enables this feature.
     enabled = false
@@ -231,45 +231,48 @@ The config file can be found at `/config/servercore.toml`
     villager_work_immunity_after = 20
     # (Default = 20) The amount of ticks an inactive villager will wake up for when it has work immunity.
     villager_work_immunity_for = 20
-    # Activation Range = The range an entity is required to be in from a player to tick.
-    # Tick Inactive = Whether an entity is allowed to tick once per second whilst inactive.
+    # (Default = ["minecraft:hopper_minecart", "minecraft:warden", "minecraft:ghast"])
+    # A list of entity types that should be excluded from activation range checks.
+    excluded_entity_types = ["minecraft:hopper_minecart", "minecraft:warden", "minecraft:ghast"]
+    # Activation Range = The range an entity is required to be in from a player to be activated.
+    # Tick Interval = The interval between 'active' ticks whilst the entity is inactive. Negative values will disable these active ticks.
     # Wakeup Max = The maximum amount of entities in the same group and world that are allowed to be awakened at the same time.
     # Wakeup Interval = The interval between inactive entity wake ups in seconds.
     # Activation range settings for villagers.
     villager_activation_range = 16
-    villager_tick_inactive = true
+    villager_tick_interval = 20
     villager_wakeup_max = 4
     villager_wakeup_interval = 30
     # Activation range settings for monsters.
     monster_activation_range = 32
-    monster_tick_inactive = true
+    monster_tick_interval = 20
     monster_wakeup_max = 8
     monster_wakeup_interval = 20
     # Activation range settings for animals.
     animal_activation_range = 16
-    animal_tick_inactive = true
+    animal_tick_interval = 20
     animal_wakeup_max = 4
     animal_wakeup_interval = 60
     # Activation range settings for flying mobs.
     flying_activation_range = 48
+    flying_tick_interval = 20
     flying_wakeup_max = 8
     flying_wakeup_interval = 10
-    flying_tick_inactive = true
     # Activation range settings for water mobs.
     water_activation_range = 16
-    water_tick_inactive = true
+    water_tick_interval = 20
     # Activation range settings for neutral mobs.
     neutral_activation_range = 24
-    neutral_tick_inactive = true
+    neutral_tick_interval = 20
     # Activation range settings for zombies.
     zombie_activation_range = 16
-    zombie_tick_inactive = true
+    zombie_tick_interval = 20
     # Activation range settings for raider mobs.
     raider_activation_range = 48
-    raider_tick_inactive = true
+    raider_tick_interval = 20
     # Activation range settings for miscellaneous entities.
     misc_activation_range = 16
-    misc_tick_inactive = true
+    misc_tick_interval = 20
 ```
 ## License
 

@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.common.activation_range;
 
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
 import me.wesley1808.servercore.common.interfaces.activation_range.LevelInfo;
 import me.wesley1808.servercore.common.utils.Util;
@@ -23,20 +24,18 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.hoglin.Hoglin;
-import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.vehicle.Boat;
-import net.minecraft.world.entity.vehicle.MinecartHopper;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -47,6 +46,7 @@ import java.util.function.Predicate;
  * License: GPL-3.0 (licenses/GPL.md)
  */
 public class ActivationRange {
+    private static final ReferenceOpenHashSet<EntityType<?>> EXCLUDED_ENTITY_TYPES = new ReferenceOpenHashSet<>();
     private static final Predicate<Goal> BEE_GOAL_IMMUNITIES = goal -> goal instanceof Bee.BeeGoToKnownFlowerGoal || goal instanceof Bee.BeeGoToHiveGoal;
     private static final Activity[] VILLAGER_PANIC_IMMUNITIES = {
             Activity.HIDE,
@@ -54,6 +54,15 @@ public class ActivationRange {
             Activity.RAID,
             Activity.PANIC
     };
+
+    public static void reload() {
+        EXCLUDED_ENTITY_TYPES.clear();
+
+        for (String type : ActivationRangeConfig.EXCLUDED_ENTITY_TYPES.get()) {
+            Optional<EntityType<?>> optional = EntityType.byString(type);
+            optional.ifPresent(EXCLUDED_ENTITY_TYPES::add);
+        }
+    }
 
     /**
      * Puts entities in their corresponding groups / activation types, upon initialization.
@@ -103,11 +112,7 @@ public class ActivationRange {
                || entity instanceof FireworkRocketEntity
                || entity instanceof EyeOfEnder
                || entity instanceof ThrownTrident
-
-               // ServerCore
-               || entity instanceof Ghast
-               || entity instanceof Warden
-               || entity instanceof MinecartHopper;
+               || EXCLUDED_ENTITY_TYPES.contains(entity.getType());
     }
 
     /**

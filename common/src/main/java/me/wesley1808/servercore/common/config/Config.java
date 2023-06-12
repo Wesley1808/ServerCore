@@ -5,6 +5,7 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.file.GenericBuilder;
 import com.electronwill.nightconfig.toml.TomlFormat;
 import me.wesley1808.servercore.common.ServerCore;
+import me.wesley1808.servercore.common.activation_range.ActivationRange;
 import me.wesley1808.servercore.common.config.tables.*;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.services.platform.PlatformHelper;
@@ -94,6 +95,7 @@ public class Config {
 
     private static void loadChanges() {
         DynamicSetting.loadCustomOrder();
+        ActivationRange.reload();
     }
 
     // Creates table when missing.
