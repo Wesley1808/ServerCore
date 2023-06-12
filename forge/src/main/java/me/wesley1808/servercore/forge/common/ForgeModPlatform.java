@@ -5,6 +5,7 @@ import me.wesley1808.servercore.common.services.platform.ModPlatform;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.fml.loading.LoadingModList;
 
 import java.nio.file.Path;
 import java.util.Objects;
@@ -20,8 +21,13 @@ public class ForgeModPlatform implements ModPlatform {
 
     @Override
     public boolean isModLoaded(String modId) {
-        ModList list = ModList.get();
-        return list != null && list.isLoaded(modId);
+        ModList modList = ModList.get();
+        if (modList != null) {
+            return modList.isLoaded(modId);
+        }
+
+        LoadingModList loadingModList = LoadingModList.get();
+        return loadingModList != null && loadingModList.getModFileById(modId) != null;
     }
 
     @Override
