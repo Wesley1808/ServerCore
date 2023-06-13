@@ -26,7 +26,7 @@ dependencies {
     // Fabric API
     Set<String> modules = ['fabric-api-base', 'fabric-command-api-v2', 'fabric-lifecycle-events-v1']
     modules.forEach {
-        modImplementation(include(fabricApi.module(it, project.fabric_api)))
+        modImplementation(fabricApi.module(it, project.fabric_api))
     }
 
     // Permission API
