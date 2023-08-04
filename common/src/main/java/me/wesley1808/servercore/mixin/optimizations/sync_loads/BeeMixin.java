@@ -30,6 +30,7 @@ public abstract class BeeMixin extends Animal {
             )
     )
     private boolean servercore$onlyValidateIfLoaded(boolean isTooFarAway) {
+        // noinspection ConstantConditions
         return isTooFarAway || !ChunkManager.hasChunk(this.level(), this.hivePos);
     }
 }

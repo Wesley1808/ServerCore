@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import me.wesley1808.servercore.common.config.ConfigEntry;
 import net.minecraft.world.entity.EntityType;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
