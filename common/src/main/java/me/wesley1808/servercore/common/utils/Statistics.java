@@ -33,7 +33,7 @@ public class Statistics {
     }
 
     public static Statistics getInstance(MinecraftServer server) {
-        return ((IMinecraftServer) server).getStatistics();
+        return ((IMinecraftServer) server).servercore$getStatistics();
     }
 
     public List<Entity> getAllEntities() {

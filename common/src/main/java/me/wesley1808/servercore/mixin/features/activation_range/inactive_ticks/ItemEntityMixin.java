@@ -40,8 +40,8 @@ public abstract class ItemEntityMixin extends Entity {
     }
 
     @Override
-    public void inactiveTick() {
-        super.inactiveTick();
+    public void servercore$inactiveTick() {
+        super.servercore$inactiveTick();
 
         if (this.pickupDelay > 0 && this.pickupDelay != INFINITE_PICKUP_DELAY) {
             this.pickupDelay--;

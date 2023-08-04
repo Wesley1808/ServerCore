@@ -35,7 +35,7 @@ public class DynamicManager {
     }
 
     public static DynamicManager getInstance(MinecraftServer server) {
-        return ((IMinecraftServer) server).getDynamicManager();
+        return ((IMinecraftServer) server).servercore$getDynamicManager();
     }
 
     public static String getModifierAsPercentage() {
@@ -102,7 +102,7 @@ public class DynamicManager {
     public void modifyMobcaps(double modifier) {
         for (MobCategory category : MobCategory.values()) {
             if ((Object) category instanceof IMobCategory mobCategory) {
-                mobCategory.modifyCapacity(modifier);
+                mobCategory.servercore$modifyCapacity(modifier);
             }
         }
     }

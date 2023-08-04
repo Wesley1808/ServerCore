@@ -20,8 +20,8 @@ public abstract class ArrowMixin extends AbstractArrow {
     }
 
     @Override
-    public void inactiveTick() {
-        super.inactiveTick();
+    public void servercore$inactiveTick() {
+        super.servercore$inactiveTick();
 
         if (this.inGround) {
             this.tickDespawn();

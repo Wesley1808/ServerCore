@@ -43,7 +43,7 @@ import java.util.function.Supplier;
 @Mixin(value = ServerLevel.class, priority = 900)
 public abstract class ServerLevelMixin extends Level implements IServerLevel {
     @Unique
-    private int currentIceAndSnowTick = 0;
+    private int servercore$currentIceAndSnowTick = 0;
 
     private ServerLevelMixin(WritableLevelData writableLevelData, ResourceKey<Level> resourceKey, RegistryAccess registryAccess, Holder<DimensionType> holder, Supplier<ProfilerFiller> supplier, boolean bl, boolean bl2, long l, int i) {
         super(writableLevelData, resourceKey, registryAccess, holder, supplier, bl, bl2, l, i);
@@ -59,7 +59,7 @@ public abstract class ServerLevelMixin extends Level implements IServerLevel {
             )
     )
     private int servercore$replaceLightningCheck(RandomSource randomSource, int thunderChance, LevelChunk chunk, int randomTickSpeed) {
-        return ((ILevelChunk) chunk).shouldDoLightning(randomSource, thunderChance);
+        return ((ILevelChunk) chunk).servercore$shouldDoLightning(randomSource, thunderChance);
     }
 
     @Redirect(
@@ -72,11 +72,11 @@ public abstract class ServerLevelMixin extends Level implements IServerLevel {
             )
     )
     private int servercore$replaceIceAndSnowCheck(RandomSource randomSource, int i) {
-        return this.currentIceAndSnowTick++ & 15;
+        return this.servercore$currentIceAndSnowTick++ & 15;
     }
 
     @Override
-    public void resetIceAndSnowTick() {
-        this.currentIceAndSnowTick = this.random.nextInt(16);
+    public void servercore$resetIceAndSnowTick() {
+        this.servercore$currentIceAndSnowTick = this.random.nextInt(16);
     }
 }

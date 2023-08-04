@@ -20,8 +20,8 @@ public abstract class TadpoleMixin extends AbstractFish {
     protected abstract void setAge(int i);
 
     @Override
-    public void inactiveTick() {
-        super.inactiveTick();
+    public void servercore$inactiveTick() {
+        super.servercore$inactiveTick();
         this.setAge(this.age + 1);
     }
 }

@@ -38,28 +38,28 @@ public class EntityMixin implements Inactive, ActivationEntity {
     private Level level;
 
     @Unique
-    private int activatedTick = Integer.MIN_VALUE;
+    private int servercore$activatedTick = Integer.MIN_VALUE;
 
     @Unique
-    private int activatedImmunityTick = Integer.MIN_VALUE;
+    private int servercore$activatedImmunityTick = Integer.MIN_VALUE;
 
     @Unique
-    private boolean isInactive = false;
+    private boolean servercore$isInactive = false;
 
     @Unique
-    private ActivationType activationType;
+    private ActivationType servercore$activationType;
 
     @Unique
-    private boolean excluded = false;
+    private boolean servercore$excluded = false;
 
     @Unique
-    private int fullTickCount;
+    private int servercore$fullTickCount;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     public void servercore$setupActivationStates(EntityType<?> type, Level level, CallbackInfo ci) {
         final Entity entity = (Entity) (Object) this;
-        this.activationType = ActivationRange.initializeEntityActivationType(entity);
-        this.excluded = level == null || ActivationRange.isExcluded(entity);
+        this.servercore$activationType = ActivationRange.initializeEntityActivationType(entity);
+        this.servercore$excluded = level == null || ActivationRange.isExcluded(entity);
     }
 
     @Inject(
@@ -74,15 +74,15 @@ public class EntityMixin implements Inactive, ActivationEntity {
         MinecraftServer server = this.level.getServer();
         if (server != null) {
             final int ticks = server.getTickCount() + 20;
-            this.activatedTick = Math.max(this.activatedTick, ticks);
-            this.activatedImmunityTick = Math.max(this.activatedImmunityTick, ticks);
+            this.servercore$activatedTick = Math.max(this.servercore$activatedTick, ticks);
+            this.servercore$activatedImmunityTick = Math.max(this.servercore$activatedImmunityTick, ticks);
         }
     }
 
     // ServerCore - Prevent inactive entities from getting extreme velocities.
     @Inject(method = "push(DDD)V", at = @At("HEAD"), cancellable = true)
     public void servercore$ignorePushingWhileInactive(double x, double y, double z, CallbackInfo ci) {
-        if (this.isInactive && !this.level.isClientSide) {
+        if (this.servercore$isInactive && !this.level.isClientSide) {
             ci.cancel();
         }
     }
@@ -90,60 +90,61 @@ public class EntityMixin implements Inactive, ActivationEntity {
     // ServerCore - Add a simple way to exclude certain entities from activation range.
     @Inject(method = "load", at = @At("RETURN"))
     private void servercore$onLoadNbt(CallbackInfo ci) {
-        this.excluded |= this.tags.contains("exclude_ear");
+        this.servercore$excluded |= this.tags.contains("exclude_ear");
     }
 
     @Inject(method = "addTag", at = @At("HEAD"))
     private void servercore$onTagAdded(String tag, CallbackInfoReturnable<Boolean> cir) {
-        this.excluded |= tag.equals("exclude_ear");
+        this.servercore$excluded |= tag.equals("exclude_ear");
     }
 
     @Override
-    public ActivationType getActivationType() {
-        return this.activationType;
+    public ActivationType servercore$getActivationType() {
+        return this.servercore$activationType;
     }
 
     @Override
-    public boolean isExcluded() {
-        return this.excluded;
+    public boolean servercore$isExcluded() {
+        return this.servercore$excluded;
     }
 
     @Override
-    public int getActivatedTick() {
-        return this.activatedTick;
+    public int servercore$getActivatedTick() {
+        return this.servercore$activatedTick;
     }
 
     @Override
-    public void setActivatedTick(int tick) {
-        this.activatedTick = tick;
+    public void servercore$setActivatedTick(int tick) {
+        this.servercore$activatedTick = tick;
     }
 
     @Override
-    public int getActivatedImmunityTick() {
-        return this.activatedImmunityTick;
+    public int servercore$getActivatedImmunityTick() {
+        return this.servercore$activatedImmunityTick;
     }
 
     @Override
-    public void setActivatedImmunityTick(int tick) {
-        this.activatedImmunityTick = tick;
+    public void servercore$setActivatedImmunityTick(int tick) {
+        this.servercore$activatedImmunityTick = tick;
     }
 
     @Override
-    public void setInactive(boolean inactive) {
-        this.isInactive = inactive;
+    public void servercore$setInactive(boolean inactive) {
+        this.servercore$isInactive = inactive;
     }
 
     @Override
-    public int getFullTickCount() {
-        return this.fullTickCount;
+    public int servercore$getFullTickCount() {
+        return this.servercore$fullTickCount;
     }
 
     @Override
-    public void incFullTickCount() {
-        this.fullTickCount++;
+    public void servercore$incFullTickCount() {
+        this.servercore$fullTickCount++;
     }
 
     @Override
-    public void inactiveTick() {
+    public void servercore$inactiveTick() {
+        // no-op
     }
 }

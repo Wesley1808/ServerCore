@@ -22,7 +22,7 @@ public class Events {
     }
 
     public static void onServerStarted(MinecraftServer server) {
-        ((IMinecraftServer) server).onStarted();
+        IMinecraftServer.onStarted(server);
 
         // Disable spawn chunks after the server starts up.
         // This is only used for dedicated servers.

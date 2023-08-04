@@ -23,11 +23,11 @@ public abstract class BeeMixin extends Animal {
     abstract boolean isHiveValid();
 
     @Override
-    public void inactiveTick() {
-        if (this.getFullTickCount() % 20 == 0 && !this.isHiveValid()) {
+    public void servercore$inactiveTick() {
+        if (this.servercore$getFullTickCount() % 20 == 0 && !this.isHiveValid()) {
             this.hivePos = null;
         }
 
-        super.inactiveTick();
+        super.servercore$inactiveTick();
     }
 }

@@ -24,8 +24,8 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Override
-    public void inactiveTick() {
-        super.inactiveTick();
+    public void servercore$inactiveTick() {
+        super.servercore$inactiveTick();
         this.noActionTime++;
     }
 }

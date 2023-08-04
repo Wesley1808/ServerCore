@@ -23,8 +23,8 @@ public abstract class ChickenMixin extends Animal {
     }
 
     @Override
-    public void inactiveTick() {
-        super.inactiveTick();
+    public void servercore$inactiveTick() {
+        super.servercore$inactiveTick();
 
         if (!this.isChickenJockey && this.age >= 0 && this.isAlive() && --this.eggTime <= 0) {
             // VanillaCopy - Spawn chicken egg

@@ -27,8 +27,8 @@ public abstract class AgeableMobMixin extends PathfinderMob {
     public abstract void setAge(int age);
 
     @Override
-    public void inactiveTick() {
-        super.inactiveTick();
+    public void servercore$inactiveTick() {
+        super.servercore$inactiveTick();
 
         final int age = this.getAge();
         if (age < 0) {

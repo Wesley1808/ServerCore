@@ -18,6 +18,6 @@ public class OcelotMixin {
             )
     )
     private int servercore$fixOcelotDespawning(Ocelot ocelot) {
-        return ocelot.getFullTickCount();
+        return ocelot.servercore$getFullTickCount();
     }
 }

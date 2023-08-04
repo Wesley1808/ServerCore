@@ -25,8 +25,8 @@ public abstract class SkeletonHorseMixin extends AbstractHorse {
     }
 
     @Override
-    public void inactiveTick() {
-        super.inactiveTick();
+    public void servercore$inactiveTick() {
+        super.servercore$inactiveTick();
 
         if (this.isTrap && this.trapTime++ >= TRAP_MAX_LIFE) {
             this.discard();

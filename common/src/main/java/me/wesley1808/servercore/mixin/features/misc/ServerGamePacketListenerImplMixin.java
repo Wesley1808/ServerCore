@@ -15,6 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -54,7 +55,7 @@ public abstract class ServerGamePacketListenerImplMixin {
             )
     )
     private void servercore$handleMoveVehicle(ServerboundMoveVehiclePacket packet, CallbackInfo ci, Entity entity, ServerLevel serverLevel, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, float yRot, float xRot, double l, double m, double n) {
-        if (this.shouldPreventMovement(serverLevel, entity, fromX, fromZ, toX, toY, toZ)) {
+        if (this.servercore$shouldPreventMovement(serverLevel, entity, fromX, fromZ, toX, toY, toZ)) {
             this.connection.send(new ClientboundMoveVehiclePacket(entity));
             ci.cancel();
         }
@@ -71,13 +72,14 @@ public abstract class ServerGamePacketListenerImplMixin {
             )
     )
     private void servercore$handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double toX, double toY, double toZ, float yRot, float xRot, double fromX, double fromY, double fromZ) {
-        if (this.shouldPreventMovement(serverLevel, this.player, fromX, fromZ, toX, toY, toZ)) {
+        if (this.servercore$shouldPreventMovement(serverLevel, this.player, fromX, fromZ, toX, toY, toZ)) {
             this.teleport(fromX, fromY, fromZ, yRot, xRot, Collections.emptySet());
             ci.cancel();
         }
     }
 
-    private boolean shouldPreventMovement(ServerLevel level, Entity entity, double fromX, double fromZ, double toX, double toY, double toZ) {
+    @Unique
+    private boolean servercore$shouldPreventMovement(ServerLevel level, Entity entity, double fromX, double fromZ, double toX, double toY, double toZ) {
         return FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get()
                && (fromX != toX || fromZ != toZ)
                && !ChunkManager.areChunksLoadedForMove(level, entity.getBoundingBox().expandTowards(new Vec3(toX, toY, toZ).subtract(entity.position())));

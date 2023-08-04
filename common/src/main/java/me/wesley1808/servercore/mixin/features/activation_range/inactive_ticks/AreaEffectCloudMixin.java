@@ -27,8 +27,8 @@ public abstract class AreaEffectCloudMixin extends Entity {
     }
 
     @Override
-    public void inactiveTick() {
-        super.inactiveTick();
+    public void servercore$inactiveTick() {
+        super.servercore$inactiveTick();
 
         if (++this.tickCount >= this.waitTime + this.duration) {
             this.discard();

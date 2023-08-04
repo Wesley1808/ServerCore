@@ -98,8 +98,8 @@ public class ActivationRange {
      * @return Boolean: whether the entity will be excluded from activation range checks.
      */
     public static boolean isExcluded(Entity entity) {
-        return entity.getActivationType().activationRange.getAsInt() <= 0
-               || entity.getActivationType().tickInterval.getAsInt() == 0
+        return entity.servercore$getActivationType().activationRange.getAsInt() <= 0
+               || entity.servercore$getActivationType().tickInterval.getAsInt() == 0
                || entity instanceof Player
                || entity instanceof ThrowableItemProjectile
                || entity instanceof EnderDragon
@@ -127,7 +127,7 @@ public class ActivationRange {
 
         LevelInfo info = (LevelInfo) level;
         for (ActivationType.Wakeup wakeup : ActivationType.Wakeup.values()) {
-            info.setRemaining(wakeup, Math.min(info.getRemaining(wakeup) + 1, wakeup.max.getAsInt()));
+            info.servercore$setRemaining(wakeup, Math.min(info.servercore$getRemaining(wakeup) + 1, wakeup.max.getAsInt()));
         }
 
         maxRange = Math.min((level.getServer().getPlayerList().getViewDistance() << 4) - 8, maxRange);
@@ -160,9 +160,9 @@ public class ActivationRange {
     }
 
     private static void activateEntity(Entity entity, int currentTick) {
-        if (currentTick > entity.getActivatedTick()) {
-            if (entity.isExcluded() || entity.getActivationType().boundingBox.intersects(entity.getBoundingBox())) {
-                entity.setActivatedTick(currentTick + 19);
+        if (currentTick > entity.servercore$getActivatedTick()) {
+            if (entity.servercore$isExcluded() || entity.servercore$getActivationType().boundingBox.intersects(entity.getBoundingBox())) {
+                entity.servercore$setActivatedTick(currentTick + 19);
             }
         }
     }
@@ -183,7 +183,7 @@ public class ActivationRange {
             return 2;
         }
 
-        if (entity.getActivatedImmunityTick() >= currentTick) {
+        if (entity.servercore$getActivatedImmunityTick() >= currentTick) {
             return 1;
         }
 
@@ -192,7 +192,7 @@ public class ActivationRange {
         }
 
         // quick checks.
-        final ActivationType type = entity.getActivationType();
+        final ActivationType type = entity.servercore$getActivationType();
         if (entity.isInWater() && entity.isPushedByFluid() && !(type == ActivationType.ANIMAL || type == ActivationType.FLYING || type == ActivationType.VILLAGER || type == ActivationType.WATER || entity instanceof Boat)) {
             return 100;
         }
@@ -239,7 +239,7 @@ public class ActivationRange {
                 }
 
                 final int immunityAfter = ActivationRangeConfig.VILLAGER_WORK_IMMUNITY_AFTER.get();
-                if (immunityAfter > 0 && (currentTick - entity.getActivatedTick()) >= immunityAfter) {
+                if (immunityAfter > 0 && (currentTick - entity.servercore$getActivatedTick()) >= immunityAfter) {
                     if (brain.isActive(Activity.WORK)) {
                         return ActivationRangeConfig.VILLAGER_WORK_IMMUNITY_FOR.get();
                     }
@@ -280,22 +280,22 @@ public class ActivationRange {
     public static boolean checkIfActive(Entity entity, int currentTick) {
         if (shouldTick(entity)) return true;
 
-        boolean active = entity.getActivatedTick() >= currentTick;
+        boolean active = entity.servercore$getActivatedTick() >= currentTick;
         if (!active) {
-            final int tickInterval = entity.getActivationType().tickInterval.getAsInt();
+            final int tickInterval = entity.servercore$getActivationType().tickInterval.getAsInt();
 
-            if ((currentTick - entity.getActivatedTick() - 1) % tickInterval == 0) {
+            if ((currentTick - entity.servercore$getActivatedTick() - 1) % tickInterval == 0) {
                 // Check immunities every 20 inactive ticks.
                 final int immunity = checkEntityImmunities(entity, currentTick);
                 if (immunity >= 0) {
-                    entity.setActivatedTick(currentTick + immunity);
+                    entity.servercore$setActivatedTick(currentTick + immunity);
                     return true;
                 }
 
                 return tickInterval > 0;
             }
             // Spigot - Add a little performance juice to active entities. Skip 1/4 if not immune.
-        } else if (ActivationRangeConfig.SKIP_NON_IMMUNE.get() && entity.getFullTickCount() % 4 == 0 && checkEntityImmunities(entity, currentTick) < 0) {
+        } else if (ActivationRangeConfig.SKIP_NON_IMMUNE.get() && entity.servercore$getFullTickCount() % 4 == 0 && checkEntityImmunities(entity, currentTick) < 0) {
             return false;
         }
 
@@ -303,19 +303,19 @@ public class ActivationRange {
     }
 
     private static boolean shouldTick(Entity entity) {
-        return !ActivationRangeConfig.ENABLED.get() || entity.isExcluded() || entity.isInsidePortal || entity.isOnPortalCooldown()
-               || (entity.tickCount < 200 && entity.getActivationType() == ActivationType.MISC) // New misc entities
+        return !ActivationRangeConfig.ENABLED.get() || entity.servercore$isExcluded() || entity.isInsidePortal || entity.isOnPortalCooldown()
+               || (entity.tickCount < 200 && entity.servercore$getActivationType() == ActivationType.MISC) // New misc entities
                || (entity instanceof Mob mob && mob.leashHolder instanceof Player) // Player leashed mobs
                || (entity instanceof LivingEntity living && living.hurtTime > 0); // Attacked mobs
     }
 
     private static int checkInactiveWakeup(Entity entity, int currentTick) {
-        ActivationType.Wakeup wakeup = entity.getActivationType().wakeup;
-        if (wakeup != null && currentTick - entity.getActivatedTick() >= wakeup.interval.getAsInt() * 20L) {
+        ActivationType.Wakeup wakeup = entity.servercore$getActivationType().wakeup;
+        if (wakeup != null && currentTick - entity.servercore$getActivatedTick() >= wakeup.interval.getAsInt() * 20L) {
             LevelInfo info = (LevelInfo) entity.level();
-            int remaining = info.getRemaining(wakeup);
+            int remaining = info.servercore$getRemaining(wakeup);
             if (remaining > 0) {
-                info.setRemaining(wakeup, remaining - 1);
+                info.servercore$setRemaining(wakeup, remaining - 1);
                 return 100;
             }
         }

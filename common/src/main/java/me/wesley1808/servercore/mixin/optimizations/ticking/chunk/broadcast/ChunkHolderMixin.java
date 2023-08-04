@@ -10,6 +10,7 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -29,7 +30,7 @@ public class ChunkHolderMixin {
             )
     )
     private void servercore$onBlockChanged(BlockPos blockPos, CallbackInfo ci) {
-        this.requiresBroadcast();
+        this.servercore$requiresBroadcast();
     }
 
     @Inject(
@@ -40,12 +41,13 @@ public class ChunkHolderMixin {
             )
     )
     private void servercore$onLightChanged(LightLayer lightLayer, int i, CallbackInfo ci) {
-        this.requiresBroadcast();
+        this.servercore$requiresBroadcast();
     }
 
-    private void requiresBroadcast() {
+    @Unique
+    private void servercore$requiresBroadcast() {
         if (this.levelHeightAccessor instanceof ServerLevel serverLevel) {
-            ((IServerChunkCache) serverLevel.getChunkSource()).requiresBroadcast((ChunkHolder) (Object) this);
+            ((IServerChunkCache) serverLevel.getChunkSource()).servercore$requiresBroadcast((ChunkHolder) (Object) this);
         }
     }
 }

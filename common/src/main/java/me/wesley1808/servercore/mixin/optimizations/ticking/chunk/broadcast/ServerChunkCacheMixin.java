@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 @Mixin(value = ServerChunkCache.class, priority = 900)
 public class ServerChunkCacheMixin implements IServerChunkCache {
     @Unique
-    private final ReferenceLinkedOpenHashSet<ChunkHolder> requiresBroadcast = new ReferenceLinkedOpenHashSet<>(128);
+    private final ReferenceLinkedOpenHashSet<ChunkHolder> servercore$requiresBroadcast = new ReferenceLinkedOpenHashSet<>(128);
 
     @Redirect(
             method = "tickChunks",
@@ -27,17 +27,17 @@ public class ServerChunkCacheMixin implements IServerChunkCache {
             )
     )
     private void servercore$broadcastChanges(List<ServerChunkCache.ChunkAndHolder> list, Consumer<ServerChunkCache.ChunkAndHolder> consumer) {
-        for (ChunkHolder holder : this.requiresBroadcast) {
+        for (ChunkHolder holder : this.servercore$requiresBroadcast) {
             LevelChunk chunk = holder.getTickingChunk();
             if (chunk != null) {
                 holder.broadcastChanges(chunk);
             }
         }
-        this.requiresBroadcast.clear();
+        this.servercore$requiresBroadcast.clear();
     }
 
     @Override
-    public void requiresBroadcast(ChunkHolder holder) {
-        this.requiresBroadcast.add(holder);
+    public void servercore$requiresBroadcast(ChunkHolder holder) {
+        this.servercore$requiresBroadcast.add(holder);
     }
 }

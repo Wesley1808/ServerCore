@@ -17,23 +17,23 @@ public class MobCategoryMixin implements IMobCategory {
     @Final
     private int max;
     @Unique
-    private int capacity;
+    private int servercore$capacity;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void servercore$onInit(String enumName, int index, String name, int max, boolean isFriendly, boolean isPersistent, int despawnDistance, CallbackInfo ci) {
-        this.capacity = max;
+        this.servercore$capacity = max;
     }
 
     // Should be @ModifyReturnValue to remove callback info allocations, however carpet mod.
     @Inject(method = "getMaxInstancesPerChunk", at = @At("HEAD"), cancellable = true)
     private void servercore$getCapacity(CallbackInfoReturnable<Integer> cir) {
-        if (this.capacity != this.max) {
-            cir.setReturnValue(this.capacity);
+        if (this.servercore$capacity != this.max) {
+            cir.setReturnValue(this.servercore$capacity);
         }
     }
 
     @Override
-    public void modifyCapacity(double modifier) {
-        this.capacity = (int) (this.max * modifier);
+    public void servercore$modifyCapacity(double modifier) {
+        this.servercore$capacity = (int) (this.max * modifier);
     }
 }

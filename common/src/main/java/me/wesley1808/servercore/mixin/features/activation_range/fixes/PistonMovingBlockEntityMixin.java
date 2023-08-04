@@ -42,8 +42,8 @@ public class PistonMovingBlockEntityMixin {
         MinecraftServer server = level.getServer();
         if (server != null) {
             final int tick = server.getTickCount() + 10;
-            entity.setActivatedTick(Math.max(entity.getActivatedTick(), tick));
-            entity.setActivatedImmunityTick(Math.max(entity.getActivatedImmunityTick(), tick));
+            entity.servercore$setActivatedTick(Math.max(entity.servercore$getActivatedTick(), tick));
+            entity.servercore$setActivatedImmunityTick(Math.max(entity.servercore$getActivatedImmunityTick(), tick));
         }
     }
 }

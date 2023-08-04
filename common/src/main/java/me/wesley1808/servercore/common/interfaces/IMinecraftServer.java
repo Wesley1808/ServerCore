@@ -2,11 +2,16 @@ package me.wesley1808.servercore.common.interfaces;
 
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.utils.Statistics;
+import net.minecraft.server.MinecraftServer;
 
 public interface IMinecraftServer {
-    void onStarted();
+    void servercore$onStarted(MinecraftServer server);
 
-    Statistics getStatistics();
+    Statistics servercore$getStatistics();
 
-    DynamicManager getDynamicManager();
+    DynamicManager servercore$getDynamicManager();
+
+    static void onStarted(MinecraftServer server) {
+        ((IMinecraftServer) server).servercore$onStarted(server);
+    }
 }

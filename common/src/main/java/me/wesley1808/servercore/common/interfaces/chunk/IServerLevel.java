@@ -1,5 +1,5 @@
 package me.wesley1808.servercore.common.interfaces.chunk;
 
 public interface IServerLevel {
-    void resetIceAndSnowTick();
+    void servercore$resetIceAndSnowTick();
 }

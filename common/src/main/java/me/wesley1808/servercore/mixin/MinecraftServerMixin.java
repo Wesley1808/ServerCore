@@ -12,27 +12,25 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin implements IMinecraftServer {
     @Unique
-    private DynamicManager dynamicManager;
+    private DynamicManager servercore$dynamicManager;
     @Unique
-    private Statistics statistics;
+    private Statistics servercore$statistics;
 
-    @Unique
     @Override
-    public void onStarted() {
-        MinecraftServer server = (MinecraftServer) (Object) this;
-        this.dynamicManager = PlatformHelper.isModLoaded("spark") ? new SparkDynamicManager(server) : new DynamicManager(server);
-        this.statistics = new Statistics(server);
+    public void servercore$onStarted(MinecraftServer server) {
+        this.servercore$dynamicManager = PlatformHelper.isModLoaded("spark") ? new SparkDynamicManager(server) : new DynamicManager(server);
+        this.servercore$statistics = new Statistics(server);
     }
 
     @Unique
     @Override
-    public Statistics getStatistics() {
-        return this.statistics;
+    public Statistics servercore$getStatistics() {
+        return this.servercore$statistics;
     }
 
     @Unique
     @Override
-    public DynamicManager getDynamicManager() {
-        return this.dynamicManager;
+    public DynamicManager servercore$getDynamicManager() {
+        return this.servercore$dynamicManager;
     }
 }

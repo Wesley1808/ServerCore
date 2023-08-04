@@ -16,15 +16,15 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(Level.class)
 public class LevelMixin implements LevelInfo {
     @Unique
-    private final int[] remaining = new int[ActivationType.Wakeup.values().length];
+    private final int[] servercore$remaining = new int[ActivationType.Wakeup.values().length];
 
     @Override
-    public int getRemaining(ActivationType.Wakeup key) {
-        return this.remaining[key.ordinal()];
+    public int servercore$getRemaining(ActivationType.Wakeup key) {
+        return this.servercore$remaining[key.ordinal()];
     }
 
     @Override
-    public void setRemaining(ActivationType.Wakeup key, int value) {
-        this.remaining[key.ordinal()] = value;
+    public void servercore$setRemaining(ActivationType.Wakeup key, int value) {
+        this.servercore$remaining[key.ordinal()] = value;
     }
 }

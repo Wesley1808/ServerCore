@@ -16,14 +16,14 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(GoalSelector.class)
 public abstract class GoalSelectorMixin implements Inactive {
     @Unique
-    private int curRate;
+    private int servercore$curRate;
 
     @Shadow
     public abstract void tick();
 
     @Override
-    public void inactiveTick() {
-        if (++this.curRate % 20 == 0) {
+    public void servercore$inactiveTick() {
+        if (++this.servercore$curRate % 20 == 0) {
             this.tick();
         }
     }

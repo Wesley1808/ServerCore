@@ -27,13 +27,13 @@ import java.util.List;
 @Mixin(value = ServerChunkCache.class, priority = 900)
 public class ServerChunkCacheMixin {
     @Unique
-    private final CachedChunkList cachedChunks = new CachedChunkList();
+    private final CachedChunkList servercore$cachedChunks = new CachedChunkList();
     @Unique
-    private boolean isChunkLoaded;
+    private boolean servercore$isChunkLoaded;
 
     @Inject(method = "save", at = @At("RETURN"))
     private void servercore$onSave(boolean bl, CallbackInfo ci) {
-        this.cachedChunks.shouldTrim();
+        this.servercore$cachedChunks.shouldTrim();
     }
 
     // Avoids unnecessary array allocations.
@@ -62,7 +62,7 @@ public class ServerChunkCacheMixin {
             )
     )
     private List<?> servercore$replaceList(List<?> list) {
-        return this.cachedChunks;
+        return this.servercore$cachedChunks;
     }
 
     // Updates our own list and prevents vanilla from adding chunks to it.
@@ -75,7 +75,7 @@ public class ServerChunkCacheMixin {
             )
     )
     private Iterable<ChunkHolder> servercore$updateCachedChunks(ChunkMap chunkMap) {
-        this.cachedChunks.update(chunkMap);
+        this.servercore$cachedChunks.update(chunkMap);
         return Collections::emptyIterator;
     }
 
@@ -102,7 +102,7 @@ public class ServerChunkCacheMixin {
             )
     )
     private void servercore$setLoaded(CallbackInfo ci, long l, long m, boolean bl, LevelData levelData, ProfilerFiller profilerFiller, int i, boolean bl2, int j, NaturalSpawner.SpawnState spawnState, List<?> list, boolean bl3, Iterator<?> var14, ServerChunkCache.ChunkAndHolder chunkAndHolder, LevelChunk chunk, ChunkPos pos) {
-        this.isChunkLoaded = chunk.loaded;
+        this.servercore$isChunkLoaded = chunk.loaded;
     }
 
     @Redirect(
@@ -113,7 +113,7 @@ public class ServerChunkCacheMixin {
             )
     )
     private boolean servercore$skipUnloadedChunks(ServerLevel level, ChunkPos pos) {
-        return this.isChunkLoaded;
+        return this.servercore$isChunkLoaded;
     }
 
     @Redirect(

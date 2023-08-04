@@ -18,6 +18,6 @@ public class CatMixin {
             )
     )
     private int servercore$fixCatDespawning(Cat cat) {
-        return cat.getFullTickCount();
+        return cat.servercore$getFullTickCount();
     }
 }

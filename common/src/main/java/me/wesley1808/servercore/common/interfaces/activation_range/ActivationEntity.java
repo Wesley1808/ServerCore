@@ -3,23 +3,23 @@ package me.wesley1808.servercore.common.interfaces.activation_range;
 import me.wesley1808.servercore.common.activation_range.ActivationType;
 
 public interface ActivationEntity {
-    ActivationType getActivationType();
+    ActivationType servercore$getActivationType();
 
-    boolean isExcluded();
+    boolean servercore$isExcluded();
 
-    int getActivatedTick();
+    int servercore$getActivatedTick();
 
-    void setActivatedTick(int activatedTick);
+    void servercore$setActivatedTick(int activatedTick);
 
-    int getActivatedImmunityTick();
+    int servercore$getActivatedImmunityTick();
 
-    void setActivatedImmunityTick(int activatedImmunityTick);
+    void servercore$setActivatedImmunityTick(int activatedImmunityTick);
 
-    void setInactive(boolean active);
+    void servercore$setInactive(boolean active);
 
-    void incFullTickCount();
+    void servercore$incFullTickCount();
 
-    default int getFullTickCount() {
+    default int servercore$getFullTickCount() {
         return 0;
     }
 }

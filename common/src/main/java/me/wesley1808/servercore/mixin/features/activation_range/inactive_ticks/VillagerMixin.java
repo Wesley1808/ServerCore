@@ -29,7 +29,7 @@ public abstract class VillagerMixin extends AbstractVillager {
     protected abstract void customServerAiStep();
 
     @Override
-    public void inactiveTick() {
+    public void servercore$inactiveTick() {
         if (this.getUnhappyCounter() > 0) {
             this.setUnhappyCounter(this.getUnhappyCounter() - 1);
         }
@@ -40,6 +40,6 @@ public abstract class VillagerMixin extends AbstractVillager {
         }
 
         this.maybeDecayGossip();
-        super.inactiveTick();
+        super.servercore$inactiveTick();
     }
 }

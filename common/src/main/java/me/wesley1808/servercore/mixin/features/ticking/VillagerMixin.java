@@ -26,10 +26,10 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(Villager.class)
 public abstract class VillagerMixin extends AbstractVillager {
     @Unique
-    private boolean lobotomized = false;
+    private boolean servercore$lobotomized = false;
 
     @Unique
-    private int notLobotomizedCount = 0;
+    private int servercore$notLobotomizedCount = 0;
 
     private VillagerMixin(EntityType<? extends AbstractVillager> entityType, Level level) {
         super(entityType, level);
@@ -43,43 +43,46 @@ public abstract class VillagerMixin extends AbstractVillager {
             )
     )
     private boolean servercore$shouldTickBrain(Brain<Villager> brain, ServerLevel level, LivingEntity livingEntity) {
-        return !FeatureConfig.LOBOTOMIZE_VILLAGERS.get() || !this.isLobotomized() || this.tickCount % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0;
+        return !FeatureConfig.LOBOTOMIZE_VILLAGERS.get() || !this.servercore$isLobotomized() || this.tickCount % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0;
     }
 
-    private boolean isLobotomized() {
+    @Unique
+    private boolean servercore$isLobotomized() {
         // Check half as often if not lobotomized for the last 3+ consecutive checks
-        if (this.tickCount % (this.notLobotomizedCount > 3 ? 600 : 300) == 0) {
+        if (this.tickCount % (this.servercore$notLobotomizedCount > 3 ? 600 : 300) == 0) {
             // Offset Y for short blocks like dirt_path/farmland
-            this.lobotomized = this.isPassenger() || !this.canTravel(BlockPos.containing(this.getX(), this.getY() + 0.0625D, this.getZ()));
+            this.servercore$lobotomized = this.isPassenger() || !this.servercore$canTravel(BlockPos.containing(this.getX(), this.getY() + 0.0625D, this.getZ()));
 
-            if (this.lobotomized) {
-                this.notLobotomizedCount = 0;
+            if (this.servercore$lobotomized) {
+                this.servercore$notLobotomizedCount = 0;
             } else {
-                this.notLobotomizedCount++;
+                this.servercore$notLobotomizedCount++;
             }
         }
 
-        return this.lobotomized;
+        return this.servercore$lobotomized;
     }
 
-    private boolean canTravel(BlockPos center) {
+    @Unique
+    private boolean servercore$canTravel(BlockPos center) {
         ChunkAccess chunk = ChunkManager.getChunkNow(this.level(), center);
         if (chunk == null) {
             return false;
         }
 
         BlockPos.MutableBlockPos mutable = center.mutable();
-        boolean canJump = !this.hasCollisionAt(chunk, mutable.move(Direction.UP, 2));
+        boolean canJump = !this.servercore$hasCollisionAt(chunk, mutable.move(Direction.UP, 2));
 
         for (Direction direction : Direction.Plane.HORIZONTAL) {
-            if (this.canTravelTo(mutable.setWithOffset(center, direction), canJump)) {
+            if (this.servercore$canTravelTo(mutable.setWithOffset(center, direction), canJump)) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean canTravelTo(BlockPos.MutableBlockPos mutable, boolean canJump) {
+    @Unique
+    private boolean servercore$canTravelTo(BlockPos.MutableBlockPos mutable, boolean canJump) {
         ChunkAccess chunk = ChunkManager.getChunkNow(this.level(), mutable);
         if (chunk == null) {
             return false;
@@ -91,7 +94,7 @@ public abstract class VillagerMixin extends AbstractVillager {
             return true;
         }
 
-        if (this.hasCollisionAt(chunk, mutable.move(Direction.UP))) {
+        if (this.servercore$hasCollisionAt(chunk, mutable.move(Direction.UP))) {
             // Early return if the top block has collision.
             return false;
         }
@@ -101,10 +104,11 @@ public abstract class VillagerMixin extends AbstractVillager {
         // - There is no collision above the top block
         // - The bottom block is short enough to jump on
         boolean isTallBlock = bottom instanceof FenceBlock || bottom instanceof FenceGateBlock || bottom instanceof WallBlock;
-        return !bottom.hasCollision || (canJump && !isTallBlock && !this.hasCollisionAt(chunk, mutable.move(Direction.UP)));
+        return !bottom.hasCollision || (canJump && !isTallBlock && !this.servercore$hasCollisionAt(chunk, mutable.move(Direction.UP)));
     }
 
-    private boolean hasCollisionAt(ChunkAccess chunk, BlockPos pos) {
+    @Unique
+    private boolean servercore$hasCollisionAt(ChunkAccess chunk, BlockPos pos) {
         return chunk.getBlockState(pos).getBlock().hasCollision;
     }
 }

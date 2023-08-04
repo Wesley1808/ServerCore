@@ -11,6 +11,7 @@ import net.minecraft.world.level.levelgen.structure.structures.BuriedTreasureStr
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -37,17 +38,19 @@ public class StructureCheckMixin {
     private void servercore$skipInvalidBiomes(ChunkPos chunkPos, Structure structure, boolean skipKnownStructures, CallbackInfoReturnable<StructureCheckResult> cir) {
         // Quick checks to validate the biome for certain structures without performing expensive noise calculations.
         // This is mainly done to significantly speed up locating buried treasures.
-        BlockPos pos = this.getRoughStructurePosition(structure, chunkPos);
-        if (pos != null && !this.isBiomeValid(structure, pos)) {
+        BlockPos pos = this.servercore$getRoughStructurePosition(structure, chunkPos);
+        if (pos != null && !this.servercore$isBiomeValid(structure, pos)) {
             cir.setReturnValue(StructureCheckResult.START_NOT_PRESENT);
         }
     }
 
-    private boolean isBiomeValid(Structure structure, BlockPos pos) {
+    @Unique
+    private boolean servercore$isBiomeValid(Structure structure, BlockPos pos) {
         return structure.biomes().contains(this.chunkGenerator.getBiomeSource().getNoiseBiome(pos.getX() >> 2, pos.getY() >> 2, pos.getZ() >> 2, this.randomState.sampler()));
     }
 
-    private BlockPos getRoughStructurePosition(Structure structure, ChunkPos chunkPos) {
+    @Unique
+    private BlockPos servercore$getRoughStructurePosition(Structure structure, ChunkPos chunkPos) {
         // The height isn't always guaranteed to be correct, but it's only used for biome checks.
         // There might be an extremely small chance that it will return the wrong biome, but it's arguably better than watchdog crashing the server.
         if (structure instanceof BuriedTreasureStructure) {

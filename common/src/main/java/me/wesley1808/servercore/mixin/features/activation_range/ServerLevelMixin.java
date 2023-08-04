@@ -53,12 +53,12 @@ public class ServerLevelMixin {
     )
     private boolean servercore$shouldTickEntity(Entity entity) {
         if (ActivationRange.checkIfActive(entity, this.server.getTickCount())) {
-            entity.setInactive(false);
+            entity.servercore$setInactive(false);
             entity.tickCount++;
             return true;
         } else {
-            entity.setInactive(true);
-            entity.inactiveTick();
+            entity.servercore$setInactive(true);
+            entity.servercore$inactiveTick();
             return false;
         }
     }
@@ -72,13 +72,13 @@ public class ServerLevelMixin {
     )
     private boolean servercore$shouldTickPassenger(Entity passenger, Entity vehicle, Entity ignored) {
         if (ActivationRange.checkIfActive(passenger, this.server.getTickCount())) {
-            passenger.setInactive(false);
+            passenger.servercore$setInactive(false);
             passenger.tickCount++;
             return true;
         } else {
             passenger.setDeltaMovement(Vec3.ZERO);
-            passenger.setInactive(true);
-            passenger.inactiveTick();
+            passenger.servercore$setInactive(true);
+            passenger.servercore$inactiveTick();
             vehicle.positionRider(passenger);
             return false;
         }
@@ -95,6 +95,6 @@ public class ServerLevelMixin {
             )
     )
     private void servercore$redirectTickCount(Entity entity, int value) {
-        entity.incFullTickCount();
+        entity.servercore$incFullTickCount();
     }
 }

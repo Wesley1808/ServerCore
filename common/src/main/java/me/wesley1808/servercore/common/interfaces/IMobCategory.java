@@ -1,5 +1,5 @@
 package me.wesley1808.servercore.common.interfaces;
 
 public interface IMobCategory {
-    void modifyCapacity(double modifier);
+    void servercore$modifyCapacity(double modifier);
 }
