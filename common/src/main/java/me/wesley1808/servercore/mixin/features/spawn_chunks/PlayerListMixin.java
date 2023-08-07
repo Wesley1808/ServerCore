@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PlayerListMixin {
 
     @Inject(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;invalidateStatus()V"))
-    private void servercore$disableSpawnChunks(Connection connection, ServerPlayer player, CallbackInfo ci) {
+    private void servercore$disableSpawnChunks(Connection connection, ServerPlayer player, int i, CallbackInfo ci) {
         // Disable spawn chunks after the player joins.
         // This is only used on singleplayer worlds that aren't published.
         if (!player.server.isPublished() && FeatureConfig.DISABLE_SPAWN_CHUNKS.get()) {

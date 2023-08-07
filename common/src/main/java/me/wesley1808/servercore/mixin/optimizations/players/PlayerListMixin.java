@@ -44,7 +44,7 @@ public class PlayerListMixin {
                     shift = At.Shift.BEFORE
             )
     )
-    private void servercore$moveToSpawn(Connection netManager, ServerPlayer player, CallbackInfo ci, GameProfile gameProfile, GameProfileCache gameProfileCache, String string, CompoundTag playerData, ResourceKey<?> resourceKey, ServerLevel ignored, ServerLevel level) {
+    private void servercore$moveToSpawn(Connection connection, ServerPlayer player, int i, CallbackInfo ci, GameProfile gameProfile, GameProfileCache gameProfileCache, String string, CompoundTag playerData, ResourceKey<?> resourceKey, ServerLevel ignored, ServerLevel level) {
         if (playerData == null) player.fudgeSpawnLocation(level);
     }
 
