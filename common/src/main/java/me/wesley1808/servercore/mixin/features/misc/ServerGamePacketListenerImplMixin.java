@@ -9,6 +9,7 @@ import net.minecraft.network.protocol.game.ServerboundMoveVehiclePacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerCommonPacketListenerImpl;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
@@ -37,8 +38,8 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
     @Shadow
     public ServerPlayer player;
 
-    public ServerGamePacketListenerImplMixin(MinecraftServer minecraftServer, Connection connection, int i) {
-        super(minecraftServer, connection, i);
+    public ServerGamePacketListenerImplMixin(MinecraftServer minecraftServer, Connection connection, CommonListenerCookie cookie) {
+        super(minecraftServer, connection, cookie);
     }
 
     @Shadow
