@@ -36,8 +36,10 @@ dependencies {
     include(forgeRuntimeLibrary("com.github.llamalad7.mixinextras:mixinextras-forge:${project.mixin_extras}"))
 
     // Adventure Text
-    shadowCommon(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-serializer-gson:${project.adventure_text}"))) { exclude group: "com.google.code.gson" }
     shadowCommon(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-minimessage:${project.adventure_text}")))
+    shadowCommon(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-serializer-gson:${project.adventure_text}"))) {
+        exclude group: "com.google.code.gson"
+    }
 
     // Allows running other mods in dev environment
     modLocalRuntime(fileTree(dir: 'runtime-mods', include: '*.jar'))
@@ -54,6 +56,7 @@ shadowJar {
     relocate("net.kyori", "sc_libs.net.kyori")
     relocate("org.jetbrains", "sc_libs.org.jetbrains")
     relocate("org.intellij", "sc_libs.org.intellij")
+    mergeServiceFiles()
 
     configurations = [project.configurations.shadowCommon]
     archiveClassifier.set "dev-shadow"
