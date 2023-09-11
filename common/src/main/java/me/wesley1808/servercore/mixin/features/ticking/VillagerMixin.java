@@ -3,6 +3,7 @@ package me.wesley1808.servercore.mixin.features.ticking;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import me.wesley1808.servercore.common.utils.ChunkManager;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -17,6 +18,8 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+
+import java.util.Locale;
 
 /**
  * Based on: Purpur (Lobotomize-stuck-villagers.patch)
@@ -47,11 +50,15 @@ public abstract class VillagerMixin extends AbstractVillager {
     }
 
     @Unique
+    private boolean servercore$isLobotomyImmune() {
+        return this.getTags().contains("no_lobotomy");
+    }
+
     private boolean servercore$isLobotomized() {
         // Check half as often if not lobotomized for the last 3+ consecutive checks
         if (this.tickCount % (this.servercore$notLobotomizedCount > 3 ? 600 : 300) == 0) {
             // Offset Y for short blocks like dirt_path/farmland
-            this.servercore$lobotomized = this.isPassenger() || !this.servercore$canTravel(BlockPos.containing(this.getX(), this.getY() + 0.0625D, this.getZ()));
+            this.servercore$lobotomized = !servercore$isLobotomyImmune() && (this.isPassenger() || !this.servercore$canTravel(BlockPos.containing(this.getX(), this.getY() + 0.0625D, this.getZ())));
 
             if (this.servercore$lobotomized) {
                 this.servercore$notLobotomizedCount = 0;
