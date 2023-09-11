@@ -3,7 +3,6 @@ package me.wesley1808.servercore.mixin.features.ticking;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import me.wesley1808.servercore.common.utils.ChunkManager;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -18,8 +17,6 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-
-import java.util.Locale;
 
 /**
  * Based on: Purpur (Lobotomize-stuck-villagers.patch)
