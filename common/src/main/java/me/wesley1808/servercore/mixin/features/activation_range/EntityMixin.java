@@ -4,6 +4,7 @@ import me.wesley1808.servercore.common.activation_range.ActivationRange;
 import me.wesley1808.servercore.common.activation_range.ActivationType;
 import me.wesley1808.servercore.common.interfaces.activation_range.ActivationEntity;
 import me.wesley1808.servercore.common.interfaces.activation_range.Inactive;
+import me.wesley1808.servercore.common.utils.EntityTags;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -90,12 +91,12 @@ public class EntityMixin implements Inactive, ActivationEntity {
     // ServerCore - Add a simple way to exclude certain entities from activation range.
     @Inject(method = "load", at = @At("RETURN"))
     private void servercore$onLoadNbt(CallbackInfo ci) {
-        this.servercore$excluded |= this.tags.contains("exclude_ear");
+        this.servercore$excluded |= this.tags.contains(EntityTags.EXCLUDE_FROM_ACTIVATION_RANGE);
     }
 
     @Inject(method = "addTag", at = @At("HEAD"))
     private void servercore$onTagAdded(String tag, CallbackInfoReturnable<Boolean> cir) {
-        this.servercore$excluded |= tag.equals("exclude_ear");
+        this.servercore$excluded |= tag.equals(EntityTags.EXCLUDE_FROM_ACTIVATION_RANGE);
     }
 
     @Override
