@@ -51,6 +51,7 @@ public abstract class VillagerMixin extends AbstractVillager {
         return this.getTags().contains("no_lobotomy");
     }
 
+    @Unique
     private boolean servercore$isLobotomized() {
         // Check half as often if not lobotomized for the last 3+ consecutive checks
         if (this.tickCount % (this.servercore$notLobotomizedCount > 3 ? 600 : 300) == 0) {
