@@ -38,6 +38,10 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             return OptimizationConfig.CACHE_TICKING_CHUNKS.get();
         }
 
+        if (path.equals("optimizations.ticking.chunk.random.LiquidBlockMixin")) {
+            return OptimizationConfig.CANCEL_DUPLICATE_FLUID_TICKS.get();
+        }
+
         return true;
     }
 

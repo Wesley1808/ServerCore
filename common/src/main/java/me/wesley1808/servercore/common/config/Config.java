@@ -30,7 +30,7 @@ public class Config {
         try {
             builder = CommentedFileConfig.builder(path, TomlFormat.instance()).preserveInsertionOrder().sync();
         } catch (Throwable throwable) {
-            ServerCore.LOGGER.error("[ServerCore] Unable to initialize config builder: {}", throwable.getMessage());
+            ServerCore.LOGGER.error("[ServerCore] Unable to initialize config builder: {}", throwable.toString());
             ServerCore.LOGGER.error("[ServerCore] Load and save operations on the config file will not be available.");
             builder = null;
         }

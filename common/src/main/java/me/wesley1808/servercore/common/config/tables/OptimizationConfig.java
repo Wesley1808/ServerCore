@@ -21,4 +21,10 @@ public class OptimizationConfig {
             (Default = false) Can significantly reduce time spent on mobspawning, but isn't as accurate as vanilla on biome borders.
             This may cause mobs from another biome to spawn a few blocks across a biome border (this does not affect structure spawning!)."""
     );
+
+    public static final ConfigEntry<Boolean> CANCEL_DUPLICATE_FLUID_TICKS = new ConfigEntry<>(
+            false, """
+            (Default = false) Fluid random ticks, like lava spreading fire, are run twice each game tick.
+            Enabling this will cancel the 'duplicate' second fluid tick, but this may cause slight behavior changes."""
+    );
 }
