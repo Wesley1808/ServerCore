@@ -1,6 +1,7 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
+
 architectury {
     platformSetupLoomIde()
     forge()
@@ -22,7 +23,7 @@ loom {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${minecraft}-${project.forge_version}"
+    forge "net.minecraftforge:forge:${project.minecraft}-${project.forge_version}"
 
     // Common
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
@@ -52,14 +53,18 @@ tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
 shadowJar {
     exclude "architectury.common.json"
 
-    relocate("com.electronwill", "sc_libs.com.electronwill")
-    relocate("net.kyori", "sc_libs.net.kyori")
-    relocate("org.jetbrains", "sc_libs.org.jetbrains")
-    relocate("org.intellij", "sc_libs.org.intellij")
+    relocateDependency(shadowJar, "com.electronwill")
+    relocateDependency(shadowJar, "net.kyori")
+    relocateDependency(shadowJar, "org.jetbrains")
+    relocateDependency(shadowJar, "org.intellij")
     mergeServiceFiles()
 
     configurations = [project.configurations.shadowCommon]
     archiveClassifier.set "dev-shadow"
+}
+
+private static void relocateDependency(com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar shadowJar, String pattern) {
+    shadowJar.relocate(pattern, "servercore_libs.${pattern}")
 }
 
 remapJar {
