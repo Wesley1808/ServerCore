@@ -65,6 +65,6 @@ public enum BreedingCap {
 
     private AABB getAreaAt(BlockPos pos) {
         int range = this.range.getAsInt();
-        return new AABB(pos.offset(range, range, range), pos.offset(-range, -range, -range));
+        return AABB.encapsulatingFullBlocks(pos.offset(range, range, range), pos.offset(-range, -range, -range));
     }
 }
