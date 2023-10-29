@@ -3,6 +3,8 @@ package me.wesley1808.servercore.common.services.platform;
 import me.wesley1808.servercore.common.ServerCore;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.Optional;
@@ -34,6 +36,16 @@ public final class PlatformHelper {
 
     public static boolean hasPermission(CommandSourceStack source, String node, int level) {
         return minecraftPlatform.hasPermission(source, node, level);
+    }
+
+    @Nullable
+    public static EntityType<?> getEntityType(String key) {
+        var optional = EntityType.byString(key);
+        if (optional.isPresent()) {
+            return optional.get();
+        } else {
+            return minecraftPlatform.getEntityType(key);
+        }
     }
 
     private static <T> T load(Class<T> clazz) {

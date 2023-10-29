@@ -93,7 +93,7 @@ public class Config {
         dirty = true;
     }
 
-    private static void loadChanges() {
+    public static void loadChanges() {
         DynamicSetting.loadCustomOrder();
         ActivationRange.reload();
     }
