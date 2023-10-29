@@ -34,7 +34,7 @@ dependencies {
     shadowCommon("com.electronwill.night-config:toml:${project.nightconfig}") { transitive false }
 
     // Mixin Extras
-    include(forgeRuntimeLibrary("com.github.llamalad7.mixinextras:mixinextras-forge:${project.mixin_extras}"))
+    include(forgeRuntimeLibrary("io.github.llamalad7:mixinextras-forge:${project.mixin_extras}"))
 
     // Adventure Text
     shadowCommon(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-minimessage:${project.adventure_text}")))
