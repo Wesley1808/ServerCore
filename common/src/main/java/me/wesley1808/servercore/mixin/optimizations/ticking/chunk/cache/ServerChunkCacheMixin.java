@@ -1,35 +1,35 @@
 package me.wesley1808.servercore.mixin.optimizations.ticking.chunk.cache;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import me.wesley1808.servercore.common.collections.CachedChunkList;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.storage.LevelData;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 @Mixin(value = ServerChunkCache.class, priority = 900)
 public class ServerChunkCacheMixin {
     @Unique
     private final CachedChunkList servercore$cachedChunks = new CachedChunkList();
-    @Unique
-    private boolean servercore$isChunkLoaded;
+    @Shadow
+    @Final
+    public ChunkMap chunkMap;
 
     @Inject(method = "save", at = @At("RETURN"))
     private void servercore$onSave(boolean bl, CallbackInfo ci) {
@@ -66,7 +66,7 @@ public class ServerChunkCacheMixin {
     }
 
     // Updates our own list and prevents vanilla from adding chunks to it.
-    @Redirect(
+    @ModifyExpressionValue(
             method = "tickChunks",
             at = @At(
                     value = "INVOKE",
@@ -74,8 +74,8 @@ public class ServerChunkCacheMixin {
                     ordinal = 0
             )
     )
-    private Iterable<ChunkHolder> servercore$updateCachedChunks(ChunkMap chunkMap) {
-        this.servercore$cachedChunks.update(chunkMap);
+    private Iterable<ChunkHolder> servercore$updateCachedChunks(Iterable<ChunkHolder> original) {
+        this.servercore$cachedChunks.update(this.chunkMap, original);
         return Collections::emptyIterator;
     }
 
@@ -92,19 +92,6 @@ public class ServerChunkCacheMixin {
         // NO-OP
     }
 
-    @Inject(
-            method = "tickChunks",
-            locals = LocalCapture.CAPTURE_FAILHARD,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ServerLevel;isNaturalSpawningAllowed(Lnet/minecraft/world/level/ChunkPos;)Z",
-                    shift = At.Shift.BEFORE
-            )
-    )
-    private void servercore$setLoaded(CallbackInfo ci, long l, long m, boolean bl, LevelData levelData, ProfilerFiller profilerFiller, int i, boolean bl2, int j, NaturalSpawner.SpawnState spawnState, List<?> list, boolean bl3, Iterator<?> var14, ServerChunkCache.ChunkAndHolder chunkAndHolder, LevelChunk chunk, ChunkPos pos) {
-        this.servercore$isChunkLoaded = chunk.loaded;
-    }
-
     @Redirect(
             method = "tickChunks",
             at = @At(
@@ -112,8 +99,8 @@ public class ServerChunkCacheMixin {
                     target = "Lnet/minecraft/server/level/ServerLevel;isNaturalSpawningAllowed(Lnet/minecraft/world/level/ChunkPos;)Z"
             )
     )
-    private boolean servercore$skipUnloadedChunks(ServerLevel level, ChunkPos pos) {
-        return this.servercore$isChunkLoaded;
+    private boolean servercore$skipUnloadedChunks(ServerLevel level, ChunkPos pos, @Local(ordinal = 0) LevelChunk chunk) {
+        return chunk.loaded;
     }
 
     @Redirect(

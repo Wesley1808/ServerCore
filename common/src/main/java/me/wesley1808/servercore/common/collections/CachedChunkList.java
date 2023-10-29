@@ -23,11 +23,11 @@ public class CachedChunkList extends ObjectArrayList<ServerChunkCache.ChunkAndHo
         this.trim = true;
     }
 
-    public void update(ChunkMap chunkMap) {
+    public void update(ChunkMap chunkMap, Iterable<ChunkHolder> holders) {
         if (this.tickCount++ % 20 == 0) {
             this.clear();
 
-            for (ChunkHolder holder : chunkMap.visibleChunkMap.values()) {
+            for (ChunkHolder holder : holders) {
                 LevelChunk chunk = ChunkManager.getChunkFromFuture(holder.getEntityTickingChunkFuture());
                 if (chunk != null && chunkMap.anyPlayerCloseEnoughForSpawning(holder.getPos())) {
                     this.add(new ServerChunkCache.ChunkAndHolder(chunk, holder));
