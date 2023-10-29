@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.mixin.optimizations.ticking.chunk.cache;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.wesley1808.servercore.common.collections.CachedChunkList;
 import net.minecraft.server.level.ChunkHolder;
@@ -9,7 +10,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.LevelChunk;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,6 +28,9 @@ import java.util.List;
 public class ServerChunkCacheMixin {
     @Unique
     private final CachedChunkList servercore$cachedChunks = new CachedChunkList();
+    @Shadow
+    @Final
+    public ChunkMap chunkMap;
 
     @Inject(method = "save", at = @At("RETURN"))
     private void servercore$onSave(boolean bl, CallbackInfo ci) {
@@ -61,7 +67,7 @@ public class ServerChunkCacheMixin {
     }
 
     // Updates our own list and prevents vanilla from adding chunks to it.
-    @Redirect(
+    @ModifyExpressionValue(
             method = "tickChunks",
             at = @At(
                     value = "INVOKE",
@@ -69,8 +75,8 @@ public class ServerChunkCacheMixin {
                     ordinal = 0
             )
     )
-    private Iterable<ChunkHolder> servercore$updateCachedChunks(ChunkMap chunkMap) {
-        this.servercore$cachedChunks.update(chunkMap);
+    private Iterable<ChunkHolder> servercore$updateCachedChunks(Iterable<ChunkHolder> original) {
+        this.servercore$cachedChunks.update(this.chunkMap, original);
         return Collections::emptyIterator;
     }
 
