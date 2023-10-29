@@ -5,7 +5,6 @@ import me.wesley1808.servercore.common.config.ConfigEntry;
 import net.minecraft.world.entity.EntityType;
 
 import java.util.List;
-import java.util.Optional;
 
 public class ActivationRangeConfig {
     public static final ConfigEntry<Boolean> ENABLED = new ConfigEntry<>(false, "(Default = false) Enables this feature.");
@@ -44,15 +43,6 @@ public class ActivationRangeConfig {
                     EntityType.getKey(EntityType.WARDEN).toString(),
                     EntityType.getKey(EntityType.GHAST).toString()
             ),
-            (types) -> {
-                for (String type : types) {
-                    Optional<?> optional = EntityType.byString(type);
-                    if (optional.isEmpty()) {
-                        return false;
-                    }
-                }
-                return true;
-            },
             """
             (Default = ["minecraft:hopper_minecart", "minecraft:warden", "minecraft:ghast"])
             A list of entity types that should be excluded from activation range checks."""
