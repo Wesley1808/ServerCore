@@ -6,6 +6,8 @@ import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.services.platform.MinecraftPlatform;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
+import org.jetbrains.annotations.Nullable;
 
 public class FabricMinecraftPlatform implements MinecraftPlatform {
     @Override
@@ -17,5 +19,11 @@ public class FabricMinecraftPlatform implements MinecraftPlatform {
     @Override
     public Component parseText(String input) {
         return TextParserUtils.formatText(input);
+    }
+
+    @Override
+    @Nullable
+    public EntityType<?> getEntityType(String key) {
+        return null;
     }
 }

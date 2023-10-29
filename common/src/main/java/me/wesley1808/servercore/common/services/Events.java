@@ -22,6 +22,7 @@ public class Events {
     }
 
     public static void onServerStarted(MinecraftServer server) {
+        Config.loadChanges();
         IMinecraftServer.onStarted(server);
 
         // Disable spawn chunks after the server starts up.

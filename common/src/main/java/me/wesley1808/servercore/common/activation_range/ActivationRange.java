@@ -3,6 +3,7 @@ package me.wesley1808.servercore.common.activation_range;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
 import me.wesley1808.servercore.common.interfaces.activation_range.LevelInfo;
+import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import me.wesley1808.servercore.common.utils.Util;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,7 +36,6 @@ import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -58,9 +58,11 @@ public class ActivationRange {
     public static void reload() {
         EXCLUDED_ENTITY_TYPES.clear();
 
-        for (String type : ActivationRangeConfig.EXCLUDED_ENTITY_TYPES.get()) {
-            Optional<EntityType<?>> optional = EntityType.byString(type);
-            optional.ifPresent(EXCLUDED_ENTITY_TYPES::add);
+        for (String key : ActivationRangeConfig.EXCLUDED_ENTITY_TYPES.get()) {
+            EntityType<?> type = PlatformHelper.getEntityType(key);
+            if (type != null) {
+                EXCLUDED_ENTITY_TYPES.add(type);
+            }
         }
     }
 
