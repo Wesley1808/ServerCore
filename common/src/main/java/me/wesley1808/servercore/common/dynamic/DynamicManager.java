@@ -23,14 +23,16 @@ public class DynamicManager {
 
         if (ENABLED.get()) {
             final int maxViewDistance = MAX_VIEW_DISTANCE.get();
-            final int maxSimDistance = MAX_SIMULATION_DISTANCE.get();
             if (server.getPlayerList().getViewDistance() > maxViewDistance) {
                 this.modifyViewDistance(maxViewDistance);
             }
 
+            final int maxSimDistance = MAX_SIMULATION_DISTANCE.get();
             if (server.getPlayerList().getSimulationDistance() > maxSimDistance) {
                 this.modifySimulationDistance(maxSimDistance);
             }
+
+            this.modifyMobcaps(MAX_MOBCAP.get());
         }
     }
 
