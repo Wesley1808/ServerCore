@@ -186,6 +186,9 @@ The config file can be found at `/config/servercore.toml`
     # (Default = false) Can significantly reduce time spent on mobspawning, but isn't as accurate as vanilla on biome borders.
     # This may cause mobs from another biome to spawn a few blocks across a biome border (this does not affect structure spawning!).
     fast_biome_lookups = false
+    # (Default = false) Fluid random ticks, like lava spreading fire, are run twice each game tick.
+    # Enabling this will cancel the 'duplicate' second fluid tick, but this may cause slight behavior changes.
+    cancel_duplicate_fluid_ticks = false
 
 # Allows you to disable specific commands and modify the way some of them are formatted.
 [commands]
@@ -217,6 +220,9 @@ The config file can be found at `/config/servercore.toml`
 [activation_range]
     # (Default = false) Enables this feature.
     enabled = false
+    # (Default = true) Briefly ticks entities newly added to the world for 10 seconds (includes both spawning and loading).
+    # This gives them a chance to properly immunize when they are spawned if they should be. Can be helpful for mobfarms.
+    tick_new_entities = true
     # (Default = false) Enables vertical range checks. By default, activation ranges only work horizontally.
     # This can greatly improve performance on taller worlds, but might break a few very specific ai-based mobfarms.
     use_vertical_range = false

@@ -9,6 +9,12 @@ import java.util.List;
 public class ActivationRangeConfig {
     public static final ConfigEntry<Boolean> ENABLED = new ConfigEntry<>(false, "(Default = false) Enables this feature.");
 
+    public static final ConfigEntry<Boolean> TICK_NEW_ENTITIES = new ConfigEntry<>(
+            true, """
+            (Default = true) Briefly ticks entities newly added to the world for 10 seconds (includes both spawning and loading).
+            This gives them a chance to properly immunize when they are spawned if they should be. Can be helpful for mobfarms."""
+    );
+
     public static final ConfigEntry<Boolean> USE_VERTICAL_RANGE = new ConfigEntry<>(
             false, """
             (Default = false) Enables vertical range checks. By default, activation ranges only work horizontally.
@@ -42,8 +48,7 @@ public class ActivationRangeConfig {
                     EntityType.getKey(EntityType.HOPPER_MINECART).toString(),
                     EntityType.getKey(EntityType.WARDEN).toString(),
                     EntityType.getKey(EntityType.GHAST).toString()
-            ),
-            """
+            ), """
             (Default = ["minecraft:hopper_minecart", "minecraft:warden", "minecraft:ghast"])
             A list of entity types that should be excluded from activation range checks."""
     );

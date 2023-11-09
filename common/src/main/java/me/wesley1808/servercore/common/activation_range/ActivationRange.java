@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ambient.AmbientCreature;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Animal;
@@ -221,53 +222,55 @@ public class ActivationRange {
                 return 1;
             }
 
-            if (entity instanceof Mob mob && mob.getTarget() != null) {
-                return 20;
-            }
+            if (living instanceof Mob mob) {
+                if (mob.getTarget() != null || mob.getBrain().hasMemoryValue(MemoryModuleType.ATTACK_TARGET)) {
+                    return 20;
+                }
 
-            if (entity instanceof Bee bee && (bee.beePollinateGoal.isPollinating() || bee.isAngry() || Util.hasTasks(bee.getGoalSelector(), BEE_GOAL_IMMUNITIES))) {
-                return 20;
-            }
+                if (mob instanceof Bee bee && (bee.beePollinateGoal.isPollinating() || bee.isAngry() || Util.hasTasks(bee.goalSelector, BEE_GOAL_IMMUNITIES))) {
+                    return 20;
+                }
 
-            if (entity instanceof Villager villager) {
-                Brain<Villager> brain = villager.getBrain();
+                if (mob instanceof Villager villager) {
+                    Brain<Villager> brain = villager.getBrain();
 
-                if (ActivationRangeConfig.VILLAGER_TICK_PANIC.get()) {
-                    for (Activity activity : VILLAGER_PANIC_IMMUNITIES) {
-                        if (brain.isActive(activity)) {
-                            return 20 * 5;
+                    if (ActivationRangeConfig.VILLAGER_TICK_PANIC.get()) {
+                        for (Activity activity : VILLAGER_PANIC_IMMUNITIES) {
+                            if (brain.isActive(activity)) {
+                                return 20 * 5;
+                            }
+                        }
+                    }
+
+                    final int immunityAfter = ActivationRangeConfig.VILLAGER_WORK_IMMUNITY_AFTER.get();
+                    if (immunityAfter > 0 && (currentTick - mob.servercore$getActivatedTick()) >= immunityAfter) {
+                        if (brain.isActive(Activity.WORK)) {
+                            return ActivationRangeConfig.VILLAGER_WORK_IMMUNITY_FOR.get();
                         }
                     }
                 }
 
-                final int immunityAfter = ActivationRangeConfig.VILLAGER_WORK_IMMUNITY_AFTER.get();
-                if (immunityAfter > 0 && (currentTick - entity.servercore$getActivatedTick()) >= immunityAfter) {
-                    if (brain.isActive(Activity.WORK)) {
-                        return ActivationRangeConfig.VILLAGER_WORK_IMMUNITY_FOR.get();
-                    }
-                }
-            }
-
-            if (entity instanceof Llama llama && llama.inCaravan()) {
-                return 1;
-            }
-
-            if (entity instanceof Animal animal) {
-                if (animal.isBaby() || animal.isInLove()) {
-                    return 5;
-                }
-
-                if (entity instanceof Sheep sheep && sheep.isSheared()) {
+                if (mob instanceof Llama llama && llama.inCaravan()) {
                     return 1;
                 }
-            }
 
-            if (entity instanceof Creeper creeper && creeper.isIgnited()) {
-                return 20;
-            }
+                if (mob instanceof Animal animal) {
+                    if (animal.isBaby() || animal.isInLove()) {
+                        return 5;
+                    }
 
-            if (entity instanceof Mob mob && Util.hasTasks(mob.targetSelector)) {
-                return 0;
+                    if (mob instanceof Sheep sheep && sheep.isSheared()) {
+                        return 1;
+                    }
+                }
+
+                if (mob instanceof Creeper creeper && creeper.isIgnited()) {
+                    return 20;
+                }
+
+                if (Util.hasTasks(mob.targetSelector)) {
+                    return 0;
+                }
             }
         }
         return -1;
@@ -306,7 +309,7 @@ public class ActivationRange {
 
     private static boolean shouldTick(Entity entity) {
         return !ActivationRangeConfig.ENABLED.get() || entity.servercore$isExcluded() || entity.isInsidePortal || entity.isOnPortalCooldown()
-               || (entity.tickCount < 200 && entity.servercore$getActivationType() == ActivationType.MISC) // New misc entities
+               || (entity.tickCount < 200 && (entity.servercore$getActivationType() == ActivationType.MISC || ActivationRangeConfig.TICK_NEW_ENTITIES.get())) // New entities
                || (entity instanceof Mob mob && mob.leashHolder instanceof Player) // Player leashed mobs
                || (entity instanceof LivingEntity living && living.hurtTime > 0); // Attacked mobs
     }
