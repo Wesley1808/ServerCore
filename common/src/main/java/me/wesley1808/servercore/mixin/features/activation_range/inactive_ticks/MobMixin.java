@@ -23,7 +23,7 @@ public abstract class MobMixin extends LivingEntity {
     public GoalSelector targetSelector;
     @Shadow
     @Final
-    protected GoalSelector goalSelector;
+    public GoalSelector goalSelector;
 
     private MobMixin(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);

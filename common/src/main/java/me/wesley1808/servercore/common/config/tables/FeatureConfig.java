@@ -20,9 +20,9 @@ public class FeatureConfig {
             "(Default = 20) Decides the interval in between villager ticks when lobotomized."
     );
 
-    public static final ConfigEntry<Integer> AUTOSAVE_INTERVAL = new ConfigEntry<>(
-            6000, (value) -> value >= 1,
-            "(Default = 6000) The amount of ticks between auto-saves when /save-on is active."
+    public static final ConfigEntry<Integer> AUTOSAVE_INTERVAL_SECONDS = new ConfigEntry<>(
+            300, (value) -> value >= 5,
+            "(Default = 300) The amount of seconds between auto-saves when /save-on is active."
     );
 
     public static final ConfigEntry<Integer> XP_MERGE_CHANCE = new ConfigEntry<>(

@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(value = MinecraftServer.class, priority = 900)
 public class MinecraftServerMixin {
 
-    @ModifyConstant(method = "tickServer", constant = @Constant(intValue = 6000), require = 0)
-    public int servercore$modifyAutoSaveInterval(int constant) {
-        return FeatureConfig.AUTOSAVE_INTERVAL.get();
+    @ModifyConstant(method = "computeNextAutosaveInterval", constant = @Constant(floatValue = 300F), require = 0)
+    public float servercore$modifyAutoSaveInterval(float constant) {
+        return FeatureConfig.AUTOSAVE_INTERVAL_SECONDS.get();
     }
 }
