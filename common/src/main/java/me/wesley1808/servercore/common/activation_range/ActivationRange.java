@@ -287,17 +287,19 @@ public class ActivationRange {
 
         boolean active = entity.servercore$getActivatedTick() >= currentTick;
         if (!active) {
-            final int tickInterval = entity.servercore$getActivationType().tickInterval.getAsInt();
-
-            if ((currentTick - entity.servercore$getActivatedTick() - 1) % tickInterval == 0) {
+            final int inactiveTicks = currentTick - entity.servercore$getActivatedTick() - 1;
+            if (inactiveTicks % 20 == 0) {
                 // Check immunities every 20 inactive ticks.
                 final int immunity = checkEntityImmunities(entity, currentTick);
                 if (immunity >= 0) {
                     entity.servercore$setActivatedTick(currentTick + immunity);
                     return true;
                 }
+            }
 
-                return tickInterval > 0;
+            final int tickInterval = entity.servercore$getActivationType().tickInterval.getAsInt();
+            if (tickInterval > 0 && inactiveTicks % tickInterval == 0) {
+                return true;
             }
             // Spigot - Add a little performance juice to active entities. Skip 1/4 if not immune.
         } else if (ActivationRangeConfig.SKIP_NON_IMMUNE.get() && entity.servercore$getFullTickCount() % 4 == 0 && checkEntityImmunities(entity, currentTick) < 0) {
