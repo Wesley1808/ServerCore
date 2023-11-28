@@ -35,7 +35,7 @@ dependencies {
     // Placeholder API
     modImplementation(include("eu.pb4:placeholder-api:${project.placeholder_api}"))
 
-    // Mixin Extras
+    // Mixin Extras - Can be removed when Fabric Loader 0.15+ is out of beta.
     runtimeOnly(include("io.github.llamalad7:mixinextras-fabric:${project.mixin_extras}"))
 
     // Night Config
