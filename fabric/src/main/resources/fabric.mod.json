@@ -11,7 +11,7 @@
     "sources": "https://github.com/Wesley1808/ServerCore",
     "issues": "https://github.com/Wesley1808/ServerCore/issues"
   },
-  "icon": "assets/servercore/icon.png",
+  "icon": "icon.png",
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
