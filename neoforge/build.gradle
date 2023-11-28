@@ -1,0 +1,84 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+}
+
+repositories {
+    maven { url "https://maven.neoforged.net/releases/" }
+}
+
+architectury {
+    platformSetupLoomIde()
+    neoForge()
+}
+
+configurations {
+    common
+    shadowCommon
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentNeoForge.extendsFrom common
+}
+
+dependencies {
+    neoForge "net.neoforged:neoforge:${project.neoforged_version}"
+
+    // Common
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive false }
+
+    // Mixin Extras
+    include(forgeRuntimeLibrary("io.github.llamalad7:mixinextras-neoforge:${project.mixin_extras}"))
+
+    // Adventure Text
+    shadowCommon(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-minimessage:${project.adventure_text}"))) {
+        exclude group: "org.intellij"
+        exclude group: "org.jetbrains"
+    }
+    shadowCommon(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-serializer-gson:${project.adventure_text}"))) {
+        exclude group: "com.google.code.gson"
+        exclude group: "org.intellij"
+        exclude group: "org.jetbrains"
+    }
+
+    // Allows running other mods in dev environment
+    modLocalRuntime(fileTree(dir: 'runtime-mods', include: '*.jar'))
+}
+
+tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
+    archiveAppendix.set("neoforge")
+}
+
+shadowJar {
+    exclude "architectury.common.json"
+
+    relocateDependency(shadowJar, "net.kyori")
+    mergeServiceFiles()
+
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier.set "dev-shadow"
+}
+
+private static void relocateDependency(com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar shadowJar, String pattern) {
+    shadowJar.relocate(pattern, "servercore_libs.${pattern}")
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier.set null
+    atAccessWideners.add('servercore.accesswidener')
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+processResources {
+    inputs.property "version", mod_version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": mod_version
+    }
+}

@@ -1,0 +1,27 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "MIT"
+issueTrackerURL = "https://github.com/Wesley1808/ServerCore/issues"
+showAsResourcePack = false
+
+[[mods]]
+modId = "servercore"
+version = "${version}"
+displayName = "ServerCore"
+displayURL = "https://github.com/Wesley1808/ServerCore"
+logoFile = "icon.png"
+authors = "Wesley1808"
+
+description = '''
+A neoforge mod that aims to optimize the minecraft server.
+'''
+
+[[mixins]]
+config = "servercore.common.mixins.json"
+
+[[dependencies.servercore]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20,)"
+ordering = "NONE"
+side = "BOTH"
