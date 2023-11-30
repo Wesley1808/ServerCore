@@ -12,7 +12,7 @@ logoFile = "icon.png"
 authors = "Wesley1808"
 
 description = '''
-A forge mod that aims to optimize the minecraft server.
+A Forge mod that aims to optimize the minecraft server.
 '''
 
 [[dependencies.servercore]]

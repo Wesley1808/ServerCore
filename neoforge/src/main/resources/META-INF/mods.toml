@@ -13,7 +13,7 @@ logoFile = "icon.png"
 authors = "Wesley1808"
 
 description = '''
-A neoforge mod that aims to optimize the minecraft server.
+A NeoForge mod that aims to optimize the minecraft server.
 '''
 
 [[mixins]]
