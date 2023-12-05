@@ -2,10 +2,6 @@ plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-repositories {
-    maven { url "https://maven.neoforged.net/releases/" }
-}
-
 architectury {
     platformSetupLoomIde()
     neoForge()
@@ -19,15 +15,16 @@ configurations {
     developmentNeoForge.extendsFrom common
 }
 
+repositories {
+    maven { url "https://maven.neoforged.net/releases/" }
+}
+
 dependencies {
     neoForge "net.neoforged:neoforge:${project.neoforged_version}"
 
     // Common
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive false }
-
-    // Mixin Extras
-    include(forgeRuntimeLibrary("io.github.llamalad7:mixinextras-neoforge:${project.mixin_extras}"))
 
     // Adventure Text
     shadowCommon(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-minimessage:${project.adventure_text}"))) {

@@ -12,26 +12,13 @@ subprojects {
     }
 
     repositories {
-        maven { url "https://repo.spongepowered.org/repository/maven-public/" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-        maven { url "https://maven.nucleoid.xyz/" }
-        maven { url "https://maven.parchmentmc.org" }
-        maven { url "https://jitpack.io" }
         mavenCentral()
     }
 
     dependencies {
         minecraft "com.mojang:minecraft:${project.minecraft}"
-
-        // Mappings
-        if (project.parchment.isEmpty()) {
-            mappings loom.officialMojangMappings()
-        } else {
-            mappings loom.layered() {
-                officialMojangMappings()
-                parchment("org.parchmentmc.data:parchment-${project.parchment}@zip")
-            }
-        }
+        mappings loom.officialMojangMappings()
 
         // Spark API
         compileOnly "me.lucko:spark-api:${project.spark_api}"

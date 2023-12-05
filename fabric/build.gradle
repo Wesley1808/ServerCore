@@ -15,6 +15,10 @@ configurations {
     developmentFabric.extendsFrom common
 }
 
+repositories {
+    maven { url "https://maven.nucleoid.xyz/" }
+}
+
 dependencies {
     // Fabric Loader
     modImplementation "net.fabricmc:fabric-loader:${project.fabric_version}"
