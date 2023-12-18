@@ -24,11 +24,11 @@ subprojects {
         compileOnly "me.lucko:spark-api:${project.spark_api}"
 
         // Night Config
-        implementation "com.electronwill.night-config:core:${project.nightconfig}"
-        implementation "com.electronwill.night-config:toml:${project.nightconfig}"
+        compileOnly "com.electronwill.night-config:core:${project.nightconfig}"
+        compileOnly "com.electronwill.night-config:toml:${project.nightconfig}"
 
         // Mixin Extras
-        implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${project.mixin_extras}"))
+        compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${project.mixin_extras}"))
     }
 }
 
