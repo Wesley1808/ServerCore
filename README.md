@@ -114,8 +114,6 @@ The config file can be found at `/config/servercore.toml`
 ```toml
 # Lets you enable / disable certain features and modify them.
 [features]
-    # (Default = false) Stops the server from loading spawn chunks.
-    disable_spawn_chunks = false
     # (Default = false) Prevents lagspikes caused by players moving into unloaded chunks.
     prevent_moving_into_unloaded_chunks = false
     # (Default = false) Makes villagers tick less often if they are stuck in a 1x1 space.

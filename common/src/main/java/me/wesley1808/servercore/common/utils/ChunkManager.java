@@ -97,12 +97,6 @@ public class ChunkManager {
         return getChunkFromHolder(holder) != null;
     }
 
-    public static void disableSpawnChunks(MinecraftServer server) {
-        ServerLevel level = server.overworld();
-        ChunkPos pos = new ChunkPos(new BlockPos(level.getLevelData().getXSpawn(), 0, level.getLevelData().getZSpawn()));
-        level.getChunkSource().removeRegionTicket(TicketType.START, pos, 11, Unit.INSTANCE);
-    }
-
     // Utility method from PaperMC (MC-Utils.patch)
     public static boolean areChunksLoadedForMove(ServerLevel level, AABB box) {
         int minBlockX = Mth.floor(box.minX - 1.0E-7D) - 3;
