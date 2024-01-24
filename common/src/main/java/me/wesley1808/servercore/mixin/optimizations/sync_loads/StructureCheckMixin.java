@@ -7,6 +7,7 @@ import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureCheck;
 import net.minecraft.world.level.levelgen.structure.StructureCheckResult;
+import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
 import net.minecraft.world.level.levelgen.structure.structures.BuriedTreasureStructure;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,7 +36,7 @@ public class StructureCheckMixin {
                     shift = At.Shift.BEFORE
             )
     )
-    private void servercore$skipInvalidBiomes(ChunkPos chunkPos, Structure structure, boolean skipKnownStructures, CallbackInfoReturnable<StructureCheckResult> cir) {
+    private void servercore$skipInvalidBiomes(ChunkPos chunkPos, Structure structure, StructurePlacement structurePlacement, boolean skipKnownStructures, CallbackInfoReturnable<StructureCheckResult> cir) {
         // Quick checks to validate the biome for certain structures without performing expensive noise calculations.
         // This is mainly done to significantly speed up locating buried treasures.
         BlockPos pos = this.servercore$getRoughStructurePosition(structure, chunkPos);
