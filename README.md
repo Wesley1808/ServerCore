@@ -120,8 +120,8 @@ The config file can be found at `/config/servercore.toml`
     lobotomize_villagers = false
     # (Default = 20) Decides the interval in between villager ticks when lobotomized.
     lobotomized_tick_interval = 20
-    # (Default = 6000) The amount of ticks between auto-saves when /save-on is active.
-    autosave_interval = 6000
+    # (Default = 300) The amount of seconds between auto-saves when /save-on is active.
+    autosave_interval_seconds = 300
     # (Default = 40) Decides the chance of XP orbs being able to merge together (1 in X).
     xp_merge_chance = 40
     # (Default = 0.5) Decides the radius in blocks that items / xp will merge at.

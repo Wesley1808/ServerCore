@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.activation_range;
 
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import me.wesley1808.servercore.common.activation_range.ActivationRange;
 import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
 import net.minecraft.server.MinecraftServer;
