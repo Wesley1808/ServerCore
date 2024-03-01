@@ -1,14 +1,11 @@
 package me.wesley1808.servercore.common.utils;
 
-import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ChunkResult;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.TicketType;
 import net.minecraft.util.Mth;
-import net.minecraft.util.Unit;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -16,8 +13,8 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,13 +59,13 @@ public class ChunkManager {
     }
 
     @Nullable
-    public static LevelChunk getChunkFromFuture(CompletableFuture<Either<LevelChunk, ChunkHolder.ChunkLoadingFailure>> chunkFuture) {
-        Either<LevelChunk, ChunkHolder.ChunkLoadingFailure> either;
-        if (chunkFuture == ChunkHolder.UNLOADED_LEVEL_CHUNK_FUTURE || (either = chunkFuture.getNow(null)) == null) {
+    public static LevelChunk getChunkFromFuture(CompletableFuture<ChunkResult<LevelChunk>> chunkFuture) {
+        ChunkResult<LevelChunk> chunkResult;
+        if (chunkFuture == ChunkHolder.UNLOADED_LEVEL_CHUNK_FUTURE || (chunkResult = chunkFuture.getNow(null)) == null) {
             return null;
         }
 
-        return either.left().orElse(null);
+        return chunkResult.orElse(null);
     }
 
     @Nullable
