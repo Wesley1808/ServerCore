@@ -45,8 +45,8 @@ public class PlayerListMixin {
                     shift = At.Shift.BEFORE
             )
     )
-    private void servercore$moveToSpawn(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci, GameProfile gameProfile, GameProfileCache gameProfileCache, String string, CompoundTag playerData, ResourceKey<?> resourceKey, ServerLevel ignored, ServerLevel level) {
-        if (playerData == null) player.fudgeSpawnLocation(level);
+    private void servercore$moveToSpawn(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci, GameProfile gameProfile, GameProfileCache gameProfileCache, String string, Optional<CompoundTag> playerData, ResourceKey<?> resourceKey, ServerLevel ignored, ServerLevel level) {
+        if (playerData.isEmpty()) player.fudgeSpawnLocation(level);
     }
 
     // ServerCore - Finds random spawn location for respawning players without spawnpoint.
