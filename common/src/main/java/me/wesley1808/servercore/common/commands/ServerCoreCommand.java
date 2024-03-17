@@ -11,6 +11,7 @@ import me.wesley1808.servercore.common.config.ConfigEntry;
 import me.wesley1808.servercore.common.config.tables.CommandConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
+import me.wesley1808.servercore.common.interfaces.IMobCategory;
 import me.wesley1808.servercore.common.services.Formatter;
 import me.wesley1808.servercore.common.services.Permission;
 import me.wesley1808.servercore.common.utils.Util;
@@ -111,6 +112,8 @@ public class ServerCoreCommand {
         if (value instanceof String val) value = val.replace("#N", "\n");
 
         sendMessage(source, key, String.valueOf(value), entry.set(value));
+
+        IMobCategory.reload();
         return Command.SINGLE_SUCCESS;
     }
 

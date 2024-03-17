@@ -31,6 +31,8 @@ public class DynamicManager {
             if (server.getPlayerList().getSimulationDistance() > maxSimDistance) {
                 this.modifySimulationDistance(maxSimDistance);
             }
+
+            DynamicManager.modifyMobcaps(MAX_MOBCAP.get());
         }
     }
 
@@ -99,11 +101,9 @@ public class DynamicManager {
         }
     }
 
-    public void modifyMobcaps(double modifier) {
+    public static void modifyMobcaps(double modifier) {
         for (MobCategory category : MobCategory.values()) {
-            if ((Object) category instanceof IMobCategory mobCategory) {
-                mobCategory.modifyCapacity(modifier);
-            }
+            IMobCategory.modifyCapacity(category, modifier);
         }
     }
 

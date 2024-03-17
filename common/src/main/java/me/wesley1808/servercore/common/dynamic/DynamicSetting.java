@@ -33,7 +33,7 @@ public enum DynamicSetting {
             MOBCAP_INCREMENT::get,
             MIN_MOBCAP::get,
             MAX_MOBCAP::get,
-            DynamicManager::modifyMobcaps
+            (manager, value) -> DynamicManager.modifyMobcaps(value)
     ),
 
     CHUNK_TICK_DISTANCE(
