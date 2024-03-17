@@ -7,7 +7,9 @@ import com.electronwill.nightconfig.toml.TomlFormat;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.activation_range.ActivationRange;
 import me.wesley1808.servercore.common.config.tables.*;
+import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
+import me.wesley1808.servercore.common.interfaces.IMobCategory;
 import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,6 +98,7 @@ public class Config {
     public static void loadChanges() {
         DynamicSetting.loadCustomOrder();
         ActivationRange.reload();
+        IMobCategory.reload();
     }
 
     // Creates table when missing.
@@ -140,6 +143,7 @@ public class Config {
         FEATURES(FeatureConfig.class, false, "Lets you enable / disable certain features and modify them."),
         DYNAMIC(DynamicConfig.class, false, "Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT."),
         BREEDING_CAP(EntityLimitConfig.class, false, "Stops animals / villagers from breeding if there are too many of the same type nearby."),
+        MOB_SPAWNING(MobSpawnConfig.class, false, "Allows you to modify individual mobcaps and their frequency of spawn attempts."),
         OPTIMIZATIONS(OptimizationConfig.class, true, "Allows you to toggle specific optimizations that don't have full vanilla parity.\nThese settings will only take effect after server restarts."),
         COMMANDS(CommandConfig.class, false, "Allows you to disable specific commands and modify the way some of them are formatted."),
         ACTIVATION_RANGE(ActivationRangeConfig.class, false, "Ticks entities less often when they are further away from players.");

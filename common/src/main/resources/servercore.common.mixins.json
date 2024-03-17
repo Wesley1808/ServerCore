@@ -39,6 +39,7 @@
     "features.misc.MinecraftServerMixin",
     "features.misc.ServerGamePacketListenerImplMixin",
     "features.spawn_chunks.ServerLevelMixin",
+    "features.ticking.NaturalSpawnerMixin",
     "features.ticking.VillagerMixin",
     "optimizations.biome_lookups.NaturalSpawnerMixin",
     "optimizations.misc.MapItemSavedDataMixin",

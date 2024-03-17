@@ -110,6 +110,7 @@ public class ServerCoreCommand {
         sendMessage(source, key, String.valueOf(value), entry.set(value));
 
         Config.setDirty();
+        Config.loadChanges();
         return Command.SINGLE_SUCCESS;
     }
 
