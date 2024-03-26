@@ -3,7 +3,9 @@ package me.wesley1808.servercore.common.services.platform;
 import me.wesley1808.servercore.common.ServerCore;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ChunkMap;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.ChunkPos;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
@@ -36,6 +38,10 @@ public final class PlatformHelper {
 
     public static boolean hasPermission(CommandSourceStack source, String node, int level) {
         return minecraftPlatform.hasPermission(source, node, level);
+    }
+
+    public static boolean shouldTickChunk(ChunkMap chunkMap, ChunkPos pos) {
+        return chunkMap.anyPlayerCloseEnoughForSpawning(pos) || minecraftPlatform.shouldForceChunkTicks(chunkMap, pos);
     }
 
     @Nullable

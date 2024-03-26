@@ -1,6 +1,7 @@
 package me.wesley1808.servercore.common.collections;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ChunkMap;
@@ -29,7 +30,7 @@ public class CachedChunkList extends ObjectArrayList<ServerChunkCache.ChunkAndHo
 
             for (ChunkHolder holder : holders) {
                 LevelChunk chunk = ChunkManager.getChunkFromFuture(holder.getEntityTickingChunkFuture());
-                if (chunk != null && chunkMap.anyPlayerCloseEnoughForSpawning(holder.getPos())) {
+                if (chunk != null && PlatformHelper.shouldTickChunk(chunkMap, holder.getPos())) {
                     this.add(new ServerChunkCache.ChunkAndHolder(chunk, holder));
                 }
             }

@@ -6,8 +6,10 @@ import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.permission.PermissionAPI;
 import net.minecraftforge.server.permission.nodes.PermissionNode;
@@ -27,6 +29,11 @@ public class ForgeMinecraftPlatform implements MinecraftPlatform {
         }
 
         return PermissionAPI.getPermission(player, permission);
+    }
+
+    @Override
+    public boolean shouldForceChunkTicks(ChunkMap chunkMap, ChunkPos pos) {
+        return chunkMap.getDistanceManager().shouldForceTicks(pos.toLong());
     }
 
     @Override
