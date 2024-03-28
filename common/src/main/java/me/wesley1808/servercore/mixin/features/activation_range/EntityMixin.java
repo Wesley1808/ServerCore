@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.mixin.features.activation_range;
 
 import me.wesley1808.servercore.common.activation_range.ActivationRange;
-import me.wesley1808.servercore.common.activation_range.ActivationType;
+import me.wesley1808.servercore.common.config.data.activation_range.ActivationType;
 import me.wesley1808.servercore.common.interfaces.activation_range.ActivationEntity;
 import me.wesley1808.servercore.common.interfaces.activation_range.Inactive;
 import me.wesley1808.servercore.common.utils.EntityTags;

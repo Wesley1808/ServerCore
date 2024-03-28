@@ -2,7 +2,6 @@ package me.wesley1808.servercore.mixin.features.activation_range;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import me.wesley1808.servercore.common.activation_range.ActivationRange;
-import me.wesley1808.servercore.common.config.legacy.ActivationRangeConfig;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -39,8 +38,9 @@ public class ServerLevelMixin {
             )
     )
     private void servercore$activateEntities(BooleanSupplier booleanSupplier, CallbackInfo ci) {
-        if (ActivationRangeConfig.ENABLED.get() && this.server.getTickCount() % 20 == 0) {
-            ActivationRange.activateEntities((ServerLevel) (Object) this);
+        final int currentTick = this.server.getTickCount();
+        if (currentTick % 20 == 0) {
+            ActivationRange.activateEntities((ServerLevel) (Object) this, currentTick);
         }
     }
 

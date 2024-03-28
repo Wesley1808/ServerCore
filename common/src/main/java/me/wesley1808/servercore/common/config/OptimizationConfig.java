@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.common.config.files;
+package me.wesley1808.servercore.common.config;
 
 import space.arim.dazzleconf.annote.ConfComments;
 import space.arim.dazzleconf.annote.ConfDefault.DefaultBoolean;

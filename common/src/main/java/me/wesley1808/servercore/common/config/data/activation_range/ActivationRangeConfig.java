@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.common.config.files.data.activation_range;
+package me.wesley1808.servercore.common.config.data.activation_range;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

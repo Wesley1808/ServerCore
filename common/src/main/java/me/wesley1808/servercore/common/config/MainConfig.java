@@ -1,11 +1,11 @@
-package me.wesley1808.servercore.common.config.files;
+package me.wesley1808.servercore.common.config;
 
-import me.wesley1808.servercore.common.config.files.data.CommandConfig;
-import me.wesley1808.servercore.common.config.files.data.FeatureConfig;
-import me.wesley1808.servercore.common.config.files.data.activation_range.ActivationRangeConfig;
-import me.wesley1808.servercore.common.config.files.data.breeding_cap.BreedingCapConfig;
-import me.wesley1808.servercore.common.config.files.data.dynamic.DynamicConfig;
-import me.wesley1808.servercore.common.config.files.data.mob_spawning.MobSpawnConfig;
+import me.wesley1808.servercore.common.config.data.CommandConfig;
+import me.wesley1808.servercore.common.config.data.FeatureConfig;
+import me.wesley1808.servercore.common.config.data.activation_range.ActivationRangeConfig;
+import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCapConfig;
+import me.wesley1808.servercore.common.config.data.dynamic.DynamicConfig;
+import me.wesley1808.servercore.common.config.data.mob_spawning.MobSpawnConfig;
 import space.arim.dazzleconf.annote.ConfComments;
 import space.arim.dazzleconf.annote.ConfHeader;
 import space.arim.dazzleconf.annote.ConfKey;
@@ -16,7 +16,7 @@ import space.arim.dazzleconf.sorter.AnnotationBasedSorter.Order;
         "The main configuration file for ServerCore.",
         "Most of these settings can be reloaded without restarting using /servercore reload.\n"
 })
-public interface Config {
+public interface MainConfig {
     @Order(1)
     @SubSection
     @ConfKey("features")

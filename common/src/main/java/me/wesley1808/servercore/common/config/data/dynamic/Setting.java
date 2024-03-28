@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.common.config.files.data.dynamic;
+package me.wesley1808.servercore.common.config.data.dynamic;
 
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import space.arim.dazzleconf.annote.ConfKey;

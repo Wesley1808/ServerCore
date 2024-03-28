@@ -3,7 +3,7 @@ package me.wesley1808.servercore.common.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import me.wesley1808.servercore.common.config.Configs;
+import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.legacy.CommandConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
@@ -63,7 +63,7 @@ public class ServerCoreCommand {
     }
 
     private static int reload(CommandSourceStack source) {
-        Configs.reload(true);
+        Config.reload(true);
 
         source.sendSuccess(() -> Component.literal("Config reloaded!").withStyle(ChatFormatting.GREEN), false);
         return Command.SINGLE_SUCCESS;

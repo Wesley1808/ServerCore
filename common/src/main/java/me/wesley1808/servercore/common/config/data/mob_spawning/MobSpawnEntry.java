@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.common.config.files.data.mob_spawning;
+package me.wesley1808.servercore.common.config.data.mob_spawning;
 
 import net.minecraft.world.entity.MobCategory;
 import space.arim.dazzleconf.annote.ConfKey;

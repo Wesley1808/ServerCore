@@ -1,7 +1,8 @@
-package me.wesley1808.servercore.common.config.files.data.activation_range;
+package me.wesley1808.servercore.common.config.data.activation_range;
 
 import me.wesley1808.servercore.common.config.serialization.EntityTypeSerializer;
 import me.wesley1808.servercore.common.config.serialization.EntityTypeTestSerializer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import space.arim.dazzleconf.annote.CollectionSize;
 import space.arim.dazzleconf.annote.ConfKey;
@@ -22,9 +23,9 @@ public interface CustomActivationType extends ActivationType {
     @Order(6)
     @ConfKey("entity-matcher")
     @CollectionSize(min = 1)
-    List<EntityTypeTest<?, ?>> matchers();
+    List<EntityTypeTest<? super Entity, ?>> matchers();
 
-    static CustomActivationType of(String name, List<EntityTypeTest<?, ?>> matchers, int activationRange, int tickInterval, int wakeupInterval, boolean extraHeightUp, boolean extraHeightDown) {
+    static CustomActivationType of(String name, List<EntityTypeTest<? super Entity, ?>> matchers, int activationRange, int tickInterval, int wakeupInterval, boolean extraHeightUp, boolean extraHeightDown) {
         return new CustomActivationType() {
             @Override
             public String name() {
@@ -32,7 +33,7 @@ public interface CustomActivationType extends ActivationType {
             }
 
             @Override
-            public List<EntityTypeTest<?, ?>> matchers() {
+            public List<EntityTypeTest<? super Entity, ?>> matchers() {
                 return matchers;
             }
 

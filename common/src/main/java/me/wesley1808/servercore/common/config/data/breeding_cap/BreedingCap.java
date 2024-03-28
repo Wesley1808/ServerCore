@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.common.config.files.data.breeding_cap;
+package me.wesley1808.servercore.common.config.data.breeding_cap;
 
 import space.arim.dazzleconf.annote.ConfDefault.DefaultInteger;
 import space.arim.dazzleconf.annote.ConfKey;

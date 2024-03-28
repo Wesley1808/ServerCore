@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin;
 
-import me.wesley1808.servercore.common.config.Configs;
+import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.legacy.OptimizationConfig;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -14,7 +14,7 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
     @Override
     public void onLoad(String mixinPackage) {
         this.mixinPackage = mixinPackage + ".";
-        Configs.reload(false);
+        Config.reload(false);
     }
 
     @Override

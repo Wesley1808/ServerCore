@@ -1,9 +1,6 @@
 package me.wesley1808.servercore.common.activation_range;
 
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.FlyingMob;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.NeutralMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.AmbientCreature;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.animal.WaterAnimal;
@@ -19,16 +16,16 @@ import java.util.Map;
  * Collection of entity type tests for the activation range configuration.
  */
 public class EntityTypeTests {
-    public static final EntityTypeTest<?, ?> MOB = EntityTypeTest.forClass(Mob.class);
-    public static final EntityTypeTest<?, ?> MONSTER = EntityTypeTest.forClass(Enemy.class);
-    public static final EntityTypeTest<?, ?> RAIDER = EntityTypeTest.forClass(Raider.class);
-    public static final EntityTypeTest<?, ?> AMBIENT = EntityTypeTest.forClass(AmbientCreature.class);
-    public static final EntityTypeTest<?, ?> ANIMAL = EntityTypeTest.forClass(AgeableMob.class);
-    public static final EntityTypeTest<?, ?> NEUTRAL = EntityTypeTest.forClass(NeutralMob.class);
-    public static final EntityTypeTest<?, ?> WATER_ANIMAL = EntityTypeTest.forClass(WaterAnimal.class);
-    public static final EntityTypeTest<?, ?> FLYING_ANIMAL = EntityTypeTest.forClass(FlyingAnimal.class);
-    public static final EntityTypeTest<?, ?> FLYING_MONSTER = EntityTypeTest.forClass(FlyingMob.class);
-    public static final EntityTypeTest<?, ?> VILLAGER = EntityTypeTest.forClass(Npc.class);
+    public static final EntityTypeTest<? super Entity, ?> MOB = EntityTypeTest.forClass(Mob.class);
+    public static final EntityTypeTest<? super Entity, ?> MONSTER = EntityTypeTest.forClass(Enemy.class);
+    public static final EntityTypeTest<? super Entity, ?> RAIDER = EntityTypeTest.forClass(Raider.class);
+    public static final EntityTypeTest<? super Entity, ?> AMBIENT = EntityTypeTest.forClass(AmbientCreature.class);
+    public static final EntityTypeTest<? super Entity, ?> ANIMAL = EntityTypeTest.forClass(AgeableMob.class);
+    public static final EntityTypeTest<? super Entity, ?> NEUTRAL = EntityTypeTest.forClass(NeutralMob.class);
+    public static final EntityTypeTest<? super Entity, ?> WATER_ANIMAL = EntityTypeTest.forClass(WaterAnimal.class);
+    public static final EntityTypeTest<? super Entity, ?> FLYING_ANIMAL = EntityTypeTest.forClass(FlyingAnimal.class);
+    public static final EntityTypeTest<? super Entity, ?> FLYING_MONSTER = EntityTypeTest.forClass(FlyingMob.class);
+    public static final EntityTypeTest<? super Entity, ?> VILLAGER = EntityTypeTest.forClass(Npc.class);
     private static final Map<String, EntityTypeTest<?, ?>> ENTITY_TYPE_TESTS = Map.of(
             "mob", MOB,
             "monster", MONSTER,
