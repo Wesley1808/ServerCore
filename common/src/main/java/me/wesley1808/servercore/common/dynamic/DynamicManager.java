@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.common.dynamic;
 
-import me.wesley1808.servercore.common.config.tables.CommandConfig;
+import me.wesley1808.servercore.common.config.legacy.CommandConfig;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
 import me.wesley1808.servercore.common.interfaces.IMobCategory;
 import me.wesley1808.servercore.common.services.platform.PlatformHelper;
@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.MobCategory;
 
-import static me.wesley1808.servercore.common.config.tables.DynamicConfig.*;
+import static me.wesley1808.servercore.common.config.legacy.DynamicConfig.*;
 import static me.wesley1808.servercore.common.dynamic.DynamicSetting.*;
 
 public class DynamicManager {
@@ -41,7 +41,7 @@ public class DynamicManager {
     }
 
     public static String getModifierAsPercentage() {
-        return String.format("%.0f%%", MOBCAP_MULTIPLIER.get() * 100);
+        return String.format("%.0f%%", MOBCAP.get());
     }
 
     public static String createStatusReport(String title) {
@@ -101,7 +101,8 @@ public class DynamicManager {
         }
     }
 
-    public static void modifyMobcaps(double modifier) {
+    public static void modifyMobcaps(double percentage) {
+        final double modifier = percentage / 100F;
         for (MobCategory category : MobCategory.values()) {
             IMobCategory.modifyCapacity(category, modifier);
         }

@@ -32,6 +32,11 @@ dependencies {
     // Mixin Extras
     include(forgeRuntimeLibrary("io.github.llamalad7:mixinextras-forge:${project.mixin_extras}"))
 
+    // Configuration
+    include(forgeRuntimeLibrary("org.yaml:snakeyaml:${project.snakeyaml}"))
+    include(forgeRuntimeLibrary("space.arim.dazzleconf:dazzleconf-core:${project.dazzleconf}"))
+    include(forgeRuntimeLibrary("space.arim.dazzleconf:dazzleconf-ext-snakeyaml:${project.dazzleconf}"))
+
     // Adventure Text
     shadowCommon(implementation(forgeRuntimeLibrary("net.kyori:adventure-text-minimessage:${project.adventure_text}"))) {
         exclude group: "org.intellij"

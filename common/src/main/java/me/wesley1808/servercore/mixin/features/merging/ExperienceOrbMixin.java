@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.merging;
 
-import me.wesley1808.servercore.common.config.tables.FeatureConfig;
+import me.wesley1808.servercore.common.config.legacy.FeatureConfig;
 import net.minecraft.world.entity.ExperienceOrb;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

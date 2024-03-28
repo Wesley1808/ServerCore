@@ -1,6 +1,5 @@
-package me.wesley1808.servercore.common.config.tables;
+package me.wesley1808.servercore.common.config.legacy;
 
-import me.wesley1808.servercore.common.config.ConfigEntry;
 import net.minecraft.world.entity.MobCategory;
 
 public class MobSpawnConfig {

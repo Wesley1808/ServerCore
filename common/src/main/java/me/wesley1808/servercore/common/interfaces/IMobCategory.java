@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.common.interfaces;
 
-import me.wesley1808.servercore.common.config.tables.MobSpawnConfig;
+import me.wesley1808.servercore.common.config.legacy.MobSpawnConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import net.minecraft.world.entity.MobCategory;
@@ -60,7 +60,7 @@ public interface IMobCategory {
                 MobSpawnConfig.WATER_AMBIENT_SPAWN_INTERVAL.get()
         );
 
-        DynamicManager.modifyMobcaps(DynamicSetting.MOBCAP_MULTIPLIER.get());
+        DynamicManager.modifyMobcaps(DynamicSetting.MOBCAP.get());
     }
 
     private static void modify(MobCategory category, int max, int interval) {

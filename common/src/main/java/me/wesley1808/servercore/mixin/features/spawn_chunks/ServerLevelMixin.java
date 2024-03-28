@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.mixin.features.spawn_chunks;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
-import me.wesley1808.servercore.common.config.tables.FeatureConfig;
+import me.wesley1808.servercore.common.config.legacy.FeatureConfig;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;

@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.common.utils;
 
-import me.wesley1808.servercore.common.config.tables.EntityLimitConfig;
+import me.wesley1808.servercore.common.config.legacy.EntityLimitConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
@@ -42,7 +42,7 @@ public enum BreedingCap {
     }
 
     public boolean exceedsLimit(EntityType<?> type, Level level, BlockPos pos) {
-        if (!EntityLimitConfig.ENABLED.get()) {
+        if (!EntityLimitConfig.ENABLED.get() || this.limit.getAsInt() < 0) {
             return false;
         }
 

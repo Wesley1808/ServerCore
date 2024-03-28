@@ -1,8 +1,7 @@
 package me.wesley1808.servercore.common.activation_range;
 
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
-import me.wesley1808.servercore.common.interfaces.activation_range.LevelInfo;
+import me.wesley1808.servercore.common.config.legacy.ActivationRangeConfig;
 import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import me.wesley1808.servercore.common.utils.Util;
 import net.minecraft.server.level.ServerLevel;
@@ -126,11 +125,6 @@ public class ActivationRange {
         int maxRange = Integer.MIN_VALUE;
         for (ActivationType type : ActivationType.values()) {
             maxRange = Math.max(type.activationRange.getAsInt(), maxRange);
-        }
-
-        LevelInfo info = (LevelInfo) level;
-        for (ActivationType.Wakeup wakeup : ActivationType.Wakeup.values()) {
-            info.servercore$setRemaining(wakeup, Math.min(info.servercore$getRemaining(wakeup) + 1, wakeup.max.getAsInt()));
         }
 
         maxRange = Math.min((level.getServer().getPlayerList().getViewDistance() << 4) - 8, maxRange);
@@ -317,14 +311,9 @@ public class ActivationRange {
     }
 
     private static int checkInactiveWakeup(Entity entity, int currentTick) {
-        ActivationType.Wakeup wakeup = entity.servercore$getActivationType().wakeup;
+        Wakeup wakeup = entity.servercore$getActivationType().wakeup;
         if (wakeup != null && currentTick - entity.servercore$getActivatedTick() >= wakeup.interval.getAsInt() * 20L) {
-            LevelInfo info = (LevelInfo) entity.level();
-            int remaining = info.servercore$getRemaining(wakeup);
-            if (remaining > 0) {
-                info.servercore$setRemaining(wakeup, remaining - 1);
-                return 100;
-            }
+            return 100;
         }
 
         return -1;

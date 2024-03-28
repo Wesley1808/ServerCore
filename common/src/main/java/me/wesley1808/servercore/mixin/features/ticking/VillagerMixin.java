@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.mixin.features.ticking;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
-import me.wesley1808.servercore.common.config.tables.FeatureConfig;
+import me.wesley1808.servercore.common.config.legacy.FeatureConfig;
 import me.wesley1808.servercore.common.utils.ChunkManager;
 import me.wesley1808.servercore.common.utils.EntityTags;
 import net.minecraft.core.BlockPos;

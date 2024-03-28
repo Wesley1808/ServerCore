@@ -8,7 +8,7 @@ import java.util.function.BiConsumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 
-import static me.wesley1808.servercore.common.config.tables.DynamicConfig.*;
+import static me.wesley1808.servercore.common.config.legacy.DynamicConfig.*;
 
 public enum DynamicSetting {
     VIEW_DISTANCE(
@@ -27,7 +27,7 @@ public enum DynamicSetting {
             (manager, value) -> manager.modifySimulationDistance(value.intValue())
     ),
 
-    MOBCAP_MULTIPLIER(
+    MOBCAP(
             UPDATE_RATE::get,
             MOBCAP_INCREMENT::get,
             MIN_MOBCAP::get,

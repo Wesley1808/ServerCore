@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.activation_range.inactive_ticks;
 
-import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
+import me.wesley1808.servercore.common.config.legacy.ActivationRangeConfig;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;

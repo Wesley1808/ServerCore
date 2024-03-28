@@ -1,6 +1,4 @@
-package me.wesley1808.servercore.common.config.tables;
-
-import me.wesley1808.servercore.common.config.ConfigEntry;
+package me.wesley1808.servercore.common.config.legacy;
 
 public class CommandConfig {
     public static final ConfigEntry<Boolean> COMMAND_STATUS = new ConfigEntry<>(true, "Enables / disables the /servercore status command.");

@@ -1,7 +1,6 @@
-package me.wesley1808.servercore.common.config.tables;
+package me.wesley1808.servercore.common.config.legacy;
 
 import com.google.common.collect.Lists;
-import me.wesley1808.servercore.common.config.ConfigEntry;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public class DynamicConfig {
     public static final ConfigEntry<Double> MOBCAP_INCREMENT = new ConfigEntry<>(0.1D, (value) -> value >= 0.01);
 
     public static final ConfigEntry<ArrayList<String>> SETTING_ORDER = new ConfigEntry<>(
-            Lists.newArrayList("chunk_tick_distance", "mobcap_multiplier", "simulation_distance", "view_distance"),
+            Lists.newArrayList("chunk_tick_distance", "mobcap", "simulation_distance", "view_distance"),
             (settings) -> {
                 for (String key : settings) {
                     try {

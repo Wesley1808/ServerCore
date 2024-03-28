@@ -4,8 +4,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import me.wesley1808.servercore.common.commands.MobcapsCommand;
 import me.wesley1808.servercore.common.commands.ServerCoreCommand;
 import me.wesley1808.servercore.common.commands.StatisticsCommand;
-import me.wesley1808.servercore.common.config.Config;
-import me.wesley1808.servercore.common.config.tables.FeatureConfig;
+import me.wesley1808.servercore.common.config.Configs;
+import me.wesley1808.servercore.common.config.legacy.FeatureConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
@@ -22,7 +22,7 @@ public class Events {
     }
 
     public static void onServerStarted(MinecraftServer server) {
-        Config.loadChanges();
+        Configs.loadChanges();
         IMinecraftServer.onStarted(server);
 
         // Disable spawn chunks after the server starts up.
@@ -34,7 +34,6 @@ public class Events {
 
     public static void onShutdown(MinecraftServer server) {
         DynamicSetting.resetAll();
-        Config.save();
     }
 
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, Commands.CommandSelection environment) {

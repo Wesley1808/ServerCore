@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.common.config;
+package me.wesley1808.servercore.common.config.legacy;
 
 import java.util.function.Predicate;
 

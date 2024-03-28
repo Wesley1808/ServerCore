@@ -1,6 +1,4 @@
-package me.wesley1808.servercore.common.config.tables;
-
-import me.wesley1808.servercore.common.config.ConfigEntry;
+package me.wesley1808.servercore.common.config.legacy;
 
 public class OptimizationConfig {
     public static final ConfigEntry<Boolean> REDUCE_SYNC_LOADS = new ConfigEntry<>(

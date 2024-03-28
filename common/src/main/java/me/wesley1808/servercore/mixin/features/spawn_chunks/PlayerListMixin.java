@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.spawn_chunks;
 
-import me.wesley1808.servercore.common.config.tables.FeatureConfig;
+import me.wesley1808.servercore.common.config.legacy.FeatureConfig;
 import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

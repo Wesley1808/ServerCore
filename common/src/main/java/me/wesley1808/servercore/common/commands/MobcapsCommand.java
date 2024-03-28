@@ -2,7 +2,7 @@ package me.wesley1808.servercore.common.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import me.wesley1808.servercore.common.config.tables.CommandConfig;
+import me.wesley1808.servercore.common.config.legacy.CommandConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.services.Formatter;
 import net.minecraft.commands.CommandSourceStack;
