@@ -59,22 +59,26 @@ public class ConfigManager<C> {
         return new ConfigManager<>(new ConfigurationHelper<>(CONFIG_DIR, fileName, configFactory), fileName);
     }
 
-    public void reload() {
+    public boolean reload() {
         try {
             this.data = this.helper.reloadConfigData();
+            return true;
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         } catch (ConfigFormatSyntaxException ex) {
-            this.data = this.helper.getFactory().loadDefaults();
-
-            ServerCore.LOGGER.error("[ServerCore] The yaml syntax in {} is invalid. Check your YAML syntax with a tool such as https://yaml-online-parser.appspot.com/.", this.fileName);
+            ServerCore.LOGGER.error("[ServerCore] The yaml syntax in {} is invalid. Check your YAML syntax with a tool such as https://yaml-online-parser.appspot.com/", this.fileName);
             this.printError(ex.getMessage());
         } catch (InvalidConfigException ex) {
-            this.data = this.helper.getFactory().loadDefaults();
-
             ServerCore.LOGGER.error("[ServerCore] One of the values in {} is not valid.", this.fileName);
             this.printError(ex.getMessage());
         }
+
+        // If the config is not loaded yet, load the default values.
+        if (this.data == null) {
+            this.data = this.helper.getFactory().loadDefaults();
+        }
+
+        return false;
     }
 
     private void printError(String message) {

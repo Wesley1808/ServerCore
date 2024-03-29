@@ -11,17 +11,20 @@ public class Config {
         return OPTIMIZATION_MANAGER.get();
     }
 
-    public static MainConfig main() {
+    public static MainConfig get() {
         return mainConfigManager.get();
     }
 
-    public static void reload(boolean afterMixinLoad) {
-        if (afterMixinLoad) {
-            Config.getOrCreateConfigManager().reload();
+    public static void loadOptimizationConfig() {
+        OPTIMIZATION_MANAGER.reload();
+    }
+
+    public static boolean reloadMainConfig() {
+        if (Config.getOrCreateConfigManager().reload()) {
             Config.loadChanges();
-        } else {
-            OPTIMIZATION_MANAGER.reload();
+            return true;
         }
+        return false;
     }
 
     public static void loadChanges() {

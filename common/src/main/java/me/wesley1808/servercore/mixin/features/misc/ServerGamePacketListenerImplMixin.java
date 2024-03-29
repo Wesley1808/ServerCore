@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.misc;
 
-import me.wesley1808.servercore.common.config.legacy.FeatureConfig;
+import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundMoveVehiclePacket;
@@ -82,7 +82,7 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
 
     @Unique
     private boolean servercore$shouldPreventMovement(ServerLevel level, Entity entity, double fromX, double fromZ, double toX, double toY, double toZ) {
-        return FeatureConfig.PREVENT_MOVING_INTO_UNLOADED_CHUNKS.get()
+        return Config.get().features().preventMovingIntoUnloadedChunks()
                && (fromX != toX || fromZ != toZ)
                && !ChunkManager.areChunksLoadedForMove(level, entity.getBoundingBox().expandTowards(new Vec3(toX, toY, toZ).subtract(entity.position())));
     }

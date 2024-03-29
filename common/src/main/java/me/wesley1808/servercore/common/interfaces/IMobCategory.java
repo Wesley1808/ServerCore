@@ -32,7 +32,7 @@ public interface IMobCategory {
     }
 
     static void reload() {
-        for (MobSpawnEntry entry : Config.main().mobSpawning().categories()) {
+        for (MobSpawnEntry entry : Config.get().mobSpawning().categories()) {
             IMobCategory.modify(entry.category(), entry.capacity(), entry.spawnInterval());
         }
 

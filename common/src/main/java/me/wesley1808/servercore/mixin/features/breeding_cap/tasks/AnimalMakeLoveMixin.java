@@ -1,7 +1,9 @@
 package me.wesley1808.servercore.mixin.features.breeding_cap.tasks;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
-import me.wesley1808.servercore.common.utils.BreedingCap;
+import me.wesley1808.servercore.common.config.Config;
+import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCap;
+import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCapConfig;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.behavior.AnimalMakeLove;
 import net.minecraft.world.entity.animal.Animal;
@@ -19,7 +21,8 @@ public class AnimalMakeLoveMixin {
             )
     )
     private boolean servercore$enforceBreedCap(Animal owner, ServerLevel level, Animal mate) {
-        if (BreedingCap.ANIMAL.exceedsLimit(owner)) {
+        BreedingCapConfig config = Config.get().breedingCap();
+        if (config.enabled() && config.animals().exceedsLimit(owner)) {
             BreedingCap.resetLove(owner, mate);
             return false;
         }

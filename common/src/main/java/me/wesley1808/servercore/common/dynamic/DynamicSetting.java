@@ -35,7 +35,7 @@ public enum DynamicSetting {
     }
 
     public static void reload() {
-        List<Setting> settings = Config.main().dynamic().settings();
+        List<Setting> settings = Config.get().dynamic().settings();
         for (int i = 0; i < settings.size(); i++) {
             Setting setting = settings.get(i);
             DynamicSetting dynamicSetting = setting.dynamicSetting();

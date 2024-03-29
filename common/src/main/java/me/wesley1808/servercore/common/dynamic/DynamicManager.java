@@ -20,7 +20,7 @@ public class DynamicManager {
         this.server = server;
         this.isClient = server.isSingleplayer();
 
-        DynamicConfig config = Config.main().dynamic();
+        DynamicConfig config = Config.get().dynamic();
         if (config.enabled()) {
             final int maxViewDistance = DynamicSetting.VIEW_DISTANCE.getMax();
             if (server.getPlayerList().getViewDistance() > maxViewDistance) {
@@ -58,7 +58,7 @@ public class DynamicManager {
             DynamicManager manager = getInstance(server);
             manager.updateValues();
 
-            DynamicConfig config = Config.main().dynamic();
+            DynamicConfig config = Config.get().dynamic();
             if (config.enabled()) {
                 manager.runPerformanceChecks(config);
             }

@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.mixin;
 
 import me.wesley1808.servercore.common.config.Config;
-import me.wesley1808.servercore.common.config.legacy.OptimizationConfig;
+import me.wesley1808.servercore.common.config.OptimizationConfig;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
@@ -14,7 +14,7 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
     @Override
     public void onLoad(String mixinPackage) {
         this.mixinPackage = mixinPackage + ".";
-        Config.reload(false);
+        Config.loadOptimizationConfig();
     }
 
     @Override
@@ -25,21 +25,22 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         String path = mixinClassName.substring(this.mixinPackage.length());
+        OptimizationConfig config = Config.optimizations();
 
         if (path.startsWith("optimizations.sync_loads")) {
-            return OptimizationConfig.REDUCE_SYNC_LOADS.get();
+            return config.reduceSyncLoads();
         }
 
         if (path.startsWith("optimizations.biome_lookups")) {
-            return OptimizationConfig.FAST_BIOME_LOOKUPS.get();
+            return config.fastBiomeLookups();
         }
 
         if (path.startsWith("optimizations.ticking.chunk.cache")) {
-            return OptimizationConfig.CACHE_TICKING_CHUNKS.get();
+            return config.cacheTickingChunks();
         }
 
         if (path.equals("optimizations.ticking.chunk.random.LiquidBlockMixin")) {
-            return OptimizationConfig.CANCEL_DUPLICATE_FLUID_TICKS.get();
+            return config.cancelDuplicateFluidTicks();
         }
 
         return true;

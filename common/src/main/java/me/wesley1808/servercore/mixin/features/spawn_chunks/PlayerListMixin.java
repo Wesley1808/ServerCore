@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.spawn_chunks;
 
-import me.wesley1808.servercore.common.config.legacy.FeatureConfig;
+import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,7 +21,7 @@ public class PlayerListMixin {
     private void servercore$disableSpawnChunks(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
         // Disable spawn chunks after the player joins.
         // This is only used on singleplayer worlds that aren't published.
-        if (!player.server.isPublished() && FeatureConfig.DISABLE_SPAWN_CHUNKS.get()) {
+        if (!player.server.isPublished() && Config.get().features().disableSpawnChunks()) {
             ChunkManager.disableSpawnChunks(player.server);
         }
     }

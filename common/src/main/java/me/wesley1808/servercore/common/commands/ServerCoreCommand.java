@@ -28,7 +28,7 @@ public class ServerCoreCommand {
         node.then(reloadConfig());
         node.then(settings());
 
-        if (Config.main().commands().statusCommandEnabled()) {
+        if (Config.get().commands().statusCommandEnabled()) {
             node.then(literal("status").executes(ctx -> getStatus(ctx.getSource())));
         }
 
@@ -64,14 +64,18 @@ public class ServerCoreCommand {
     }
 
     private static int reload(CommandSourceStack source) {
-        Config.reload(true);
+        boolean success = Config.reloadMainConfig();
+        if (success) {
+            source.sendSuccess(() -> Component.literal("Config reloaded!").withStyle(ChatFormatting.GREEN), false);
+        } else {
+            source.sendFailure(Component.literal("Failed to reload config! Check the logs for more info.").withStyle(ChatFormatting.RED));
+        }
 
-        source.sendSuccess(() -> Component.literal("Config reloaded!").withStyle(ChatFormatting.GREEN), false);
         return Command.SINGLE_SUCCESS;
     }
 
     private static int getStatus(CommandSourceStack source) {
-        CommandConfig config = Config.main().commands();
+        CommandConfig config = Config.get().commands();
         source.sendSuccess(() -> Formatter.parse(String.format("%s\n%s",
                 Formatter.line(config.statusTitle(), 40, source.isPlayer()),
                 DynamicManager.createStatusReport(config)

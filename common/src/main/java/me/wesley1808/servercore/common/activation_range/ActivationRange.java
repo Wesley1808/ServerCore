@@ -54,7 +54,7 @@ public class ActivationRange {
      * Puts entities in their corresponding groups / activation types, upon initialization.
      */
     public static ActivationType initializeEntityActivationType(Entity entity) {
-        ActivationRangeConfig config = Config.main().activationRange();
+        ActivationRangeConfig config = Config.get().activationRange();
         for (CustomActivationType type : config.activationTypes()) {
             for (EntityTypeTest<? super Entity, ?> matcher : type.matchers()) {
                 if (matcher.tryCast(entity) != null) {
@@ -86,14 +86,14 @@ public class ActivationRange {
                || entity instanceof FireworkRocketEntity
                || entity instanceof EyeOfEnder
                || entity instanceof ThrownTrident
-               || Config.main().activationRange().excludedEntityTypes().contains(entity.getType());
+               || Config.get().activationRange().excludedEntityTypes().contains(entity.getType());
     }
 
     /**
      * Activates entities in {@param level} that are close enough to players.
      */
     public static void activateEntities(ServerLevel level, int currentTick) {
-        ActivationRangeConfig config = Config.main().activationRange();
+        ActivationRangeConfig config = Config.get().activationRange();
         if (!config.enabled()) {
             return;
         }
@@ -256,7 +256,7 @@ public class ActivationRange {
      * @return Boolean: whether the entity should tick.
      */
     public static boolean checkIfActive(Entity entity, int currentTick) {
-        ActivationRangeConfig config = Config.main().activationRange();
+        ActivationRangeConfig config = Config.get().activationRange();
         if (shouldTick(entity, config)) return true;
 
         boolean active = entity.servercore$getActivatedTick() >= currentTick;

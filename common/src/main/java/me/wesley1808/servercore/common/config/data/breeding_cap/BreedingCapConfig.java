@@ -15,10 +15,10 @@ public interface BreedingCapConfig {
 
     @Order(2)
     @SubSection
-    @ConfKey("villager")
+    @ConfKey("villagers")
     @ConfComments({
             "The breeding caps for mobs of each group.",
-            "► count = Maximum count before stopping entities of the same type from breeding. Setting this to negative will disable the limit.",
+            "► limit = The limit of mobs of the same type within range. Setting this to negative will disable the breeding cap.",
             "► range = The range it will check for entities of the same type."
     })
     BreedingCap villager();

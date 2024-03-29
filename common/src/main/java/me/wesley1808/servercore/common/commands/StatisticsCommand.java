@@ -3,7 +3,8 @@ package me.wesley1808.servercore.common.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import me.wesley1808.servercore.common.config.legacy.CommandConfig;
+import me.wesley1808.servercore.common.config.Config;
+import me.wesley1808.servercore.common.config.data.CommandConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.services.Formatter;
 import me.wesley1808.servercore.common.services.Permission;
@@ -97,15 +98,18 @@ public class StatisticsCommand {
     private static int displayOverview(CommandSourceStack source) {
         final double mspt = DynamicManager.getInstance(source.getServer()).getAverageTickTime();
         final double tps = mspt != 0 ? Math.min((1000 / mspt), 20) : 20;
-
         Statistics statistics = Statistics.getInstance(source.getServer());
-        source.sendSuccess(() -> Formatter.parse(Formatter.line(CommandConfig.STATS_TITLE.get(), 40, source.isPlayer()) + "\n" + CommandConfig.STATS_CONTENT.get()
-                .replace("${tps}", String.format("%.2f", tps))
-                .replace("${mspt}", String.format("%.2f", mspt))
-                .replace("${chunk_count}", String.valueOf(statistics.getChunkCount(true)))
-                .replace("${entity_count}", String.valueOf(statistics.getAllEntities().size()))
-                .replace("${block_entity_count}", String.valueOf(statistics.getAllBlockEntities().size()))
-        ), false);
+
+        CommandConfig config = Config.get().commands();
+        source.sendSuccess(() -> Formatter.parse(String.format("%s\n%s",
+                Formatter.line(config.statisticsTitle(), 40, source.isPlayer()),
+                String.join("\n", config.statisticsContents())
+                        .replace("${tps}", String.format("%.2f", tps))
+                        .replace("${mspt}", String.format("%.2f", mspt))
+                        .replace("${chunk_count}", String.valueOf(statistics.getChunkCount(true)))
+                        .replace("${entity_count}", String.valueOf(statistics.getAllEntities().size()))
+                        .replace("${block_entity_count}", String.valueOf(statistics.getAllBlockEntities().size()))
+        )), false);
 
         return Command.SINGLE_SUCCESS;
     }
@@ -140,12 +144,13 @@ public class StatisticsCommand {
 
     private static void displayFeedback(CommandContext<CommandSourceStack> context, Map<String, Integer> map, boolean isBlockEntity, boolean byPlayer, int page, @Nullable ServerPlayer player) {
         CommandSourceStack source = context.getSource();
+        CommandConfig config = Config.get().commands();
 
-        StringBuilder builder = new StringBuilder(createHeader(isBlockEntity, byPlayer, source.isPlayer(), player));
-        boolean success = Util.iteratePage(Util.sortByValue(map), page, 8, (entry, index) -> builder.append(createEntry(entry, index, isBlockEntity, byPlayer)));
+        StringBuilder builder = new StringBuilder(createHeader(isBlockEntity, byPlayer, source.isPlayer(), player, config));
+        boolean success = Util.iteratePage(Util.sortByValue(map), page, 8, (entry, index) -> builder.append(createEntry(entry, index, isBlockEntity, byPlayer, config)));
 
         if (success) {
-            builder.append("\n").append(createFooter(page, Util.getPage(map.size(), 8), isBlockEntity, context));
+            builder.append("\n").append(createFooter(page, Util.getPage(map.size(), 8), isBlockEntity, context, config));
             source.sendSuccess(() -> Formatter.parse(builder.toString()), false);
         } else if (page == 1) {
             source.sendFailure(Component.literal(isBlockEntity ? "No block entities were found!" : "No entities were found!"));
@@ -154,8 +159,8 @@ public class StatisticsCommand {
         }
     }
 
-    private static String createEntry(Map.Entry<String, Integer> entry, int index, boolean isBlockEntity, boolean byPlayer) {
-        String string = "\n" + CommandConfig.STATS_PAGE_CONTENT.get()
+    private static String createEntry(Map.Entry<String, Integer> entry, int index, boolean isBlockEntity, boolean byPlayer, CommandConfig config) {
+        String string = "\n" + config.statisticsPageContent()
                 .replace("${name}", entry.getKey())
                 .replace("${index}", String.valueOf(index))
                 .replace("${count}", String.valueOf(entry.getValue()));
@@ -167,16 +172,16 @@ public class StatisticsCommand {
         return string;
     }
 
-    private static String createHeader(boolean isBlockEntity, boolean byPlayer, boolean isPlayer, ServerPlayer player) {
+    private static String createHeader(boolean isBlockEntity, boolean byPlayer, boolean isPlayer, ServerPlayer player, CommandConfig config) {
         String title = player == null
-                ? CommandConfig.STATS_PAGE_TITLE.get().replace("${type}", byPlayer ? "Player" : "Type")
-                : CommandConfig.STATS_PAGE_TITLE_PLAYER.get().replace("${player}", player.getScoreboardName());
+                ? config.statisticsPageTitle().replace("${type}", byPlayer ? "Player" : "Type")
+                : config.statisticsPageTitlePlayer().replace("${player}", player.getScoreboardName());
 
         return Formatter.line(title.replace("${title}", isBlockEntity ? "Block Entities" : "Entities"), 40, isPlayer);
     }
 
-    private static String createFooter(int page, int pageCount, boolean isBlockEntity, CommandContext<CommandSourceStack> context) {
-        String title = CommandConfig.STATS_PAGE_FOOTER.get()
+    private static String createFooter(int page, int pageCount, boolean isBlockEntity, CommandContext<CommandSourceStack> context, CommandConfig config) {
+        String title = config.statisticsPageFooter()
                 .replace("${page}", String.valueOf(page))
                 .replace("${page_count}", String.valueOf(pageCount));
 
