@@ -73,7 +73,10 @@ public class ActivationRange {
      * @return Boolean: whether the entity will be excluded from activation range checks.
      */
     public static boolean isExcluded(Entity entity) {
-        return entity.servercore$getActivationType().activationRange() <= 0
+        final ActivationType type = entity.servercore$getActivationType();
+        final int tickInterval = type.tickInterval();
+
+        return tickInterval == 0 || tickInterval == 1 || type.activationRange() <= 0
                || entity instanceof Player
                || entity instanceof ThrowableItemProjectile
                || entity instanceof EnderDragon
@@ -272,7 +275,7 @@ public class ActivationRange {
             }
 
             final int tickInterval = entity.servercore$getActivationType().tickInterval();
-            if (inactiveTicks % tickInterval == 0) {
+            if (tickInterval > 0 && inactiveTicks % tickInterval == 0) {
                 return true;
             }
             // Spigot - Add a little performance juice to active entities. Skip 1/4 if not immune.

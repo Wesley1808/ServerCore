@@ -1,8 +1,8 @@
 package me.wesley1808.servercore.common.config.data.dynamic;
 
 import com.google.common.collect.Lists;
-import me.wesley1808.servercore.common.config.data.impl.dynamic.DynamicConfigImpl;
-import me.wesley1808.servercore.common.config.data.impl.dynamic.SettingImpl;
+import me.wesley1808.servercore.common.config.impl.dynamic.DynamicConfigImpl;
+import me.wesley1808.servercore.common.config.impl.dynamic.SettingImpl;
 import me.wesley1808.servercore.common.config.serialization.Validators;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import space.arim.dazzleconf.annote.*;

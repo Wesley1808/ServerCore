@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.common.config.data.impl.dynamic;
+package me.wesley1808.servercore.common.config.impl.dynamic;
 
 import me.wesley1808.servercore.common.config.data.dynamic.Setting;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;

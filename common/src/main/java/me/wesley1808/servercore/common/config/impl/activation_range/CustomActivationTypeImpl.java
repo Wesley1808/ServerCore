@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.common.config.data.impl.activation_range;
+package me.wesley1808.servercore.common.config.impl.activation_range;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.wesley1808.servercore.common.config.data.activation_range.CustomActivationType;

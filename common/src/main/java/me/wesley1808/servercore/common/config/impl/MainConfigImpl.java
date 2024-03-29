@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.common.config.data.impl;
+package me.wesley1808.servercore.common.config.impl;
 
 import me.wesley1808.servercore.common.config.MainConfig;
 import me.wesley1808.servercore.common.config.data.CommandConfig;
@@ -6,10 +6,10 @@ import me.wesley1808.servercore.common.config.data.FeatureConfig;
 import me.wesley1808.servercore.common.config.data.activation_range.ActivationRangeConfig;
 import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCapConfig;
 import me.wesley1808.servercore.common.config.data.dynamic.DynamicConfig;
-import me.wesley1808.servercore.common.config.data.impl.activation_range.ActivationRangeConfigImpl;
-import me.wesley1808.servercore.common.config.data.impl.breeding_cap.BreedingCapConfigImpl;
-import me.wesley1808.servercore.common.config.data.impl.dynamic.DynamicConfigImpl;
 import me.wesley1808.servercore.common.config.data.mob_spawning.MobSpawnConfig;
+import me.wesley1808.servercore.common.config.impl.activation_range.ActivationRangeConfigImpl;
+import me.wesley1808.servercore.common.config.impl.breeding_cap.BreedingCapConfigImpl;
+import me.wesley1808.servercore.common.config.impl.dynamic.DynamicConfigImpl;
 
 public class MainConfigImpl implements MainConfig {
     private final FeatureConfig features;

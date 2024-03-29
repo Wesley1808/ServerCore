@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.common.config.data.impl.breeding_cap;
+package me.wesley1808.servercore.common.config.impl.breeding_cap;
 
 import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCap;
 

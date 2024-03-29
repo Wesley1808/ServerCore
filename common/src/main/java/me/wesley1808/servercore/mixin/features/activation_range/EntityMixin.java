@@ -39,10 +39,10 @@ public class EntityMixin implements Inactive, ActivationEntity {
     private Level level;
 
     @Unique
-    private int servercore$activatedTick = Integer.MIN_VALUE;
+    private int servercore$activatedTick;
 
     @Unique
-    private int servercore$activatedImmunityTick = Integer.MIN_VALUE;
+    private int servercore$activatedImmunityTick;
 
     @Unique
     private boolean servercore$isInactive = false;

@@ -3,7 +3,6 @@ package me.wesley1808.servercore.common.config.data.activation_range;
 import space.arim.dazzleconf.annote.ConfDefault.DefaultBoolean;
 import space.arim.dazzleconf.annote.ConfDefault.DefaultInteger;
 import space.arim.dazzleconf.annote.ConfKey;
-import space.arim.dazzleconf.annote.IntegerRange;
 import space.arim.dazzleconf.sorter.AnnotationBasedSorter.Order;
 
 public interface ActivationType {
@@ -15,7 +14,6 @@ public interface ActivationType {
     @Order(2)
     @ConfKey("tick-interval")
     @DefaultInteger(20)
-    @IntegerRange(min = 1)
     int tickInterval();
 
     @Order(3)

@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.common.config.data.mob_spawning;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import me.wesley1808.servercore.common.config.data.impl.mob_spawning.MobSpawnEntryImpl;
+import me.wesley1808.servercore.common.config.impl.mob_spawning.MobSpawnEntryImpl;
 import net.minecraft.world.entity.MobCategory;
 import space.arim.dazzleconf.annote.ConfComments;
 import space.arim.dazzleconf.annote.ConfDefault.DefaultObject;

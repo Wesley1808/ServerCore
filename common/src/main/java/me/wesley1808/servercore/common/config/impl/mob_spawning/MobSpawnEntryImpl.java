@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.common.config.data.impl.mob_spawning;
+package me.wesley1808.servercore.common.config.impl.mob_spawning;
 
 import me.wesley1808.servercore.common.config.data.mob_spawning.MobSpawnEntry;
 import me.wesley1808.servercore.common.interfaces.IMobCategory;
