@@ -24,7 +24,7 @@ public class MobcapsCommand {
 
     private static int mobcaps(ServerPlayer player) {
         StringBuilder builder = new StringBuilder(Formatter.line(
-                CommandConfig.MOBCAP_TITLE.get().replace("${mobcap_percentage}", DynamicManager.getModifierAsPercentage()),
+                CommandConfig.MOBCAP_TITLE.get().replace("${mobcap_percentage}", DynamicManager.getMobcapPercentage()),
                 50, true
         ));
 

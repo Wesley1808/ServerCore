@@ -25,7 +25,7 @@ public class Config {
     }
 
     public static void loadChanges() {
-        DynamicSetting.loadCustomOrder();
+        DynamicSetting.reload();
         IMobCategory.reload();
     }
 

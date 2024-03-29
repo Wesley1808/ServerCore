@@ -42,7 +42,7 @@ public class PlaceHolders {
         );
 
         register("mobcap_percentage",
-                (ctx, arg) -> PlaceholderResult.value(DynamicManager.getModifierAsPercentage())
+                (ctx, arg) -> PlaceholderResult.value(DynamicManager.getMobcapPercentage())
         );
     }
 

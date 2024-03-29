@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.common.config.data.mob_spawning;
 
+import me.wesley1808.servercore.common.interfaces.IMobCategory;
 import net.minecraft.world.entity.MobCategory;
 import space.arim.dazzleconf.annote.ConfKey;
 import space.arim.dazzleconf.annote.IntegerRange;
@@ -22,7 +23,7 @@ public interface MobSpawnEntry {
 
     static MobSpawnEntry of(MobCategory category) {
         int spawnInterval = category.isPersistent() ? 400 : 1;
-        int capacity = category.getMaxInstancesPerChunk();
+        int capacity = IMobCategory.getOriginalCapacity(category);
         return new MobSpawnEntry() {
             @Override
             public MobCategory category() {

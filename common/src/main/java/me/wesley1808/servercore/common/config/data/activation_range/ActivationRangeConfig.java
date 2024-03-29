@@ -115,7 +115,7 @@ public interface ActivationRangeConfig {
         );
     }
 
-    static List<@SubSection CustomActivationType> defaultActivationTypes() {
+    static List<CustomActivationType> defaultActivationTypes() {
         return Lists.newArrayList(
                 CustomActivationType.of("raider",
                         Lists.newArrayList(EntityTypeTests.RAIDER),

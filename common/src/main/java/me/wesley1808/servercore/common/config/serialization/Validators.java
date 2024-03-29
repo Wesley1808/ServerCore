@@ -17,8 +17,8 @@ public class Validators {
 
             ReferenceOpenHashSet<DynamicSetting> dynamicSettings = new ReferenceOpenHashSet<>();
             for (Setting setting : settings) {
-                if (!dynamicSettings.add(setting.setting())) {
-                    throw badValue(key, "Duplicate dynamic setting: " + setting.setting());
+                if (!dynamicSettings.add(setting.dynamicSetting())) {
+                    throw badValue(key, "Duplicate dynamic setting: " + setting.dynamicSetting());
                 }
             }
         }

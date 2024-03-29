@@ -8,7 +8,7 @@ import space.arim.dazzleconf.sorter.AnnotationBasedSorter.Order;
 public interface Setting {
     @Order(1)
     @ConfKey("setting")
-    DynamicSetting setting();
+    DynamicSetting dynamicSetting();
 
     @Order(2)
     @ConfKey("max")
@@ -25,10 +25,15 @@ public interface Setting {
     @IntegerRange(min = 1)
     int increment();
 
-    static Setting of(DynamicSetting setting, int max, int min, int increment) {
+    @Order(5)
+    @ConfKey("interval")
+    @IntegerRange(min = 1)
+    int interval();
+
+    static Setting of(DynamicSetting setting, int max, int min, int increment, int interval) {
         return new Setting() {
             @Override
-            public DynamicSetting setting() {
+            public DynamicSetting dynamicSetting() {
                 return setting;
             }
 
@@ -45,6 +50,11 @@ public interface Setting {
             @Override
             public int increment() {
                 return increment;
+            }
+
+            @Override
+            public int interval() {
+                return interval;
             }
         };
     }

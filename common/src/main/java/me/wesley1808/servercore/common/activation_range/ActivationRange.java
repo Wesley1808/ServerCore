@@ -62,6 +62,7 @@ public class ActivationRange {
                 }
             }
         }
+
         return config.defaultActivationType();
     }
 

@@ -15,12 +15,15 @@ public class MobCategoryMixin implements IMobCategory {
     @Final
     private int max;
     @Unique
+    private int servercore$originalCapacity;
+    @Unique
     private int servercore$spawnInterval;
     @Unique
     private int servercore$capacity;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void servercore$onInit(String enumName, int index, String name, int max, boolean isFriendly, boolean isPersistent, int despawnDistance, CallbackInfo ci) {
+        this.servercore$originalCapacity = max;
         this.servercore$capacity = max;
     }
 
@@ -35,6 +38,11 @@ public class MobCategoryMixin implements IMobCategory {
     @Override
     public int servercore$getSpawnInterval() {
         return this.servercore$spawnInterval;
+    }
+
+    @Override
+    public int servercore$getOriginalCapacity() {
+        return this.servercore$originalCapacity;
     }
 
     @Override
