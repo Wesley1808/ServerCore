@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 public class ConfigManager<C extends Copyable> {
-    private static final Path CONFIG_DIR = PlatformHelper.getConfigDir().resolve("ServerCore");
+    private static final Path CONFIG_DIR = PlatformHelper.getConfigDir().resolve(ServerCore.MODID);
     private final ConfigurationHelper<C> helper;
     private final String fileName;
     private C data;

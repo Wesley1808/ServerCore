@@ -75,7 +75,9 @@ A setting that allows you to reduce the distance at which chunks can tick (mob s
 
 ### Commands
 
-- /servercore settings | config - Allows for modifying settings & configs ingame.
+- /servercore reload - Reloads the configuration file.
+
+- /servercore settings - Allows for modifying dynamic settings ingame.
 
 - /servercore status - Gives information about the current dynamic settings.
 
@@ -109,7 +111,7 @@ ___
 ### Config
 
 Since most features are disabled by default it can be helpful to know where you can edit them.\
-ServerCore has two configuration files, both of which can be found in `./config/ServerCore/`
+ServerCore has two configuration files, both of which can be found in `./config/servercore/`
 - `config.yml` - Contains all the feature toggles.
 - `optimizations.yml` - Contains all toggleable optimizations.
 
