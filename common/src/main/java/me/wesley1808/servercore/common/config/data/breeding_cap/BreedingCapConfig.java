@@ -21,7 +21,7 @@ public interface BreedingCapConfig {
             "► limit = The limit of mobs of the same type within range. Setting this to negative will disable the breeding cap.",
             "► range = The range it will check for entities of the same type."
     })
-    BreedingCap villager();
+    BreedingCap villagers();
 
     @Order(3)
     @SubSection

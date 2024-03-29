@@ -11,10 +11,7 @@ import space.arim.dazzleconf.sorter.AnnotationBasedSorter.Order;
 
 import java.util.List;
 
-@ConfSerialisers({
-        EntityTypeSerializer.class,
-        EntityTypeTestSerializer.class
-})
+@ConfSerialisers({EntityTypeSerializer.class, EntityTypeTestSerializer.class})
 public interface CustomActivationType extends ActivationType {
     @Order(0)
     @ConfKey("name")
@@ -24,43 +21,4 @@ public interface CustomActivationType extends ActivationType {
     @ConfKey("entity-matcher")
     @CollectionSize(min = 1)
     List<EntityTypeTest<? super Entity, ?>> matchers();
-
-    static CustomActivationType of(String name, List<EntityTypeTest<? super Entity, ?>> matchers, int activationRange, int tickInterval, int wakeupInterval, boolean extraHeightUp, boolean extraHeightDown) {
-        return new CustomActivationType() {
-            @Override
-            public String name() {
-                return name;
-            }
-
-            @Override
-            public List<EntityTypeTest<? super Entity, ?>> matchers() {
-                return matchers;
-            }
-
-            @Override
-            public int activationRange() {
-                return activationRange;
-            }
-
-            @Override
-            public int tickInterval() {
-                return tickInterval;
-            }
-
-            @Override
-            public int wakeupInterval() {
-                return wakeupInterval;
-            }
-
-            @Override
-            public boolean extraHeightUp() {
-                return extraHeightUp;
-            }
-
-            @Override
-            public boolean extraHeightDown() {
-                return extraHeightDown;
-            }
-        };
-    }
 }

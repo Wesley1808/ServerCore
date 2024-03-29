@@ -27,7 +27,7 @@ public class VillagerMakeLoveMixin {
     )
     private void servercore$enforceBreedCap(ServerLevel level, Villager owner, long gameTime, CallbackInfo ci, Villager mate) {
         BreedingCapConfig config = Config.get().breedingCap();
-        if (config.enabled() && config.villager().exceedsLimit(owner)) {
+        if (config.enabled() && config.villagers().exceedsLimit(owner)) {
             BreedingCap.resetAge(owner, mate);
             ci.cancel();
         }

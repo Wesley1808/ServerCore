@@ -3,8 +3,8 @@ package me.wesley1808.servercore.common.config.data.activation_range;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import me.wesley1808.servercore.common.activation_range.EntityTypeTests;
+import me.wesley1808.servercore.common.config.data.impl.activation_range.CustomActivationTypeImpl;
 import me.wesley1808.servercore.common.config.serialization.EntityTypeSerializer;
-import me.wesley1808.servercore.common.config.serialization.EntityTypeTestSerializer;
 import net.minecraft.world.entity.EntityType;
 import space.arim.dazzleconf.annote.ConfComments;
 import space.arim.dazzleconf.annote.ConfDefault.DefaultBoolean;
@@ -18,7 +18,7 @@ import space.arim.dazzleconf.sorter.AnnotationBasedSorter.Order;
 import java.util.List;
 import java.util.Set;
 
-@ConfSerialisers({EntityTypeSerializer.class, EntityTypeTestSerializer.class})
+@ConfSerialisers(EntityTypeSerializer.class)
 public interface ActivationRangeConfig {
     @Order(1)
     @ConfKey("enabled")
@@ -117,39 +117,39 @@ public interface ActivationRangeConfig {
 
     static List<CustomActivationType> defaultActivationTypes() {
         return Lists.newArrayList(
-                CustomActivationType.of("raider",
+                new CustomActivationTypeImpl("raider",
                         Lists.newArrayList(EntityTypeTests.RAIDER),
                         48, 20, 20, true, false
                 ),
-                CustomActivationType.of("water",
+                new CustomActivationTypeImpl("water",
                         Lists.newArrayList(EntityTypeTests.WATER_ANIMAL),
                         16, 20, 60, false, false
                 ),
-                CustomActivationType.of("villager",
+                new CustomActivationTypeImpl("villager",
                         Lists.newArrayList(EntityTypeTests.VILLAGER),
                         16, 20, 30, false, false
                 ),
-                CustomActivationType.of("zombie",
+                new CustomActivationTypeImpl("zombie",
                         Lists.newArrayList(EntityType.ZOMBIE, EntityType.HUSK),
                         16, 20, 20, true, false
                 ),
-                CustomActivationType.of("monster-below",
+                new CustomActivationTypeImpl("monster-below",
                         Lists.newArrayList(EntityType.CREEPER, EntityType.SLIME, EntityType.MAGMA_CUBE, EntityType.HOGLIN),
                         32, 20, 20, true, true
                 ),
-                CustomActivationType.of("flying-monster",
+                new CustomActivationTypeImpl("flying-monster",
                         Lists.newArrayList(EntityType.GHAST, EntityType.PHANTOM),
                         48, 20, 20, true, false
                 ),
-                CustomActivationType.of("monster",
+                new CustomActivationTypeImpl("monster",
                         Lists.newArrayList(EntityTypeTests.MONSTER),
                         32, 20, 20, true, false
                 ),
-                CustomActivationType.of("animal",
+                new CustomActivationTypeImpl("animal",
                         Lists.newArrayList(EntityTypeTests.ANIMAL, EntityTypeTests.AMBIENT),
                         16, 20, 60, false, false
                 ),
-                CustomActivationType.of("creature",
+                new CustomActivationTypeImpl("creature",
                         Lists.newArrayList(EntityTypeTests.MOB),
                         24, 20, 30, false, false
                 )

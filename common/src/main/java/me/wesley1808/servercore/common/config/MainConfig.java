@@ -5,6 +5,7 @@ import me.wesley1808.servercore.common.config.data.FeatureConfig;
 import me.wesley1808.servercore.common.config.data.activation_range.ActivationRangeConfig;
 import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCapConfig;
 import me.wesley1808.servercore.common.config.data.dynamic.DynamicConfig;
+import me.wesley1808.servercore.common.config.data.impl.MainConfigImpl;
 import me.wesley1808.servercore.common.config.data.mob_spawning.MobSpawnConfig;
 import space.arim.dazzleconf.annote.ConfComments;
 import space.arim.dazzleconf.annote.ConfHeader;
@@ -16,7 +17,7 @@ import space.arim.dazzleconf.sorter.AnnotationBasedSorter.Order;
         "The main configuration file for ServerCore.",
         "Most of these settings can be reloaded without restarting using /servercore reload.\n"
 })
-public interface MainConfig {
+public interface MainConfig extends Copyable {
     @Order(1)
     @SubSection
     @ConfKey("features")
@@ -53,5 +54,8 @@ public interface MainConfig {
     @ConfComments("Ticks entities less often when they are further away from players.")
     ActivationRangeConfig activationRange();
 
-
+    @Override
+    default MainConfig optimizedCopy() {
+        return new MainConfigImpl(this);
+    }
 }

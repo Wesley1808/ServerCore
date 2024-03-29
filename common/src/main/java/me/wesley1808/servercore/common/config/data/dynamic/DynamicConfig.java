@@ -1,6 +1,8 @@
 package me.wesley1808.servercore.common.config.data.dynamic;
 
 import com.google.common.collect.Lists;
+import me.wesley1808.servercore.common.config.data.impl.dynamic.DynamicConfigImpl;
+import me.wesley1808.servercore.common.config.data.impl.dynamic.SettingImpl;
 import me.wesley1808.servercore.common.config.serialization.Validators;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import space.arim.dazzleconf.annote.*;
@@ -40,12 +42,16 @@ public interface DynamicConfig {
     })
     List<@SubSection Setting> settings();
 
+    default DynamicConfig optimizedCopy() {
+        return new DynamicConfigImpl(this);
+    }
+
     static List<Setting> defaultSettings() {
         return Lists.newArrayList(
-                Setting.of(DynamicSetting.CHUNK_TICK_DISTANCE, 10, 2, 1, 15),
-                Setting.of(DynamicSetting.MOBCAP, 100, 30, 10, 15),
-                Setting.of(DynamicSetting.SIMULATION_DISTANCE, 10, 2, 1, 15),
-                Setting.of(DynamicSetting.VIEW_DISTANCE, 10, 2, 1, 150)
+                new SettingImpl(DynamicSetting.CHUNK_TICK_DISTANCE, 10, 2, 1, 15),
+                new SettingImpl(DynamicSetting.MOBCAP, 100, 30, 10, 15),
+                new SettingImpl(DynamicSetting.SIMULATION_DISTANCE, 10, 2, 1, 15),
+                new SettingImpl(DynamicSetting.VIEW_DISTANCE, 10, 2, 1, 150)
         );
     }
 }

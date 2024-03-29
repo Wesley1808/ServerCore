@@ -20,7 +20,7 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
-public class ConfigManager<C> {
+public class ConfigManager<C extends Copyable> {
     private static final Path CONFIG_DIR = PlatformHelper.getConfigDir().resolve("ServerCore");
     private final ConfigurationHelper<C> helper;
     private final String fileName;
@@ -31,7 +31,7 @@ public class ConfigManager<C> {
         this.fileName = fileName;
     }
 
-    public static <C> ConfigManager<C> create(String fileName, Class<C> configClass) {
+    public static <C extends Copyable> ConfigManager<C> create(String fileName, Class<C> configClass) {
         SnakeYamlOptions yamlOptions = new SnakeYamlOptions.Builder()
                 .commentMode(CommentMode.alternativeWriter("# %s"))
                 .charset(StandardCharsets.UTF_8)
@@ -61,7 +61,8 @@ public class ConfigManager<C> {
 
     public boolean reload() {
         try {
-            this.data = this.helper.reloadConfigData();
+            C loadedData = this.helper.reloadConfigData();
+            this.copyAndSetData(loadedData);
             return true;
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
@@ -75,7 +76,8 @@ public class ConfigManager<C> {
 
         // If the config is not loaded yet, load the default values.
         if (this.data == null) {
-            this.data = this.helper.getFactory().loadDefaults();
+            C defaultData = this.helper.getFactory().loadDefaults();
+            this.copyAndSetData(defaultData);
         }
 
         return false;
@@ -94,5 +96,10 @@ public class ConfigManager<C> {
 
     public C get() {
         return this.data;
+    }
+
+    private void copyAndSetData(C source) {
+        // noinspection unchecked
+        this.data = (C) source.optimizedCopy();
     }
 }

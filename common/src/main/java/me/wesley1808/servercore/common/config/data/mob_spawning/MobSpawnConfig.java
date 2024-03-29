@@ -1,6 +1,7 @@
 package me.wesley1808.servercore.common.config.data.mob_spawning;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import me.wesley1808.servercore.common.config.data.impl.mob_spawning.MobSpawnEntryImpl;
 import net.minecraft.world.entity.MobCategory;
 import space.arim.dazzleconf.annote.ConfComments;
 import space.arim.dazzleconf.annote.ConfDefault.DefaultObject;
@@ -26,7 +27,7 @@ public interface MobSpawnConfig {
         ObjectArrayList<MobSpawnEntry> entries = new ObjectArrayList<>();
         for (MobCategory category : MobCategory.values()) {
             if (category != MobCategory.MISC) {
-                entries.add(MobSpawnEntry.of(category));
+                entries.add(new MobSpawnEntryImpl(category));
             }
         }
         return entries;

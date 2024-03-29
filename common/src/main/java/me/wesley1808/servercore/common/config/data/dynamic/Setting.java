@@ -29,33 +29,4 @@ public interface Setting {
     @ConfKey("interval")
     @IntegerRange(min = 1)
     int interval();
-
-    static Setting of(DynamicSetting setting, int max, int min, int increment, int interval) {
-        return new Setting() {
-            @Override
-            public DynamicSetting dynamicSetting() {
-                return setting;
-            }
-
-            @Override
-            public int max() {
-                return max;
-            }
-
-            @Override
-            public int min() {
-                return min;
-            }
-
-            @Override
-            public int increment() {
-                return increment;
-            }
-
-            @Override
-            public int interval() {
-                return interval;
-            }
-        };
-    }
 }

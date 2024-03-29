@@ -10,7 +10,7 @@ import space.arim.dazzleconf.sorter.AnnotationBasedSorter.Order;
         "Allows you to toggle specific optimizations that don't have full vanilla parity.",
         "These settings will only take effect after server restarts.\n",
 })
-public interface OptimizationConfig {
+public interface OptimizationConfig extends Copyable {
     @Order(1)
     @ConfKey("reduce-sync-loads")
     @DefaultBoolean(true)
@@ -47,4 +47,9 @@ public interface OptimizationConfig {
             "Enabling this will cancel the 'duplicate' second fluid tick, but this may cause slight behavior changes."
     })
     boolean cancelDuplicateFluidTicks();
+
+    @Override
+    default OptimizationConfig optimizedCopy() {
+        return this;
+    }
 }
