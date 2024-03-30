@@ -31,7 +31,6 @@ public class EntityTypeSerializer implements ValueSerialiser<EntityType> {
 
     @Override
     public Object serialise(EntityType value, Decomposer decomposer) {
-        // TODO: Forge support
-        return EntityType.getKey(value).toString();
+        return PlatformHelper.getEntityTypeKey(value).toString();
     }
 }
