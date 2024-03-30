@@ -42,6 +42,7 @@ import java.util.function.Predicate;
  * License: GPL-3.0 (licenses/GPL.md)
  */
 public class ActivationRange {
+    private static final double MINIMUM_MOVEMENT = 0.001;
     private static final Predicate<Goal> BEE_GOAL_IMMUNITIES = goal -> goal instanceof Bee.BeeGoToKnownFlowerGoal || goal instanceof Bee.BeeGoToHiveGoal;
     private static final Activity[] VILLAGER_PANIC_IMMUNITIES = {
             Activity.HIDE,
@@ -179,7 +180,7 @@ public class ActivationRange {
         // ServerCore - Immunize moving items & xp orbs.
         if (entity instanceof ItemEntity || entity instanceof ExperienceOrb) {
             final Vec3 movement = entity.getDeltaMovement();
-            if (movement.x != 0 || movement.z != 0 || movement.y > 0) {
+            if (Math.abs(movement.x) > MINIMUM_MOVEMENT || Math.abs(movement.z) > MINIMUM_MOVEMENT || movement.y > MINIMUM_MOVEMENT) {
                 return 20;
             }
         }
