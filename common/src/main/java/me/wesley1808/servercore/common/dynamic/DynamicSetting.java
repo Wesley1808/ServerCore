@@ -6,14 +6,32 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.IntFunction;
 
 public enum DynamicSetting {
-    VIEW_DISTANCE(2, 256, DynamicManager::modifyViewDistance),
-    SIMULATION_DISTANCE(2, 256, DynamicManager::modifySimulationDistance),
-    MOBCAP(1, 1024, (manager, value) -> DynamicManager.modifyMobcaps(value)),
-    CHUNK_TICK_DISTANCE(2, 256);
+    MOBCAP_PERCENTAGE(1, 1024,
+            "Mobcap percentage",
+            (value) -> String.format("%d%%", value),
+            (manager, value) -> DynamicManager.modifyMobcaps(value)
+    ),
+    CHUNK_TICK_DISTANCE(2, 256,
+            "Chunk-tick distance",
+            String::valueOf
+    ),
+    SIMULATION_DISTANCE(2, 256,
+            "Simulation distance",
+            String::valueOf,
+            DynamicManager::modifySimulationDistance
+    ),
+    VIEW_DISTANCE(2, 256,
+            "View distance",
+            String::valueOf,
+            DynamicManager::modifyViewDistance
+    );
 
     private final BiConsumer<DynamicManager, Integer> onChanged;
+    private final IntFunction<String> valueFormatter;
+    private final String formattedName;
     private final int minimumBound;
     private final int maximumBound;
     private DynamicSetting prev;
@@ -24,12 +42,14 @@ public enum DynamicSetting {
     private int interval = -1;
     private int value = -1;
 
-    DynamicSetting(int minimumBound, int maximumBound) {
-        this(minimumBound, maximumBound, null);
+    DynamicSetting(int minimumBound, int maximumBound, String formattedName, IntFunction<String> valueFormatter) {
+        this(minimumBound, maximumBound, formattedName, valueFormatter, null);
     }
 
-    DynamicSetting(int minimumBound, int maximumBound, BiConsumer<DynamicManager, Integer> onChanged) {
+    DynamicSetting(int minimumBound, int maximumBound, String formattedName, IntFunction<String> valueFormatter, BiConsumer<DynamicManager, Integer> onChanged) {
         this.onChanged = onChanged;
+        this.valueFormatter = valueFormatter;
+        this.formattedName = formattedName;
         this.minimumBound = minimumBound;
         this.maximumBound = maximumBound;
     }
@@ -132,5 +152,13 @@ public enum DynamicSetting {
             throw new IllegalStateException(this.name() + " has not been initialized yet!");
         }
         return this.max;
+    }
+
+    public String getFormattedName() {
+        return this.formattedName;
+    }
+
+    public String getFormattedValue() {
+        return this.valueFormatter.apply(this.value);
     }
 }

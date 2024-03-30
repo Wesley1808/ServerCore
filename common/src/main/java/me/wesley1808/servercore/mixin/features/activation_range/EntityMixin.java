@@ -130,6 +130,11 @@ public class EntityMixin implements Inactive, ActivationEntity {
     }
 
     @Override
+    public boolean servercore$isInactive() {
+        return this.servercore$isInactive;
+    }
+
+    @Override
     public void servercore$setInactive(boolean inactive) {
         this.servercore$isInactive = inactive;
     }

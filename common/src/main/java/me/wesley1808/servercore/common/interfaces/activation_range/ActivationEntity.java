@@ -15,6 +15,8 @@ public interface ActivationEntity {
 
     void servercore$setActivatedImmunityTick(int activatedImmunityTick);
 
+    boolean servercore$isInactive();
+
     void servercore$setInactive(boolean active);
 
     void servercore$incFullTickCount();

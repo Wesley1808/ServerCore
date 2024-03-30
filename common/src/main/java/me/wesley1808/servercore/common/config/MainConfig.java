@@ -45,7 +45,7 @@ public interface MainConfig extends Copyable {
     @Order(5)
     @SubSection
     @ConfKey("commands")
-    @ConfComments("Allows you to disable specific commands and modify the way some of them are formatted.")
+    @ConfComments("Allows you to disable specific commands and modify their formatting.")
     CommandConfig commands();
 
     @Order(6)

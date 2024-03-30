@@ -1,94 +1,83 @@
 package me.wesley1808.servercore.common.config.data;
 
+import me.wesley1808.servercore.common.config.serialization.TextColorSerializer;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
 import space.arim.dazzleconf.annote.ConfComments;
 import space.arim.dazzleconf.annote.ConfDefault.DefaultBoolean;
-import space.arim.dazzleconf.annote.ConfDefault.DefaultString;
-import space.arim.dazzleconf.annote.ConfDefault.DefaultStrings;
+import space.arim.dazzleconf.annote.ConfDefault.DefaultObject;
 import space.arim.dazzleconf.annote.ConfKey;
+import space.arim.dazzleconf.annote.ConfSerialisers;
 import space.arim.dazzleconf.sorter.AnnotationBasedSorter.Order;
 
-import java.util.List;
-
+@ConfSerialisers(TextColorSerializer.class)
 public interface CommandConfig {
     @Order(1)
-    @ConfKey("status.enabled")
+    @ConfKey("status-enabled")
     @DefaultBoolean(true)
-    @ConfComments("Enables / disables the /servercore status command.")
+    @ConfComments("Enables the /servercore status command.")
     boolean statusCommandEnabled();
 
     @Order(2)
-    @ConfKey("status.title")
-    @DefaultString("<dark_aqua>${line} <aqua>ServerCore</aqua> ${line}</dark_aqua>")
-    @ConfComments("The title for the /servercore status command.")
-    String statusTitle();
-
-    @Order(3)
-    @ConfKey("status.content")
-    @DefaultStrings({
-            "<dark_gray>» <dark_aqua>Version: <green>${version}",
-            "<dark_gray>» <dark_aqua>Mobcap Percentage: <green>${mobcap_percentage}",
-            "<dark_gray>» <dark_aqua>Chunk-Tick Distance: <green>${chunk_tick_distance}",
-            "<dark_gray>» <dark_aqua>Simulation Distance: <green>${simulation_distance}",
-            "<dark_gray>» <dark_aqua>View Distance: <green>${view_distance}"
-    })
-    @ConfComments("The content for the /servercore status command.")
-    List<String> statusContents();
-
-    @Order(4)
-    @ConfKey("mobcap.enabled")
+    @ConfKey("mobcaps-enabled")
     @DefaultBoolean(true)
-    @ConfComments("Enables / disables the /mobcaps command.")
+    @ConfComments("Enables the /mobcaps command.")
     boolean mobcapsCommandEnabled();
 
-    @Order(5)
-    @ConfKey("mobcap.title")
-    @DefaultString("<dark_aqua>${line} <aqua>Mobcaps</aqua> (<aqua>${mobcap_percentage}</aqua>) ${line}</dark_aqua>")
-    @ConfComments("The title for the /mobcaps command.")
-    String mobcapTitle();
-
-    @Order(6)
-    @ConfKey("mobcap.content")
-    @DefaultString("<dark_gray>» <dark_aqua>${name}:</dark_aqua> <green>${current}</green> / <green>${capacity}</green></dark_gray>")
-    @ConfComments("The content for the /mobcaps command. This is displayed for every existing spawngroup.")
-    String mobcapContent();
-
-    @Order(7)
-    @ConfKey("statistics.title")
-    @DefaultString("<dark_aqua>${line} <aqua>Statistics</aqua> ${line}</dark_aqua>")
-    @ConfComments("The title for the /statistics command.")
-    String statisticsTitle();
-
-    @Order(8)
-    @ConfKey("statistics.content")
-    @DefaultStrings({
-            "<dark_gray>» <dark_aqua>TPS:</dark_aqua> <green>${tps}</green> - <dark_aqua>MSPT: <green>${mspt}",
-            "<dark_gray>» <dark_aqua>Total chunk count: <green>${chunk_count}",
-            "<dark_gray>» <dark_aqua>Total entity count: <green>${entity_count}",
-            "<dark_gray>» <dark_aqua>Total block entity count: <green>${block_entity_count}"
+    @Order(3)
+    @ConfKey("colors.primary")
+    @DefaultObject("defaultPrimaryColor")
+    @ConfComments({
+            "The colors used in command feedback. You can use hex codes or minecraft legacy color names.",
+            "The primary color is the most used color in command feedback."
     })
-    @ConfComments("The content for the /statistics command.")
-    List<String> statisticsContents();
+    TextColor primaryColor();
 
-    @Order(9)
-    @ConfKey("statistics.page-title")
-    @DefaultString("<dark_aqua>${line} <aqua>${title}</aqua> by <aqua>${type}</aqua> ${line}</dark_aqua>")
-    @ConfComments("The title for the /statistics (block) entities command.")
-    String statisticsPageTitle();
+    @Order(4)
+    @ConfKey("colors.secondary")
+    @DefaultObject("defaultSecondaryColor")
+    @ConfComments("The secondary color is used for highlighting important information, like values.")
+    TextColor secondaryColor();
 
-    @Order(10)
-    @ConfKey("statistics.page-title-player")
-    @DefaultString("<dark_aqua>${line} <aqua>${title}</aqua> for <aqua>${player}</aqua> ${line}</dark_aqua>")
-    String statisticsPageTitlePlayer();
+    @Order(5)
+    @ConfKey("colors.tertiary")
+    @DefaultObject("defaultTertiaryColor")
+    @ConfComments("The tertiary color is mostly used for text in titles.")
+    TextColor tertiaryColor();
 
-    @Order(11)
-    @ConfKey("statistics.page-content")
-    @DefaultString("<green>${index}. <dark_aqua>${name}</dark_aqua> ${count}</green>")
-    @ConfComments("The content for the /statistics (block) entities command. This is displayed for every entry.")
-    String statisticsPageContent();
+    default String primaryHex() {
+        return this.primaryColor().serialize();
+    }
 
-    @Order(12)
-    @ConfKey("statistics.page-footer")
-    @DefaultString("<dark_aqua>${line} <green>${prev_page}</green> Page <aqua>${page}</aqua> of <aqua>${page_count}</aqua> <green>${next_page}</green> ${line}")
-    @ConfComments("The footer for the /statistics (block) entities command.")
-    String statisticsPageFooter();
+    default String secondaryHex() {
+        return this.secondaryColor().serialize();
+    }
+
+    default String tertiaryHex() {
+        return this.tertiaryColor().serialize();
+    }
+
+    default int primaryValue() {
+        return this.primaryColor().getValue();
+    }
+
+    default int secondaryValue() {
+        return this.secondaryColor().getValue();
+    }
+
+    default int tertiaryValue() {
+        return this.tertiaryColor().getValue();
+    }
+
+    static TextColor defaultPrimaryColor() {
+        return TextColor.fromLegacyFormat(ChatFormatting.DARK_AQUA);
+    }
+
+    static TextColor defaultSecondaryColor() {
+        return TextColor.fromLegacyFormat(ChatFormatting.GREEN);
+    }
+
+    static TextColor defaultTertiaryColor() {
+        return TextColor.fromLegacyFormat(ChatFormatting.AQUA);
+    }
 }

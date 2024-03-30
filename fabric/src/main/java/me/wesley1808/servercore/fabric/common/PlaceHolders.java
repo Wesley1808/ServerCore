@@ -5,9 +5,8 @@ import com.google.common.cache.CacheBuilder;
 import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
-import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
-import me.wesley1808.servercore.common.utils.Statistics;
+import me.wesley1808.servercore.common.utils.statistics.Statistics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -42,7 +41,7 @@ public class PlaceHolders {
         );
 
         register("mobcap_percentage",
-                (ctx, arg) -> PlaceholderResult.value(DynamicManager.getMobcapPercentage())
+                (ctx, arg) -> PlaceholderResult.value(String.format("%d%%", DynamicSetting.MOBCAP_PERCENTAGE.get()))
         );
     }
 

@@ -4,7 +4,7 @@ import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.SparkDynamicManager;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
 import me.wesley1808.servercore.common.services.platform.PlatformHelper;
-import me.wesley1808.servercore.common.utils.Statistics;
+import me.wesley1808.servercore.common.utils.statistics.Statistics;
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

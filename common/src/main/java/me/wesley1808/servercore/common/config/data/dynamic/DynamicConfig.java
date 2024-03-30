@@ -49,7 +49,7 @@ public interface DynamicConfig {
     static List<Setting> defaultSettings() {
         return Lists.newArrayList(
                 new SettingImpl(DynamicSetting.CHUNK_TICK_DISTANCE, 10, 2, 1, 15),
-                new SettingImpl(DynamicSetting.MOBCAP, 100, 30, 10, 15),
+                new SettingImpl(DynamicSetting.MOBCAP_PERCENTAGE, 100, 30, 10, 15),
                 new SettingImpl(DynamicSetting.SIMULATION_DISTANCE, 10, 2, 1, 15),
                 new SettingImpl(DynamicSetting.VIEW_DISTANCE, 10, 2, 1, 150)
         );

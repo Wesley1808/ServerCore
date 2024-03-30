@@ -1,11 +1,9 @@
 package me.wesley1808.servercore.common.dynamic;
 
 import me.wesley1808.servercore.common.config.Config;
-import me.wesley1808.servercore.common.config.data.CommandConfig;
 import me.wesley1808.servercore.common.config.data.dynamic.DynamicConfig;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
 import me.wesley1808.servercore.common.interfaces.IMobCategory;
-import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.MobCategory;
@@ -32,25 +30,12 @@ public class DynamicManager {
                 this.modifySimulationDistance(maxSimDistance);
             }
 
-            DynamicManager.modifyMobcaps(DynamicSetting.MOBCAP.getMax());
+            DynamicManager.modifyMobcaps(DynamicSetting.MOBCAP_PERCENTAGE.getMax());
         }
     }
 
     public static DynamicManager getInstance(MinecraftServer server) {
         return ((IMinecraftServer) server).servercore$getDynamicManager();
-    }
-
-    public static String getMobcapPercentage() {
-        return String.format("%d%%", DynamicSetting.MOBCAP.get());
-    }
-
-    public static String createStatusReport(CommandConfig config) {
-        return String.join("\n", config.statusContents())
-                .replace("${version}", PlatformHelper.getVersion())
-                .replace("${mobcap_percentage}", getMobcapPercentage())
-                .replace("${chunk_tick_distance}", String.valueOf(DynamicSetting.CHUNK_TICK_DISTANCE.get()))
-                .replace("${simulation_distance}", String.valueOf(DynamicSetting.SIMULATION_DISTANCE.get()))
-                .replace("${view_distance}", String.valueOf(DynamicSetting.VIEW_DISTANCE.get()));
     }
 
     public static void update(MinecraftServer server) {

@@ -36,7 +36,7 @@ public interface IMobCategory {
             IMobCategory.modify(entry.category(), entry.capacity(), entry.spawnInterval());
         }
 
-        DynamicManager.modifyMobcaps(DynamicSetting.MOBCAP.get());
+        DynamicManager.modifyMobcaps(DynamicSetting.MOBCAP_PERCENTAGE.get());
     }
 
     private static void modify(MobCategory category, int max, int interval) {

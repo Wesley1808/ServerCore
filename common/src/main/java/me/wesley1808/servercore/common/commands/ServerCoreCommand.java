@@ -9,10 +9,11 @@ import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.services.Formatter;
 import me.wesley1808.servercore.common.services.Permission;
+import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
-import org.apache.commons.lang3.StringUtils;
+import net.minecraft.network.chat.MutableComponent;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
@@ -59,7 +60,15 @@ public class ServerCoreCommand {
         DynamicManager manager = DynamicManager.getInstance(source.getServer());
         setting.set(value, manager);
 
-        source.sendSuccess(() -> Formatter.parse(String.format("<green>%s <dark_aqua>has been set to <green>%d", StringUtils.capitalize(setting.name().toLowerCase()), value)), false);
+        CommandConfig config = Config.get().commands();
+        source.sendSuccess(() -> Formatter.parse("<c:%s>%s <c:%s>has been set to <c:%s>%s".formatted(
+                config.secondaryHex(),
+                setting.getFormattedName(),
+                config.primaryHex(),
+                config.secondaryHex(),
+                setting.getFormattedValue()
+        )), false);
+
         return Command.SINGLE_SUCCESS;
     }
 
@@ -76,10 +85,31 @@ public class ServerCoreCommand {
 
     private static int getStatus(CommandSourceStack source) {
         CommandConfig config = Config.get().commands();
-        source.sendSuccess(() -> Formatter.parse(String.format("%s\n%s",
-                Formatter.line(config.statusTitle(), 40, source.isPlayer()),
-                DynamicManager.createStatusReport(config)
-        )), false);
+        source.sendSuccess(() -> {
+            MutableComponent component = Component.empty();
+            Component title = Component.literal("ServerCore").withColor(config.tertiaryValue());
+            if (source.isPlayer()) {
+                Formatter.addLines(component, 14, config.primaryValue(), title);
+            } else {
+                component.append(title);
+            }
+
+            component.append(Formatter.parse("\n<dark_gray>» <c:%s>Version: <c:%s>%s".formatted(
+                    config.primaryHex(),
+                    config.secondaryHex(),
+                    PlatformHelper.getVersion()
+            )));
+
+            for (DynamicSetting setting : DynamicSetting.values()) {
+                component.append(Formatter.parse("\n<dark_gray>» <c:%s>%s: <c:%s>%s".formatted(
+                        config.primaryHex(),
+                        setting.getFormattedName(),
+                        config.secondaryHex(),
+                        setting.getFormattedValue()
+                )));
+            }
+            return component;
+        }, false);
         return Command.SINGLE_SUCCESS;
     }
 }
