@@ -17,7 +17,7 @@ public interface DynamicConfig {
     @Order(1)
     @ConfKey("enabled")
     @DefaultBoolean(false)
-    @ConfComments("(Default = false) Enables this feature.")
+    @ConfComments("(Default = false) Enables dynamic performance checks.")
     boolean enabled();
 
     @Order(2)

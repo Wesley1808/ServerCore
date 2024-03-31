@@ -14,7 +14,6 @@ public class EntityStatisticEntry extends StatisticEntry<Entity> {
 
         if (entity.level() instanceof ServerLevel level && this.isActive(entity, level)) {
             this.activeCount++;
-            System.out.println(activeCount);
         }
     }
 

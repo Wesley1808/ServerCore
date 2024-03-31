@@ -6,6 +6,7 @@ import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.data.CommandConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.services.Formatter;
+import me.wesley1808.servercore.common.utils.Mobcaps;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,8 +18,6 @@ import net.minecraft.world.level.NaturalSpawner;
 import static net.minecraft.commands.Commands.literal;
 
 public class MobcapsCommand {
-    private static final LocalMobCapCalculator.MobCounts EMPTY_MOBCOUNTS = new LocalMobCapCalculator.MobCounts();
-
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         if (Config.get().commands().mobcapsCommandEnabled()) {
             dispatcher.register(literal("mobcaps").executes(ctx -> mobcaps(ctx.getSource(), ctx.getSource().getPlayerOrException())));
@@ -39,7 +38,7 @@ public class MobcapsCommand {
 
             NaturalSpawner.SpawnState state = player.serverLevel().getChunkSource().getLastSpawnState();
             if (state != null) {
-                LocalMobCapCalculator.MobCounts mobCounts = state.localMobCapCalculator.playerMobCounts.getOrDefault(player, EMPTY_MOBCOUNTS);
+                LocalMobCapCalculator.MobCounts mobCounts = state.localMobCapCalculator.playerMobCounts.getOrDefault(player, Mobcaps.EMPTY_MOBCOUNTS);
                 for (MobCategory category : MobCategory.values()) {
                     if (category != MobCategory.MISC) {
                         component.append(Formatter.parse("\n<dark_gray>» <c:%s>%s:</c> <c:%s>%d</c> / <c:%s>%d".formatted(

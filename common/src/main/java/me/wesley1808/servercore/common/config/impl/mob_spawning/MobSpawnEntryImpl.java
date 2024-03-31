@@ -1,7 +1,6 @@
 package me.wesley1808.servercore.common.config.impl.mob_spawning;
 
 import me.wesley1808.servercore.common.config.data.mob_spawning.MobSpawnEntry;
-import me.wesley1808.servercore.common.interfaces.IMobCategory;
 import net.minecraft.world.entity.MobCategory;
 
 public class MobSpawnEntryImpl implements MobSpawnEntry {
@@ -9,10 +8,16 @@ public class MobSpawnEntryImpl implements MobSpawnEntry {
     private final int capacity;
     private final int spawnInterval;
 
-    public MobSpawnEntryImpl(MobCategory category) {
+    public MobSpawnEntryImpl(MobSpawnEntry source) {
+        this.category = source.category();
+        this.capacity = source.capacity();
+        this.spawnInterval = source.spawnInterval();
+    }
+
+    public MobSpawnEntryImpl(MobCategory category, int capacity, int spawnInterval) {
         this.category = category;
-        this.spawnInterval = category.isPersistent() ? 400 : 1;
-        this.capacity = IMobCategory.getOriginalCapacity(category);
+        this.capacity = capacity;
+        this.spawnInterval = spawnInterval;
     }
 
     @Override

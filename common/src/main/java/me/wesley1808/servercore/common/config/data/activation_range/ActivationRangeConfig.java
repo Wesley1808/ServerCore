@@ -23,7 +23,7 @@ public interface ActivationRangeConfig {
     @Order(1)
     @ConfKey("enabled")
     @DefaultBoolean(false)
-    @ConfComments("(Default = false) Enables this feature.")
+    @ConfComments("(Default = false) Enables activation range.")
     boolean enabled();
 
     @Order(2)

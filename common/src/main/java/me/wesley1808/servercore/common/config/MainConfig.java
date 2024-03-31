@@ -21,37 +21,42 @@ public interface MainConfig extends Copyable {
     @Order(1)
     @SubSection
     @ConfKey("features")
-    @ConfComments("Lets you enable / disable certain features and modify them.")
+    @ConfComments("Most miscellaneous feature toggles.")
     FeatureConfig features();
 
     @Order(2)
     @SubSection
     @ConfKey("dynamic")
-    @ConfComments("Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT.")
+    @ConfComments("Automatically modifies dynamic settings based on the server performance.")
     DynamicConfig dynamic();
 
     @Order(3)
     @SubSection
     @ConfKey("breeding-cap")
-    @ConfComments("Stops animals / villagers from breeding if there are too many of the same type nearby.")
+    @ConfComments("A special mobcap that only affects the breeding of animals and villagers.")
     BreedingCapConfig breedingCap();
 
     @Order(4)
     @SubSection
     @ConfKey("mob-spawning")
-    @ConfComments("Allows you to modify individual mobcaps and their frequency of spawn attempts.")
+    @ConfComments("Gives more control over mob spawning.")
     MobSpawnConfig mobSpawning();
 
     @Order(5)
     @SubSection
     @ConfKey("commands")
-    @ConfComments("Allows you to disable specific commands and modify their formatting.")
+    @ConfComments("Settings for commands and their formatting.")
     CommandConfig commands();
 
     @Order(6)
     @SubSection
     @ConfKey("activation-range")
-    @ConfComments("Ticks entities less often when they are further away from players.")
+    @ConfComments({
+            "Activation range can drastically reduce the amount of lag caused by ticking entities.",
+            "It does this by cleverly skipping certain entity ticks based on the distance to players and other factors, like immunity checks.",
+            "Immunity checks determine whether an entity should be ticked even when it's outside the activation range, like for example when it is falling or takes damage.",
+            "Note: while this is a very powerful feature, it can still slow down mobfarms and break very specific technical contraptions.",
+    })
     ActivationRangeConfig activationRange();
 
     @Override

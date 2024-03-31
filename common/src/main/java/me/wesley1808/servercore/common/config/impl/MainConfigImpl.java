@@ -10,6 +10,7 @@ import me.wesley1808.servercore.common.config.data.mob_spawning.MobSpawnConfig;
 import me.wesley1808.servercore.common.config.impl.activation_range.ActivationRangeConfigImpl;
 import me.wesley1808.servercore.common.config.impl.breeding_cap.BreedingCapConfigImpl;
 import me.wesley1808.servercore.common.config.impl.dynamic.DynamicConfigImpl;
+import me.wesley1808.servercore.common.config.impl.mob_spawning.MobSpawnConfigImpl;
 
 public class MainConfigImpl implements MainConfig {
     private final FeatureConfig features;
@@ -24,7 +25,7 @@ public class MainConfigImpl implements MainConfig {
         this.dynamic = new DynamicConfigImpl(source.dynamic());
         this.breedingCap = new BreedingCapConfigImpl(source.breedingCap());
         this.activationRange = new ActivationRangeConfigImpl(source.activationRange());
-        this.mobSpawning = source.mobSpawning();
+        this.mobSpawning = new MobSpawnConfigImpl(source.mobSpawning());
         this.commands = source.commands();
     }
 
