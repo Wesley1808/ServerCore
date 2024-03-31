@@ -10,11 +10,13 @@ import java.util.List;
 public class MobSpawnConfigImpl implements MobSpawnConfig {
     private final EnforcedMobcap zombieReinforcements;
     private final EnforcedMobcap portalRandomTicks;
+    private final EnforcedMobcap monsterSpawner;
     private final List<MobSpawnEntry> categories;
 
     public MobSpawnConfigImpl(MobSpawnConfig source) {
         this.zombieReinforcements = new EnforcedMobcapImpl(source.zombieReinforcements());
         this.portalRandomTicks = new EnforcedMobcapImpl(source.portalRandomTicks());
+        this.monsterSpawner = new EnforcedMobcapImpl(source.monsterSpawner());
         this.categories = Util.map(source.categories(), MobSpawnEntryImpl::new);
     }
 
@@ -26,6 +28,11 @@ public class MobSpawnConfigImpl implements MobSpawnConfig {
     @Override
     public EnforcedMobcap portalRandomTicks() {
         return this.portalRandomTicks;
+    }
+
+    @Override
+    public EnforcedMobcap monsterSpawner() {
+        return this.monsterSpawner;
     }
 
     @Override

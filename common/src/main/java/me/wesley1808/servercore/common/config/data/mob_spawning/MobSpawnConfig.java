@@ -15,7 +15,7 @@ import java.util.List;
 public interface MobSpawnConfig {
     @Order(1)
     @SubSection
-    @ConfKey("zombie-reinforcement-spawning")
+    @ConfKey("zombie-reinforcements")
     @ConfComments({
             "Mobcap settings for zombie reinforcements.",
             "► enforce-mobcaps = Whether to enforce mobcaps for this type of mobspawning.",
@@ -26,11 +26,17 @@ public interface MobSpawnConfig {
 
     @Order(2)
     @SubSection
-    @ConfKey("portal-randomtick-spawning")
+    @ConfKey("nether-portal-randomticks")
     @ConfComments("Mobcap settings for zombified piglin spawning from nether portal random ticks.")
     EnforcedMobcap portalRandomTicks();
 
     @Order(3)
+    @SubSection
+    @ConfKey("monster-spawners")
+    @ConfComments("Mobcap settings for mobs spawned from monster spawners.")
+    EnforcedMobcap monsterSpawner();
+
+    @Order(4)
     @ConfKey("categories")
     @DefaultObject("defaultCategories")
     @ConfComments({

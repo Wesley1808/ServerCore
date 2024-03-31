@@ -16,7 +16,7 @@ public class Mobcaps {
 
     public static boolean canSpawnForCategory(ServerLevel level, ChunkPos pos, MobCategory category, EnforcedMobcap config) {
         NaturalSpawner.SpawnState state = level.getChunkSource().getLastSpawnState();
-        if (state == null || !config.enforcesMobcap()) {
+        if (state == null || category == MobCategory.MISC || !config.enforcesMobcap()) {
             return true;
         }
 

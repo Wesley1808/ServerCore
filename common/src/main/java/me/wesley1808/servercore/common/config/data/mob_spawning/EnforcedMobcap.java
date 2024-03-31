@@ -14,7 +14,7 @@ public interface EnforcedMobcap {
 
     @Order(2)
     @ConfKey("mobcap-modifier")
-    @DefaultDouble(1.25)
-    @NumericRange(min = 1)
+    @DefaultDouble(1.5)
+    @NumericRange(min = 0)
     double mobcapModifier();
 }
