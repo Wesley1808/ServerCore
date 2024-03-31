@@ -29,8 +29,7 @@ public class MobcapsCommand {
         source.sendSuccess(() -> {
             MutableComponent component = Component.empty();
 
-            Component title = Formatter.parse("<c:%s>Mobcaps <c:%s>(<c:%s>%s</c>)".formatted(
-                    config.tertiaryHex(), config.primaryHex(), config.tertiaryHex(),
+            Component title = Formatter.parse("<c:#tertiary>Mobcaps <c:#primary>(<c:#tertiary>%s</c>)".formatted(
                     DynamicSetting.MOBCAP_PERCENTAGE.getFormattedValue()
             ));
 
@@ -41,10 +40,10 @@ public class MobcapsCommand {
                 LocalMobCapCalculator.MobCounts mobCounts = state.localMobCapCalculator.playerMobCounts.getOrDefault(player, Mobcaps.EMPTY_MOBCOUNTS);
                 for (MobCategory category : MobCategory.values()) {
                     if (category != MobCategory.MISC) {
-                        component.append(Formatter.parse("\n<dark_gray>» <c:%s>%s:</c> <c:%s>%d</c> / <c:%s>%d".formatted(
-                                config.primaryHex(), category.getName(),
-                                config.secondaryHex(), mobCounts.counts.getOrDefault(category, 0),
-                                config.secondaryHex(), category.getMaxInstancesPerChunk()
+                        component.append(Formatter.parse("\n<dark_gray>» <c:#primary>%s:</c> <c:#secondary>%d</c> / <c:#secondary>%d".formatted(
+                                category.getName(),
+                                mobCounts.counts.getOrDefault(category, 0),
+                                category.getMaxInstancesPerChunk()
                         )));
                     }
                 }

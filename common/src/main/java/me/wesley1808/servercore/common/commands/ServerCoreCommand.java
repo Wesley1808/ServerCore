@@ -60,13 +60,8 @@ public class ServerCoreCommand {
         DynamicManager manager = DynamicManager.getInstance(source.getServer());
         setting.set(value, manager);
 
-        CommandConfig config = Config.get().commands();
-        source.sendSuccess(() -> Formatter.parse("<c:%s>%s <c:%s>has been set to <c:%s>%s".formatted(
-                config.secondaryHex(),
-                setting.getFormattedName(),
-                config.primaryHex(),
-                config.secondaryHex(),
-                setting.getFormattedValue()
+        source.sendSuccess(() -> Formatter.parse("<c:#secondary>%s <c:#primary>has been set to <c:#secondary>%s".formatted(
+                setting.getFormattedName(), setting.getFormattedValue()
         )), false);
 
         return Command.SINGLE_SUCCESS;
@@ -94,18 +89,13 @@ public class ServerCoreCommand {
                 component.append(title);
             }
 
-            component.append(Formatter.parse("\n<dark_gray>» <c:%s>Version: <c:%s>%s".formatted(
-                    config.primaryHex(),
-                    config.secondaryHex(),
+            component.append(Formatter.parse("\n<dark_gray>» <c:#primary>Version: <c:#secondary>%s".formatted(
                     PlatformHelper.getVersion()
             )));
 
             for (DynamicSetting setting : DynamicSetting.values()) {
-                component.append(Formatter.parse("\n<dark_gray>» <c:%s>%s: <c:%s>%s".formatted(
-                        config.primaryHex(),
-                        setting.getFormattedName(),
-                        config.secondaryHex(),
-                        setting.getFormattedValue()
+                component.append(Formatter.parse("\n<dark_gray>» <c:#primary>%s: <c:#secondary>%s".formatted(
+                        setting.getFormattedName(), setting.getFormattedValue()
                 )));
             }
             return component;

@@ -86,21 +86,20 @@ public class StatisticsCommand {
 
             final double mspt = DynamicManager.getInstance(source.getServer()).getAverageTickTime();
             final double tps = mspt != 0 ? Math.min((1000 / mspt), 20) : 20;
-            component.append(Formatter.parse("\n<dark_gray>» <c:%s>TPS: <c:%s>%.2f</c> - MSPT: <c:%s>%.2f".formatted(
-                    config.primaryHex(), config.secondaryHex(), tps,
-                    config.secondaryHex(), mspt
+            component.append(Formatter.parse("\n<dark_gray>» <c:#primary>TPS: <c:#secondary>%.2f</c> - MSPT: <c:#secondary>%.2f".formatted(
+                    tps, mspt
             )));
 
-            component.append(Formatter.parse("\n<dark_gray>» <c:%s>Total chunk count: <c:%s>%d".formatted(
-                    config.primaryHex(), config.secondaryHex(), statistics.getChunkCount(true)
+            component.append(Formatter.parse("\n<dark_gray>» <c:#primary>Total chunk count: <c:#secondary>%d".formatted(
+                    statistics.getChunkCount(true)
             )));
 
-            component.append(Formatter.parse("\n<dark_gray>» <c:%s>Total entity count: <c:%s>%d".formatted(
-                    config.primaryHex(), config.secondaryHex(), statistics.getAllEntities().size()
+            component.append(Formatter.parse("\n<dark_gray>» <c:#primary>Total entity count: <c:#secondary>%d".formatted(
+                    statistics.getAllEntities().size()
             )));
 
-            component.append(Formatter.parse("\n<dark_gray>» <c:%s>Total block entity count: <c:%s>%d".formatted(
-                    config.primaryHex(), config.secondaryHex(), statistics.getAllBlockEntities().size()
+            component.append(Formatter.parse("\n<dark_gray>» <c:#primary>Total block entity count: <c:#secondary>%d".formatted(
+                    statistics.getAllBlockEntities().size()
             )));
 
             return component;
@@ -183,9 +182,8 @@ public class StatisticsCommand {
     private static <T> Component createEntry(Map.Entry<String, StatisticEntry<T>> entry, int index, StatisticType type, GroupBy groupBy, CommandConfig config) {
         MutableComponent component = Component.empty();
 
-        component.append(Formatter.parse("\n<c:%s>%d. <c:%s>%s %s".formatted(
-                config.secondaryHex(), index,
-                config.primaryHex(), entry.getKey(), entry.getValue().formatValue()
+        component.append(Formatter.parse("\n<c:#secondary>%d. <c:#primary>%s %s".formatted(
+                index, entry.getKey(), entry.getValue().formatValue()
         )));
 
         if (groupBy == GroupBy.PLAYER) {
@@ -203,14 +201,12 @@ public class StatisticsCommand {
         Component title;
 
         if (player == null) {
-            title = Formatter.parse("<c:%s><c:%s>%s</c> by <c:%s>%s".formatted(
-                    config.primaryHex(), config.tertiaryHex(), type.getName(),
-                    config.tertiaryHex(), groupBy.getName()
+            title = Formatter.parse("<c:#primary><c:#tertiary>%s</c> by <c:#tertiary>%s".formatted(
+                    type.getName(), groupBy.getName()
             ));
         } else {
-            title = Formatter.parse("<c:%s><c:%s>%s</c> for <c:%s>%s".formatted(
-                    config.primaryHex(), config.tertiaryHex(), type.getName(),
-                    config.tertiaryHex(), player.getScoreboardName()
+            title = Formatter.parse("<c:#primary><c:#tertiary>%s</c> for <c:#tertiary>%s".formatted(
+                    type.getName(), player.getScoreboardName()
             ));
         }
 
@@ -242,9 +238,8 @@ public class StatisticsCommand {
         )));
 
         footer.append(prevPage);
-        footer.append(Formatter.parse(" <c:%s>Page <c:%s>%d</c> of <c:%s>%d ".formatted(
-                config.primaryHex(), config.tertiaryHex(), page,
-                config.tertiaryHex(), pageCount
+        footer.append(Formatter.parse(" <c:#primary>Page <c:#tertiary>%d</c> of <c:#tertiary>%d ".formatted(
+                page, pageCount
         )));
         footer.append(nextPage);
 

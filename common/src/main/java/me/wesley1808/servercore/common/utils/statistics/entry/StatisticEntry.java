@@ -1,7 +1,5 @@
 package me.wesley1808.servercore.common.utils.statistics.entry;
 
-import me.wesley1808.servercore.common.config.Config;
-import me.wesley1808.servercore.common.config.data.CommandConfig;
 import org.jetbrains.annotations.NotNull;
 
 public class StatisticEntry<T> implements Comparable<StatisticEntry<T>> {
@@ -12,8 +10,7 @@ public class StatisticEntry<T> implements Comparable<StatisticEntry<T>> {
     }
 
     public String formatValue() {
-        CommandConfig config = Config.get().commands();
-        return String.format("<c:%s>%d</c>", config.secondaryHex(), this.count);
+        return String.format("<c:#secondary>%d</c>", this.count);
     }
 
     @Override
