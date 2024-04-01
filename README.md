@@ -110,10 +110,13 @@ ___
 
 ### Config
 
-Since most features are disabled by default it can be helpful to know where you can edit them.\
-ServerCore has two configuration files, both of which can be found in `./config/servercore/`
-- `config.yml` - Contains all the feature toggles.
-- `optimizations.yml` - Contains all toggleable optimizations.
+By default, ServerCore will disable most of its changes that can affect vanilla behavior.\
+This way you can safely install the mod without having to worry about breaking things.
+
+However, if you want to squeeze out the most performance, these default settings might not be enough.\
+To change these settings you can edit `config.yml` and `optimizations.yml` in the `config/servercore` folder.
+
+You can find some example configurations [here](docs/config).
 
 ___
 
