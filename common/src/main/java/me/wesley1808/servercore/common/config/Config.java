@@ -6,6 +6,7 @@ import me.wesley1808.servercore.common.interfaces.IMobCategory;
 public class Config {
     private static final ConfigManager<OptimizationConfig> OPTIMIZATION_MANAGER = ConfigManager.create("optimizations.yml", OptimizationConfig.class);
     private static ConfigManager<MainConfig> mainConfigManager;
+    private static boolean shouldValidate;
 
     public static OptimizationConfig optimizations() {
         return OPTIMIZATION_MANAGER.get();
@@ -37,5 +38,13 @@ public class Config {
             mainConfigManager = ConfigManager.create("config.yml", MainConfig.class);
         }
         return mainConfigManager;
+    }
+
+    public static void enableValidation() {
+        shouldValidate = true;
+    }
+
+    public static boolean shouldValidate() {
+        return shouldValidate;
     }
 }

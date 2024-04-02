@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.common.config.serialization;
 
+import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import net.minecraft.world.entity.EntityType;
 import space.arim.dazzleconf.error.BadValueException;
@@ -21,9 +22,15 @@ public class EntityTypeSerializer implements ValueSerialiser<EntityType> {
 
         EntityType<?> type = PlatformHelper.getEntityType(key);
         if (type == null) {
-            throw flexibleType.badValueExceptionBuilder()
-                    .message("Unknown entity type: " + key)
-                    .build();
+            if (Config.shouldValidate()) {
+                throw flexibleType.badValueExceptionBuilder().message("Unknown entity type: " + key).build();
+            } else {
+                // Fallback to the marker entity type if none are found since we cannot return null here.
+                // This is to fix an issue when providing a modded entity type in the config that hasn't been registered yet.
+                // The config is required to be loaded early on, so it can't easily be delayed.
+                // It will automatically be reloaded later to replace any of these marker types.
+                type = EntityType.MARKER;
+            }
         }
 
         return type;

@@ -5,6 +5,7 @@ import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+import space.arim.dazzleconf.AuxiliaryKeys;
 import space.arim.dazzleconf.ConfigurationFactory;
 import space.arim.dazzleconf.ConfigurationOptions;
 import space.arim.dazzleconf.error.ConfigFormatSyntaxException;
@@ -12,22 +13,24 @@ import space.arim.dazzleconf.error.InvalidConfigException;
 import space.arim.dazzleconf.ext.snakeyaml.CommentMode;
 import space.arim.dazzleconf.ext.snakeyaml.SnakeYamlConfigurationFactory;
 import space.arim.dazzleconf.ext.snakeyaml.SnakeYamlOptions;
-import space.arim.dazzleconf.helper.ConfigurationHelper;
 import space.arim.dazzleconf.sorter.AnnotationBasedSorter;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 public class ConfigManager<C extends Copyable> {
     private static final Path CONFIG_DIR = PlatformHelper.getConfigDir().resolve(ServerCore.MODID);
-    private final ConfigurationHelper<C> helper;
+    private final ConfigurationFactory<C> factory;
     private final String fileName;
     private C data;
 
-    private ConfigManager(ConfigurationHelper<C> helper, String fileName) {
-        this.helper = helper;
+    private ConfigManager(ConfigurationFactory<C> factory, String fileName) {
+        this.factory = factory;
         this.fileName = fileName;
     }
 
@@ -56,12 +59,12 @@ public class ConfigManager<C extends Copyable> {
                 yamlOptions
         );
 
-        return new ConfigManager<>(new ConfigurationHelper<>(CONFIG_DIR, fileName, configFactory), fileName);
+        return new ConfigManager<>(configFactory, fileName);
     }
 
     public boolean reload() {
         try {
-            C loadedData = this.helper.reloadConfigData();
+            C loadedData = this.reloadConfigData();
             this.copyAndSetData(loadedData);
             return true;
         } catch (IOException ex) {
@@ -76,11 +79,41 @@ public class ConfigManager<C extends Copyable> {
 
         // If the config is not loaded yet, load the default values.
         if (this.data == null) {
-            C defaultData = this.helper.getFactory().loadDefaults();
+            C defaultData = this.factory.loadDefaults();
             this.copyAndSetData(defaultData);
         }
 
         return false;
+    }
+
+    private C reloadConfigData() throws IOException, InvalidConfigException {
+        // Create parent directory if it does not exist.
+        Files.createDirectories(CONFIG_DIR);
+
+        C defaults = this.factory.loadDefaults();
+
+        Path configPath = CONFIG_DIR.resolve(this.fileName);
+        if (!Files.exists(configPath)) {
+            // Copy default config data.
+            try (FileChannel fileChannel = FileChannel.open(configPath, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE)) {
+                this.factory.write(defaults, fileChannel);
+            }
+            return defaults;
+        }
+
+        C loadedData;
+        try (FileChannel fileChannel = FileChannel.open(configPath, StandardOpenOption.READ)) {
+            loadedData = this.factory.load(fileChannel, defaults);
+        }
+
+        // Makes sure not to write temporarily invalid data to the config file.
+        if (Config.shouldValidate() && loadedData instanceof AuxiliaryKeys) {
+            // Update config with latest keys.
+            try (FileChannel fileChannel = FileChannel.open(configPath, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                this.factory.write(loadedData, fileChannel);
+            }
+        }
+        return loadedData;
     }
 
     private void printError(String message) {
