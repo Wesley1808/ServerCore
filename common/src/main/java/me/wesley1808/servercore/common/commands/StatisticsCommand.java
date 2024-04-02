@@ -77,7 +77,7 @@ public class StatisticsCommand {
         CommandConfig config = Config.get().commands();
         source.sendSuccess(() -> {
             MutableComponent component = Component.empty();
-            Component title = Component.literal("Statistics").withColor(config.tertiaryValue());
+            Component title = Component.literal("Statistics").withStyle(style -> style.withColor(config.tertiaryValue()));
             if (source.isPlayer()) {
                 Formatter.addLines(component, 16, config.primaryValue(), title);
             } else {
@@ -223,7 +223,7 @@ public class StatisticsCommand {
         MutableComponent footer = Component.empty();
 
         String command = parseCommand(context.getInput());
-        MutableComponent prevPage = Component.literal("<<").withColor(config.secondaryValue());
+        MutableComponent prevPage = Component.literal("<<").withStyle(style -> style.withColor(config.secondaryValue()));
         if (page > 1) {
             prevPage.withStyle((style) -> style.withClickEvent(new ClickEvent(
                     ClickEvent.Action.RUN_COMMAND,
@@ -231,7 +231,7 @@ public class StatisticsCommand {
             )));
         }
 
-        MutableComponent nextPage = Component.literal(">>").withColor(config.secondaryValue());
+        MutableComponent nextPage = Component.literal(">>").withStyle(style -> style.withColor(config.secondaryValue()));
         nextPage.withStyle((style) -> style.withClickEvent(new ClickEvent(
                 ClickEvent.Action.RUN_COMMAND,
                 command.replace("%page_nr%", String.valueOf(page + 1))

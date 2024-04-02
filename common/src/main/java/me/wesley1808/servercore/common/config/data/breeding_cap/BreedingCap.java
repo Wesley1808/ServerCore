@@ -57,7 +57,7 @@ public interface BreedingCap {
 
     private AABB getAreaAt(BlockPos pos) {
         int range = this.range();
-        return AABB.encapsulatingFullBlocks(pos.offset(range, range, range), pos.offset(-range, -range, -range));
+        return new AABB(pos.offset(range, range, range), pos.offset(-range, -range, -range));
     }
 
     static void resetLove(Animal owner, Animal mate) {

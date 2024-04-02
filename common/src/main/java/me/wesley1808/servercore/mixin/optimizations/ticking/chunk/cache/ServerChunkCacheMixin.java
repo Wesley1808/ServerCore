@@ -54,7 +54,7 @@ public class ServerChunkCacheMixin {
     // Replaces the list variable with our own.
     @ModifyVariable(
             method = "tickChunks",
-            index = 6,
+            index = 12,
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/Iterable;iterator()Ljava/util/Iterator;",
@@ -86,10 +86,10 @@ public class ServerChunkCacheMixin {
             require = 0,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/Util;shuffle(Ljava/util/List;Lnet/minecraft/util/RandomSource;)V"
+                    target = "Ljava/util/Collections;shuffle(Ljava/util/List;)V"
             )
     )
-    private void servercore$cancelShuffle(List<?> list, RandomSource randomSource) {
+    private void servercore$cancelShuffle(List<?> list) {
         // NO-OP
     }
 

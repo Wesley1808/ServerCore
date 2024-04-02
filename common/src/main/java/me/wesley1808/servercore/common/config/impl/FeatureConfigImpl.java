@@ -15,7 +15,7 @@ public class FeatureConfigImpl implements FeatureConfig {
     public FeatureConfigImpl(FeatureConfig source) {
         this.disableSpawnChunks = source.disableSpawnChunks();
         this.preventMovingIntoUnloadedChunks = source.preventMovingIntoUnloadedChunks();
-        this.autosaveIntervalSeconds = source.autosaveIntervalSeconds();
+        this.autosaveIntervalSeconds = source.autosaveInterval();
         this.xpMergeChance = source.xpMergeFraction();
         this.xpMergeRadius = source.xpMergeRadius();
         this.itemMergeRadius = source.itemMergeRadius();
@@ -34,7 +34,7 @@ public class FeatureConfigImpl implements FeatureConfig {
     }
 
     @Override
-    public int autosaveIntervalSeconds() {
+    public int autosaveInterval() {
         return this.autosaveIntervalSeconds;
     }
 

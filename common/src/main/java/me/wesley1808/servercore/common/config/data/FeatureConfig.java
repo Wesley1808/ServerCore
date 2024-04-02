@@ -23,11 +23,11 @@ public interface FeatureConfig {
     boolean preventMovingIntoUnloadedChunks();
 
     @Order(3)
-    @ConfKey("autosave-interval-seconds")
-    @DefaultInteger(300)
-    @IntegerRange(min = 5)
-    @ConfComments("The amount of seconds between auto-saves when /save-on is active.")
-    int autosaveIntervalSeconds();
+    @ConfKey("autosave-interval")
+    @DefaultInteger(6000)
+    @IntegerRange(min = 100)
+    @ConfComments("The amount of ticks between auto-saves when /save-on is active.")
+    int autosaveInterval();
 
     @Order(4)
     @ConfKey("xp-merge-fraction")

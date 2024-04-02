@@ -82,7 +82,7 @@ public class ServerCoreCommand {
         CommandConfig config = Config.get().commands();
         source.sendSuccess(() -> {
             MutableComponent component = Component.empty();
-            Component title = Component.literal("ServerCore").withColor(config.tertiaryValue());
+            Component title = Component.literal("ServerCore").withStyle(style -> style.withColor(config.tertiaryValue()));
             if (source.isPlayer()) {
                 Formatter.addLines(component, 14, config.primaryValue(), title);
             } else {

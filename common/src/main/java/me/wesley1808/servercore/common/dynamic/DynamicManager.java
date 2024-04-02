@@ -56,7 +56,7 @@ public class DynamicManager {
     }
 
     protected double calculateAverageTickTime() {
-        return this.server.getCurrentSmoothedTickTime();
+        return this.server.getAverageTickTime();
     }
 
     private void runPerformanceChecks(DynamicConfig config) {

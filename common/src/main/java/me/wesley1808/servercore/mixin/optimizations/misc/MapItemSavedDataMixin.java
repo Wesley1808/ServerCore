@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.mixin.optimizations.misc;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.PlainTextContents;
+import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -34,8 +34,8 @@ public class MapItemSavedDataMixin {
             )
     )
     private String servercore$getPlayerName(Component component) {
-        if (component.getContents() instanceof PlainTextContents plainText) {
-            return plainText.text();
+        if (component.getContents() instanceof LiteralContents literal) {
+            return literal.text();
         }
 
         return component.getString();

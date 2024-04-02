@@ -21,7 +21,7 @@ public class Formatter {
     public static void addLines(MutableComponent out, int lineLength, int lineColor, Component component) {
         Component line = Component.literal(" ".repeat(lineLength))
                 .withStyle(ChatFormatting.STRIKETHROUGH)
-                .withColor(lineColor);
+                .withStyle(style -> style.withColor(lineColor));
 
         out.append(line);
         out.append(" ");
