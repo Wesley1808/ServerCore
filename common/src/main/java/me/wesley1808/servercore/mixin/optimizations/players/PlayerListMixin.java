@@ -7,7 +7,6 @@ import net.minecraft.network.Connection;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.server.players.PlayerList;
 import org.spongepowered.asm.mixin.Mixin;
@@ -45,7 +44,7 @@ public class PlayerListMixin {
                     shift = At.Shift.BEFORE
             )
     )
-    private void servercore$moveToSpawn(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci, GameProfile gameProfile, GameProfileCache gameProfileCache, String string, CompoundTag playerData, ResourceKey<?> resourceKey, ServerLevel ignored, ServerLevel level) {
+    private void servercore$moveToSpawn(Connection connection, ServerPlayer player, CallbackInfo ci, GameProfile gameProfile, GameProfileCache gameProfileCache, String string, CompoundTag playerData, ResourceKey<?> resourceKey, ServerLevel ignored, ServerLevel level) {
         if (playerData == null) player.fudgeSpawnLocation(level);
     }
 
