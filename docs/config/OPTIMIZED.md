@@ -42,7 +42,7 @@ features:
   prevent-moving-into-unloaded-chunks: true
   # The amount of seconds between auto-saves when /save-on is active.
   autosave-interval-seconds: 600
-  # The fraction of experience orbs that can merge with each other. (1 = 100%, 40 = 2.5%)
+  # The fraction that decides the chance of experience orbs being able to merge with each other. (1 = 100%, 40 = 2.5%)
   # Note that just like in vanilla, experience orbs will still need to be of the same size to actually merge.
   xp-merge-fraction: 8
   # The radius in blocks that experience orbs will merge at.

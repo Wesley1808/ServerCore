@@ -57,6 +57,13 @@ Allows the server to cut down on villager lag from large trading halls, by makin
 
 ___
 
+#### More configurable mobspawning
+
+Allows you to modify the spawnrate and mobcaps of each individual spawngroup.
+It also provides optional functionality to force mobcaps to apply to zombie reinforcements, spawners and nether portal randomticks.
+
+___
+
 #### Breeding Caps
 
 A feature that allows you to set a cap on the amount of mobs of the same type that can be bred within a certain radius.\
