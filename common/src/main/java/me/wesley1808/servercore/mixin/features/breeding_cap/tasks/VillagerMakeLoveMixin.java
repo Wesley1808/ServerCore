@@ -1,6 +1,8 @@
 package me.wesley1808.servercore.mixin.features.breeding_cap.tasks;
 
-import me.wesley1808.servercore.common.utils.BreedingCap;
+import me.wesley1808.servercore.common.config.Config;
+import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCap;
+import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCapConfig;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.behavior.VillagerMakeLove;
 import net.minecraft.world.entity.npc.Villager;
@@ -24,7 +26,8 @@ public class VillagerMakeLoveMixin {
             )
     )
     private void servercore$enforceBreedCap(ServerLevel level, Villager owner, long gameTime, CallbackInfo ci, Villager mate) {
-        if (BreedingCap.VILLAGER.exceedsLimit(owner)) {
+        BreedingCapConfig config = Config.get().breedingCap();
+        if (config.enabled() && config.villagers().exceedsLimit(owner)) {
             BreedingCap.resetAge(owner, mate);
             ci.cancel();
         }

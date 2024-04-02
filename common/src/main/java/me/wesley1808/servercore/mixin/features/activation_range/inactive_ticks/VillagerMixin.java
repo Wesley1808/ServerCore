@@ -1,6 +1,5 @@
 package me.wesley1808.servercore.mixin.features.activation_range.inactive_ticks;
 
-import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
@@ -32,11 +31,6 @@ public abstract class VillagerMixin extends AbstractVillager {
     public void servercore$inactiveTick() {
         if (this.getUnhappyCounter() > 0) {
             this.setUnhappyCounter(this.getUnhappyCounter() - 1);
-        }
-
-        if (ActivationRangeConfig.VILLAGER_TICK_ALWAYS.get()) {
-            this.tickCount++;
-            this.customServerAiStep();
         }
 
         this.maybeDecayGossip();

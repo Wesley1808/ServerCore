@@ -5,7 +5,6 @@ import me.wesley1808.servercore.common.commands.MobcapsCommand;
 import me.wesley1808.servercore.common.commands.ServerCoreCommand;
 import me.wesley1808.servercore.common.commands.StatisticsCommand;
 import me.wesley1808.servercore.common.config.Config;
-import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
@@ -22,13 +21,14 @@ public class Events {
     }
 
     public static void onServerStarted(MinecraftServer server) {
-        Config.loadChanges();
+        Config.enableValidation();
+        Config.reloadMainConfig();
+
         IMinecraftServer.onStarted(server);
     }
 
     public static void onShutdown(MinecraftServer server) {
         DynamicSetting.resetAll();
-        Config.save();
     }
 
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, Commands.CommandSelection environment) {

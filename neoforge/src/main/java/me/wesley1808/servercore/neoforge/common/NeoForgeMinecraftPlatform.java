@@ -5,11 +5,11 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.ChunkPos;
 import net.neoforged.neoforge.server.permission.PermissionAPI;
 import net.neoforged.neoforge.server.permission.nodes.PermissionNode;
-import org.jetbrains.annotations.Nullable;
 
 public class NeoForgeMinecraftPlatform implements MinecraftPlatform {
     @Override
@@ -28,13 +28,12 @@ public class NeoForgeMinecraftPlatform implements MinecraftPlatform {
     }
 
     @Override
-    public Component parseText(String input) {
-        return Component.Serializer.fromJson(GsonComponentSerializer.gson().serialize(MiniMessage.miniMessage().deserialize(input)));
+    public boolean shouldForceChunkTicks(ChunkMap chunkMap, ChunkPos pos) {
+        return chunkMap.getDistanceManager().shouldForceTicks(pos.toLong());
     }
 
     @Override
-    @Nullable
-    public EntityType<?> getEntityType(String key) {
-        return null;
+    public Component parseText(String input) {
+        return Component.Serializer.fromJson(GsonComponentSerializer.gson().serialize(MiniMessage.miniMessage().deserialize(input)));
     }
 }

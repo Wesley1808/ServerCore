@@ -6,8 +6,8 @@ import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.services.platform.MinecraftPlatform;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EntityType;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.server.level.ChunkMap;
+import net.minecraft.world.level.ChunkPos;
 
 public class FabricMinecraftPlatform implements MinecraftPlatform {
     @Override
@@ -17,13 +17,12 @@ public class FabricMinecraftPlatform implements MinecraftPlatform {
     }
 
     @Override
-    public Component parseText(String input) {
-        return TextParserUtils.formatText(input);
+    public boolean shouldForceChunkTicks(ChunkMap chunkMap, ChunkPos pos) {
+        return false;
     }
 
     @Override
-    @Nullable
-    public EntityType<?> getEntityType(String key) {
-        return null;
+    public Component parseText(String input) {
+        return TextParserUtils.formatText(input);
     }
 }

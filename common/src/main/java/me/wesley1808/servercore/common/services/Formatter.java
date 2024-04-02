@@ -1,36 +1,32 @@
 package me.wesley1808.servercore.common.services;
 
+import me.wesley1808.servercore.common.config.Config;
+import me.wesley1808.servercore.common.config.data.CommandConfig;
 import me.wesley1808.servercore.common.services.platform.PlatformHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public class Formatter {
 
     public static Component parse(String input) {
-        return PlatformHelper.parseText(input);
+        CommandConfig config = Config.get().commands();
+        return PlatformHelper.parseText(input
+                .replace("#primary", config.primaryHex())
+                .replace("#secondary", config.secondaryHex())
+                .replace("#tertiary", config.tertiaryHex())
+        );
     }
 
-    public static String line(String input, int targetLength, boolean isPlayer) {
-        if (!isPlayer) {
-            return input.replace("${line}", "");
-        }
+    public static void addLines(MutableComponent out, int lineLength, int lineColor, Component component) {
+        Component line = Component.literal(" ".repeat(lineLength))
+                .withStyle(ChatFormatting.STRIKETHROUGH)
+                .withColor(lineColor);
 
-        String cleanInput = input.replace("${line}", "").replaceAll("<.*?>", "").strip();
-
-        final int length = (targetLength - cleanInput.length()) / 2;
-        return input.replace("${line}", "<strikethrough>" + " ".repeat(length) + "</strikethrough>");
-    }
-
-    public static String page(String input, String command, int page) {
-        if (page > 1) {
-            input = input.replace("${prev_page}", command(command.replace("%page_nr%", String.valueOf(page - 1)), "<<"));
-        } else {
-            input = input.replace("${prev_page}", "<<");
-        }
-
-        return input.replace("${next_page}", command(command.replace("%page_nr%", String.valueOf(page + 1)), ">>"));
-    }
-
-    public static String command(String command, String text) {
-        return String.format("<click:run_command:'/%s'>%s</click>", command, text);
+        out.append(line);
+        out.append(" ");
+        out.append(component);
+        out.append(" ");
+        out.append(line);
     }
 }

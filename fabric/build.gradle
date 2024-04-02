@@ -28,10 +28,7 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
     // Fabric API
-    Set<String> modules = ['fabric-api-base', 'fabric-command-api-v2', 'fabric-lifecycle-events-v1']
-    modules.forEach {
-        modImplementation(fabricApi.module(it, project.fabric_api))
-    }
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_api}")
 
     // Permission API
     modImplementation(include("me.lucko:fabric-permissions-api:${project.permission_api}"))
@@ -39,9 +36,10 @@ dependencies {
     // Placeholder API
     modImplementation(include("eu.pb4:placeholder-api:${project.placeholder_api}"))
 
-    // Night Config
-    runtimeOnly(include("com.electronwill.night-config:core:${project.nightconfig}"))
-    runtimeOnly(include("com.electronwill.night-config:toml:${project.nightconfig}"))
+    // Configuration
+    runtimeOnly(include("org.yaml:snakeyaml:${project.snakeyaml}"))
+    runtimeOnly(include("space.arim.dazzleconf:dazzleconf-core:${project.dazzleconf}"))
+    runtimeOnly(include("space.arim.dazzleconf:dazzleconf-ext-snakeyaml:${project.dazzleconf}"))
 }
 
 tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {

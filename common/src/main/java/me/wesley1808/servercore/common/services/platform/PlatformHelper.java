@@ -3,7 +3,12 @@ package me.wesley1808.servercore.common.services.platform;
 import me.wesley1808.servercore.common.ServerCore;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ChunkMap;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.ChunkPos;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
@@ -38,6 +43,10 @@ public final class PlatformHelper {
         return minecraftPlatform.hasPermission(source, node, level);
     }
 
+    public static boolean shouldTickChunk(ChunkMap chunkMap, ChunkPos pos) {
+        return chunkMap.anyPlayerCloseEnoughForSpawning(pos) || minecraftPlatform.shouldForceChunkTicks(chunkMap, pos);
+    }
+
     @Nullable
     public static EntityType<?> getEntityType(String key) {
         var optional = EntityType.byString(key);
@@ -46,6 +55,13 @@ public final class PlatformHelper {
         } else {
             return minecraftPlatform.getEntityType(key);
         }
+    }
+
+    @NotNull
+    public static ResourceLocation getEntityTypeKey(EntityType<?> type) {
+        return minecraftPlatform.getEntityTypeKey(type)
+                .map(ResourceKey::location)
+                .orElse(EntityType.getKey(type));
     }
 
     private static <T> T load(Class<T> clazz) {

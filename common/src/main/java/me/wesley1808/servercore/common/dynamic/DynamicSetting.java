@@ -1,82 +1,69 @@
 package me.wesley1808.servercore.common.dynamic;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import me.wesley1808.servercore.common.config.Config;
+import me.wesley1808.servercore.common.config.data.dynamic.Setting;
 import org.jetbrains.annotations.Nullable;
 
-import java.math.BigDecimal;
+import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.DoubleSupplier;
-import java.util.function.IntSupplier;
-
-import static me.wesley1808.servercore.common.config.tables.DynamicConfig.*;
+import java.util.function.IntFunction;
 
 public enum DynamicSetting {
-    VIEW_DISTANCE(
-            VIEW_DISTANCE_UPDATE_RATE::get,
-            VIEW_DISTANCE_INCREMENT::get,
-            MIN_VIEW_DISTANCE::get,
-            MAX_VIEW_DISTANCE::get,
-            (manager, value) -> manager.modifyViewDistance(value.intValue())
+    MOBCAP_PERCENTAGE(1, 1024,
+            "Mobcap percentage",
+            (value) -> String.format("%d%%", value),
+            (manager, value) -> DynamicManager.modifyMobcaps(value)
     ),
-
-    SIMULATION_DISTANCE(
-            UPDATE_RATE::get,
-            SIMULATION_DISTANCE_INCREMENT::get,
-            MIN_SIMULATION_DISTANCE::get,
-            MAX_SIMULATION_DISTANCE::get,
-            (manager, value) -> manager.modifySimulationDistance(value.intValue())
+    CHUNK_TICK_DISTANCE(2, 256,
+            "Chunk-tick distance",
+            String::valueOf
     ),
-
-    MOBCAP_MULTIPLIER(
-            UPDATE_RATE::get,
-            MOBCAP_INCREMENT::get,
-            MIN_MOBCAP::get,
-            MAX_MOBCAP::get,
-            DynamicManager::modifyMobcaps
+    SIMULATION_DISTANCE(2, 256,
+            "Simulation distance",
+            String::valueOf,
+            DynamicManager::modifySimulationDistance
     ),
-
-    CHUNK_TICK_DISTANCE(
-            UPDATE_RATE::get,
-            CHUNK_TICK_DISTANCE_INCREMENT::get,
-            MIN_CHUNK_TICK_DISTANCE::get,
-            MAX_CHUNK_TICK_DISTANCE::get
+    VIEW_DISTANCE(2, 256,
+            "View distance",
+            String::valueOf,
+            DynamicManager::modifyViewDistance
     );
 
-    private final BiConsumer<DynamicManager, Double> onChanged;
-    private final DoubleSupplier increment;
-    private final DoubleSupplier min;
-    private final DoubleSupplier max;
-    private final IntSupplier interval;
-    private BigDecimal value;
-    private double cachedValue;
-
+    private final BiConsumer<DynamicManager, Integer> onChanged;
+    private final IntFunction<String> valueFormatter;
+    private final String formattedName;
+    private final int minimumBound;
+    private final int maximumBound;
     private DynamicSetting prev;
     private DynamicSetting next;
+    private int increment = -1;
+    private int min = -1;
+    private int max = -1;
+    private int interval = -1;
+    private int value = -1;
 
-    DynamicSetting(IntSupplier interval, DoubleSupplier increment, DoubleSupplier min, DoubleSupplier max) {
-        this(interval, increment, min, max, null);
+    DynamicSetting(int minimumBound, int maximumBound, String formattedName, IntFunction<String> valueFormatter) {
+        this(minimumBound, maximumBound, formattedName, valueFormatter, null);
     }
 
-    DynamicSetting(IntSupplier interval, DoubleSupplier increment, DoubleSupplier min, DoubleSupplier max, BiConsumer<DynamicManager, Double> onChanged) {
-        this.interval = interval;
+    DynamicSetting(int minimumBound, int maximumBound, String formattedName, IntFunction<String> valueFormatter, BiConsumer<DynamicManager, Integer> onChanged) {
         this.onChanged = onChanged;
-        this.increment = increment;
-        this.min = min;
-        this.max = max;
-        this.reset();
+        this.valueFormatter = valueFormatter;
+        this.formattedName = formattedName;
+        this.minimumBound = minimumBound;
+        this.maximumBound = maximumBound;
     }
 
-    public static void loadCustomOrder() {
-        ObjectArrayList<DynamicSetting> settings = new ObjectArrayList<>();
-        for (String key : SETTING_ORDER.get()) {
-            settings.add(DynamicSetting.valueOf(key.toUpperCase()));
-        }
-
+    public static void reload() {
+        List<Setting> settings = Config.get().dynamic().settings();
         for (int i = 0; i < settings.size(); i++) {
-            DynamicSetting setting = settings.get(i);
-            DynamicSetting prev = i == 0 ? null : settings.get(i - 1);
-            DynamicSetting next = i == settings.size() - 1 ? null : settings.get(i + 1);
-            setting.initialize(prev, next);
+            Setting setting = settings.get(i);
+            DynamicSetting dynamicSetting = setting.dynamicSetting();
+            dynamicSetting.modifyConfiguration(setting);
+            dynamicSetting.initialize(
+                    i == 0 ? null : settings.get(i - 1).dynamicSetting(), // prev
+                    i == settings.size() - 1 ? null : settings.get(i + 1).dynamicSetting() // next
+            );
         }
     }
 
@@ -91,33 +78,28 @@ public enum DynamicSetting {
         this.next = next;
     }
 
-    public double get() {
-        return this.cachedValue;
+    public int get() {
+        return this.value;
     }
 
     public boolean shouldRun(int count) {
-        return count % this.interval.getAsInt() == 0;
+        return this.interval > 0 && count % this.interval == 0;
     }
 
     public void reset() {
-        this.set(this.max.getAsDouble(), null);
+        this.set(this.max, null);
     }
 
-    public void set(double value, @Nullable DynamicManager manager) {
-        this.set(BigDecimal.valueOf(value), manager);
-    }
-
-    public void set(BigDecimal value, @Nullable DynamicManager manager) {
+    public void set(int value, @Nullable DynamicManager manager) {
         this.value = value;
-        this.cachedValue = value.doubleValue();
 
         if (this.onChanged != null && manager != null) {
-            this.onChanged.accept(manager, this.cachedValue);
+            this.onChanged.accept(manager, value);
         }
     }
 
     public boolean modify(boolean increase, DynamicManager manager) {
-        BigDecimal value = this.newValue(increase);
+        int value = this.newValue(increase);
         if (this.shouldModify(value)) {
             this.set(value, manager);
             return true;
@@ -125,39 +107,58 @@ public enum DynamicSetting {
         return false;
     }
 
-    private boolean shouldModify(BigDecimal value) {
-        int compared = value.compareTo(this.value);
+    private boolean shouldModify(int value) {
+        int compared = Integer.compare(value, this.value);
         return compared != 0 && (this.next != null || this.prev != null)
                && (compared < 0 || (!this.isMaximum() && (this.next == null || this.next.isMaximum())))
                && (compared > 0 || (!this.isMinimum() && (this.prev == null || this.prev.isMinimum())));
     }
 
-    private BigDecimal newValue(boolean increase) {
-        BigDecimal increment = BigDecimal.valueOf(this.increment.getAsDouble());
-        BigDecimal value;
-
-        if (increase) {
-            value = this.value.add(increment);
-            double maximum = this.max.getAsDouble();
-            if (value.doubleValue() > maximum) {
-                return BigDecimal.valueOf(maximum);
-            }
-        } else {
-            value = this.value.subtract(increment);
-            double minimum = this.min.getAsDouble();
-            if (value.doubleValue() < minimum) {
-                return BigDecimal.valueOf(minimum);
-            }
-        }
-
-        return value;
+    private int newValue(boolean increase) {
+        return increase
+                ? Math.min(this.value + this.increment, this.max)
+                : Math.max(this.value - this.increment, this.min);
     }
 
     private boolean isMinimum() {
-        return this.cachedValue <= this.min.getAsDouble();
+        return this.value <= this.min;
     }
 
     private boolean isMaximum() {
-        return this.cachedValue >= this.max.getAsDouble();
+        return this.value >= this.max;
+    }
+
+    private void modifyConfiguration(Setting settings) {
+        this.max = Math.min(settings.max(), this.maximumBound);
+        this.min = Math.max(settings.min(), this.minimumBound);
+        this.increment = settings.increment();
+        this.interval = settings.interval();
+
+        if (this.value < 0) {
+            this.set(this.max, null);
+        }
+    }
+
+    public int getLowerBound() {
+        return this.minimumBound;
+    }
+
+    public int getUpperBound() {
+        return this.maximumBound;
+    }
+
+    public int getMax() {
+        if (this.max < 0) {
+            throw new IllegalStateException(this.name() + " has not been initialized yet!");
+        }
+        return this.max;
+    }
+
+    public String getFormattedName() {
+        return this.formattedName;
+    }
+
+    public String getFormattedValue() {
+        return this.valueFormatter.apply(this.value);
     }
 }

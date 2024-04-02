@@ -1,7 +1,8 @@
 package me.wesley1808.servercore.mixin.features.breeding_cap;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import me.wesley1808.servercore.common.utils.BreedingCap;
+import me.wesley1808.servercore.common.config.Config;
+import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCapConfig;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.entity.projectile.ThrownEgg;
@@ -24,7 +25,8 @@ public abstract class ThrownEggMixin extends ThrowableItemProjectile {
             )
     )
     public int servercore$enforceBreedCap(int value) {
-        if (value == 0 && BreedingCap.ANIMAL.exceedsLimit(EntityType.CHICKEN, this.level(), this.blockPosition())) {
+        BreedingCapConfig config = Config.get().breedingCap();
+        if (value == 0 && config.enabled() && config.animals().exceedsLimit(EntityType.CHICKEN, this.level(), this.blockPosition())) {
             return 1;
         }
 

@@ -1,9 +1,9 @@
 package me.wesley1808.servercore.common.activation_range;
 
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import me.wesley1808.servercore.common.config.tables.ActivationRangeConfig;
-import me.wesley1808.servercore.common.interfaces.activation_range.LevelInfo;
-import me.wesley1808.servercore.common.services.platform.PlatformHelper;
+import me.wesley1808.servercore.common.config.Config;
+import me.wesley1808.servercore.common.config.data.activation_range.ActivationRangeConfig;
+import me.wesley1808.servercore.common.config.data.activation_range.ActivationType;
+import me.wesley1808.servercore.common.config.data.activation_range.CustomActivationType;
 import me.wesley1808.servercore.common.utils.Util;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,12 +11,10 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.ambient.AmbientCreature;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.animal.Sheep;
-import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.boss.EnderDragonPart;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
@@ -25,15 +23,12 @@ import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.Slime;
-import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.*;
-import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -47,7 +42,7 @@ import java.util.function.Predicate;
  * License: GPL-3.0 (licenses/GPL.md)
  */
 public class ActivationRange {
-    private static final ReferenceOpenHashSet<EntityType<?>> EXCLUDED_ENTITY_TYPES = new ReferenceOpenHashSet<>();
+    private static final double MINIMUM_MOVEMENT = 0.001;
     private static final Predicate<Goal> BEE_GOAL_IMMUNITIES = goal -> goal instanceof Bee.BeeGoToKnownFlowerGoal || goal instanceof Bee.BeeGoToHiveGoal;
     private static final Activity[] VILLAGER_PANIC_IMMUNITIES = {
             Activity.HIDE,
@@ -56,42 +51,20 @@ public class ActivationRange {
             Activity.PANIC
     };
 
-    public static void reload() {
-        EXCLUDED_ENTITY_TYPES.clear();
-
-        for (String key : ActivationRangeConfig.EXCLUDED_ENTITY_TYPES.get()) {
-            EntityType<?> type = PlatformHelper.getEntityType(key);
-            if (type != null) {
-                EXCLUDED_ENTITY_TYPES.add(type);
-            }
-        }
-    }
-
     /**
      * Puts entities in their corresponding groups / activation types, upon initialization.
      */
     public static ActivationType initializeEntityActivationType(Entity entity) {
-        if (entity instanceof Raider) {
-            return ActivationType.RAIDER;
-        } else if (entity instanceof WaterAnimal) {
-            return ActivationType.WATER;
-        } else if (entity instanceof Villager) {
-            return ActivationType.VILLAGER;
-        } else if (entity.getType() == EntityType.ZOMBIE || entity.getType() == EntityType.HUSK) {
-            return ActivationType.ZOMBIE;
-        } else if (entity instanceof Creeper || entity instanceof Slime || entity instanceof Hoglin) {
-            return ActivationType.MONSTER_BELOW;
-        } else if (entity instanceof FlyingMob) {
-            return ActivationType.FLYING;
-        } else if (entity instanceof Enemy) {
-            return ActivationType.MONSTER;
-        } else if (entity instanceof AgeableMob || entity instanceof AmbientCreature) {
-            return ActivationType.ANIMAL;
-        } else if (entity instanceof PathfinderMob) {
-            return ActivationType.NEUTRAL;
-        } else {
-            return ActivationType.MISC;
+        ActivationRangeConfig config = Config.get().activationRange();
+        for (CustomActivationType type : config.activationTypes()) {
+            for (EntityTypeTest<? super Entity, ?> matcher : type.matchers()) {
+                if (matcher.tryCast(entity) != null) {
+                    return type;
+                }
+            }
         }
+
+        return config.defaultActivationType();
     }
 
     /**
@@ -101,8 +74,10 @@ public class ActivationRange {
      * @return Boolean: whether the entity will be excluded from activation range checks.
      */
     public static boolean isExcluded(Entity entity) {
-        return entity.servercore$getActivationType().activationRange.getAsInt() <= 0
-               || entity.servercore$getActivationType().tickInterval.getAsInt() == 0
+        final ActivationType type = entity.servercore$getActivationType();
+        final int tickInterval = type.tickInterval();
+
+        return tickInterval == 0 || tickInterval == 1 || type.activationRange() <= 0
                || entity instanceof Player
                || entity instanceof ThrowableItemProjectile
                || entity instanceof EnderDragon
@@ -115,59 +90,62 @@ public class ActivationRange {
                || entity instanceof FireworkRocketEntity
                || entity instanceof EyeOfEnder
                || entity instanceof ThrownTrident
-               || EXCLUDED_ENTITY_TYPES.contains(entity.getType());
+               || Config.get().activationRange().excludedEntityTypes().contains(entity.getType());
     }
 
     /**
      * Activates entities in {@param level} that are close enough to players.
      */
-    public static void activateEntities(ServerLevel level) {
-        int currentTick = level.getServer().getTickCount();
-        int maxRange = Integer.MIN_VALUE;
-        for (ActivationType type : ActivationType.values()) {
-            maxRange = Math.max(type.activationRange.getAsInt(), maxRange);
+    public static void activateEntities(ServerLevel level, int currentTick) {
+        ActivationRangeConfig config = Config.get().activationRange();
+        if (!config.enabled()) {
+            return;
         }
 
-        LevelInfo info = (LevelInfo) level;
-        for (ActivationType.Wakeup wakeup : ActivationType.Wakeup.values()) {
-            info.servercore$setRemaining(wakeup, Math.min(info.servercore$getRemaining(wakeup) + 1, wakeup.max.getAsInt()));
+        int maxRange = Integer.MIN_VALUE;
+        for (CustomActivationType type : config.activationTypes()) {
+            maxRange = Math.max(type.activationRange(), maxRange);
         }
 
         maxRange = Math.min((level.getServer().getPlayerList().getViewDistance() << 4) - 8, maxRange);
         for (ServerPlayer player : level.players()) {
-            if (player.isSpectator()) {
-                continue;
-            }
-
-            AABB maxBB;
-            if (ActivationRangeConfig.USE_VERTICAL_RANGE.get()) {
-                maxBB = player.getBoundingBox().inflate(maxRange, 128, maxRange);
-                for (ActivationType type : ActivationType.values()) {
-                    type.boundingBox = player.getBoundingBox().inflate(type.activationRange.getAsInt());
-
-                    if (type.extraHeightUp) type.boundingBox = type.boundingBox.expandTowards(0, 96, 0);
-                    if (type.extraHeightDown) type.boundingBox = type.boundingBox.expandTowards(0, -96, 0);
+            if (!player.isSpectator()) {
+                AABB maxBB = player.getBoundingBox().inflate(maxRange, 256, maxRange);
+                for (Entity entity : level.getEntities(player, maxBB)) {
+                    activateEntity(player, entity, currentTick, config);
                 }
-            } else {
-                maxBB = player.getBoundingBox().inflate(maxRange, 256, maxRange);
-                for (ActivationType type : ActivationType.values()) {
-                    final int range = type.activationRange.getAsInt();
-                    type.boundingBox = player.getBoundingBox().inflate(range, 256, range);
-                }
-            }
-
-            for (Entity entity : level.getEntities(player, maxBB)) {
-                activateEntity(entity, currentTick);
             }
         }
     }
 
-    private static void activateEntity(Entity entity, int currentTick) {
+    private static void activateEntity(ServerPlayer player, Entity entity, int currentTick, ActivationRangeConfig config) {
         if (currentTick > entity.servercore$getActivatedTick()) {
-            if (entity.servercore$isExcluded() || entity.servercore$getActivationType().boundingBox.intersects(entity.getBoundingBox())) {
+            if (entity.servercore$isExcluded() || isWithinRange(player, entity, config)) {
                 entity.servercore$setActivatedTick(currentTick + 19);
             }
         }
+    }
+
+    private static boolean isWithinRange(ServerPlayer player, Entity entity, ActivationRangeConfig config) {
+        final ActivationType type = entity.servercore$getActivationType();
+        final int range = type.activationRange();
+        final int chessboardDistance = Math.max(
+                Math.abs(player.getBlockX() - entity.getBlockX()),
+                Math.abs(player.getBlockZ() - entity.getBlockZ())
+        );
+
+        if (chessboardDistance > range) {
+            return false;
+        }
+
+        if (config.useVerticalRange()) {
+            final int deltaY = entity.getBlockY() - player.getBlockY();
+            return deltaY <= range && deltaY >= -range
+                   || (deltaY > 0 && type.extraHeightUp())
+                   || (deltaY < 0 && type.extraHeightDown());
+        }
+
+        return true;
     }
 
     /**
@@ -176,7 +154,7 @@ public class ActivationRange {
      * @param entity: The entity to check immunities for
      * @return Integer: the amount of ticks an entity should be immune for activation range checks.
      */
-    public static int checkEntityImmunities(Entity entity, int currentTick) {
+    public static int checkEntityImmunities(Entity entity, int currentTick, ActivationRangeConfig config) {
         final int inactiveWakeUpImmunity = checkInactiveWakeup(entity, currentTick);
         if (inactiveWakeUpImmunity > -1) {
             return inactiveWakeUpImmunity;
@@ -195,15 +173,14 @@ public class ActivationRange {
         }
 
         // quick checks.
-        final ActivationType type = entity.servercore$getActivationType();
-        if (entity.isInWater() && entity.isPushedByFluid() && !(type == ActivationType.ANIMAL || type == ActivationType.FLYING || type == ActivationType.VILLAGER || type == ActivationType.WATER || entity instanceof Boat)) {
+        if (entity.isInWater() && entity.isPushedByFluid() && !(entity instanceof AgeableMob || entity instanceof Villager || entity instanceof Boat)) {
             return 100;
         }
 
         // ServerCore - Immunize moving items & xp orbs.
         if (entity instanceof ItemEntity || entity instanceof ExperienceOrb) {
             final Vec3 movement = entity.getDeltaMovement();
-            if (movement.x != 0 || movement.z != 0 || movement.y > 0) {
+            if (Math.abs(movement.x) > MINIMUM_MOVEMENT || Math.abs(movement.z) > MINIMUM_MOVEMENT || movement.y > MINIMUM_MOVEMENT) {
                 return 20;
             }
         }
@@ -234,7 +211,7 @@ public class ActivationRange {
                 if (mob instanceof Villager villager) {
                     Brain<Villager> brain = villager.getBrain();
 
-                    if (ActivationRangeConfig.VILLAGER_TICK_PANIC.get()) {
+                    if (config.villagerTickPanic()) {
                         for (Activity activity : VILLAGER_PANIC_IMMUNITIES) {
                             if (brain.isActive(activity)) {
                                 return 20 * 5;
@@ -242,10 +219,10 @@ public class ActivationRange {
                         }
                     }
 
-                    final int immunityAfter = ActivationRangeConfig.VILLAGER_WORK_IMMUNITY_AFTER.get();
+                    final int immunityAfter = config.villagerWorkImmunityAfter();
                     if (immunityAfter > 0 && (currentTick - mob.servercore$getActivatedTick()) >= immunityAfter) {
                         if (brain.isActive(Activity.WORK)) {
-                            return ActivationRangeConfig.VILLAGER_WORK_IMMUNITY_FOR.get();
+                            return config.villagerWorkImmunityFor();
                         }
                     }
                 }
@@ -283,48 +260,44 @@ public class ActivationRange {
      * @return Boolean: whether the entity should tick.
      */
     public static boolean checkIfActive(Entity entity, int currentTick) {
-        if (shouldTick(entity)) return true;
+        ActivationRangeConfig config = Config.get().activationRange();
+        if (shouldTick(entity, config)) return true;
 
         boolean active = entity.servercore$getActivatedTick() >= currentTick;
         if (!active) {
             final int inactiveTicks = currentTick - entity.servercore$getActivatedTick() - 1;
             if (inactiveTicks % 20 == 0) {
                 // Check immunities every 20 inactive ticks.
-                final int immunity = checkEntityImmunities(entity, currentTick);
+                final int immunity = checkEntityImmunities(entity, currentTick, config);
                 if (immunity >= 0) {
                     entity.servercore$setActivatedTick(currentTick + immunity);
                     return true;
                 }
             }
 
-            final int tickInterval = entity.servercore$getActivationType().tickInterval.getAsInt();
+            final int tickInterval = entity.servercore$getActivationType().tickInterval();
             if (tickInterval > 0 && inactiveTicks % tickInterval == 0) {
                 return true;
             }
             // Spigot - Add a little performance juice to active entities. Skip 1/4 if not immune.
-        } else if (ActivationRangeConfig.SKIP_NON_IMMUNE.get() && entity.servercore$getFullTickCount() % 4 == 0 && checkEntityImmunities(entity, currentTick) < 0) {
+        } else if (config.skipNonImmune() && entity.servercore$getFullTickCount() % 4 == 0 && checkEntityImmunities(entity, currentTick, config) < 0) {
             return false;
         }
 
         return active;
     }
 
-    private static boolean shouldTick(Entity entity) {
-        return !ActivationRangeConfig.ENABLED.get() || entity.servercore$isExcluded() || entity.isInsidePortal || entity.isOnPortalCooldown()
-               || (entity.tickCount < 200 && (entity.servercore$getActivationType() == ActivationType.MISC || ActivationRangeConfig.TICK_NEW_ENTITIES.get())) // New entities
+    private static boolean shouldTick(Entity entity, ActivationRangeConfig config) {
+        return !config.enabled() || entity.servercore$isExcluded() || entity.isInsidePortal || entity.isOnPortalCooldown()
+               || (entity.tickCount < 200 && (entity.servercore$getActivationType() == config.defaultActivationType() || config.tickNewEntities())) // New entities
                || (entity instanceof Mob mob && mob.leashHolder instanceof Player) // Player leashed mobs
                || (entity instanceof LivingEntity living && living.hurtTime > 0); // Attacked mobs
     }
 
     private static int checkInactiveWakeup(Entity entity, int currentTick) {
-        ActivationType.Wakeup wakeup = entity.servercore$getActivationType().wakeup;
-        if (wakeup != null && currentTick - entity.servercore$getActivatedTick() >= wakeup.interval.getAsInt() * 20L) {
-            LevelInfo info = (LevelInfo) entity.level();
-            int remaining = info.servercore$getRemaining(wakeup);
-            if (remaining > 0) {
-                info.servercore$setRemaining(wakeup, remaining - 1);
-                return 100;
-            }
+        int wakeupInterval = entity.servercore$getActivationType().wakeupInterval();
+        if (wakeupInterval > 0 && currentTick - entity.servercore$getActivatedTick() >= wakeupInterval * 20L) {
+            return 100;
         }
 
         return -1;

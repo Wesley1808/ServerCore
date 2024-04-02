@@ -2,14 +2,29 @@ package me.wesley1808.servercore.common.services.platform;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ChunkMap;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.ChunkPos;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface MinecraftPlatform {
-    Component parseText(String input);
+import java.util.Optional;
 
+public interface MinecraftPlatform {
     boolean hasPermission(CommandSourceStack source, String node, int level);
 
+    boolean shouldForceChunkTicks(ChunkMap chunkMap, ChunkPos pos);
+
+    Component parseText(String input);
+
     @Nullable
-    EntityType<?> getEntityType(String key);
+    default EntityType<?> getEntityType(String key) {
+        return null;
+    }
+
+    @NotNull
+    default Optional<ResourceKey<EntityType<?>>> getEntityTypeKey(EntityType<?> type) {
+        return Optional.empty();
+    }
 }

@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.mixin.features.activation_range;
 
 import me.wesley1808.servercore.common.activation_range.ActivationRange;
-import me.wesley1808.servercore.common.activation_range.ActivationType;
+import me.wesley1808.servercore.common.config.data.activation_range.ActivationType;
 import me.wesley1808.servercore.common.interfaces.activation_range.ActivationEntity;
 import me.wesley1808.servercore.common.interfaces.activation_range.Inactive;
 import me.wesley1808.servercore.common.utils.EntityTags;
@@ -39,10 +39,10 @@ public class EntityMixin implements Inactive, ActivationEntity {
     private Level level;
 
     @Unique
-    private int servercore$activatedTick = Integer.MIN_VALUE;
+    private int servercore$activatedTick;
 
     @Unique
-    private int servercore$activatedImmunityTick = Integer.MIN_VALUE;
+    private int servercore$activatedImmunityTick;
 
     @Unique
     private boolean servercore$isInactive = false;
@@ -127,6 +127,11 @@ public class EntityMixin implements Inactive, ActivationEntity {
     @Override
     public void servercore$setActivatedImmunityTick(int tick) {
         this.servercore$activatedImmunityTick = tick;
+    }
+
+    @Override
+    public boolean servercore$isInactive() {
+        return this.servercore$isInactive;
     }
 
     @Override

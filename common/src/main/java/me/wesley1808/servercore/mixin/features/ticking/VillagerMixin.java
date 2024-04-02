@@ -1,7 +1,8 @@
 package me.wesley1808.servercore.mixin.features.ticking;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import me.wesley1808.servercore.common.config.tables.FeatureConfig;
+import me.wesley1808.servercore.common.config.Config;
+import me.wesley1808.servercore.common.config.data.FeatureConfig;
 import me.wesley1808.servercore.common.utils.ChunkManager;
 import me.wesley1808.servercore.common.utils.EntityTags;
 import net.minecraft.core.BlockPos;
@@ -44,7 +45,8 @@ public abstract class VillagerMixin extends AbstractVillager {
             )
     )
     private boolean servercore$shouldTickBrain(Brain<Villager> brain, ServerLevel level, LivingEntity livingEntity) {
-        return !FeatureConfig.LOBOTOMIZE_VILLAGERS.get() || !this.servercore$isLobotomized() || this.tickCount % FeatureConfig.LOBOTOMIZED_TICK_INTERVAL.get() == 0;
+        FeatureConfig config = Config.get().features();
+        return !config.lobotomizeVillagers() || !this.servercore$isLobotomized() || this.tickCount % config.lobotomizedTickInterval() == 0;
     }
 
     @Unique
