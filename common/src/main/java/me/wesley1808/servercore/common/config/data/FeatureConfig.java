@@ -11,25 +11,19 @@ import space.arim.dazzleconf.sorter.AnnotationBasedSorter.Order;
 
 public interface FeatureConfig {
     @Order(1)
-    @ConfKey("disable-spawn-chunks")
-    @DefaultBoolean(false)
-    @ConfComments("Stops the server from loading spawn chunks.")
-    boolean disableSpawnChunks();
-
-    @Order(2)
     @ConfKey("prevent-moving-into-unloaded-chunks")
     @DefaultBoolean(false)
     @ConfComments("Prevents lagspikes caused by players moving into unloaded chunks.")
     boolean preventMovingIntoUnloadedChunks();
 
-    @Order(3)
+    @Order(2)
     @ConfKey("autosave-interval-seconds")
     @DefaultInteger(300)
     @IntegerRange(min = 5)
     @ConfComments("The amount of seconds between auto-saves when /save-on is active.")
     int autosaveIntervalSeconds();
 
-    @Order(4)
+    @Order(3)
     @ConfKey("xp-merge-fraction")
     @DefaultInteger(40)
     @IntegerRange(min = 1)
@@ -39,27 +33,27 @@ public interface FeatureConfig {
     })
     int xpMergeFraction();
 
-    @Order(5)
+    @Order(4)
     @ConfKey("xp-merge-radius")
     @DefaultDouble(0.5)
     @NumericRange(min = 0.5)
     @ConfComments("The radius in blocks that experience orbs will merge at.")
     double xpMergeRadius();
 
-    @Order(6)
+    @Order(5)
     @ConfKey("item-merge-radius")
     @DefaultDouble(0.5)
     @NumericRange(min = 0.5)
     @ConfComments("The radius in blocks that items will merge at.")
     double itemMergeRadius();
 
-    @Order(7)
+    @Order(6)
     @ConfKey("lobotomize-villagers.enabled")
     @DefaultBoolean(false)
     @ConfComments("Makes villagers tick less often if they are stuck in a 1x1 space.")
     boolean lobotomizeVillagers();
 
-    @Order(8)
+    @Order(7)
     @ConfKey("lobotomize-villagers.tick-interval")
     @DefaultInteger(20)
     @IntegerRange(min = 2)

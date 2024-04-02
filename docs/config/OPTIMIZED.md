@@ -36,8 +36,6 @@ cancel-duplicate-fluid-ticks: true
 
 # Most miscellaneous feature toggles.
 features:
-  # Stops the server from loading spawn chunks.
-  disable-spawn-chunks: true
   # Prevents lagspikes caused by players moving into unloaded chunks.
   prevent-moving-into-unloaded-chunks: true
   # The amount of seconds between auto-saves when /save-on is active.

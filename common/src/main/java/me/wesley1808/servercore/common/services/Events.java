@@ -8,7 +8,6 @@ import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
-import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;

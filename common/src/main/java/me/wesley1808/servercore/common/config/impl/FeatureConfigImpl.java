@@ -3,7 +3,6 @@ package me.wesley1808.servercore.common.config.impl;
 import me.wesley1808.servercore.common.config.data.FeatureConfig;
 
 public class FeatureConfigImpl implements FeatureConfig {
-    private final boolean disableSpawnChunks;
     private final boolean preventMovingIntoUnloadedChunks;
     private final int autosaveIntervalSeconds;
     private final int xpMergeChance;
@@ -13,7 +12,6 @@ public class FeatureConfigImpl implements FeatureConfig {
     private final int lobotomizedTickInterval;
 
     public FeatureConfigImpl(FeatureConfig source) {
-        this.disableSpawnChunks = source.disableSpawnChunks();
         this.preventMovingIntoUnloadedChunks = source.preventMovingIntoUnloadedChunks();
         this.autosaveIntervalSeconds = source.autosaveIntervalSeconds();
         this.xpMergeChance = source.xpMergeFraction();
@@ -21,11 +19,6 @@ public class FeatureConfigImpl implements FeatureConfig {
         this.itemMergeRadius = source.itemMergeRadius();
         this.lobotomizeVillagers = source.lobotomizeVillagers();
         this.lobotomizedTickInterval = source.lobotomizedTickInterval();
-    }
-
-    @Override
-    public boolean disableSpawnChunks() {
-        return this.disableSpawnChunks;
     }
 
     @Override
