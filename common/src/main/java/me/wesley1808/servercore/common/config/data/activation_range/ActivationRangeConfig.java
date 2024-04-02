@@ -23,14 +23,14 @@ public interface ActivationRangeConfig {
     @Order(1)
     @ConfKey("enabled")
     @DefaultBoolean(false)
-    @ConfComments("(Default = false) Enables activation range.")
+    @ConfComments("Enables activation range.")
     boolean enabled();
 
     @Order(2)
     @ConfKey("tick-new-entities")
     @DefaultBoolean(true)
     @ConfComments({
-            "(Default = true) Briefly ticks entities newly added to the world for 10 seconds (includes both spawning and loading).",
+            "Briefly ticks entities newly added to the world for 10 seconds (includes both spawning and loading).",
             "This gives them a chance to properly immunize when they are spawned if they should be. Can be helpful for mobfarms."
     })
     boolean tickNewEntities();
@@ -39,7 +39,7 @@ public interface ActivationRangeConfig {
     @ConfKey("use-vertical-range")
     @DefaultBoolean(false)
     @ConfComments({
-            "(Default = false) Enables vertical range checks. By default, activation ranges only work horizontally.",
+            "Enables vertical range checks. By default, activation ranges only work horizontally.",
             "This can greatly improve performance on taller worlds, but might break a few very specific ai-based mobfarms."
     })
     boolean useVerticalRange();
@@ -48,7 +48,7 @@ public interface ActivationRangeConfig {
     @ConfKey("skip-non-immune")
     @DefaultBoolean(false)
     @ConfComments({
-            "(Default = false) Skips 1/4th of entity ticks whilst not immune.",
+            "Skips 1/4th of entity ticks whilst not immune.",
             "This affects entities that are within the activation range, but not immune (for example by falling or being in water)."
     })
     boolean skipNonImmune();
@@ -74,10 +74,7 @@ public interface ActivationRangeConfig {
     @Order(8)
     @ConfKey("excluded-entity-types")
     @DefaultObject("defaultExcludedEntityTypes")
-    @ConfComments({
-            "(Default = [minecraft:hopper_minecart, minecraft:warden, minecraft:ghast])",
-            "A list of entity types that should be excluded from activation range checks."
-    })
+    @ConfComments("A list of entity types that should be excluded from activation range checks.")
     Set<EntityType<?>> excludedEntityTypes();
 
     @Order(9)
@@ -101,8 +98,8 @@ public interface ActivationRangeConfig {
             "► name = The name of the activation type.",
             "► entity-matcher = A list of conditions to filter entities. Only one of these conditions needs to be met for an entity to match.",
             "► If an entity matches multiple activation types, the one highest in the list will be used. The conditions accept the following formats:",
-            "  - Entity type matching    |   Uses the entity type's registry key.  |  'minecraft:zombie' matches zombies, but for example not husks or drowned.",
-            "  - Typeof class matching   |   Uses the 'typeof:' prefix.            |  'typeof:monster' matches all monsters.",
+            "  - Entity type matching    |   Uses the entity type's identifier.  |  'minecraft:zombie' matches zombies, but for example not husks or drowned.",
+            "  - Typeof class matching   |   Uses the 'typeof:' prefix.          |  'typeof:monster' matches all monsters.",
             "► Available typeof classes: mob, monster, raider, neutral, ambient, animal, water_animal, flying_animal, flying_monster, villager."
     })
     List<@SubSection CustomActivationType> activationTypes();

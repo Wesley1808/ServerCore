@@ -10,7 +10,7 @@ public interface BreedingCapConfig {
     @Order(1)
     @ConfKey("enabled")
     @DefaultBoolean(false)
-    @ConfComments("(Default = false) Enables breeding caps.")
+    @ConfComments("Enables breeding caps.")
     boolean enabled();
 
     @Order(2)

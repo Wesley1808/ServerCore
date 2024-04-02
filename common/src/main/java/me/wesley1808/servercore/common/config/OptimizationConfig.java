@@ -15,7 +15,7 @@ public interface OptimizationConfig extends Copyable {
     @ConfKey("reduce-sync-loads")
     @DefaultBoolean(true)
     @ConfComments({
-            "(Default = true) Prevents many different lagspikes caused by loading chunks synchronously.",
+            "Prevents many different lagspikes caused by loading chunks synchronously.",
             "This for example causes maps to only update loaded chunks, which depending on the viewdistance can be a smaller radius than vanilla."
     })
     boolean reduceSyncLoads();
@@ -24,7 +24,7 @@ public interface OptimizationConfig extends Copyable {
     @ConfKey("cache-ticking-chunks")
     @DefaultBoolean(true)
     @ConfComments({
-            "(Default = true) Can significantly reduce the time spent on chunk iteration by caching ticking chunks every second.",
+            "Can significantly reduce the time spent on chunk iteration by caching ticking chunks every second.",
             "This is especially useful for servers with a high playercount and / or viewdistance.",
             "Note: The list of ticking chunks is only updated every second, rather than every tick (but that is very unlikely to matter)."
     })
@@ -34,7 +34,7 @@ public interface OptimizationConfig extends Copyable {
     @ConfKey("fast-biome-lookups")
     @DefaultBoolean(false)
     @ConfComments({
-            "(Default = false) Can significantly reduce time spent on mobspawning, but isn't as accurate as vanilla on biome borders.",
+            "Can significantly reduce time spent on mobspawning, but isn't as accurate as vanilla on biome borders.",
             "This may cause mobs from another biome to spawn a few blocks across a biome border (this does not affect structure spawning!)."
     })
     boolean fastBiomeLookups();
@@ -43,7 +43,7 @@ public interface OptimizationConfig extends Copyable {
     @ConfKey("cancel-duplicate-fluid-ticks")
     @DefaultBoolean(false)
     @ConfComments({
-            "(Default = false) Fluid random ticks, like lava spreading fire, are run twice each game tick.",
+            "Fluid random ticks, like lava spreading fire, are run twice each game tick.",
             "Enabling this will cancel the 'duplicate' second fluid tick, but this may cause slight behavior changes."
     })
     boolean cancelDuplicateFluidTicks();

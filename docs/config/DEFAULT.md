@@ -9,17 +9,17 @@ These are recommended for most users, as it has little to no impact on behavior 
 # Allows you to toggle specific optimizations that don't have full vanilla parity.
 # These settings will only take effect after server restarts.
 
-# (Default = true) Prevents many different lagspikes caused by loading chunks synchronously.
+# Prevents many different lagspikes caused by loading chunks synchronously.
 # This for example causes maps to only update loaded chunks, which depending on the viewdistance can be a smaller radius than vanilla.
 reduce-sync-loads: true
-# (Default = true) Can significantly reduce the time spent on chunk iteration by caching ticking chunks every second.
+# Can significantly reduce the time spent on chunk iteration by caching ticking chunks every second.
 # This is especially useful for servers with a high playercount and / or viewdistance.
 # Note: The list of ticking chunks is only updated every second, rather than every tick (but that is very unlikely to matter).
 cache-ticking-chunks: true
-# (Default = false) Can significantly reduce time spent on mobspawning, but isn't as accurate as vanilla on biome borders.
+# Can significantly reduce time spent on mobspawning, but isn't as accurate as vanilla on biome borders.
 # This may cause mobs from another biome to spawn a few blocks across a biome border (this does not affect structure spawning!).
 fast-biome-lookups: false
-# (Default = false) Fluid random ticks, like lava spreading fire, are run twice each game tick.
+# Fluid random ticks, like lava spreading fire, are run twice each game tick.
 # Enabling this will cancel the 'duplicate' second fluid tick, but this may cause slight behavior changes.
 cancel-duplicate-fluid-ticks: false
 ```
@@ -32,30 +32,31 @@ cancel-duplicate-fluid-ticks: false
 
 # Most miscellaneous feature toggles.
 features:
-  # (Default = false) Stops the server from loading spawn chunks.
+  # Stops the server from loading spawn chunks.
   disable-spawn-chunks: false
-  # (Default = false) Prevents lagspikes caused by players moving into unloaded chunks.
+  # Prevents lagspikes caused by players moving into unloaded chunks.
   prevent-moving-into-unloaded-chunks: false
-  # (Default = 300) The amount of seconds between auto-saves when /save-on is active.
+  # The amount of seconds between auto-saves when /save-on is active.
   autosave-interval-seconds: 300
-  # (Default = 40) Decides the chance of XP orbs being able to merge together (1 in X).
-  xp-merge-chance: 40
-  # (Default = 0.5) Decides the radius in blocks that items / XP orbs will merge at.
+  # The fraction of experience orbs that can merge with each other. (1 = 100%, 40 = 2.5%)
+  # Note that just like in vanilla, experience orbs will still need to be of the same size to actually merge.
+  xp-merge-fraction: 40
+  # The radius in blocks that experience orbs will merge at.
   xp-merge-radius: 0.5
+  # The radius in blocks that items will merge at.
   item-merge-radius: 0.5
   lobotomize-villagers:
-    # (Default = false) Makes villagers tick less often if they are stuck in a 1x1 space.
+    # Makes villagers tick less often if they are stuck in a 1x1 space.
     enabled: false
-    # (Default = 20) Decides the interval in between villager ticks when lobotomized.
+    # Decides the interval in between villager ticks when lobotomized.
     tick-interval: 20
 
 # Automatically modifies dynamic settings based on the server performance.
 dynamic:
-  # (Default = false) Enables dynamic performance checks.
+  # Enables dynamic performance checks.
   enabled: false
-  # (Default = 35) The average MSPT to target.
+  # The average MSPT to target.
   target-mspt: 35
-  # (Default = [CHUNK_TICK_DISTANCE, MOBCAP, SIMULATION_DISTANCE, VIEW_DISTANCE])
   # The settings that will be decreased when the server is overloaded, in the specified order.
   # Removing a setting from the list will disable it.
   # ► max = The maximum value the server will increase the setting to.
@@ -89,7 +90,7 @@ dynamic:
 
 # A special mobcap that only affects the breeding of animals and villagers.
 breeding-cap:
-  # (Default = false) Enables breeding caps.
+  # Enables breeding caps.
   enabled: false
   # The breeding cap for villagers.
   # ► limit = The limit of mobs of the same type within range. Setting this to negative will disable the breeding cap.
@@ -178,15 +179,15 @@ commands:
 # Immunity checks determine whether an entity should be ticked even when it's outside the activation range, like for example when it is falling or takes damage.
 # Note: while this is a very powerful feature, it can still slow down mobfarms and break very specific technical contraptions.
 activation-range:
-  # (Default = false) Enables activation range.
+  # Enables activation range.
   enabled: false
-  # (Default = true) Briefly ticks entities newly added to the world for 10 seconds (includes both spawning and loading).
+  # Briefly ticks entities newly added to the world for 10 seconds (includes both spawning and loading).
   # This gives them a chance to properly immunize when they are spawned if they should be. Can be helpful for mobfarms.
   tick-new-entities: true
-  # (Default = false) Enables vertical range checks. By default, activation ranges only work horizontally.
+  # Enables vertical range checks. By default, activation ranges only work horizontally.
   # This can greatly improve performance on taller worlds, but might break a few very specific ai-based mobfarms.
   use-vertical-range: false
-  # (Default = false) Skips 1/4th of entity ticks whilst not immune.
+  # Skips 1/4th of entity ticks whilst not immune.
   # This affects entities that are within the activation range, but not immune (for example by falling or being in water).
   skip-non-immune: false
   # Allows villagers to tick regardless of the activation range when panicking.
@@ -195,12 +196,11 @@ activation-range:
   villager-work-immunity-after: 20
   # The amount of ticks an inactive villager will wake up for when it has work immunity.
   villager-work-immunity-for: 20
-  # (Default = [minecraft:hopper_minecart, minecraft:warden, minecraft:ghast])
   # A list of entity types that should be excluded from activation range checks.
   excluded-entity-types:
-    - 'minecraft:warden'
     - 'minecraft:ghast'
     - 'minecraft:hopper_minecart'
+    - 'minecraft:warden'
   # The activation type that will get assigned to any entity that doesn't have a custom activation type.
   # ► activation-range = The range an entity is required to be in from a player to be activated.
   # ► tick-interval = The interval between 'active' ticks whilst the entity is inactive. Negative values will disable these active ticks.
@@ -218,8 +218,8 @@ activation-range:
   # ► name = The name of the activation type.
   # ► entity-matcher = A list of conditions to filter entities. Only one of these conditions needs to be met for an entity to match.
   # ► If an entity matches multiple activation types, the one highest in the list will be used. The conditions accept the following formats:
-  #   - Entity type matching    |   Uses the entity type's registry key.  |  'minecraft:zombie' matches zombies, but for example not husks or drowned.
-  #   - Typeof class matching   |   Uses the 'typeof:' prefix.            |  'typeof:monster' matches all monsters.
+  #   - Entity type matching    |   Uses the entity type's identifier.  |  'minecraft:zombie' matches zombies, but for example not husks or drowned.
+  #   - Typeof class matching   |   Uses the 'typeof:' prefix.          |  'typeof:monster' matches all monsters.
   # ► Available typeof classes: mob, monster, raider, neutral, ambient, animal, water_animal, flying_animal, flying_monster, villager.
   custom-activation-types:
     - name: 'raider'

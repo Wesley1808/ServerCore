@@ -17,14 +17,14 @@ public interface DynamicConfig {
     @Order(1)
     @ConfKey("enabled")
     @DefaultBoolean(false)
-    @ConfComments("(Default = false) Enables dynamic performance checks.")
+    @ConfComments("Enables dynamic performance checks.")
     boolean enabled();
 
     @Order(2)
     @ConfKey("target-mspt")
     @DefaultInteger(35)
     @IntegerRange(min = 2)
-    @ConfComments("(Default = 35) The average MSPT to target.")
+    @ConfComments("The average MSPT to target.")
     int targetMspt();
 
     @Order(3)
@@ -32,7 +32,6 @@ public interface DynamicConfig {
     @DefaultObject("defaultSettings")
     @ConfValidator(Validators.UniqueSettings.class)
     @ConfComments({
-            "(Default = [CHUNK_TICK_DISTANCE, MOBCAP, SIMULATION_DISTANCE, VIEW_DISTANCE])",
             "The settings that will be decreased when the server is overloaded, in the specified order.",
             "Removing a setting from the list will disable it.",
             "► max = The maximum value the server will increase the setting to.",
