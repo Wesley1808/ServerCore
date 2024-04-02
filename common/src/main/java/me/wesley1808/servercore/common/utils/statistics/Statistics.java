@@ -1,10 +1,13 @@
-package me.wesley1808.servercore.common.utils;
+package me.wesley1808.servercore.common.utils.statistics;
 
 import com.google.common.collect.Iterables;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
+import me.wesley1808.servercore.common.utils.ChunkManager;
+import me.wesley1808.servercore.common.utils.statistics.entry.EntityStatisticEntry;
+import me.wesley1808.servercore.common.utils.statistics.entry.StatisticEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkHolder;
@@ -19,6 +22,7 @@ import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Utility methods for getting performance related statistics.
@@ -44,20 +48,23 @@ public class Statistics {
         return this.getAll(level -> level.blockEntityTickers);
     }
 
-    public Map<String, Integer> getEntitiesByType(Iterable<Entity> entities) {
-        return this.getByType(entities, (entity) -> EntityType.getKey(entity.getType()).toString());
+    public Map<String, StatisticEntry<Entity>> getEntitiesByType(Iterable<Entity> entities) {
+        return this.getByType(entities,
+                (entity) -> EntityType.getKey(entity.getType()).toString(),
+                EntityStatisticEntry::new
+        );
     }
 
-    public Map<String, Integer> getBlockEntitiesByType(Iterable<TickingBlockEntity> blockEntities) {
-        return this.getByType(blockEntities, TickingBlockEntity::getType);
+    public Map<String, StatisticEntry<TickingBlockEntity>> getBlockEntitiesByType(Iterable<TickingBlockEntity> blockEntities) {
+        return this.getByType(blockEntities, TickingBlockEntity::getType, StatisticEntry::new);
     }
 
-    public Map<String, Integer> getEntitiesByPlayer(Iterable<ServerPlayer> players) {
-        return this.getByPlayer(players, this::getEntitiesNear);
+    public Map<String, StatisticEntry<Entity>> getEntitiesByPlayer(Iterable<ServerPlayer> players) {
+        return this.getByPlayer(players, this::getEntitiesNear, EntityStatisticEntry::new);
     }
 
-    public Map<String, Integer> getBlockEntitiesByPlayer(Iterable<ServerPlayer> players) {
-        return this.getByPlayer(players, this::getBlockEntitiesNear);
+    public Map<String, StatisticEntry<TickingBlockEntity>> getBlockEntitiesByPlayer(Iterable<ServerPlayer> players) {
+        return this.getByPlayer(players, this::getBlockEntitiesNear, StatisticEntry::new);
     }
 
     private <T> List<T> getAll(Function<ServerLevel, Iterable<T>> function) {
@@ -69,19 +76,25 @@ public class Statistics {
         return list;
     }
 
-    private <T> Map<String, Integer> getByType(Iterable<T> iterable, Function<T, String> function) {
-        Object2IntOpenHashMap<String> map = new Object2IntOpenHashMap<>();
+    private <T> Map<String, StatisticEntry<T>> getByType(Iterable<T> iterable, Function<T, String> function, Supplier<StatisticEntry<T>> supplier) {
+        Map<String, StatisticEntry<T>> map = new Object2ObjectOpenHashMap<>();
         for (T value : iterable) {
-            map.addTo(function.apply(value), 1);
+            String key = function.apply(value);
+            StatisticEntry<T> entry = map.computeIfAbsent(key, k -> supplier.get());
+            entry.increment(value);
         }
 
         return map;
     }
 
-    private Map<String, Integer> getByPlayer(Iterable<ServerPlayer> players, Function<ServerPlayer, List<?>> function) {
-        Object2IntOpenHashMap<String> map = new Object2IntOpenHashMap<>();
+    private <T> Map<String, StatisticEntry<T>> getByPlayer(Iterable<ServerPlayer> players, Function<ServerPlayer, List<T>> function, Supplier<StatisticEntry<T>> supplier) {
+        Map<String, StatisticEntry<T>> map = new Object2ObjectOpenHashMap<>();
         for (ServerPlayer player : players) {
-            map.put(player.getScoreboardName(), function.apply(player).size());
+            StatisticEntry<T> entry = supplier.get();
+            for (T value : function.apply(player)) {
+                entry.increment(value);
+            }
+            map.put(player.getScoreboardName(), entry);
         }
 
         return map;
@@ -102,6 +115,7 @@ public class Statistics {
         List<TickingBlockEntity> list = new ObjectArrayList<>();
         for (TickingBlockEntity blockEntity : player.level().blockEntityTickers) {
             BlockPos pos = blockEntity.getPos();
+            // noinspection ConstantConditions - Lithium's sleeping block entities can have a null position.
             if (pos != null && this.isNearby(player, new ChunkPos(pos))) {
                 list.add(blockEntity);
             }
@@ -126,7 +140,6 @@ public class Statistics {
 
         return count;
     }
-
 
     private boolean isNearby(Player player, ChunkPos pos) {
         return player.chunkPosition().getChessboardDistance(pos) <= DynamicSetting.VIEW_DISTANCE.get();

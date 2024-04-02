@@ -23,9 +23,10 @@ subprojects {
         // Spark API
         compileOnly "me.lucko:spark-api:${project.spark_api}"
 
-        // Night Config
-        compileOnly "com.electronwill.night-config:core:${project.nightconfig}"
-        compileOnly "com.electronwill.night-config:toml:${project.nightconfig}"
+        // Configuration
+        compileOnly "org.yaml:snakeyaml:${project.snakeyaml}"
+        compileOnly "space.arim.dazzleconf:dazzleconf-core:${project.dazzleconf}"
+        compileOnly "space.arim.dazzleconf:dazzleconf-ext-snakeyaml:${project.dazzleconf}"
 
         // Mixin Extras
         compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${project.mixin_extras}"))

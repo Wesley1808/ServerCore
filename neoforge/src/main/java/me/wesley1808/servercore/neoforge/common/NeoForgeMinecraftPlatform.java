@@ -7,11 +7,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.ChunkPos;
 import net.neoforged.neoforge.server.permission.PermissionAPI;
 import net.neoforged.neoforge.server.permission.nodes.PermissionNode;
-import org.jetbrains.annotations.Nullable;
 
 public class NeoForgeMinecraftPlatform implements MinecraftPlatform {
     @Override
@@ -37,11 +35,5 @@ public class NeoForgeMinecraftPlatform implements MinecraftPlatform {
     @Override
     public Component parseText(String input) {
         return Component.Serializer.fromJson(GsonComponentSerializer.gson().serialize(MiniMessage.miniMessage().deserialize(input)));
-    }
-
-    @Override
-    @Nullable
-    public EntityType<?> getEntityType(String key) {
-        return null;
     }
 }

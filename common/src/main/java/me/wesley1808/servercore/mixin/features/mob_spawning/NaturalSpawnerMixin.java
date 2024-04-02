@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.mixin.features.ticking;
+package me.wesley1808.servercore.mixin.features.mob_spawning;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;

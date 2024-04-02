@@ -1,12 +1,15 @@
 package me.wesley1808.servercore.common.interfaces;
 
-import me.wesley1808.servercore.common.config.tables.MobSpawnConfig;
+import me.wesley1808.servercore.common.config.Config;
+import me.wesley1808.servercore.common.config.data.mob_spawning.MobSpawnEntry;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import net.minecraft.world.entity.MobCategory;
 
 public interface IMobCategory {
     int servercore$getSpawnInterval();
+
+    int servercore$getOriginalCapacity();
 
     void servercore$modifyCapacity(double modifier);
 
@@ -20,47 +23,20 @@ public interface IMobCategory {
         return IMobCategory.of(category).servercore$getSpawnInterval();
     }
 
+    static int getOriginalCapacity(MobCategory category) {
+        return IMobCategory.of(category).servercore$getOriginalCapacity();
+    }
+
     static void modifyCapacity(MobCategory category, double modifier) {
         IMobCategory.of(category).servercore$modifyCapacity(modifier);
     }
 
     static void reload() {
-        modify(MobCategory.MONSTER,
-                MobSpawnConfig.MONSTER_MOBCAP.get(),
-                MobSpawnConfig.MONSTER_SPAWN_INTERVAL.get()
-        );
+        for (MobSpawnEntry entry : Config.get().mobSpawning().categories()) {
+            IMobCategory.modify(entry.category(), entry.capacity(), entry.spawnInterval());
+        }
 
-        modify(MobCategory.CREATURE,
-                MobSpawnConfig.CREATURE_MOBCAP.get(),
-                MobSpawnConfig.CREATURE_SPAWN_INTERVAL.get()
-        );
-
-        modify(MobCategory.AMBIENT,
-                MobSpawnConfig.AMBIENT_MOBCAP.get(),
-                MobSpawnConfig.AMBIENT_SPAWN_INTERVAL.get()
-        );
-
-        modify(MobCategory.AXOLOTLS,
-                MobSpawnConfig.AXOLOTLS_MOBCAP.get(),
-                MobSpawnConfig.AXOLOTLS_SPAWN_INTERVAL.get()
-        );
-
-        modify(MobCategory.UNDERGROUND_WATER_CREATURE,
-                MobSpawnConfig.UNDERGROUND_WATER_CREATURE_MOBCAP.get(),
-                MobSpawnConfig.UNDERGROUND_WATER_CREATURE_SPAWN_INTERVAL.get()
-        );
-
-        modify(MobCategory.WATER_CREATURE,
-                MobSpawnConfig.WATER_CREATURE_MOBCAP.get(),
-                MobSpawnConfig.WATER_CREATURE_SPAWN_INTERVAL.get()
-        );
-
-        modify(MobCategory.WATER_AMBIENT,
-                MobSpawnConfig.WATER_AMBIENT_MOBCAP.get(),
-                MobSpawnConfig.WATER_AMBIENT_SPAWN_INTERVAL.get()
-        );
-
-        DynamicManager.modifyMobcaps(DynamicSetting.MOBCAP_MULTIPLIER.get());
+        DynamicManager.modifyMobcaps(DynamicSetting.MOBCAP_PERCENTAGE.get());
     }
 
     private static void modify(MobCategory category, int max, int interval) {

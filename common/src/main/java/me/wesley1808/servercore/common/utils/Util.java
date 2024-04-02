@@ -8,10 +8,12 @@ import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class Util {
@@ -64,5 +66,17 @@ public class Util {
             }
         }
         return false;
+    }
+
+    public static <T, R> ObjectArrayList<R> map(Collection<T> collection, Function<T, R> function) {
+        ObjectArrayList<R> result = new ObjectArrayList<>(collection.size());
+        for (T value : collection) {
+            R mapped = function.apply(value);
+            if (mapped != null) {
+                result.add(mapped);
+            }
+        }
+
+        return result;
     }
 }

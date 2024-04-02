@@ -1,7 +1,9 @@
 package me.wesley1808.servercore.mixin.features.breeding_cap.tasks;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
-import me.wesley1808.servercore.common.utils.BreedingCap;
+import me.wesley1808.servercore.common.config.Config;
+import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCap;
+import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCapConfig;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.animal.Animal;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +29,8 @@ public class BreedGoalMixin {
             )
     )
     private boolean servercore$enforceBreedCap(BreedGoal goal) {
-        if (BreedingCap.ANIMAL.exceedsLimit(this.animal)) {
+        BreedingCapConfig config = Config.get().breedingCap();
+        if (config.enabled() && config.animals().exceedsLimit(this.animal)) {
             BreedingCap.resetLove(this.animal, this.partner);
             return false;
         }

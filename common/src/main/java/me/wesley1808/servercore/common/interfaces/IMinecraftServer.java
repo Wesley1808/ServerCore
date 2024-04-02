@@ -1,7 +1,7 @@
 package me.wesley1808.servercore.common.interfaces;
 
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
-import me.wesley1808.servercore.common.utils.Statistics;
+import me.wesley1808.servercore.common.utils.statistics.Statistics;
 import net.minecraft.server.MinecraftServer;
 
 public interface IMinecraftServer {

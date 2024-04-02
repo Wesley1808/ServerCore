@@ -75,7 +75,9 @@ A setting that allows you to reduce the distance at which chunks can tick (mob s
 
 ### Commands
 
-- /servercore settings | config - Allows for modifying settings & configs ingame.
+- /servercore reload - Reloads the configuration file.
+
+- /servercore settings - Allows for modifying dynamic settings ingame.
 
 - /servercore status - Gives information about the current dynamic settings.
 
@@ -108,178 +110,16 @@ ___
 
 ### Config
 
-Most features are disabled by default and can be found in the config.\
-The config file can be found at `/config/servercore.toml`
+By default, ServerCore will disable most of its changes that can affect vanilla behavior.\
+This way you can safely install the mod without having to worry about breaking things.
 
-```toml
-# Lets you enable / disable certain features and modify them.
-[features]
-    # (Default = false) Stops the server from loading spawn chunks.
-    disable_spawn_chunks = false
-    # (Default = false) Prevents lagspikes caused by players moving into unloaded chunks.
-    prevent_moving_into_unloaded_chunks = false
-    # (Default = false) Makes villagers tick less often if they are stuck in a 1x1 space.
-    lobotomize_villagers = false
-    # (Default = 20) Decides the interval in between villager ticks when lobotomized.
-    lobotomized_tick_interval = 20
-    # (Default = 6000) The amount of ticks between auto-saves when /save-on is active.
-    autosave_interval = 6000
-    # (Default = 40) Decides the chance of XP orbs being able to merge together (1 in X).
-    xp_merge_chance = 40
-    # (Default = 0.5) Decides the radius in blocks that items / xp will merge at.
-    item_merge_radius = 0.5
-    xp_merge_radius = 0.5
+However, if you want to squeeze out the most performance, these default settings might not be enough.\
+To change these settings you can edit `config.yml` and `optimizations.yml` in the `config/servercore` folder.
 
-# Modifies mobcaps, no-chunk-tick, simulation and view-distance depending on the MSPT.
-[dynamic]
-    # (Default = false) Enables this feature.
-    enabled = false
-    # (Default = 35) The average MSPT to target.
-    target_mspt = 35
-    # (Default = 15) The amount of seconds between dynamic performance updates.
-    update_rate = 15
-    # (Default = 150) The amount of seconds between dynamic viewdistance updates.
-    # This value is separate from the other checks because it makes all clients reload their chunks.
-    view_distance_update_rate = 150
-    # (Default = [Max: 10, Min: 2, Increment: 1]) Distance in which random ticks and mobspawning can happen.
-    max_chunk_tick_distance = 10
-    min_chunk_tick_distance = 2
-    chunk_tick_distance_increment = 1
-    # (Default = [Max: 10, Min: 2, Increment: 1]) Distance in which the world will tick, similar to no-tick-vd.
-    max_simulation_distance = 10
-    min_simulation_distance = 2
-    simulation_distance_increment = 1
-    # (Default = [Max: 10, Min: 2, Increment: 1]) Distance in which the world will render.
-    max_view_distance = 10
-    min_view_distance = 2
-    view_distance_increment = 1
-    # (Default = [Max: 1.0, Min: 0.3, Increment: 0.1]) Global multiplier that decides the percentage of the mobcap to be used.
-    max_mobcap = 1.0
-    min_mobcap = 0.3
-    mobcap_increment = 0.1
-    # (Default = ["chunk_tick_distance", "mobcap_multiplier", "simulation_distance", "view_distance"])
-    # The order in which the settings will be decreased when the server is overloaded.
-    # Removing a setting from the list will disable it.
-    setting_order = ["chunk_tick_distance", "mobcap_multiplier", "simulation_distance", "view_distance"]
+You can find some example configurations [here](docs/config).
 
-# Stops animals / villagers from breeding if there are too many of the same type nearby.
-[breeding_cap]
-    # (Default = false) Enables this feature.
-    enabled = false
-    # (Default = [Villager: 24, Animals: 32]) Maximum count before stopping entities of the same type from breeding.
-    villager_count = 24
-    animal_count = 32
-    # (Default = [Villager: 64, Animals: 64]) The range it will check for entities of the same type.
-    villager_range = 64
-    animal_range = 64
+___
 
-# Allows you to toggle specific optimizations that don't have full vanilla parity.
-# These settings will only take effect after server restarts.
-[optimizations]
-    # (Default = true) Prevents many different lagspikes caused by loading chunks synchronously.
-    # This for example causes maps to only update loaded chunks, which depending on the viewdistance can be a smaller radius than vanilla.
-    reduce_sync_loads = true
-    # (Default = true) Can significantly reduce the time spent on chunk iteration by caching ticking chunks every second.
-    # This is especially useful for servers with a high playercount and / or viewdistance.
-    # Note: The list of ticking chunks is only updated every second, rather than every tick (but that is very unlikely to matter).
-    cache_ticking_chunks = true
-    # (Default = false) Can significantly reduce time spent on mobspawning, but isn't as accurate as vanilla on biome borders.
-    # This may cause mobs from another biome to spawn a few blocks across a biome border (this does not affect structure spawning!).
-    fast_biome_lookups = false
-    # (Default = false) Fluid random ticks, like lava spreading fire, are run twice each game tick.
-    # Enabling this will cancel the 'duplicate' second fluid tick, but this may cause slight behavior changes.
-    cancel_duplicate_fluid_ticks = false
-
-# Allows you to disable specific commands and modify the way some of them are formatted.
-[commands]
-    # Enables / disables the /servercore status command.
-    command_status = true
-    # Enables / disables the /mobcaps command.
-    command_mobcaps = true
-    # The title for the /mobcaps command.
-    mobcap_title = "<dark_aqua>${line} <aqua>Mobcaps</aqua> (<aqua>${mobcap_percentage}</aqua>) ${line}</dark_aqua>"
-    # The content for the /mobcaps command. This is displayed for every existing spawngroup.
-    mobcap_content = "<dark_gray>» <dark_aqua>${name}:</dark_aqua> <green>${current}</green> / <green>${capacity}</green></dark_gray>"
-    # The title for the /servercore status command.
-    status_title = "<dark_aqua>${line} <aqua>ServerCore</aqua> ${line}</dark_aqua>"
-    # The content for the /servercore status command.
-    status_content = "<dark_gray>» <dark_aqua>Version:</dark_aqua> <green>${version}</green>\n» <dark_aqua>Mobcap Percentage:</dark_aqua> <green>${mobcap_percentage}</green>\n» <dark_aqua>Chunk-Tick Distance:</dark_aqua> <green>${chunk_tick_distance}</green>\n» <dark_aqua>Simulation Distance:</dark_aqua> <green>${simulation_distance}</green>\n» <dark_aqua>View Distance:</dark_aqua> <green>${view_distance}</green></dark_gray>"
-    # The title for the /statistics command.
-    stats_title = "<dark_aqua>${line} <aqua>Statistics</aqua> ${line}</dark_aqua>"
-    # The content for the /statistics command.
-    stats_content = "<dark_gray>» <dark_aqua>TPS:</dark_aqua> <green>${tps}</green> - <dark_aqua>MSPT:</dark_aqua> <green>${mspt}</green>\n» <dark_aqua>Total chunk count:</dark_aqua> <green>${chunk_count}</green>\n» <dark_aqua>Total entity count:</dark_aqua> <green>${entity_count}</green>\n» <dark_aqua>Total block entity count:</dark_aqua> <green>${block_entity_count}</green></dark_gray>"
-    # The title for the /statistics (block) entities command.
-    stats_page_title = "<dark_aqua>${line} <aqua>${title}</aqua> by <aqua>${type}</aqua> ${line}</dark_aqua>"
-    stats_page_title_player = "<dark_aqua>${line} <aqua>${title}</aqua> for <aqua>${player}</aqua> ${line}</dark_aqua>"
-    # The content for the /statistics (block) entities command. This is displayed for every entry.
-    stats_page_content = "<green>${index}. <dark_aqua>${name}</dark_aqua> ${count}</green>"
-    # The footer for the /statistics (block) entities command.
-    stats_page_footer = "<dark_aqua>${line} <green>${prev_page}</green> Page <aqua>${page}</aqua> of <aqua>${page_count}</aqua> <green>${next_page}</green> ${line}"
-
-# Ticks entities less often when they are further away from players.
-[activation_range]
-    # (Default = false) Enables this feature.
-    enabled = false
-    # (Default = true) Briefly ticks entities newly added to the world for 10 seconds (includes both spawning and loading).
-    # This gives them a chance to properly immunize when they are spawned if they should be. Can be helpful for mobfarms.
-    tick_new_entities = true
-    # (Default = false) Enables vertical range checks. By default, activation ranges only work horizontally.
-    # This can greatly improve performance on taller worlds, but might break a few very specific ai-based mobfarms.
-    use_vertical_range = false
-    # (Default = false) Skips 1/4th of entity ticks whilst not immune.
-    # This affects entities that are within the activation range, but not immune (for example by falling or being in water).
-    skip_non_immune = false
-    # (Default = true) Allows villagers to tick regardless of the activation range when panicking.
-    villager_tick_panic = true
-    # (Default = false) Allows villagers to tick regardless of the activation range.
-    villager_tick_always = false
-    # (Default = 20) The time in seconds that a villager needs to be inactive for before obtaining work immunity (if it has work tasks).
-    villager_work_immunity_after = 20
-    # (Default = 20) The amount of ticks an inactive villager will wake up for when it has work immunity.
-    villager_work_immunity_for = 20
-    # (Default = ["minecraft:hopper_minecart", "minecraft:warden", "minecraft:ghast"])
-    # A list of entity types that should be excluded from activation range checks.
-    excluded_entity_types = ["minecraft:hopper_minecart", "minecraft:warden", "minecraft:ghast"]
-    # Activation Range = The range an entity is required to be in from a player to be activated.
-    # Tick Interval = The interval between 'active' ticks whilst the entity is inactive. Negative values will disable these active ticks.
-    # Wakeup Max = The maximum amount of entities in the same group and world that are allowed to be awakened at the same time.
-    # Wakeup Interval = The interval between inactive entity wake ups in seconds.
-    # Activation range settings for villagers.
-    villager_activation_range = 16
-    villager_tick_interval = 20
-    villager_wakeup_max = 4
-    villager_wakeup_interval = 30
-    # Activation range settings for monsters.
-    monster_activation_range = 32
-    monster_tick_interval = 20
-    monster_wakeup_max = 8
-    monster_wakeup_interval = 20
-    # Activation range settings for animals.
-    animal_activation_range = 16
-    animal_tick_interval = 20
-    animal_wakeup_max = 4
-    animal_wakeup_interval = 60
-    # Activation range settings for flying mobs.
-    flying_activation_range = 48
-    flying_tick_interval = 20
-    flying_wakeup_max = 8
-    flying_wakeup_interval = 10
-    # Activation range settings for water mobs.
-    water_activation_range = 16
-    water_tick_interval = 20
-    # Activation range settings for neutral mobs.
-    neutral_activation_range = 24
-    neutral_tick_interval = 20
-    # Activation range settings for zombies.
-    zombie_activation_range = 16
-    zombie_tick_interval = 20
-    # Activation range settings for raider mobs.
-    raider_activation_range = 48
-    raider_tick_interval = 20
-    # Activation range settings for miscellaneous entities.
-    misc_activation_range = 16
-    misc_tick_interval = 20
-```
 ## License
 
 ServerCore contains several ports based on patches from repositories such as PaperMC, Purpur and Airplane.\

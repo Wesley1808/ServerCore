@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.common.interfaces.activation_range;
 
-import me.wesley1808.servercore.common.activation_range.ActivationType;
+import me.wesley1808.servercore.common.config.data.activation_range.ActivationType;
 
 public interface ActivationEntity {
     ActivationType servercore$getActivationType();
@@ -14,6 +14,8 @@ public interface ActivationEntity {
     int servercore$getActivatedImmunityTick();
 
     void servercore$setActivatedImmunityTick(int activatedImmunityTick);
+
+    boolean servercore$isInactive();
 
     void servercore$setInactive(boolean active);
 

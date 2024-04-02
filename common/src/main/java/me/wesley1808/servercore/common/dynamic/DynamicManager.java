@@ -1,15 +1,12 @@
 package me.wesley1808.servercore.common.dynamic;
 
-import me.wesley1808.servercore.common.config.tables.CommandConfig;
+import me.wesley1808.servercore.common.config.Config;
+import me.wesley1808.servercore.common.config.data.dynamic.DynamicConfig;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
 import me.wesley1808.servercore.common.interfaces.IMobCategory;
-import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.MobCategory;
-
-import static me.wesley1808.servercore.common.config.tables.DynamicConfig.*;
-import static me.wesley1808.servercore.common.dynamic.DynamicSetting.*;
 
 public class DynamicManager {
     private final MinecraftServer server;
@@ -21,18 +18,19 @@ public class DynamicManager {
         this.server = server;
         this.isClient = server.isSingleplayer();
 
-        if (ENABLED.get()) {
-            final int maxViewDistance = MAX_VIEW_DISTANCE.get();
+        DynamicConfig config = Config.get().dynamic();
+        if (config.enabled()) {
+            final int maxViewDistance = DynamicSetting.VIEW_DISTANCE.getMax();
             if (server.getPlayerList().getViewDistance() > maxViewDistance) {
                 this.modifyViewDistance(maxViewDistance);
             }
 
-            final int maxSimDistance = MAX_SIMULATION_DISTANCE.get();
+            final int maxSimDistance = DynamicSetting.SIMULATION_DISTANCE.getMax();
             if (server.getPlayerList().getSimulationDistance() > maxSimDistance) {
                 this.modifySimulationDistance(maxSimDistance);
             }
 
-            DynamicManager.modifyMobcaps(MAX_MOBCAP.get());
+            DynamicManager.modifyMobcaps(DynamicSetting.MOBCAP_PERCENTAGE.getMax());
         }
     }
 
@@ -40,26 +38,14 @@ public class DynamicManager {
         return ((IMinecraftServer) server).servercore$getDynamicManager();
     }
 
-    public static String getModifierAsPercentage() {
-        return String.format("%.0f%%", MOBCAP_MULTIPLIER.get() * 100);
-    }
-
-    public static String createStatusReport(String title) {
-        return title + "\n" + CommandConfig.STATUS_CONTENT.get()
-                .replace("${version}", PlatformHelper.getVersion())
-                .replace("${mobcap_percentage}", getModifierAsPercentage())
-                .replace("${chunk_tick_distance}", String.format("%.0f", CHUNK_TICK_DISTANCE.get()))
-                .replace("${simulation_distance}", String.format("%.0f", SIMULATION_DISTANCE.get()))
-                .replace("${view_distance}", String.format("%.0f", VIEW_DISTANCE.get()));
-    }
-
     public static void update(MinecraftServer server) {
         if (server.getTickCount() % 20 == 0) {
             DynamicManager manager = getInstance(server);
             manager.updateValues();
 
-            if (ENABLED.get()) {
-                manager.runPerformanceChecks();
+            DynamicConfig config = Config.get().dynamic();
+            if (config.enabled()) {
+                manager.runPerformanceChecks(config);
             }
         }
     }
@@ -73,8 +59,8 @@ public class DynamicManager {
         return this.server.getCurrentSmoothedTickTime();
     }
 
-    private void runPerformanceChecks() {
-        final double targetMspt = TARGET_MSPT.get();
+    private void runPerformanceChecks(DynamicConfig config) {
+        final double targetMspt = config.targetMspt();
         final boolean decrease = this.averageTickTime > targetMspt + 5;
         final boolean increase = this.averageTickTime < Math.max(targetMspt - 5, 2);
 
@@ -101,7 +87,8 @@ public class DynamicManager {
         }
     }
 
-    public static void modifyMobcaps(double modifier) {
+    public static void modifyMobcaps(int percentage) {
+        final double modifier = percentage / 100F;
         for (MobCategory category : MobCategory.values()) {
             IMobCategory.modifyCapacity(category, modifier);
         }

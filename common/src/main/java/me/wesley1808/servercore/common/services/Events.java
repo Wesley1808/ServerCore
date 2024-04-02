@@ -5,7 +5,6 @@ import me.wesley1808.servercore.common.commands.MobcapsCommand;
 import me.wesley1808.servercore.common.commands.ServerCoreCommand;
 import me.wesley1808.servercore.common.commands.StatisticsCommand;
 import me.wesley1808.servercore.common.config.Config;
-import me.wesley1808.servercore.common.config.tables.FeatureConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
@@ -27,14 +26,13 @@ public class Events {
 
         // Disable spawn chunks after the server starts up.
         // This is only used for dedicated servers.
-        if (server.isPublished() && FeatureConfig.DISABLE_SPAWN_CHUNKS.get()) {
+        if (server.isPublished() && Config.get().features().disableSpawnChunks()) {
             ChunkManager.disableSpawnChunks(server);
         }
     }
 
     public static void onShutdown(MinecraftServer server) {
         DynamicSetting.resetAll();
-        Config.save();
     }
 
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, Commands.CommandSelection environment) {
