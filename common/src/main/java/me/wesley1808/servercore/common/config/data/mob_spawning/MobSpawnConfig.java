@@ -37,6 +37,12 @@ public interface MobSpawnConfig {
     EnforcedMobcap monsterSpawner();
 
     @Order(4)
+    @SubSection
+    @ConfKey("potion-effects")
+    @ConfComments("Mobcap settings for mobs spawned from effects, like oozing and infested.")
+    EnforcedMobcap potionEffects();
+
+    @Order(5)
     @ConfKey("categories")
     @DefaultObject("defaultCategories")
     @ConfComments({
