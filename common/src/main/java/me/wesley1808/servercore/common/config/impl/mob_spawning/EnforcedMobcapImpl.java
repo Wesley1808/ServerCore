@@ -4,11 +4,11 @@ import me.wesley1808.servercore.common.config.data.mob_spawning.EnforcedMobcap;
 
 public class EnforcedMobcapImpl implements EnforcedMobcap {
     private final boolean enforcesMobcap;
-    private final double mobcapModifier;
+    private final int additionalCapacity;
 
     public EnforcedMobcapImpl(EnforcedMobcap source) {
         this.enforcesMobcap = source.enforcesMobcap();
-        this.mobcapModifier = source.mobcapModifier();
+        this.additionalCapacity = source.additionalCapacity();
     }
 
     @Override
@@ -17,7 +17,7 @@ public class EnforcedMobcapImpl implements EnforcedMobcap {
     }
 
     @Override
-    public double mobcapModifier() {
-        return this.mobcapModifier;
+    public int additionalCapacity() {
+        return this.additionalCapacity;
     }
 }
