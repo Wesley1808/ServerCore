@@ -1,6 +1,10 @@
+import org.jetbrains.changelog.Changelog
+
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "1.4-SNAPSHOT" apply false
+    id "me.modmuss50.mod-publish-plugin" version "0.+"
+    id 'org.jetbrains.changelog' version '2.+'
 }
 
 subprojects {
@@ -38,9 +42,11 @@ allprojects {
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
+    var formattedVersion = "${mod_version}+${minecraft}"
+    archivesBaseName = project.archives_base_name
+
+    version = formattedVersion
     group = project.maven_group
-    mod_version = "${mod_version}+${minecraft}"
-    archivesBaseName = archives_base_name
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
@@ -48,8 +54,80 @@ allprojects {
     }
 
     tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
-        archiveVersion.set(mod_version)
+        archiveVersion.set(formattedVersion)
     }
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
+
+publishMods {
+    displayName = "ServerCore %s for MC %s".formatted(project.mod_version, project.minecraft)
+    changelog = fetchChangelog()
+    type = STABLE
+
+    def fabricJar = project(":fabric").remapJar.archiveFile
+    def forgeJar = project(":forge").remapJar.archiveFile
+    def neoForgeJar = project(":neoforge").remapJar.archiveFile
+
+    def curseforgeOpts = curseforgeOptions {
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        minecraftVersions.add(project.minecraft)
+        projectId = "550579"
+    }
+
+    def modrinthOpts = modrinthOptions {
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        minecraftVersions.add(project.minecraft)
+        projectId = "4WWQxlQP"
+    }
+
+    curseforge("CurseForge - Fabric") {
+        from curseforgeOpts
+        modLoaders.add("fabric")
+        file = fabricJar
+    }
+
+    curseforge("CurseForge - Forge") {
+        from curseforgeOpts
+        modLoaders.add("forge")
+        file = forgeJar
+    }
+
+    curseforge("CurseForge - NeoForge") {
+        from curseforgeOpts
+        modLoaders.add("neoforge")
+        file = neoForgeJar
+    }
+
+    modrinth("Modrinth - Fabric") {
+        from modrinthOpts
+        modLoaders.add("fabric")
+        file = fabricJar
+    }
+
+    modrinth("Modrinth - Forge") {
+        from modrinthOpts
+        modLoaders.add("forge")
+        file = forgeJar
+    }
+
+    modrinth("Modrinth - NeoForge") {
+        from modrinthOpts
+        modLoaders.add("neoforge")
+        file = neoForgeJar
+    }
+
+    dryRun = curseforgeOpts.get().accessToken.getOrNull() == null || modrinthOpts.get().accessToken.getOrNull() == null
+}
+
+private String fetchChangelog() {
+    def log = getChangelog.changelog.get()
+    if (log.has(project.mod_version)) {
+        return log.renderItem(
+                log.get(project.mod_version).withHeader(false),
+                Changelog.OutputType.MARKDOWN
+        )
+    } else {
+        return ""
+    }
 }
