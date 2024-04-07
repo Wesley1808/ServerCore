@@ -67,7 +67,6 @@ publishMods {
 
     def fabricJar = project(":fabric").remapJar.archiveFile
     def forgeJar = project(":forge").remapJar.archiveFile
-    def neoForgeJar = project(":neoforge").remapJar.archiveFile
 
     def curseforgeOpts = curseforgeOptions {
         accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
@@ -93,12 +92,6 @@ publishMods {
         file = forgeJar
     }
 
-    curseforge("CurseForge - NeoForge") {
-        from curseforgeOpts
-        modLoaders.add("neoforge")
-        file = neoForgeJar
-    }
-
     modrinth("Modrinth - Fabric") {
         from modrinthOpts
         modLoaders.add("fabric")
@@ -109,12 +102,6 @@ publishMods {
         from modrinthOpts
         modLoaders.add("forge")
         file = forgeJar
-    }
-
-    modrinth("Modrinth - NeoForge") {
-        from modrinthOpts
-        modLoaders.add("neoforge")
-        file = neoForgeJar
     }
 
     dryRun = curseforgeOpts.get().accessToken.getOrNull() == null || modrinthOpts.get().accessToken.getOrNull() == null
