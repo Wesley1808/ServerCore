@@ -5,7 +5,7 @@
 ](https://discord.gg/Y9nC7Peq4m)
 [
 ![Build Status](https://github.com/Wesley1808/ServerCore/actions/workflows/build.yml/badge.svg)
-](https://github.com/Wesley1808/ServerCore/actions/workflows/gradle.yml)
+](https://github.com/Wesley1808/ServerCore/actions)
 [
 ![Modrinth](https://img.shields.io/modrinth/dt/servercore?color=00AF5C&label=Modrinth&style=flat&logo=modrinth)
 ](https://modrinth.com/mod/servercore)
