@@ -65,9 +65,9 @@ publishMods {
     changelog = fetchChangelog()
     type = STABLE
 
-    def fabricJar = project(":fabric").remapJar.archiveFile
-    def forgeJar = project(":forge").remapJar.archiveFile
-    def neoForgeJar = project(":neoforge").remapJar.archiveFile
+    def fabric = findProject(':fabric')
+    def forge = findProject(':forge')
+    def neoforge = findProject(':neoforge')
 
     def curseforgeOpts = curseforgeOptions {
         accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
@@ -81,40 +81,52 @@ publishMods {
         projectId = "4WWQxlQP"
     }
 
-    curseforge("CurseForge - Fabric") {
-        from curseforgeOpts
-        modLoaders.add("fabric")
-        file = fabricJar
+    if (fabric != null) {
+        def fabricJar = fabric.remapJar.archiveFile
+
+        curseforge("CurseForge - Fabric") {
+            from curseforgeOpts
+            modLoaders.add("fabric")
+            file = fabricJar
+        }
+
+        modrinth("Modrinth - Fabric") {
+            from modrinthOpts
+            modLoaders.add("fabric")
+            file = fabricJar
+        }
     }
 
-    curseforge("CurseForge - Forge") {
-        from curseforgeOpts
-        modLoaders.add("forge")
-        file = forgeJar
+    if (forge != null) {
+        def forgeJar = forge.remapJar.archiveFile
+
+        curseforge("CurseForge - Forge") {
+            from curseforgeOpts
+            modLoaders.add("forge")
+            file = forgeJar
+        }
+
+        modrinth("Modrinth - Forge") {
+            from modrinthOpts
+            modLoaders.add("forge")
+            file = forgeJar
+        }
     }
 
-    curseforge("CurseForge - NeoForge") {
-        from curseforgeOpts
-        modLoaders.add("neoforge")
-        file = neoForgeJar
-    }
+    if (neoforge != null) {
+        def neoforgeJar = neoforge.remapJar.archiveFile
 
-    modrinth("Modrinth - Fabric") {
-        from modrinthOpts
-        modLoaders.add("fabric")
-        file = fabricJar
-    }
+        curseforge("CurseForge - NeoForge") {
+            from curseforgeOpts
+            modLoaders.add("neoforge")
+            file = neoforgeJar
+        }
 
-    modrinth("Modrinth - Forge") {
-        from modrinthOpts
-        modLoaders.add("forge")
-        file = forgeJar
-    }
-
-    modrinth("Modrinth - NeoForge") {
-        from modrinthOpts
-        modLoaders.add("neoforge")
-        file = neoForgeJar
+        modrinth("Modrinth - NeoForge") {
+            from modrinthOpts
+            modLoaders.add("neoforge")
+            file = neoforgeJar
+        }
     }
 
     dryRun = curseforgeOpts.get().accessToken.getOrNull() == null || modrinthOpts.get().accessToken.getOrNull() == null
