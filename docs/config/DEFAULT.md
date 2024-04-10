@@ -108,21 +108,21 @@ breeding-cap:
 mob-spawning:
   # Mobcap settings for zombie reinforcements.
   # ► enforce-mobcaps = Whether to enforce mobcaps for this type of mobspawning.
-  # ► mobcap-modifier = The modifier to apply to this enforced mobcap. This modifier only affects this type of mobspawning.
-  # Since these mobspawns normally wouldn't be affected by the mobcap, you might want to allow them to spawn a bit over it.
+  # ► additional-capacity = Additional capacity for this specific mobcap. Decides how much it can spawn over the regular mobcap.
+  # It is recommended to allow them to spawn a bit over the regular mobcap as they would otherwise never get a chance to spawn.
   zombie-reinforcements:
     enforce-mobcap: false
-    mobcap-modifier: 1.5
+    additional-capacity: 32
 
   # Mobcap settings for zombified piglin spawning from nether portal random ticks.
   nether-portal-randomticks:
     enforce-mobcap: false
-    mobcap-modifier: 1.5
+    additional-capacity: 32
 
   # Mobcap settings for mobs spawned from monster spawners.
   monster-spawners:
     enforce-mobcap: false
-    mobcap-modifier: 1.5
+    additional-capacity: 32
 
   # A list of mob categories with their respective mobcap and spawn interval.
   # ► category = The vanilla spawn category.

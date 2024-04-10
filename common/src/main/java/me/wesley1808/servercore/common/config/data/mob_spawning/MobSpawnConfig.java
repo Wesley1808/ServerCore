@@ -19,8 +19,8 @@ public interface MobSpawnConfig {
     @ConfComments({
             "Mobcap settings for zombie reinforcements.",
             "► enforce-mobcaps = Whether to enforce mobcaps for this type of mobspawning.",
-            "► mobcap-modifier = The modifier to apply to this enforced mobcap. This modifier only affects this type of mobspawning.",
-            "Since these mobspawns normally wouldn't be affected by the mobcap, you might want to allow them to spawn a bit over it."
+            "► additional-capacity = Additional capacity for this specific mobcap. Decides how much it can spawn over the regular mobcap.",
+            "It is recommended to allow them to spawn a bit over the regular mobcap as they would otherwise never get a chance to spawn."
     })
     EnforcedMobcap zombieReinforcements();
 
@@ -38,9 +38,9 @@ public interface MobSpawnConfig {
 
     @Order(4)
     @SubSection
-    @ConfKey("potion-effects")
-    @ConfComments("Mobcap settings for mobs spawned from effects, like oozing and infested.")
-    EnforcedMobcap potionEffects();
+    @ConfKey("infested")
+    @ConfComments("Mobcap settings for silverfish spawned from the infested potion effect.")
+    EnforcedMobcap infested();
 
     @Order(5)
     @ConfKey("categories")

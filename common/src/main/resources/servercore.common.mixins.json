@@ -40,7 +40,6 @@
     "features.mob_spawning.InfestedMobEffectMixin",
     "features.mob_spawning.NaturalSpawnerMixin",
     "features.mob_spawning.NetherPortalBlockMixin",
-    "features.mob_spawning.OozingMobEffectMixin",
     "features.mob_spawning.ZombieMixin",
     "features.ticking.VillagerMixin",
     "optimizations.biome_lookups.NaturalSpawnerMixin",

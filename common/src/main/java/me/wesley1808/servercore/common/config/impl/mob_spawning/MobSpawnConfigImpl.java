@@ -11,14 +11,14 @@ public class MobSpawnConfigImpl implements MobSpawnConfig {
     private final EnforcedMobcap zombieReinforcements;
     private final EnforcedMobcap portalRandomTicks;
     private final EnforcedMobcap monsterSpawner;
-    private final EnforcedMobcap potionEffects;
+    private final EnforcedMobcap infested;
     private final List<MobSpawnEntry> categories;
 
     public MobSpawnConfigImpl(MobSpawnConfig source) {
         this.zombieReinforcements = new EnforcedMobcapImpl(source.zombieReinforcements());
         this.portalRandomTicks = new EnforcedMobcapImpl(source.portalRandomTicks());
         this.monsterSpawner = new EnforcedMobcapImpl(source.monsterSpawner());
-        this.potionEffects = new EnforcedMobcapImpl(source.potionEffects());
+        this.infested = new EnforcedMobcapImpl(source.infested());
         this.categories = Util.map(source.categories(), MobSpawnEntryImpl::new);
     }
 
@@ -38,8 +38,8 @@ public class MobSpawnConfigImpl implements MobSpawnConfig {
     }
 
     @Override
-    public EnforcedMobcap potionEffects() {
-        return this.potionEffects;
+    public EnforcedMobcap infested() {
+        return this.infested;
     }
 
     @Override

@@ -27,7 +27,7 @@ public class InfestedMobEffectMixin {
                 entity.level(),
                 entity.chunkPosition(),
                 EntityType.SILVERFISH.getCategory(),
-                Config.get().mobSpawning().potionEffects()
+                Config.get().mobSpawning().infested()
         );
 
         if (!canSpawn) {

@@ -25,7 +25,7 @@ public class Mobcaps {
             return true;
         }
 
-        final int capacity = (int) (category.getMaxInstancesPerChunk() * config.mobcapModifier());
+        final int capacity = category.getMaxInstancesPerChunk() + config.additionalCapacity();
         final int globalCapacity = Mobcaps.toGlobalCapacity(state, capacity);
 
         final int globalCount = state.getMobCategoryCounts().getInt(category);
