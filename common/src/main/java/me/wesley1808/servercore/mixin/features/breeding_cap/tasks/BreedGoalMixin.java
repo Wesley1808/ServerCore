@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.breeding_cap.tasks;
 
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCap;
 import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCapConfig;

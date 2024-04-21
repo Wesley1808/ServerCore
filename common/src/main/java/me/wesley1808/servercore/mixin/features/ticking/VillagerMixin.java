@@ -1,6 +1,6 @@
 package me.wesley1808.servercore.mixin.features.ticking;
 
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.data.FeatureConfig;
 import me.wesley1808.servercore.common.utils.ChunkManager;

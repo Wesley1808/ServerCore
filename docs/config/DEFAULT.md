@@ -32,8 +32,6 @@ cancel-duplicate-fluid-ticks: false
 
 # Most miscellaneous feature toggles.
 features:
-  # Stops the server from loading spawn chunks.
-  disable-spawn-chunks: false
   # Prevents lagspikes caused by players moving into unloaded chunks.
   prevent-moving-into-unloaded-chunks: false
   # The amount of seconds between auto-saves when /save-on is active.
@@ -123,6 +121,11 @@ mob-spawning:
 
   # Mobcap settings for mobs spawned from monster spawners.
   monster-spawners:
+    enforce-mobcap: false
+    additional-capacity: 32
+
+  # Mobcap settings for silverfish spawned from the infested potion effect.
+  infested:
     enforce-mobcap: false
     additional-capacity: 32
 

@@ -8,7 +8,6 @@ import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
-import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -25,12 +24,6 @@ public class Events {
         Config.reloadMainConfig();
 
         IMinecraftServer.onStarted(server);
-
-        // Disable spawn chunks after the server starts up.
-        // This is only used for dedicated servers.
-        if (server.isPublished() && Config.get().features().disableSpawnChunks()) {
-            ChunkManager.disableSpawnChunks(server);
-        }
     }
 
     public static void onShutdown(MinecraftServer server) {

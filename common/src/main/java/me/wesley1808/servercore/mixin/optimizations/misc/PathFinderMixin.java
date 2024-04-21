@@ -76,7 +76,7 @@ public class PathFinderMixin {
     private Map<Target, BlockPos> servercore$replaceMap(Map<Target, BlockPos> nullMap, PathNavigationRegion region, Mob mob, Set<BlockPos> positions, float maxRange, int accuracy, float searchDepthMultiplier) {
         Object2ObjectOpenHashMap<Target, BlockPos> map = new Object2ObjectOpenHashMap<>(positions.size());
         for (BlockPos pos : positions) {
-            map.put(this.nodeEvaluator.getGoal(pos.getX(), pos.getY(), pos.getZ()), pos);
+            map.put(this.nodeEvaluator.getTarget(pos.getX(), pos.getY(), pos.getZ()), pos);
         }
 
         return map;

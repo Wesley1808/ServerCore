@@ -37,6 +37,12 @@ public interface MobSpawnConfig {
     EnforcedMobcap monsterSpawner();
 
     @Order(4)
+    @SubSection
+    @ConfKey("infested")
+    @ConfComments("Mobcap settings for silverfish spawned from the infested potion effect.")
+    EnforcedMobcap infested();
+
+    @Order(5)
     @ConfKey("categories")
     @DefaultObject("defaultCategories")
     @ConfComments({

@@ -3,11 +3,14 @@ package me.wesley1808.servercore.mixin.optimizations.misc;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+
+import java.util.function.Predicate;
 
 @Mixin(value = MapItemSavedData.class, priority = 900)
 public class MapItemSavedDataMixin {
@@ -18,11 +21,11 @@ public class MapItemSavedDataMixin {
             require = 0,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/player/Inventory;contains(Lnet/minecraft/world/item/ItemStack;)Z"
+                    target = "Lnet/minecraft/world/entity/player/Inventory;contains(Ljava/util/function/Predicate;)Z"
             )
     )
-    private boolean servercore$reduceInventoryIteration(Inventory inventory, ItemStack stack) {
-        return stack.isFramed() || inventory.contains(stack);
+    private boolean servercore$reduceInventoryIteration(Inventory inventory, Predicate<ItemStack> predicate, Player player, ItemStack stack) {
+        return stack.isFramed() || inventory.contains(predicate);
     }
 
     @Redirect(

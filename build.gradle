@@ -2,7 +2,7 @@ import org.jetbrains.changelog.Changelog
 
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.4-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
     id "me.modmuss50.mod-publish-plugin" version "0.+"
     id 'org.jetbrains.changelog' version '2.+'
 }
@@ -50,14 +50,14 @@ allprojects {
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
-        options.release.set(17)
+        options.release.set(21)
     }
 
     tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
         archiveVersion.set(formattedVersion)
     }
 
-    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+    java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 }
 
 publishMods {
