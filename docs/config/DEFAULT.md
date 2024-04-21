@@ -124,6 +124,11 @@ mob-spawning:
     enforce-mobcap: false
     additional-capacity: 32
 
+  # Mobcap settings for silverfish spawned from the infested potion effect.
+  infested:
+    enforce-mobcap: false
+    additional-capacity: 32
+
   # A list of mob categories with their respective mobcap and spawn interval.
   # ► category = The vanilla spawn category.
   # ► mobcap = The maximum amount of entities in the same category that can spawn near a player.
