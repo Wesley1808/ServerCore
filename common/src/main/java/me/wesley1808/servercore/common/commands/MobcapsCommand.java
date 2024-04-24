@@ -31,7 +31,7 @@ public class MobcapsCommand {
 
             Component title = Formatter.parse("<c:#tertiary>Mobcaps <c:#primary>(<c:#tertiary>%s</c>)".formatted(
                     DynamicSetting.MOBCAP_PERCENTAGE.getFormattedValue()
-            ));
+            ), source.getServer());
 
             Formatter.addLines(component, 16, config.primaryValue(), title);
 
@@ -44,7 +44,7 @@ public class MobcapsCommand {
                                 category.getName(),
                                 mobCounts.counts.getOrDefault(category, 0),
                                 category.getMaxInstancesPerChunk()
-                        )));
+                        ), source.getServer()));
                     }
                 }
             }

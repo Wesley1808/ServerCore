@@ -5,6 +5,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.ChunkPos;
@@ -35,8 +36,8 @@ public final class PlatformHelper {
         return MOD_PLATFORM.getVersion();
     }
 
-    public static Component parseText(String input) {
-        return minecraftPlatform.parseText(input);
+    public static Component parseText(MinecraftServer server, String input) {
+        return minecraftPlatform.parseText(server, input);
     }
 
     public static boolean hasPermission(CommandSourceStack source, String node, int level) {

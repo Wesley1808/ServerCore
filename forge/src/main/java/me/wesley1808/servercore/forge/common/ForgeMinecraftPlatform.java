@@ -41,8 +41,10 @@ public class ForgeMinecraftPlatform implements MinecraftPlatform {
     }
 
     @Override
-    public Component parseText(String input) {
-        return Component.Serializer.fromJson(GsonComponentSerializer.gson().serialize(MiniMessage.miniMessage().deserialize(input)));
+    public Component parseText(MinecraftServer server, String input) {
+        return Component.Serializer.fromJson(GsonComponentSerializer.gson().serialize(
+                MiniMessage.miniMessage().deserialize(input)
+        ), server.registryAccess());
     }
 
     @Override

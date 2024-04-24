@@ -6,12 +6,13 @@ import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.MinecraftServer;
 
 public class Formatter {
 
-    public static Component parse(String input) {
+    public static Component parse(String input, MinecraftServer server) {
         CommandConfig config = Config.get().commands();
-        return PlatformHelper.parseText(input
+        return PlatformHelper.parseText(server, input
                 .replace("#primary", config.primaryHex())
                 .replace("#secondary", config.secondaryHex())
                 .replace("#tertiary", config.tertiaryHex())

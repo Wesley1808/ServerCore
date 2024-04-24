@@ -5,6 +5,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
@@ -33,7 +34,9 @@ public class NeoForgeMinecraftPlatform implements MinecraftPlatform {
     }
 
     @Override
-    public Component parseText(String input) {
-        return Component.Serializer.fromJson(GsonComponentSerializer.gson().serialize(MiniMessage.miniMessage().deserialize(input)));
+    public Component parseText(MinecraftServer server, String input) {
+        return Component.Serializer.fromJson(GsonComponentSerializer.gson().serialize(
+                MiniMessage.miniMessage().deserialize(input)
+        ), server.registryAccess());
     }
 }

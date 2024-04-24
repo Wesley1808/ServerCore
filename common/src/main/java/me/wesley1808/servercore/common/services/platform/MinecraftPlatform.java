@@ -3,6 +3,7 @@ package me.wesley1808.servercore.common.services.platform;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.ChunkPos;
@@ -16,7 +17,7 @@ public interface MinecraftPlatform {
 
     boolean shouldForceChunkTicks(ChunkMap chunkMap, ChunkPos pos);
 
-    Component parseText(String input);
+    Component parseText(MinecraftServer server, String input);
 
     @Nullable
     default EntityType<?> getEntityType(String key) {

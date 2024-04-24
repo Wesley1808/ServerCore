@@ -62,7 +62,7 @@ public class ServerCoreCommand {
 
         source.sendSuccess(() -> Formatter.parse("<c:#secondary>%s <c:#primary>has been set to <c:#secondary>%s".formatted(
                 setting.getFormattedName(), setting.getFormattedValue()
-        )), false);
+        ), source.getServer()), false);
 
         return Command.SINGLE_SUCCESS;
     }
@@ -91,12 +91,12 @@ public class ServerCoreCommand {
 
             component.append(Formatter.parse("\n<dark_gray>» <c:#primary>Version: <c:#secondary>%s".formatted(
                     PlatformHelper.getVersion()
-            )));
+            ), source.getServer()));
 
             for (DynamicSetting setting : DynamicSetting.values()) {
                 component.append(Formatter.parse("\n<dark_gray>» <c:#primary>%s: <c:#secondary>%s".formatted(
                         setting.getFormattedName(), setting.getFormattedValue()
-                )));
+                ), source.getServer()));
             }
             return component;
         }, false);

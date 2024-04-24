@@ -88,19 +88,19 @@ public class StatisticsCommand {
             final double tps = mspt != 0 ? Math.min((1000 / mspt), 20) : 20;
             component.append(Formatter.parse("\n<dark_gray>» <c:#primary>TPS: <c:#secondary>%.2f</c> - MSPT: <c:#secondary>%.2f".formatted(
                     tps, mspt
-            )));
+            ), source.getServer()));
 
             component.append(Formatter.parse("\n<dark_gray>» <c:#primary>Total chunk count: <c:#secondary>%d".formatted(
                     statistics.getChunkCount(true)
-            )));
+            ), source.getServer()));
 
             component.append(Formatter.parse("\n<dark_gray>» <c:#primary>Total entity count: <c:#secondary>%d".formatted(
                     statistics.getAllEntities().size()
-            )));
+            ), source.getServer()));
 
             component.append(Formatter.parse("\n<dark_gray>» <c:#primary>Total block entity count: <c:#secondary>%d".formatted(
                     statistics.getAllBlockEntities().size()
-            )));
+            ), source.getServer()));
 
             return component;
         }, false);
@@ -167,11 +167,11 @@ public class StatisticsCommand {
         component.append(createHeader(type, groupBy, source, player, config));
 
         boolean success = Util.iteratePage(formattedEntries, page, 8, (entry, index) ->
-                component.append(createEntry(entry, index, type, groupBy, config))
+                component.append(createEntry(source, entry, index, type, groupBy))
         );
 
         if (success) {
-            source.sendSuccess(() -> component.append(createFooter(page, Util.getPage(formattedEntries.size(), 8), type, context, config)), false);
+            source.sendSuccess(() -> component.append(createFooter(source, page, Util.getPage(formattedEntries.size(), 8), type, context, config)), false);
         } else if (page == 1) {
             source.sendFailure(Component.literal(String.format("No %s were found!", type.getName().toLowerCase())));
         } else {
@@ -179,12 +179,12 @@ public class StatisticsCommand {
         }
     }
 
-    private static <T> Component createEntry(Map.Entry<String, StatisticEntry<T>> entry, int index, StatisticType type, GroupBy groupBy, CommandConfig config) {
+    private static <T> Component createEntry(CommandSourceStack source, Map.Entry<String, StatisticEntry<T>> entry, int index, StatisticType type, GroupBy groupBy) {
         MutableComponent component = Component.empty();
 
         component.append(Formatter.parse("\n<c:#secondary>%d. <c:#primary>%s %s".formatted(
                 index, entry.getKey(), entry.getValue().formatValue()
-        )));
+        ), source.getServer()));
 
         if (groupBy == GroupBy.PLAYER) {
             component.withStyle((style) -> style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statistics %s byType %s".formatted(
@@ -203,11 +203,11 @@ public class StatisticsCommand {
         if (player == null) {
             title = Formatter.parse("<c:#primary><c:#tertiary>%s</c> by <c:#tertiary>%s".formatted(
                     type.getName(), groupBy.getName()
-            ));
+            ), source.getServer());
         } else {
             title = Formatter.parse("<c:#primary><c:#tertiary>%s</c> for <c:#tertiary>%s".formatted(
                     type.getName(), player.getScoreboardName()
-            ));
+            ), source.getServer());
         }
 
         if (source.isPlayer()) {
@@ -218,7 +218,7 @@ public class StatisticsCommand {
         return component;
     }
 
-    private static Component createFooter(int page, int pageCount, StatisticType type, CommandContext<CommandSourceStack> context, CommandConfig config) {
+    private static Component createFooter(CommandSourceStack source, int page, int pageCount, StatisticType type, CommandContext<CommandSourceStack> context, CommandConfig config) {
         MutableComponent component = Component.literal("\n");
         MutableComponent footer = Component.empty();
 
@@ -240,7 +240,7 @@ public class StatisticsCommand {
         footer.append(prevPage);
         footer.append(Formatter.parse(" <c:#primary>Page <c:#tertiary>%d</c> of <c:#tertiary>%d ".formatted(
                 page, pageCount
-        )));
+        ), source.getServer()));
         footer.append(nextPage);
 
         if (context.getSource().isPlayer()) {
