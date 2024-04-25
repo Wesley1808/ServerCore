@@ -61,10 +61,10 @@ allprojects {
 }
 
 publishMods {
-    displayName = "ServerCore %s for MC %s".formatted(project.mod_version, project.minecraft)
     changelog = fetchChangelog()
     type = STABLE
 
+    def nameFormat = "ServerCore %s ${version.get()}"
     def fabric = findProject(':fabric')
     def forge = findProject(':forge')
     def neoforge = findProject(':neoforge')
@@ -86,14 +86,16 @@ publishMods {
 
         curseforge("CurseForge - Fabric") {
             from curseforgeOpts
-            modLoaders.add("fabric")
             file = fabricJar
+            modLoaders.add("fabric")
+            displayName = nameFormat.formatted("Fabric")
         }
 
         modrinth("Modrinth - Fabric") {
             from modrinthOpts
-            modLoaders.add("fabric")
             file = fabricJar
+            modLoaders.add("fabric")
+            displayName = nameFormat.formatted("Fabric")
         }
     }
 
@@ -102,14 +104,16 @@ publishMods {
 
         curseforge("CurseForge - Forge") {
             from curseforgeOpts
-            modLoaders.add("forge")
             file = forgeJar
+            modLoaders.add("forge")
+            displayName = nameFormat.formatted("Forge")
         }
 
         modrinth("Modrinth - Forge") {
             from modrinthOpts
-            modLoaders.add("forge")
             file = forgeJar
+            modLoaders.add("forge")
+            displayName = nameFormat.formatted("Forge")
         }
     }
 
@@ -118,14 +122,16 @@ publishMods {
 
         curseforge("CurseForge - NeoForge") {
             from curseforgeOpts
-            modLoaders.add("neoforge")
             file = neoforgeJar
+            modLoaders.add("neoforge")
+            displayName = nameFormat.formatted("NeoForge")
         }
 
         modrinth("Modrinth - NeoForge") {
             from modrinthOpts
-            modLoaders.add("neoforge")
             file = neoforgeJar
+            modLoaders.add("neoforge")
+            displayName = nameFormat.formatted("NeoForge")
         }
     }
 
