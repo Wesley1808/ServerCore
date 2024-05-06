@@ -6,9 +6,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent;
 
 @Mod(ServerCore.MODID)
@@ -19,10 +19,8 @@ public class ServerCoreNeoForge extends ServerCore {
     }
 
     @SubscribeEvent
-    public void onTick(TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            Events.onTick(event.getServer());
-        }
+    public void onTick(ServerTickEvent.Post event) {
+        Events.onTick(event.getServer());
     }
 
     @SubscribeEvent
