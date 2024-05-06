@@ -261,7 +261,10 @@ public class ActivationRange {
      */
     public static boolean checkIfActive(Entity entity, int currentTick) {
         ActivationRangeConfig config = Config.get().activationRange();
-        if (shouldTick(entity, config)) return true;
+        if (shouldTick(entity, config)) {
+            entity.servercore$setActivatedTick(currentTick);
+            return true;
+        }
 
         boolean active = entity.servercore$getActivatedTick() >= currentTick;
         if (!active) {
