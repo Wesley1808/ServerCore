@@ -1,21 +1,18 @@
 package me.wesley1808.servercore.mixin.optimizations.players;
 
-import com.mojang.authlib.GameProfile;
-import net.minecraft.core.BlockPos;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
-import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.server.players.PlayerList;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Optional;
 
@@ -38,21 +35,25 @@ public class PlayerListMixin {
     // Paper - Finds random spawn location for new players.
     @Inject(
             method = "placeNewPlayer",
-            locals = LocalCapture.CAPTURE_FAILHARD,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/level/ServerPlayer;setServerLevel(Lnet/minecraft/server/level/ServerLevel;)V",
                     shift = At.Shift.BEFORE
             )
     )
-    private void servercore$moveToSpawn(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci, GameProfile gameProfile, GameProfileCache gameProfileCache, String string, Optional<CompoundTag> playerData, ResourceKey<?> resourceKey, ServerLevel ignored, ServerLevel level) {
-        if (playerData.isEmpty()) player.fudgeSpawnLocation(level);
+    private void servercore$moveToSpawn(
+            Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci,
+            @Local(ordinal = 0) Optional<CompoundTag> playerData,
+            @Local(ordinal = 1) ServerLevel level
+    ) {
+        if (playerData.isEmpty()) {
+            player.fudgeSpawnLocation(level);
+        }
     }
 
     // ServerCore - Finds random spawn location for respawning players without spawnpoint.
     @Inject(
             method = "respawn",
-            locals = LocalCapture.CAPTURE_FAILHARD,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/level/ServerPlayer;restoreFrom(Lnet/minecraft/server/level/ServerPlayer;Z)V",
@@ -60,7 +61,13 @@ public class PlayerListMixin {
                     ordinal = 0
             )
     )
-    private void servercore$moveToSpawn(ServerPlayer oldPlayer, boolean bl, CallbackInfoReturnable<ServerPlayer> cir, BlockPos blockPos, float f, boolean bl2, ServerLevel ignored, Optional<?> spawnPoint, ServerLevel level, ServerPlayer player) {
-        if (spawnPoint.isEmpty()) player.fudgeSpawnLocation(level);
+    private void servercore$moveToSpawn(
+            ServerPlayer oldPlayer, boolean bl, CallbackInfoReturnable<ServerPlayer> cir,
+            @Local(ordinal = 0) Optional<Vec3> spawnPoint,
+            @Local(ordinal = 1) ServerPlayer player
+    ) {
+        if (spawnPoint.isEmpty()) {
+            player.fudgeSpawnLocation(player.serverLevel());
+        }
     }
 }
