@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.mixin.features.breeding_cap.tasks;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCap;
 import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCapConfig;
@@ -10,14 +11,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(VillagerMakeLove.class)
 public class VillagerMakeLoveMixin {
 
     @Inject(
             method = "tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/npc/Villager;J)V",
-            locals = LocalCapture.CAPTURE_FAILHARD,
             cancellable = true,
             at = @At(
                     value = "INVOKE",
@@ -25,7 +24,7 @@ public class VillagerMakeLoveMixin {
                     ordinal = 0
             )
     )
-    private void servercore$enforceBreedCap(ServerLevel level, Villager owner, long gameTime, CallbackInfo ci, Villager mate) {
+    private void servercore$enforceBreedCap(ServerLevel level, Villager owner, long gameTime, CallbackInfo ci, @Local(ordinal = 1) Villager mate) {
         BreedingCapConfig config = Config.get().breedingCap();
         if (config.enabled() && config.villagers().exceedsLimit(owner)) {
             BreedingCap.resetAge(owner, mate);

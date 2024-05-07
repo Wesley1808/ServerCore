@@ -1,16 +1,15 @@
 package me.wesley1808.servercore.mixin.optimizations.sync_loads;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.SleepInBed;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(SleepInBed.class)
 public class SleepInBedMixin {
@@ -18,7 +17,6 @@ public class SleepInBedMixin {
     // Don't load chunks to find beds.
     @Inject(
             method = "checkExtraStartConditions",
-            locals = LocalCapture.CAPTURE_FAILHARD,
             cancellable = true,
             at = @At(
                     value = "INVOKE",
@@ -26,7 +24,7 @@ public class SleepInBedMixin {
                     ordinal = 0
             )
     )
-    private void servercore$onlyProcessIfLoaded(ServerLevel level, LivingEntity owner, CallbackInfoReturnable<Boolean> cir, Brain<?> brain, GlobalPos globalPos) {
+    private void servercore$onlyProcessIfLoaded(ServerLevel level, LivingEntity owner, CallbackInfoReturnable<Boolean> cir, @Local(ordinal = 0) GlobalPos globalPos) {
         if (!ChunkManager.hasChunk(level, globalPos.pos())) {
             cir.setReturnValue(false);
         }
