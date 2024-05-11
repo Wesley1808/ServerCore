@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.2]
+
+### Fixed
+- Fixed compatibility with 1.20.6 NeoForge loader changes.
+- Fixed a bug with activation range immunization that unnecessarily broke redstone contraptions.
+
 ## [1.5.1]
 
 ### Changed
