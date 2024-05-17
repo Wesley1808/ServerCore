@@ -7,12 +7,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.players.PlayerList;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.portal.DimensionTransition;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
 
@@ -51,23 +50,32 @@ public class PlayerListMixin {
         }
     }
 
+
+    /**
+     * TODO 1.21
+     * Mojang now always seems to move the player to the world spawn after player initialization if they don't have a spawnpoint.
+     * This could be a bug - but if it stays this inject can be removed.
+     *
+     * Also worth noting: {@link DimensionTransition#missingRespawnBlock()} is only true if the player has a spawnpoint that is no longer valid.
+     */
+
     // ServerCore - Finds random spawn location for respawning players without spawnpoint.
-    @Inject(
-            method = "respawn",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ServerPlayer;restoreFrom(Lnet/minecraft/server/level/ServerPlayer;Z)V",
-                    shift = At.Shift.BEFORE,
-                    ordinal = 0
-            )
-    )
-    private void servercore$moveToSpawn(
-            ServerPlayer oldPlayer, boolean bl, CallbackInfoReturnable<ServerPlayer> cir,
-            @Local(ordinal = 0) Optional<Vec3> spawnPoint,
-            @Local(ordinal = 1) ServerPlayer player
-    ) {
-        if (spawnPoint.isEmpty()) {
-            player.fudgeSpawnLocation(player.serverLevel());
-        }
-    }
+//    @Inject(
+//            method = "respawn",
+//            at = @At(
+//                    value = "INVOKE",
+//                    target = "Lnet/minecraft/server/level/ServerPlayer;restoreFrom(Lnet/minecraft/server/level/ServerPlayer;Z)V",
+//                    shift = At.Shift.BEFORE,
+//                    ordinal = 0
+//            )
+//    )
+//    private void servercore$moveToSpawn(
+//            ServerPlayer oldPlayer, boolean bl, Entity.RemovalReason reason, CallbackInfoReturnable<ServerPlayer> cir,
+//            @Local(ordinal = 0) DimensionTransition dimensionTransition,
+//            @Local(ordinal = 1) ServerPlayer player
+//    ) {
+//        if (dimensionTransition.missingRespawnBlock()) {
+//            player.fudgeSpawnLocation(player.serverLevel());
+//        }
+//    }
 }
