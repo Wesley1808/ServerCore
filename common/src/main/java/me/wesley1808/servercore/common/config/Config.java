@@ -20,7 +20,8 @@ public class Config {
         OPTIMIZATION_MANAGER.reload();
     }
 
-    public static boolean reloadMainConfig() {
+    public static boolean reloadConfigs() {
+        Config.loadOptimizationConfig();
         if (Config.getOrCreateConfigManager().reload()) {
             Config.loadChanges();
             return true;

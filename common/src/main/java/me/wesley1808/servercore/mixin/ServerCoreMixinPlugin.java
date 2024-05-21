@@ -39,6 +39,10 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             return config.cacheTickingChunks();
         }
 
+        if (path.startsWith("optimizations.command_blocks")) {
+            return config.optimizeCommandBlocks();
+        }
+
         if (path.equals("optimizations.ticking.chunk.random.LiquidBlockMixin")) {
             return config.cancelDuplicateFluidTicks();
         }

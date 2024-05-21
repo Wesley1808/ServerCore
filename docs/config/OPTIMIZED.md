@@ -20,6 +20,9 @@ reduce-sync-loads: true
 # This is especially useful for servers with a high playercount and / or viewdistance.
 # Note: The list of ticking chunks is only updated every second, rather than every tick (but that is very unlikely to matter).
 cache-ticking-chunks: true
+# Optimizes command block executions by caching parsed commands.
+# Command parsing is a relatively expensive operation. By caching it we avoid parsing the same command every time it is executed.
+optimize-command-blocks: true
 # Can significantly reduce time spent on mobspawning, but isn't as accurate as vanilla on biome borders.
 # This may cause mobs from another biome to spawn a few blocks across a biome border (this does not affect structure spawning!).
 fast-biome-lookups: true
