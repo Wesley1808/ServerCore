@@ -57,7 +57,6 @@
     "optimizations.sync_loads.StructureCheckMixin",
     "optimizations.tickets.ChunkGeneratorMixin",
     "optimizations.tickets.NaturalSpawnerMixin",
-    "optimizations.tickets.ServerLevelMixin",
     "optimizations.ticking.chunk.broadcast.ChunkHolderMixin",
     "optimizations.ticking.chunk.broadcast.ServerChunkCacheMixin",
     "optimizations.ticking.chunk.cache.ServerChunkCacheMixin",
