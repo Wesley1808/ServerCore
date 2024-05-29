@@ -20,17 +20,26 @@ public class DynamicManager {
 
         DynamicConfig config = Config.get().dynamic();
         if (config.enabled()) {
-            final int maxViewDistance = DynamicSetting.VIEW_DISTANCE.getMax();
-            if (server.getPlayerList().getViewDistance() > maxViewDistance) {
-                this.modifyViewDistance(maxViewDistance);
+            DynamicSetting viewDistance = DynamicSetting.VIEW_DISTANCE;
+            if (viewDistance.isEnabled()) {
+                int max = viewDistance.getMax();
+                if (server.getPlayerList().getViewDistance() > max) {
+                    this.modifyViewDistance(max);
+                }
             }
 
-            final int maxSimDistance = DynamicSetting.SIMULATION_DISTANCE.getMax();
-            if (server.getPlayerList().getSimulationDistance() > maxSimDistance) {
-                this.modifySimulationDistance(maxSimDistance);
+            DynamicSetting simulationDistance = DynamicSetting.SIMULATION_DISTANCE;
+            if (simulationDistance.isEnabled()) {
+                int max = simulationDistance.getMax();
+                if (server.getPlayerList().getSimulationDistance() > max) {
+                    this.modifySimulationDistance(max);
+                }
             }
 
-            DynamicManager.modifyMobcaps(DynamicSetting.MOBCAP_PERCENTAGE.getMax());
+            DynamicSetting mobcaps = DynamicSetting.MOBCAP_PERCENTAGE;
+            if (mobcaps.isEnabled()) {
+                DynamicManager.modifyMobcaps(mobcaps.getMax());
+            }
         }
     }
 

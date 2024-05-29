@@ -22,11 +22,9 @@ public class Config {
 
     public static boolean reloadConfigs() {
         Config.loadOptimizationConfig();
-        if (Config.getOrCreateConfigManager().reload()) {
-            Config.loadChanges();
-            return true;
-        }
-        return false;
+        boolean success = Config.getOrCreateConfigManager().reload();
+        Config.loadChanges();
+        return success;
     }
 
     public static void loadChanges() {
