@@ -59,31 +59,35 @@ dynamic:
   # The average MSPT to target.
   target-mspt: 35
   # The settings that will be decreased when the server is overloaded, in the specified order.
-  # Removing a setting from the list will disable it.
+  # ► enabled = Whether the server should automatically adjust the setting.
   # ► max = The maximum value the server will increase the setting to.
   # ► min = The minimum value the server will decrease the setting to.
   # ► increment = The amount the setting will be increased or decreased by.
   # ► interval = The amount of seconds between each check to increase or decrease.
   dynamic-settings:
     - setting: 'CHUNK_TICK_DISTANCE'
+      enabled: true
       max: 10
       min: 2
       increment: 1
       interval: 15
 
     - setting: 'MOBCAP_PERCENTAGE'
+      enabled: true
       max: 100
       min: 30
       increment: 10
       interval: 15
 
     - setting: 'SIMULATION_DISTANCE'
+      enabled: true
       max: 10
       min: 2
       increment: 1
       interval: 15
 
     - setting: 'VIEW_DISTANCE'
+      enabled: true
       max: 10
       min: 2
       increment: 1
