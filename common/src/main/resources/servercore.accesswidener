@@ -4,9 +4,7 @@ accessWidener v1 named
 accessible method net/minecraft/world/entity/animal/Bee$BeePollinateGoal isPollinating ()Z
 
 accessible field net/minecraft/world/entity/LivingEntity jumping Z
-accessible field net/minecraft/world/entity/Entity isInsidePortal Z
 accessible field net/minecraft/world/entity/projectile/AbstractArrow inGround Z
-accessible field net/minecraft/world/entity/Mob leashHolder Lnet/minecraft/world/entity/Entity;
 accessible field net/minecraft/world/entity/Mob goalSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 accessible field net/minecraft/world/entity/Mob targetSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 accessible field net/minecraft/world/entity/animal/Bee beePollinateGoal Lnet/minecraft/world/entity/animal/Bee$BeePollinateGoal;
@@ -20,7 +18,6 @@ accessible field net/minecraft/world/level/LocalMobCapCalculator$MobCounts count
 accessible field net/minecraft/world/level/Level blockEntityTickers Ljava/util/List;
 
 # Miscellaneous
-accessible method net/minecraft/server/level/ServerPlayer fudgeSpawnLocation (Lnet/minecraft/server/level/ServerLevel;)V
 accessible method net/minecraft/server/level/ChunkMap anyPlayerCloseEnoughForSpawning (Lnet/minecraft/world/level/ChunkPos;)Z
 accessible method net/minecraft/server/level/ServerChunkCache getVisibleChunkIfPresent (J)Lnet/minecraft/server/level/ChunkHolder;
 accessible method net/minecraft/server/level/ServerChunkCache$ChunkAndHolder <init> (Lnet/minecraft/world/level/chunk/LevelChunk;Lnet/minecraft/server/level/ChunkHolder;)V

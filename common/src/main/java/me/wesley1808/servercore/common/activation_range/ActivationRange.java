@@ -291,9 +291,10 @@ public class ActivationRange {
     }
 
     private static boolean shouldTick(Entity entity, ActivationRangeConfig config) {
-        return !config.enabled() || entity.servercore$isExcluded() || entity.isInsidePortal || entity.isOnPortalCooldown()
+        return !config.enabled() || entity.servercore$isExcluded() || entity.isOnPortalCooldown()
+               || (entity.portalProcess != null && entity.portalProcess.isInsidePortalThisTick()) // Entities in portals
                || (entity.tickCount < 200 && (entity.servercore$getActivationType() == config.defaultActivationType() || config.tickNewEntities())) // New entities
-               || (entity instanceof Mob mob && mob.leashHolder instanceof Player) // Player leashed mobs
+               || (entity instanceof Leashable leashable && leashable.getLeashData() != null && leashable.getLeashData().leashHolder instanceof Player) // Player leashed mobs
                || (entity instanceof LivingEntity living && living.hurtTime > 0); // Attacked mobs
     }
 

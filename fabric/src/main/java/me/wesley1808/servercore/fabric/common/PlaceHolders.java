@@ -82,6 +82,6 @@ public class PlaceHolders {
     }
 
     private static void register(String name, PlaceholderHandler handler) {
-        Placeholders.register(new ResourceLocation("servercore", name), handler);
+        Placeholders.register(ResourceLocation.fromNamespaceAndPath("servercore", name), handler);
     }
 }
