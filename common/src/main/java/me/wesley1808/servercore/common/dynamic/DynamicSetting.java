@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.common.dynamic;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.data.dynamic.Setting;
 import org.jetbrains.annotations.Nullable;
@@ -36,6 +37,7 @@ public enum DynamicSetting {
     private final int maximumBound;
     private DynamicSetting prev;
     private DynamicSetting next;
+    private boolean enabled;
     private int increment = -1;
     private int min = -1;
     private int max = -1;
@@ -56,13 +58,20 @@ public enum DynamicSetting {
 
     public static void reload() {
         List<Setting> settings = Config.get().dynamic().settings();
-        for (int i = 0; i < settings.size(); i++) {
-            Setting setting = settings.get(i);
+        List<DynamicSetting> activeSettings = new ObjectArrayList<>();
+        for (Setting setting : settings) {
             DynamicSetting dynamicSetting = setting.dynamicSetting();
             dynamicSetting.modifyConfiguration(setting);
-            dynamicSetting.initialize(
-                    i == 0 ? null : settings.get(i - 1).dynamicSetting(), // prev
-                    i == settings.size() - 1 ? null : settings.get(i + 1).dynamicSetting() // next
+            if (setting.enabled()) {
+                activeSettings.add(dynamicSetting);
+            }
+        }
+
+        for (int i = 0; i < activeSettings.size(); i++) {
+            DynamicSetting setting = activeSettings.get(i);
+            setting.initialize(
+                    i == 0 ? null : activeSettings.get(i - 1), // prev
+                    i == activeSettings.size() - 1 ? null : activeSettings.get(i + 1) // next
             );
         }
     }
@@ -83,7 +92,7 @@ public enum DynamicSetting {
     }
 
     public boolean shouldRun(int count) {
-        return this.interval > 0 && count % this.interval == 0;
+        return this.enabled && this.interval > 0 && count % this.interval == 0;
     }
 
     public void reset() {
@@ -129,6 +138,7 @@ public enum DynamicSetting {
     }
 
     private void modifyConfiguration(Setting settings) {
+        this.enabled = settings.enabled();
         this.max = Math.min(settings.max(), this.maximumBound);
         this.min = Math.max(settings.min(), this.minimumBound);
         this.increment = settings.increment();
@@ -145,6 +155,10 @@ public enum DynamicSetting {
 
     public int getUpperBound() {
         return this.maximumBound;
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
     }
 
     public int getMax() {

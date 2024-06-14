@@ -6,10 +6,11 @@ import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import space.arim.dazzleconf.error.BadValueException;
 import space.arim.dazzleconf.validator.ValueValidator;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Validators {
-    public static class UniqueSettings implements ValueValidator {
+    public static class DynamicSettings implements ValueValidator {
         @Override
         public void validate(String key, Object value) throws BadValueException {
             // noinspection unchecked
@@ -20,6 +21,10 @@ public class Validators {
                 if (!dynamicSettings.add(setting.dynamicSetting())) {
                     throw badValue(key, "Duplicate dynamic setting: " + setting.dynamicSetting());
                 }
+            }
+
+            if (dynamicSettings.size() < DynamicSetting.values().length) {
+                throw badValue(key, "All dynamic settings must be defined in the config: " + Arrays.toString(DynamicSetting.values()));
             }
         }
     }

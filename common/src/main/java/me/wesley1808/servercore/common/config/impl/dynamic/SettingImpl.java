@@ -5,6 +5,7 @@ import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 
 public class SettingImpl implements Setting {
     private final DynamicSetting dynamicSetting;
+    private final boolean enabled;
     private final int max;
     private final int min;
     private final int increment;
@@ -12,14 +13,16 @@ public class SettingImpl implements Setting {
 
     public SettingImpl(Setting source) {
         this.dynamicSetting = source.dynamicSetting();
+        this.enabled = source.enabled();
         this.max = source.max();
         this.min = source.min();
         this.increment = source.increment();
         this.interval = source.interval();
     }
 
-    public SettingImpl(DynamicSetting dynamicSetting, int max, int min, int increment, int interval) {
+    public SettingImpl(DynamicSetting dynamicSetting, boolean enabled, int max, int min, int increment, int interval) {
         this.dynamicSetting = dynamicSetting;
+        this.enabled = enabled;
         this.max = max;
         this.min = min;
         this.increment = increment;
@@ -29,6 +32,11 @@ public class SettingImpl implements Setting {
     @Override
     public DynamicSetting dynamicSetting() {
         return this.dynamicSetting;
+    }
+
+    @Override
+    public boolean enabled() {
+        return this.enabled;
     }
 
     @Override

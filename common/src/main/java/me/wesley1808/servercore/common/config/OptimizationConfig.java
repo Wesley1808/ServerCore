@@ -31,6 +31,15 @@ public interface OptimizationConfig extends Copyable {
     boolean cacheTickingChunks();
 
     @Order(3)
+    @ConfKey("optimize-command-blocks")
+    @DefaultBoolean(false)
+    @ConfComments({
+            "Optimizes command block executions by caching parsed commands.",
+            "Command parsing is a relatively expensive operation. By caching it we avoid parsing the same command every time it is executed.",
+    })
+    boolean optimizeCommandBlocks();
+
+    @Order(4)
     @ConfKey("fast-biome-lookups")
     @DefaultBoolean(false)
     @ConfComments({
@@ -39,7 +48,7 @@ public interface OptimizationConfig extends Copyable {
     })
     boolean fastBiomeLookups();
 
-    @Order(4)
+    @Order(5)
     @ConfKey("cancel-duplicate-fluid-ticks")
     @DefaultBoolean(false)
     @ConfComments({

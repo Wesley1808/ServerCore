@@ -30,10 +30,10 @@ public interface DynamicConfig {
     @Order(3)
     @ConfKey("dynamic-settings")
     @DefaultObject("defaultSettings")
-    @ConfValidator(Validators.UniqueSettings.class)
+    @ConfValidator(Validators.DynamicSettings.class)
     @ConfComments({
             "The settings that will be decreased when the server is overloaded, in the specified order.",
-            "Removing a setting from the list will disable it.",
+            "► enabled = Whether the server should automatically adjust the setting.",
             "► max = The maximum value the server will increase the setting to.",
             "► min = The minimum value the server will decrease the setting to.",
             "► increment = The amount the setting will be increased or decreased by.",
@@ -47,10 +47,10 @@ public interface DynamicConfig {
 
     static List<Setting> defaultSettings() {
         return Lists.newArrayList(
-                new SettingImpl(DynamicSetting.CHUNK_TICK_DISTANCE, 10, 2, 1, 15),
-                new SettingImpl(DynamicSetting.MOBCAP_PERCENTAGE, 100, 30, 10, 15),
-                new SettingImpl(DynamicSetting.SIMULATION_DISTANCE, 10, 2, 1, 15),
-                new SettingImpl(DynamicSetting.VIEW_DISTANCE, 10, 2, 1, 150)
+                new SettingImpl(DynamicSetting.CHUNK_TICK_DISTANCE, true, 10, 2, 1, 15),
+                new SettingImpl(DynamicSetting.MOBCAP_PERCENTAGE, true, 100, 30, 10, 15),
+                new SettingImpl(DynamicSetting.SIMULATION_DISTANCE, true, 10, 2, 1, 15),
+                new SettingImpl(DynamicSetting.VIEW_DISTANCE, true, 10, 2, 1, 150)
         );
     }
 }

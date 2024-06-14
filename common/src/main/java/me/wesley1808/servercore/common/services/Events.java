@@ -21,7 +21,7 @@ public class Events {
 
     public static void onServerStarted(MinecraftServer server) {
         Config.enableValidation();
-        Config.reloadMainConfig();
+        Config.reloadConfigs();
 
         IMinecraftServer.onStarted(server);
     }

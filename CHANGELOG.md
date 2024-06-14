@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.5.3]
+
+### Added
+- New optimization for command block executions by caching parsed commands (disabled by default).
+- New `enabled` field for dynamic settings which allows you to disable certain settings from being automatically changed.
+You can no longer remove the setting entirely as the config suggested doing before as this was broken.
+
+### Fixed
+- Fix dynamic settings not loading properly when the config file contained errors.
+This would cause things like the mobcap percentage to remain uninitialized at -1, stopping mobspawning.
+
 ## [1.5.2]
 
 ### Fixed

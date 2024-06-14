@@ -20,12 +20,11 @@ public class Config {
         OPTIMIZATION_MANAGER.reload();
     }
 
-    public static boolean reloadMainConfig() {
-        if (Config.getOrCreateConfigManager().reload()) {
-            Config.loadChanges();
-            return true;
-        }
-        return false;
+    public static boolean reloadConfigs() {
+        Config.loadOptimizationConfig();
+        boolean success = Config.getOrCreateConfigManager().reload();
+        Config.loadChanges();
+        return success;
     }
 
     public static void loadChanges() {

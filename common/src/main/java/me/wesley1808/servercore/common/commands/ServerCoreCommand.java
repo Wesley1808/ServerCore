@@ -68,7 +68,7 @@ public class ServerCoreCommand {
     }
 
     private static int reload(CommandSourceStack source) {
-        boolean success = Config.reloadMainConfig();
+        boolean success = Config.reloadConfigs();
         if (success) {
             source.sendSuccess(() -> Component.literal("Config reloaded!").withStyle(ChatFormatting.GREEN), false);
         } else {
