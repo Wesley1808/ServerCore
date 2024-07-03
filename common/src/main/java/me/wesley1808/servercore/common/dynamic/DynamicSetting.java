@@ -14,7 +14,7 @@ public enum DynamicSetting {
             (value) -> String.format("%d%%", value),
             (manager, value) -> DynamicManager.modifyMobcaps(value)
     ),
-    CHUNK_TICK_DISTANCE(2, 256, 8,
+    CHUNK_TICK_DISTANCE(2, 256, 10,
             "Chunk-tick distance",
             String::valueOf
     ),
