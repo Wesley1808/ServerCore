@@ -2,8 +2,6 @@ package me.wesley1808.servercore.common.interfaces;
 
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.data.mob_spawning.MobSpawnEntry;
-import me.wesley1808.servercore.common.dynamic.DynamicManager;
-import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import net.minecraft.world.entity.MobCategory;
 
 public interface IMobCategory {
@@ -35,8 +33,6 @@ public interface IMobCategory {
         for (MobSpawnEntry entry : Config.get().mobSpawning().categories()) {
             IMobCategory.modify(entry.category(), entry.capacity(), entry.spawnInterval());
         }
-
-        DynamicManager.modifyMobcaps(DynamicSetting.MOBCAP_PERCENTAGE.get());
     }
 
     private static void modify(MobCategory category, int max, int interval) {
