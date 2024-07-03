@@ -48,7 +48,7 @@ public class Mobcaps {
     }
 
     private static List<ServerPlayer> getPlayersNear(ServerLevel level, ChunkPos pos, LocalMobCapCalculator calculator) {
-        return ModCompat.VMP
+        return Environment.MOD_VMP
                 ? level.getChunkSource().chunkMap.getPlayersCloseForSpawning(pos)
                 : calculator.getPlayersNear(pos);
     }

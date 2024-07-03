@@ -1,8 +1,7 @@
 package me.wesley1808.servercore.common.dynamic;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.data.dynamic.Setting;
+import me.wesley1808.servercore.common.utils.Environment;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -10,21 +9,21 @@ import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
 
 public enum DynamicSetting {
-    MOBCAP_PERCENTAGE(1, 1024,
+    MOBCAP_PERCENTAGE(0, 1024, 100,
             "Mobcap percentage",
             (value) -> String.format("%d%%", value),
             (manager, value) -> DynamicManager.modifyMobcaps(value)
     ),
-    CHUNK_TICK_DISTANCE(2, 256,
+    CHUNK_TICK_DISTANCE(2, 256, 8,
             "Chunk-tick distance",
             String::valueOf
     ),
-    SIMULATION_DISTANCE(2, 256,
+    SIMULATION_DISTANCE(Environment.CLIENT ? 5 : 2, 256, 10,
             "Simulation distance",
             String::valueOf,
             DynamicManager::modifySimulationDistance
     ),
-    VIEW_DISTANCE(2, 256,
+    VIEW_DISTANCE(2, 256, 10,
             "View distance",
             String::valueOf,
             DynamicManager::modifyViewDistance
@@ -35,68 +34,55 @@ public enum DynamicSetting {
     private final String formattedName;
     private final int minimumBound;
     private final int maximumBound;
-    private DynamicSetting prev;
-    private DynamicSetting next;
-    private boolean enabled;
-    private int increment = -1;
-    private int min = -1;
-    private int max = -1;
-    private int interval = -1;
-    private int value = -1;
+    private final int defaultValue;
+    private boolean initialized;
+    private int maxValue;
+    private int value;
 
-    DynamicSetting(int minimumBound, int maximumBound, String formattedName, IntFunction<String> valueFormatter) {
-        this(minimumBound, maximumBound, formattedName, valueFormatter, null);
+    DynamicSetting(int minimumBound, int maximumBound, int defaultValue, String formattedName, IntFunction<String> valueFormatter) {
+        this(minimumBound, maximumBound, defaultValue, formattedName, valueFormatter, null);
     }
 
-    DynamicSetting(int minimumBound, int maximumBound, String formattedName, IntFunction<String> valueFormatter, BiConsumer<DynamicManager, Integer> onChanged) {
+    DynamicSetting(int minimumBound, int maximumBound, int defaultValue, String formattedName, IntFunction<String> valueFormatter, BiConsumer<DynamicManager, Integer> onChanged) {
         this.onChanged = onChanged;
         this.valueFormatter = valueFormatter;
         this.formattedName = formattedName;
         this.minimumBound = minimumBound;
         this.maximumBound = maximumBound;
+        this.defaultValue = defaultValue;
+        this.maxValue = defaultValue;
+        this.value = defaultValue;
     }
 
-    public static void reload() {
-        List<Setting> settings = Config.get().dynamic().settings();
-        List<DynamicSetting> activeSettings = new ObjectArrayList<>();
+    public static void recalculateValues(List<Setting> settings) {
+        for (DynamicSetting setting : values()) {
+            setting.maxValue = 0;
+        }
+
         for (Setting setting : settings) {
             DynamicSetting dynamicSetting = setting.dynamicSetting();
-            dynamicSetting.modifyConfiguration(setting);
-            if (setting.enabled()) {
-                activeSettings.add(dynamicSetting);
+            int max = setting.max();
+            if (max > dynamicSetting.maxValue) {
+                dynamicSetting.maxValue = max;
             }
         }
 
-        for (int i = 0; i < activeSettings.size(); i++) {
-            DynamicSetting setting = activeSettings.get(i);
-            setting.initialize(
-                    i == 0 ? null : activeSettings.get(i - 1), // prev
-                    i == activeSettings.size() - 1 ? null : activeSettings.get(i + 1) // next
-            );
+        for (DynamicSetting setting : values()) {
+            if (setting.maxValue <= 0) {
+                setting.maxValue = setting.defaultValue;
+            }
+
+            if (!setting.initialized) {
+                setting.set(setting.maxValue, null);
+                setting.initialized = true;
+            }
         }
     }
 
     public static void resetAll() {
         for (DynamicSetting setting : values()) {
-            setting.reset();
+            setting.initialized = false;
         }
-    }
-
-    public void initialize(DynamicSetting prev, DynamicSetting next) {
-        this.prev = prev;
-        this.next = next;
-    }
-
-    public int get() {
-        return this.value;
-    }
-
-    public boolean shouldRun(int count) {
-        return this.enabled && this.interval > 0 && count % this.interval == 0;
-    }
-
-    public void reset() {
-        this.set(this.max, null);
     }
 
     public void set(int value, @Nullable DynamicManager manager) {
@@ -107,46 +93,8 @@ public enum DynamicSetting {
         }
     }
 
-    public boolean modify(boolean increase, DynamicManager manager) {
-        int value = this.newValue(increase);
-        if (this.shouldModify(value)) {
-            this.set(value, manager);
-            return true;
-        }
-        return false;
-    }
-
-    private boolean shouldModify(int value) {
-        int compared = Integer.compare(value, this.value);
-        return compared != 0 && (this.next != null || this.prev != null)
-               && (compared < 0 || (!this.isMaximum() && (this.next == null || this.next.isMaximum())))
-               && (compared > 0 || (!this.isMinimum() && (this.prev == null || this.prev.isMinimum())));
-    }
-
-    private int newValue(boolean increase) {
-        return increase
-                ? Math.min(this.value + this.increment, this.max)
-                : Math.max(this.value - this.increment, this.min);
-    }
-
-    private boolean isMinimum() {
-        return this.value <= this.min;
-    }
-
-    private boolean isMaximum() {
-        return this.value >= this.max;
-    }
-
-    private void modifyConfiguration(Setting settings) {
-        this.enabled = settings.enabled();
-        this.max = Math.min(settings.max(), this.maximumBound);
-        this.min = Math.max(settings.min(), this.minimumBound);
-        this.increment = settings.increment();
-        this.interval = settings.interval();
-
-        if (this.value < 0) {
-            this.set(this.max, null);
-        }
+    public int get() {
+        return this.value;
     }
 
     public int getLowerBound() {
@@ -157,22 +105,15 @@ public enum DynamicSetting {
         return this.maximumBound;
     }
 
-    public boolean isEnabled() {
-        return this.enabled;
-    }
-
-    public int getMax() {
-        if (this.max < 0) {
-            throw new IllegalStateException(this.name() + " has not been initialized yet!");
-        }
-        return this.max;
-    }
-
     public String getFormattedName() {
         return this.formattedName;
     }
 
     public String getFormattedValue() {
         return this.valueFormatter.apply(this.value);
+    }
+
+    public int getMax() {
+        return this.maxValue;
     }
 }

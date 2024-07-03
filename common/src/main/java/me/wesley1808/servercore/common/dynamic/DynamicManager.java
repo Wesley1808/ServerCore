@@ -1,50 +1,49 @@
 package me.wesley1808.servercore.common.dynamic;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.data.dynamic.DynamicConfig;
+import me.wesley1808.servercore.common.config.data.dynamic.Setting;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
 import me.wesley1808.servercore.common.interfaces.IMobCategory;
+import me.wesley1808.servercore.common.utils.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.MobCategory;
 
+import java.util.List;
+
 public class DynamicManager {
+    private static final List<LinkedSetting> SETTINGS = new ObjectArrayList<>();
     private final MinecraftServer server;
-    private final boolean isClient;
     private double averageTickTime;
     private int count;
 
     public DynamicManager(MinecraftServer server) {
         this.server = server;
-        this.isClient = server.isSingleplayer();
-
-        DynamicConfig config = Config.get().dynamic();
-        if (config.enabled()) {
-            DynamicSetting viewDistance = DynamicSetting.VIEW_DISTANCE;
-            if (viewDistance.isEnabled()) {
-                int max = viewDistance.getMax();
-                if (server.getPlayerList().getViewDistance() > max) {
-                    this.modifyViewDistance(max);
-                }
-            }
-
-            DynamicSetting simulationDistance = DynamicSetting.SIMULATION_DISTANCE;
-            if (simulationDistance.isEnabled()) {
-                int max = simulationDistance.getMax();
-                if (server.getPlayerList().getSimulationDistance() > max) {
-                    this.modifySimulationDistance(max);
-                }
-            }
-
-            DynamicSetting mobcaps = DynamicSetting.MOBCAP_PERCENTAGE;
-            if (mobcaps.isEnabled()) {
-                DynamicManager.modifyMobcaps(mobcaps.getMax());
-            }
-        }
     }
 
     public static DynamicManager getInstance(MinecraftServer server) {
         return ((IMinecraftServer) server).servercore$getDynamicManager();
+    }
+
+    public static void reload() {
+        SETTINGS.clear();
+
+        List<Setting> settings = Config.get().dynamic().settings();
+        DynamicSetting.recalculateValues(settings);
+
+        for (Setting setting : settings) {
+            SETTINGS.add(new LinkedSetting(setting));
+        }
+
+        for (int i = 0; i < SETTINGS.size(); i++) {
+            LinkedSetting linked = SETTINGS.get(i);
+            linked.initialize(
+                    i == 0 ? null : SETTINGS.get(i - 1), // prev
+                    i == SETTINGS.size() - 1 ? null : SETTINGS.get(i + 1) // next
+            );
+        }
     }
 
     public static void update(MinecraftServer server) {
@@ -74,7 +73,8 @@ public class DynamicManager {
         final boolean increase = this.averageTickTime < Math.max(targetMspt - 5, 2);
 
         if (decrease || increase) {
-            for (DynamicSetting setting : DynamicSetting.values()) {
+            Iterable<LinkedSetting> ordered = increase ? SETTINGS.reversed() : SETTINGS;
+            for (LinkedSetting setting : ordered) {
                 if (setting.shouldRun(this.count) && setting.modify(increase, this)) {
                     break;
                 }
@@ -84,14 +84,14 @@ public class DynamicManager {
 
     public void modifyViewDistance(int distance) {
         this.server.getPlayerList().setViewDistance(distance);
-        if (this.isClient) {
+        if (Environment.CLIENT) {
             Minecraft.getInstance().options.renderDistance().set(distance);
         }
     }
 
     public void modifySimulationDistance(int distance) {
         this.server.getPlayerList().setSimulationDistance(distance);
-        if (this.isClient) {
+        if (Environment.CLIENT) {
             Minecraft.getInstance().options.simulationDistance().set(distance);
         }
     }
