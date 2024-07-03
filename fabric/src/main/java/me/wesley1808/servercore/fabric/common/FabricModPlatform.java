@@ -2,6 +2,7 @@ package me.wesley1808.servercore.fabric.common;
 
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.services.platform.ModPlatform;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
@@ -15,6 +16,11 @@ public class FabricModPlatform implements ModPlatform {
     public FabricModPlatform() {
         this.version = this.getVersionString();
         this.configDir = FabricLoader.getInstance().getConfigDir();
+    }
+
+    @Override
+    public boolean isClient() {
+        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
     }
 
     @Override

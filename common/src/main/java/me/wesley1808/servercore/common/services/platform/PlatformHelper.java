@@ -24,6 +24,10 @@ public final class PlatformHelper {
         PlatformHelper.minecraftPlatform = PlatformHelper.load(MinecraftPlatform.class);
     }
 
+    public static boolean isClient() {
+        return MOD_PLATFORM.isClient();
+    }
+
     public static boolean isModLoaded(String modId) {
         return MOD_PLATFORM.isModLoaded(modId);
     }

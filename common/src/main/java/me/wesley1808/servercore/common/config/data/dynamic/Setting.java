@@ -11,25 +11,21 @@ public interface Setting {
     DynamicSetting dynamicSetting();
 
     @Order(2)
-    @ConfKey("enabled")
-    boolean enabled();
-
-    @Order(3)
     @ConfKey("max")
     @IntegerRange(min = 1)
     int max();
 
-    @Order(4)
+    @Order(3)
     @ConfKey("min")
-    @IntegerRange(min = 1)
+    @IntegerRange(min = 0)
     int min();
 
-    @Order(5)
+    @Order(4)
     @ConfKey("increment")
     @IntegerRange(min = 1)
     int increment();
 
-    @Order(6)
+    @Order(5)
     @ConfKey("interval")
     @IntegerRange(min = 1)
     int interval();

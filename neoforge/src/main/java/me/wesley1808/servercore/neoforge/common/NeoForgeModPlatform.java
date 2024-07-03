@@ -4,6 +4,7 @@ import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.services.platform.ModPlatform;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.fml.loading.LoadingModList;
 
@@ -17,6 +18,11 @@ public class NeoForgeModPlatform implements ModPlatform {
 
     public NeoForgeModPlatform() {
         this.configDir = FMLPaths.CONFIGDIR.get();
+    }
+
+    @Override
+    public boolean isClient() {
+        return FMLEnvironment.dist.isClient();
     }
 
     @Override
