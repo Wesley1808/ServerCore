@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.5.4]
+
+### Added
+- You can now use a dynamic setting multiple times in the config.
+For example: simulation distance from 10 to 5 → view distance from 12 to 8 → simulation distance from 5 to 2 → view distance from 8 to 4, etc.
+
+### Fixed
+- Fixed dynamic performance trying to change simulation distance below 5 on singleplayer. The client doesn't accept this and would put it back to 12 (default).
+- Fixed villagers being unable to swim up in a 1x1 with lobotomization enabled.
+
 ## [1.5.3]
 
 ### Added

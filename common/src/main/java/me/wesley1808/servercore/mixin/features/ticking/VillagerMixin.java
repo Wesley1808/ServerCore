@@ -46,7 +46,7 @@ public abstract class VillagerMixin extends AbstractVillager {
     )
     private boolean servercore$shouldTickBrain(Brain<Villager> brain, ServerLevel level, LivingEntity livingEntity) {
         FeatureConfig config = Config.get().features();
-        return !config.lobotomizeVillagers() || !this.servercore$isLobotomized() || this.tickCount % config.lobotomizedTickInterval() == 0;
+        return !config.lobotomizeVillagers() || !this.servercore$isLobotomized() || this.tickCount % config.lobotomizedTickInterval() == 0 || this.isUnderWater();
     }
 
     @Unique
