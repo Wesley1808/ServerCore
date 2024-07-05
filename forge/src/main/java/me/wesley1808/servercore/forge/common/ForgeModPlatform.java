@@ -4,6 +4,7 @@ import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.services.platform.ModPlatform;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.loading.LoadingModList;
 
@@ -17,6 +18,11 @@ public class ForgeModPlatform implements ModPlatform {
 
     public ForgeModPlatform() {
         this.configDir = FMLPaths.CONFIGDIR.get();
+    }
+
+    @Override
+    public boolean isClient() {
+        return FMLEnvironment.dist.isClient();
     }
 
     @Override
