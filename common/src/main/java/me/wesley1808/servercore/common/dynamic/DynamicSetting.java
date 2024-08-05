@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
+import java.util.Locale;
 import java.util.function.BiConsumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
@@ -69,7 +70,7 @@ public enum DynamicSetting {
     public static void loadCustomOrder() {
         ObjectArrayList<DynamicSetting> settings = new ObjectArrayList<>();
         for (String key : SETTING_ORDER.get()) {
-            settings.add(DynamicSetting.valueOf(key.toUpperCase()));
+            settings.add(DynamicSetting.valueOf(key.toUpperCase(Locale.ENGLISH)));
         }
 
         for (int i = 0; i < settings.size(); i++) {

@@ -5,6 +5,7 @@ import me.wesley1808.servercore.common.config.ConfigEntry;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class DynamicConfig {
     public static final ConfigEntry<Boolean> ENABLED = new ConfigEntry<>(false, "(Default = false) Enables this feature.");
@@ -62,7 +63,7 @@ public class DynamicConfig {
             (settings) -> {
                 for (String key : settings) {
                     try {
-                        DynamicSetting.valueOf(key.toUpperCase());
+                        DynamicSetting.valueOf(key.toUpperCase(Locale.ENGLISH));
                     } catch (IllegalArgumentException ex) {
                         return false;
                     }
