@@ -22,6 +22,7 @@ public class MobCategoryMixin implements IMobCategory {
     @Inject(method = "<init>", at = @At("RETURN"))
     private void servercore$onInit(String enumName, int index, String name, int max, boolean isFriendly, boolean isPersistent, int despawnDistance, CallbackInfo ci) {
         this.servercore$capacity = max;
+        this.servercore$spawnInterval = isPersistent ? 400 : 1;
     }
 
     // Should be @ModifyReturnValue to remove callback info allocations, however carpet mod.
