@@ -8,8 +8,6 @@ import me.wesley1808.servercore.common.services.platform.MinecraftPlatform;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ChunkMap;
-import net.minecraft.world.level.ChunkPos;
 
 public class FabricMinecraftPlatform implements MinecraftPlatform {
     private final NodeParser parser = NodeParser.builder()
@@ -21,11 +19,6 @@ public class FabricMinecraftPlatform implements MinecraftPlatform {
     public boolean hasPermission(CommandSourceStack source, String node, int level) {
         String permission = String.format("%s.%s", ServerCore.MODID, node);
         return Permissions.check(source, permission, level);
-    }
-
-    @Override
-    public boolean shouldForceChunkTicks(ChunkMap chunkMap, ChunkPos pos) {
-        return false;
     }
 
     @Override

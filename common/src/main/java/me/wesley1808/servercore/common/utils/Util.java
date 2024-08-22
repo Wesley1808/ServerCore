@@ -12,11 +12,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class Util {
+    public static final AtomicInteger WORLD_COUNTER = new AtomicInteger();
 
     public static <T> boolean iteratePage(List<T> list, int page, int pageSize, BiConsumer<T, Integer> consumer) {
         int index = getIndex(page, pageSize);

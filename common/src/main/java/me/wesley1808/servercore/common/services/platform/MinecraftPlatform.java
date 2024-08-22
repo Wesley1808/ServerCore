@@ -4,9 +4,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ChunkMap;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.ChunkPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,8 +12,6 @@ import java.util.Optional;
 
 public interface MinecraftPlatform {
     boolean hasPermission(CommandSourceStack source, String node, int level);
-
-    boolean shouldForceChunkTicks(ChunkMap chunkMap, ChunkPos pos);
 
     Component parseText(MinecraftServer server, String input);
 

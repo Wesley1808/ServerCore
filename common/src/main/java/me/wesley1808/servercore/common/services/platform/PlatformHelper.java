@@ -6,9 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ChunkMap;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.ChunkPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,10 +44,6 @@ public final class PlatformHelper {
 
     public static boolean hasPermission(CommandSourceStack source, String node, int level) {
         return minecraftPlatform.hasPermission(source, node, level);
-    }
-
-    public static boolean shouldTickChunk(ChunkMap chunkMap, ChunkPos pos) {
-        return chunkMap.anyPlayerCloseEnoughForSpawning(pos) || minecraftPlatform.shouldForceChunkTicks(chunkMap, pos);
     }
 
     @Nullable

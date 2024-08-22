@@ -1,117 +1,72 @@
 package me.wesley1808.servercore.mixin.optimizations.ticking.chunk.cache;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.sugar.Local;
-import me.wesley1808.servercore.common.collections.CachedChunkList;
-import net.minecraft.server.level.ChunkHolder;
-import net.minecraft.server.level.ChunkMap;
+import com.mojang.datafixers.DataFixer;
+import me.wesley1808.servercore.common.collections.FilteredList;
+import me.wesley1808.servercore.common.utils.Util;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.progress.ChunkProgressListener;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.LevelChunk;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import net.minecraft.world.level.entity.ChunkStatusUpdateListener;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+import net.minecraft.world.level.storage.LevelStorageSource;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.function.Supplier;
 
 @Mixin(value = ServerChunkCache.class, priority = 900)
 public class ServerChunkCacheMixin {
-    @Unique
-    private final CachedChunkList servercore$cachedChunks = new CachedChunkList();
+    @Mutable
     @Shadow
     @Final
-    public ChunkMap chunkMap;
+    private List<LevelChunk> tickingChunks;
+    @Unique
+    private int servercore$tickCount;
 
-    @Inject(method = "save", at = @At("RETURN"))
-    private void servercore$onSave(boolean bl, CallbackInfo ci) {
-        this.servercore$cachedChunks.shouldTrim();
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void servercore$onInit(ServerLevel serverLevel, LevelStorageSource.LevelStorageAccess levelStorageAccess, DataFixer dataFixer, StructureTemplateManager structureTemplateManager, Executor executor, ChunkGenerator chunkGenerator, int i, int j, boolean bl, ChunkProgressListener chunkProgressListener, ChunkStatusUpdateListener chunkStatusUpdateListener, Supplier<?> supplier, CallbackInfo ci) {
+        this.tickingChunks = new FilteredList<>(1024, chunk -> chunk.loaded);
+        this.servercore$tickCount = Util.WORLD_COUNTER.getAndIncrement();
     }
 
-    // Avoids unnecessary array allocations.
-    @Redirect(
-            method = "tickChunks",
-            require = 0,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lcom/google/common/collect/Lists;newArrayListWithCapacity(I)Ljava/util/ArrayList;",
-                    remap = false
-            )
-    )
-    private ArrayList<?> servercore$noList(int initialArraySize) {
-        return null;
-    }
-
-    // Replaces the list variable with our own.
-    @ModifyVariable(
-            method = "tickChunks",
-            index = 6,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Ljava/lang/Iterable;iterator()Ljava/util/Iterator;",
-                    shift = At.Shift.BEFORE,
-                    ordinal = 0
-            )
-    )
-    private List<?> servercore$replaceList(List<?> list) {
-        return this.servercore$cachedChunks;
-    }
-
-    // Updates our own list and prevents vanilla from adding chunks to it.
-    @ModifyExpressionValue(
-            method = "tickChunks",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ChunkMap;getChunks()Ljava/lang/Iterable;",
-                    ordinal = 0
-            )
-    )
-    private Iterable<ChunkHolder> servercore$updateCachedChunks(Iterable<ChunkHolder> original) {
-        this.servercore$cachedChunks.update(this.chunkMap, original);
-        return Collections::emptyIterator;
+    @Inject(method = "collectTickingChunks", at = @At("HEAD"), cancellable = true)
+    private void servercore$useCachedChunks(List<LevelChunk> list, CallbackInfo ci) {
+        if (this.servercore$tickCount++ % 20 == 0) {
+            list.clear();
+        } else {
+            ci.cancel();
+        }
     }
 
     // Don't shuffle the chunk list.
     @Redirect(
-            method = "tickChunks",
+            method = "tickChunks()V",
             require = 0,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/Util;shuffle(Ljava/util/List;Lnet/minecraft/util/RandomSource;)V"
             )
     )
-    private void servercore$cancelShuffle(List<?> list, RandomSource randomSource) {
+    private void servercore$cancelShuffle(List<LevelChunk> list, RandomSource randomSource) {
         // NO-OP
     }
 
     @Redirect(
-            method = "tickChunks",
+            method = "tickChunks()V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ServerLevel;isNaturalSpawningAllowed(Lnet/minecraft/world/level/ChunkPos;)Z"
+                    target = "Ljava/util/List;clear()V"
             )
     )
-    private boolean servercore$skipUnloadedChunks(ServerLevel level, ChunkPos pos, @Local(ordinal = 0) LevelChunk chunk) {
-        return chunk.loaded;
-    }
-
-    @Redirect(
-            method = "tickChunks",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ChunkMap;anyPlayerCloseEnoughForSpawning(Lnet/minecraft/world/level/ChunkPos;)Z"
-            )
-    )
-    private boolean servercore$skipCheck(ChunkMap chunkMap, ChunkPos pos) {
-        return true;
+    private void servercore$cancelListClear(List<LevelChunk> list) {
+        // NO-OP
     }
 }
