@@ -52,7 +52,9 @@ public class ChunkManager {
     @Nullable
     public static ChunkAccess getChunkNow(LevelReader levelReader, int chunkX, int chunkZ) {
         if (levelReader instanceof ServerLevel level) {
-            return getChunkFromHolder(getChunkHolder(level, chunkX, chunkZ));
+            return Environment.MOD_MOONRISE
+                    ? level.getChunkSource().getChunkNow(chunkX, chunkZ)
+                    : getChunkFromHolder(getChunkHolder(level, chunkX, chunkZ));
         } else {
             return levelReader.getChunk(chunkX, chunkZ, ChunkStatus.FULL, false);
         }
@@ -69,7 +71,7 @@ public class ChunkManager {
     }
 
     @Nullable
-    public static LevelChunk getChunkFromHolder(ChunkHolder holder) {
+    private static LevelChunk getChunkFromHolder(ChunkHolder holder) {
         return holder != null ? getChunkFromFuture(holder.getFullChunkFuture()) : null;
     }
 
@@ -84,13 +86,20 @@ public class ChunkManager {
 
     public static boolean hasChunk(Level level, int chunkX, int chunkZ) {
         if (level instanceof ServerLevel serverLevel) {
-            return hasChunk(getChunkHolder(serverLevel, chunkX, chunkZ));
+            return Environment.MOD_MOONRISE
+                    ? level.getChunkSource().hasChunk(chunkX, chunkZ)
+                    : hasChunk(serverLevel, getChunkHolder(serverLevel, chunkX, chunkZ));
         } else {
             return true;
         }
     }
 
-    public static boolean hasChunk(ChunkHolder holder) {
+    public static boolean hasChunk(ServerLevel level, ChunkHolder holder) {
+        if (Environment.MOD_MOONRISE) {
+            ChunkPos pos = holder.getPos();
+            return level.getChunkSource().hasChunk(pos.x, pos.z);
+        }
+
         return getChunkFromHolder(holder) != null;
     }
 
