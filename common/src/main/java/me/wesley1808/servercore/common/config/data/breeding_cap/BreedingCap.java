@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import space.arim.dazzleconf.annote.ConfDefault.DefaultBoolean;
 import space.arim.dazzleconf.annote.ConfDefault.DefaultInteger;
 import space.arim.dazzleconf.annote.ConfKey;
 import space.arim.dazzleconf.annote.IntegerRange;
@@ -32,13 +33,18 @@ public interface BreedingCap {
     @IntegerRange(min = 1)
     int range();
 
+    @Order(3)
+    @ConfKey("unlimited-height")
+    @DefaultBoolean(false)
+    boolean unlimitedHeight();
+
     default boolean exceedsLimit(EntityType<?> type, Level level, BlockPos pos) {
         final int limit = this.limit();
         if (limit < 0) {
             return false;
         }
 
-        AABB area = this.getAreaAt(pos);
+        AABB area = this.getAreaAt(level, pos);
         Set<EntityType<?>> set = CUSTOM_TYPES.get(type);
 
         int count;
@@ -55,9 +61,28 @@ public interface BreedingCap {
         return this.exceedsLimit(entity.getType(), entity.level(), entity.blockPosition());
     }
 
-    private AABB getAreaAt(BlockPos pos) {
-        int range = this.range();
-        return AABB.encapsulatingFullBlocks(pos.offset(range, range, range), pos.offset(-range, -range, -range));
+    private AABB getAreaAt(Level level, BlockPos pos) {
+        final boolean unlimitedHeight = this.unlimitedHeight();
+        final int range = this.range();
+        final int minHeight = level.getMinBuildHeight();
+        final int maxHeight = level.getMaxBuildHeight() + 4;
+
+        final int minX = pos.getX() - range;
+        final int minY = unlimitedHeight ? minHeight : Math.max(minHeight, pos.getY() - range);
+        final int minZ = pos.getZ() - range;
+
+        final int maxX = pos.getX() + range;
+        final int maxY = unlimitedHeight ? maxHeight : Math.min(maxHeight, pos.getY() + range);
+        final int maxZ = pos.getZ() + range;
+
+        return new AABB(
+                minX,
+                minY,
+                minZ,
+                maxX + 1,
+                maxY + 1,
+                maxZ + 1
+        );
     }
 
     static void resetLove(Animal owner, Animal mate) {
