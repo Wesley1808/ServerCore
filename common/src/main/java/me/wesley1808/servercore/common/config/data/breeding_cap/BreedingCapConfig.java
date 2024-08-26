@@ -19,7 +19,8 @@ public interface BreedingCapConfig {
     @ConfComments({
             "The breeding cap for villagers.",
             "► limit = The limit of mobs of the same type within range. Setting this to negative will disable the breeding cap.",
-            "► range = The range it will check for entities of the same type."
+            "► range = The range it will check for entities of the same type.",
+            "► unlimited-height = Whether to ignore the vertical distance when checking for entities of the same type."
     })
     BreedingCap villagers();
 
