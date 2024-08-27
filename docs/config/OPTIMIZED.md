@@ -16,9 +16,9 @@ You can of course always tweak these even further to your liking, but this shoul
 # Prevents many different lagspikes caused by loading chunks synchronously.
 # This for example causes maps to only update loaded chunks, which depending on the viewdistance can be a smaller radius than vanilla.
 reduce-sync-loads: true
-# Can significantly reduce the time spent on chunk iteration by caching ticking chunks every second.
+# Can significantly reduce the time spent on chunk iteration by only updating the ticking chunks list each second, rather than each tick.
 # This is especially useful for servers with a high playercount and / or viewdistance.
-# Note: The list of ticking chunks is only updated every second, rather than every tick (but that is very unlikely to matter).
+# Note: This setting is incompatible with Moonrise.
 cache-ticking-chunks: true
 # Optimizes command block executions by caching parsed commands.
 # Command parsing is a relatively expensive operation. By caching it we avoid parsing the same command every time it is executed.
@@ -118,9 +118,11 @@ breeding-cap:
   # The breeding cap for villagers.
   # ► limit = The limit of mobs of the same type within range. Setting this to negative will disable the breeding cap.
   # ► range = The range it will check for entities of the same type.
+  # ► unlimited-height = Whether to ignore the vertical distance when checking for entities of the same type.
   villagers:
     limit: 24
     range: 64
+    unlimited-height: false
 
   # The breeding cap for animals.
   # Note that this cap only checks for animals of the same type.
@@ -128,6 +130,7 @@ breeding-cap:
   animals:
     limit: 32
     range: 64
+    unlimited-height: false
 
 # Gives more control over mob spawning.
 mob-spawning:
