@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.5]
+
+### Added
+- Config option for unlimited height in breeding cap checks.
+
+### Fixed
+- Fixed compatibility with Moonrise.
+
 ## [1.5.4]
 
 ### Added
