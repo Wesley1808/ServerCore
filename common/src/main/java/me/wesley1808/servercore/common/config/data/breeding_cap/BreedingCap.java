@@ -64,8 +64,8 @@ public interface BreedingCap {
     private AABB getAreaAt(Level level, BlockPos pos) {
         final boolean unlimitedHeight = this.unlimitedHeight();
         final int range = this.range();
-        final int minHeight = level.getMinBuildHeight();
-        final int maxHeight = level.getMaxBuildHeight() + 4;
+        final int minHeight = level.getMinY();
+        final int maxHeight = level.getMaxY() + 4;
 
         final int minX = pos.getX() - range;
         final int minY = unlimitedHeight ? minHeight : Math.max(minHeight, pos.getY() - range);

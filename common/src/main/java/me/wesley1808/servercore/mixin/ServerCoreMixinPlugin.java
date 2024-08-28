@@ -50,6 +50,7 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
         }
 
         if (path.startsWith("optimizations.ticking.chunk")) {
+            // TODO: Test moonrise compat with cache-ticking-chunks at 1.21.2 release.
             shouldApply &= !Environment.MOD_MOONRISE;
         }
 
