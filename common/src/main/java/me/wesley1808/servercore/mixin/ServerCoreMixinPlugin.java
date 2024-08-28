@@ -2,6 +2,7 @@ package me.wesley1808.servercore.mixin;
 
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.OptimizationConfig;
+import me.wesley1808.servercore.common.utils.Environment;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
@@ -26,28 +27,33 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         String path = mixinClassName.substring(this.mixinPackage.length());
         OptimizationConfig config = Config.optimizations();
+        boolean shouldApply = true;
 
         if (path.startsWith("optimizations.sync_loads")) {
-            return config.reduceSyncLoads();
+            shouldApply &= config.reduceSyncLoads();
         }
 
         if (path.startsWith("optimizations.biome_lookups")) {
-            return config.fastBiomeLookups();
-        }
-
-        if (path.startsWith("optimizations.ticking.chunk.cache")) {
-            return config.cacheTickingChunks();
+            shouldApply &= config.fastBiomeLookups();
         }
 
         if (path.startsWith("optimizations.command_blocks")) {
-            return config.optimizeCommandBlocks();
+            shouldApply &= config.optimizeCommandBlocks();
+        }
+
+        if (path.startsWith("optimizations.ticking.chunk.cache")) {
+            shouldApply &= config.cacheTickingChunks();
         }
 
         if (path.equals("optimizations.ticking.chunk.random.LiquidBlockMixin")) {
-            return config.cancelDuplicateFluidTicks();
+            shouldApply &= config.cancelDuplicateFluidTicks();
         }
 
-        return true;
+        if (path.startsWith("optimizations.ticking.chunk")) {
+            shouldApply &= !Environment.MOD_MOONRISE;
+        }
+
+        return shouldApply;
     }
 
     @Override
