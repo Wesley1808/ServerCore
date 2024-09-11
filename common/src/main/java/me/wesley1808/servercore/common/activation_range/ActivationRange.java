@@ -1,9 +1,12 @@
 package me.wesley1808.servercore.common.activation_range;
 
+import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.config.Config;
+import me.wesley1808.servercore.common.config.MainConfig;
 import me.wesley1808.servercore.common.config.data.activation_range.ActivationRangeConfig;
 import me.wesley1808.servercore.common.config.data.activation_range.ActivationType;
 import me.wesley1808.servercore.common.config.data.activation_range.CustomActivationType;
+import me.wesley1808.servercore.common.config.impl.activation_range.ActivationTypeImpl;
 import me.wesley1808.servercore.common.utils.Util;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,6 +46,7 @@ import java.util.function.Predicate;
  */
 public class ActivationRange {
     private static final double MINIMUM_MOVEMENT = 0.001;
+    private static final ActivationType DUMMY_ACTIVATION_TYPE = new ActivationTypeImpl(0, 0, 0, false, false);
     private static final Predicate<Goal> BEE_GOAL_IMMUNITIES = goal -> goal instanceof Bee.BeeGoToKnownFlowerGoal || goal instanceof Bee.BeeGoToHiveGoal;
     private static final Activity[] VILLAGER_PANIC_IMMUNITIES = {
             Activity.HIDE,
@@ -55,7 +59,13 @@ public class ActivationRange {
      * Puts entities in their corresponding groups / activation types, upon initialization.
      */
     public static ActivationType initializeEntityActivationType(Entity entity) {
-        ActivationRangeConfig config = Config.get().activationRange();
+        MainConfig mainConfig = Config.getSafe();
+        if (mainConfig == null) {
+            ServerCore.LOGGER.warn("[ServerCore] Entity {} was initialized before modloading! Defaulting to dummy activation type.", entity);
+            return DUMMY_ACTIVATION_TYPE;
+        }
+
+        ActivationRangeConfig config = mainConfig.activationRange();
         for (CustomActivationType type : config.activationTypes()) {
             for (EntityTypeTest<? super Entity, ?> matcher : type.matchers()) {
                 if (matcher.tryCast(entity) != null) {
