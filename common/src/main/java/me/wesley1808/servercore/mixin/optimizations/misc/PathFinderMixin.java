@@ -3,7 +3,6 @@ package me.wesley1808.servercore.mixin.optimizations.misc;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.PathNavigationRegion;
 import net.minecraft.world.level.pathfinder.Node;
@@ -60,20 +59,7 @@ public class PathFinderMixin {
                     target = "Ljava/util/stream/Stream;collect(Ljava/util/stream/Collector;)Ljava/lang/Object;"
             )
     )
-    private Object servercore$reduceStreams(Stream<?> stream, Collector<?, ?, ?> collector) {
-        return null;
-    }
-
-    @ModifyVariable(
-            method = "findPath(Lnet/minecraft/world/level/PathNavigationRegion;Lnet/minecraft/world/entity/Mob;Ljava/util/Set;FIF)Lnet/minecraft/world/level/pathfinder/Path;",
-            index = 8,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/PathNavigationRegion;getProfiler()Lnet/minecraft/util/profiling/ProfilerFiller;",
-                    shift = At.Shift.BEFORE
-            )
-    )
-    private Map<Target, BlockPos> servercore$replaceMap(Map<Target, BlockPos> nullMap, PathNavigationRegion region, Mob mob, Set<BlockPos> positions, float maxRange, int accuracy, float searchDepthMultiplier) {
+    private Object servercore$reduceStreams(Stream<?> stream, Collector<?, ?, ?> collector, PathNavigationRegion region, Mob mob, Set<BlockPos> positions) {
         Object2ObjectOpenHashMap<Target, BlockPos> map = new Object2ObjectOpenHashMap<>(positions.size());
         for (BlockPos pos : positions) {
             map.put(this.nodeEvaluator.getTarget(pos.getX(), pos.getY(), pos.getZ()), pos);
@@ -83,7 +69,7 @@ public class PathFinderMixin {
     }
 
     @Redirect(
-            method = "findPath(Lnet/minecraft/util/profiling/ProfilerFiller;Lnet/minecraft/world/level/pathfinder/Node;Ljava/util/Map;FIF)Lnet/minecraft/world/level/pathfinder/Path;",
+            method = "findPath(Lnet/minecraft/world/level/pathfinder/Node;Ljava/util/Map;FIF)Lnet/minecraft/world/level/pathfinder/Path;",
             at = @At(
                     value = "INVOKE",
                     target = "Lcom/google/common/collect/Sets;newHashSetWithExpectedSize(I)Ljava/util/HashSet;",
@@ -96,7 +82,7 @@ public class PathFinderMixin {
     }
 
     @ModifyVariable(
-            method = "findPath(Lnet/minecraft/util/profiling/ProfilerFiller;Lnet/minecraft/world/level/pathfinder/Node;Ljava/util/Map;FIF)Lnet/minecraft/world/level/pathfinder/Path;",
+            method = "findPath(Lnet/minecraft/world/level/pathfinder/Node;Ljava/util/Map;FIF)Lnet/minecraft/world/level/pathfinder/Path;",
             index = 10,
             at = @At(
                     value = "FIELD",
@@ -105,7 +91,7 @@ public class PathFinderMixin {
                     ordinal = 0
             )
     )
-    private Set<Target> servercore$replaceSet(Set<Target> nullSet, ProfilerFiller profiler, Node node, Map<Target, BlockPos> positions, float maxRange, int accuracy, float searchDepthMultiplier) {
+    private Set<Target> servercore$replaceSet(Set<Target> nullSet, Node node, Map<Target, BlockPos> positions, float maxRange, int accuracy, float searchDepthMultiplier) {
         return new ObjectArraySet<>();
     }
 }

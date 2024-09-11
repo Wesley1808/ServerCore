@@ -13,7 +13,6 @@ import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerCommonPacketListenerImpl;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,9 +21,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * Based on: Paper (Add-option-to-prevent-players-from-moving-into-unloaded-chunks.patch)
@@ -43,7 +39,7 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
     }
 
     @Shadow
-    public abstract void teleport(double x, double y, double z, float yaw, float pitch, Set<RelativeMovement> relativeSet);
+    public abstract void teleport(double x, double y, double z, float yaw, float pitch);
 
     @Inject(
             method = "handleMoveVehicle",
@@ -75,7 +71,7 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
     )
     private void servercore$handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, double toX, double toY, double toZ, float yRot, float xRot, double fromX, double fromY, double fromZ) {
         if (this.servercore$shouldPreventMovement(serverLevel, this.player, fromX, fromZ, toX, toY, toZ)) {
-            this.teleport(fromX, fromY, fromZ, yRot, xRot, Collections.emptySet());
+            this.teleport(fromX, fromY, fromZ, yRot, xRot);
             ci.cancel();
         }
     }
