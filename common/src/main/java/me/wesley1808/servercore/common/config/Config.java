@@ -17,6 +17,10 @@ public class Config {
         return mainConfigManager.get();
     }
 
+    public static MainConfig getSafe() {
+        return mainConfigManager == null ? null : mainConfigManager.get();
+    }
+
     public static void loadOptimizationConfig() {
         OPTIMIZATION_MANAGER.reload();
     }
