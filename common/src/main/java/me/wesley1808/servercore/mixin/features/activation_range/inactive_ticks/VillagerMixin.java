@@ -23,10 +23,6 @@ public abstract class VillagerMixin extends AbstractVillager {
     @Shadow
     protected abstract void maybeDecayGossip();
 
-    @Shadow
-    @Override
-    protected abstract void customServerAiStep();
-
     @Override
     public void servercore$inactiveTick() {
         if (this.getUnhappyCounter() > 0) {

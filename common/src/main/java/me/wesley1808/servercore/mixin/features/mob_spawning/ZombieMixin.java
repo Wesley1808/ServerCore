@@ -1,7 +1,6 @@
 package me.wesley1808.servercore.mixin.features.mob_spawning;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.sugar.Local;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.utils.Mobcaps;
 import net.minecraft.server.level.ServerLevel;
@@ -19,13 +18,13 @@ public abstract class ZombieMixin extends Monster {
     }
 
     @ModifyExpressionValue(
-            method = "hurt",
+            method = "hurtServer",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/level/GameRules;getBoolean(Lnet/minecraft/world/level/GameRules$Key;)Z"
             )
     )
-    private boolean servercore$enforceMobCap(boolean doMobSpawning, @Local(ordinal = 0) ServerLevel level) {
+    private boolean servercore$enforceMobCap(boolean doMobSpawning, ServerLevel level) {
         return doMobSpawning && Mobcaps.canSpawnForCategory(
                 level,
                 this.chunkPosition(),
