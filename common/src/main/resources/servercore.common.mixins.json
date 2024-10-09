@@ -32,6 +32,8 @@
     "features.dynamic.ChunkMapMixin",
     "features.dynamic.MobCategoryMixin",
     "features.dynamic.PlayerListMixin",
+    "features.ender_pearls.ServerPlayerMixin",
+    "features.ender_pearls.ThrownEnderPearlMixin",
     "features.merging.ExperienceOrbMixin",
     "features.merging.ItemEntityMixin",
     "features.misc.MinecraftServerMixin",
