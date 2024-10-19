@@ -199,7 +199,7 @@ public class ActivationRange {
             if (!entity.onGround() && !entity.isInWater() && !(entity instanceof FlyingMob || entity instanceof Bat)) {
                 return 10;
             }
-        } else if (!projectile.inGround) {
+        } else if (!projectile.isInGround()) {
             return 1;
         }
 

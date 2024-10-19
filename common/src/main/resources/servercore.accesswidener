@@ -2,9 +2,9 @@ accessWidener v1 named
 
 # Entity Activation Range
 accessible method net/minecraft/world/entity/animal/Bee$BeePollinateGoal isPollinating ()Z
+accessible method net/minecraft/world/entity/projectile/AbstractArrow isInGround ()Z
 
 accessible field net/minecraft/world/entity/LivingEntity jumping Z
-accessible field net/minecraft/world/entity/projectile/AbstractArrow inGround Z
 accessible field net/minecraft/world/entity/Mob goalSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 accessible field net/minecraft/world/entity/Mob targetSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 accessible field net/minecraft/world/entity/animal/Bee beePollinateGoal Lnet/minecraft/world/entity/animal/Bee$BeePollinateGoal;

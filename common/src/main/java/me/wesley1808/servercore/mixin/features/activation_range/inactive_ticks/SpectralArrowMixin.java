@@ -23,7 +23,7 @@ public abstract class SpectralArrowMixin extends AbstractArrow {
     public void servercore$inactiveTick() {
         super.servercore$inactiveTick();
 
-        if (this.inGround) {
+        if (this.isInGround()) {
             this.tickDespawn();
         }
     }

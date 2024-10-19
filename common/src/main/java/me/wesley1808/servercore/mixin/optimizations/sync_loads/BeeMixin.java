@@ -23,13 +23,13 @@ public abstract class BeeMixin extends Animal {
     }
 
     @ModifyExpressionValue(
-            method = "isHiveValid",
+            method = "getBeehiveBlockEntity",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/entity/animal/Bee;isTooFarAway(Lnet/minecraft/core/BlockPos;)Z"
             )
     )
-    private boolean servercore$onlyValidateIfLoaded(boolean isTooFarAway) {
+    private boolean servercore$onlyFetchHiveIfLoaded(boolean isTooFarAway) {
         // noinspection ConstantConditions
         return isTooFarAway || !ChunkManager.hasChunk(this.level(), this.hivePos);
     }
