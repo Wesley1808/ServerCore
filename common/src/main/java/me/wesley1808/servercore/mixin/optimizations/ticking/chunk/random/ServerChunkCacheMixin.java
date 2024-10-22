@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ServerChunkCacheMixin {
     @Shadow
     @Final
-    ServerLevel level;
+    private ServerLevel level;
 
     @Inject(method = "tickChunks(Lnet/minecraft/util/profiling/ProfilerFiller;JLjava/util/List;)V", at = @At(value = "HEAD"))
     private void servercore$resetIceAndSnowTick(CallbackInfo ci) {

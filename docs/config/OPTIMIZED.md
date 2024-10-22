@@ -18,7 +18,6 @@ You can of course always tweak these even further to your liking, but this shoul
 reduce-sync-loads: true
 # Can significantly reduce the time spent on chunk iteration by only updating the ticking chunks list each second, rather than each tick.
 # This is especially useful for servers with a high playercount and / or viewdistance.
-# Note: This setting is incompatible with Moonrise.
 cache-ticking-chunks: true
 # Optimizes command block executions by caching parsed commands.
 # Command parsing is a relatively expensive operation. By caching it we avoid parsing the same command every time it is executed.
@@ -39,6 +38,11 @@ cancel-duplicate-fluid-ticks: true
 
 # Most miscellaneous feature toggles.
 features:
+  # Reverts enderpearl behavior to pre-1.21.2. The following will change when this setting is enabled:
+  # ► Enderpearls will no longer load chunks around them.
+  # ► Enderpearls will load / unload with chunks again instead of with their owner joining / leaving the game.
+  # Note: Toggling this setting may cause some old enderpearls from before the toggle to be lost.
+  prevent-enderpearl-chunkloading: true
   # Prevents lagspikes caused by players moving into unloaded chunks.
   prevent-moving-into-unloaded-chunks: true
   # The amount of seconds between auto-saves when /save-on is active.

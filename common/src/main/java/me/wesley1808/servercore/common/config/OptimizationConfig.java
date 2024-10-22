@@ -25,8 +25,7 @@ public interface OptimizationConfig extends Copyable {
     @DefaultBoolean(true)
     @ConfComments({
             "Can significantly reduce the time spent on chunk iteration by only updating the ticking chunks list each second, rather than each tick.",
-            "This is especially useful for servers with a high playercount and / or viewdistance.",
-            "Note: This setting is incompatible with Moonrise."
+            "This is especially useful for servers with a high playercount and / or viewdistance."
     })
     boolean cacheTickingChunks();
 
