@@ -10,7 +10,7 @@
 ### Added
 - Added `prevent-enderpearl-chunkloading`, an option to disable enderpearl chunkloading from 1.21.2 (reverts behavior to pre-1.21.2)
 
-## Fixed
+### Fixed
 - Improved mod compatibility with mods that initialize entities extremely early.
 
 ## [1.5.5]
