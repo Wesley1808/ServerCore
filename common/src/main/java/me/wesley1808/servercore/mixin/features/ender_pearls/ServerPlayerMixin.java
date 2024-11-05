@@ -18,7 +18,7 @@ public class ServerPlayerMixin {
     private void servercore$preventEnderpearlRegistration(ThrownEnderpearl enderpearl, CallbackInfo ci) {
         // Prevents enderpearls from being registered to players.
         // This prevents the game from unloading and saving the pearls with the player.
-        if (!Config.get().features().preventEnderpearlChunkLoading()) {
+        if (Config.get().features().preventEnderpearlChunkLoading()) {
             ci.cancel();
         }
     }
@@ -26,7 +26,7 @@ public class ServerPlayerMixin {
     @Inject(method = "loadAndSpawnEnderpearls", at = @At("HEAD"), cancellable = true)
     private void servercore$preventEnderpearlLoading(Optional<CompoundTag> optional, CallbackInfo ci) {
         // Prevents enderpearls from being loaded from playerdata.
-        if (!Config.get().features().preventEnderpearlChunkLoading()) {
+        if (Config.get().features().preventEnderpearlChunkLoading()) {
             ci.cancel();
         }
     }

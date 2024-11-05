@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.5.7]
+
+### Fixed
+- Fixed ender pearl behavior inconsistencies from `prevent-enderpearl-chunkloading`
+
+## [1.5.6]
+
+### Added
+- Added `prevent-enderpearl-chunkloading`, an option to disable enderpearl chunkloading from 1.21.2 (reverts behavior to pre-1.21.2)
+
+## Fixed
+- Improved mod compatibility with mods that initialize entities extremely early.
+
 ## [1.5.5]
 
 ### Added

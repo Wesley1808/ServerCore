@@ -32,10 +32,5 @@
   },
   "breaks": {
     "cardboard": "*"
-  },
-  "custom": {
-    "lithium:options": {
-      "mixin.alloc.chunk_ticking": false
-    }
   }
 }
