@@ -33,6 +33,11 @@ public class Mobcaps {
             return false;
         }
 
+        if (Environment.MOD_MOONRISE) {
+            // We can't check per player mob counts in Moonrise, so we can only enforce the global cap.
+            return true;
+        }
+
         for (ServerPlayer player : Mobcaps.getPlayersNear(level, pos, state.localMobCapCalculator)) {
             var mobCounts = state.localMobCapCalculator.playerMobCounts.get(player);
             if (mobCounts == null || mobCounts.counts.getOrDefault(category, 0) < capacity) {

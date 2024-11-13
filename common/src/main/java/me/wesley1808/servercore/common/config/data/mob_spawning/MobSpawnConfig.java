@@ -18,7 +18,7 @@ public interface MobSpawnConfig {
     @ConfKey("zombie-reinforcements")
     @ConfComments({
             "Mobcap settings for zombie reinforcements.",
-            "► enforce-mobcaps = Whether to enforce mobcaps for this type of mobspawning.",
+            "► enforce-mobcap = Whether to enforce mobcaps for this type of mobspawning.",
             "► additional-capacity = Additional capacity for this specific mobcap. Decides how much it can spawn over the regular mobcap.",
             "It is recommended to allow them to spawn a bit over the regular mobcap as they would otherwise never get a chance to spawn."
     })
