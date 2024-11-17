@@ -251,7 +251,7 @@ activation-range:
   # ► If an entity matches multiple activation types, the one highest in the list will be used. The conditions accept the following formats:
   #   - Entity type matching    |   Uses the entity type's identifier.  |  'minecraft:zombie' matches zombies, but for example not husks or drowned.
   #   - Typeof class matching   |   Uses the 'typeof:' prefix.          |  'typeof:monster' matches all monsters.
-  # ► Available typeof classes: mob, monster, raider, neutral, ambient, animal, water_animal, flying_animal, flying_monster, villager.
+  # ► Available typeof classes: mob, monster, raider, neutral, ambient, animal, water_animal, flying_animal, flying_monster, villager, projectile.
   custom-activation-types:
     - name: 'raider'
       activation-range: 48
