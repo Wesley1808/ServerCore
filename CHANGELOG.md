@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.5.2]
+
+### Added
+- Added the `typeof:projectile` entity matcher to activation range configuration.
+
 ## [1.5.1]
 
 ### Changed
