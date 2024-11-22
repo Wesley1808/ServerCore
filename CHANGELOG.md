@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.8]
+
+### Added
+- Added the `typeof:projectile` entity matcher for activation range configuration
+
+### Fixed
+- Fixed incompatibility between Moonrise and the `enforce-mobcap` settings
+
 ## [1.5.7]
 
 ### Fixed
