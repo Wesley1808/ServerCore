@@ -54,7 +54,7 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
     )
     private void servercore$handleMoveVehicle(ServerboundMoveVehiclePacket packet, CallbackInfo ci, Entity entity, ServerLevel serverLevel, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, float yRot, float xRot, double l, double m, double n) {
         if (this.servercore$shouldPreventMovement(serverLevel, entity, fromX, fromZ, toX, toY, toZ)) {
-            this.connection.send(new ClientboundMoveVehiclePacket(entity));
+            this.connection.send(ClientboundMoveVehiclePacket.fromEntity(entity));
             ci.cancel();
         }
     }
