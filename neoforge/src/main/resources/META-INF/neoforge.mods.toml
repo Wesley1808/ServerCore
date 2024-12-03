@@ -22,7 +22,7 @@ config = "servercore.common.mixins.json"
 [[dependencies.servercore]]
 modId = "minecraft"
 required = true
-versionRange = "[1.21.2,)"
+versionRange = "[1.21.4,)"
 ordering = "NONE"
 side = "BOTH"
 
