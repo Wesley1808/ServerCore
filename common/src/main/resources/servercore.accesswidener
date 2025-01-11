@@ -21,7 +21,6 @@ accessible field net/minecraft/world/level/Level blockEntityTickers Ljava/util/L
 # Miscellaneous
 accessible method net/minecraft/server/level/ChunkMap anyPlayerCloseEnoughForSpawning (Lnet/minecraft/world/level/ChunkPos;)Z
 accessible method net/minecraft/server/level/ServerChunkCache getVisibleChunkIfPresent (J)Lnet/minecraft/server/level/ChunkHolder;
-accessible method net/minecraft/server/level/ServerChunkCache$ChunkAndHolder <init> (Lnet/minecraft/world/level/chunk/LevelChunk;Lnet/minecraft/server/level/ChunkHolder;)V
 accessible method net/minecraft/world/level/LocalMobCapCalculator getPlayersNear (Lnet/minecraft/world/level/ChunkPos;)Ljava/util/List;
 
 accessible field net/minecraft/server/level/ChunkHolder UNLOADED_LEVEL_CHUNK_FUTURE Ljava/util/concurrent/CompletableFuture;
@@ -34,6 +33,5 @@ accessible field net/minecraft/world/level/chunk/LevelChunk loaded Z
 
 # Forge
 accessible class net/minecraft/world/level/LocalMobCapCalculator$MobCounts
-accessible class net/minecraft/server/level/ServerChunkCache$ChunkAndHolder
 accessible class net/minecraft/world/level/NaturalSpawner$SpawnState
 accessible class net/minecraft/world/entity/animal/Bee$BeePollinateGoal

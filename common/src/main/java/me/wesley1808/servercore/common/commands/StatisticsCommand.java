@@ -187,7 +187,7 @@ public class StatisticsCommand {
         ), source.getServer()));
 
         if (groupBy == GroupBy.PLAYER) {
-            component.withStyle((style) -> style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statistics %s byType %s".formatted(
+            component.withStyle((style) -> style.withClickEvent(new ClickEvent.RunCommand("/statistics %s byType %s".formatted(
                     type.getCommandFormat(),
                     entry.getKey()
             ))));
@@ -225,15 +225,13 @@ public class StatisticsCommand {
         String command = parseCommand(context.getInput());
         MutableComponent prevPage = Component.literal("<<").withColor(config.secondaryValue());
         if (page > 1) {
-            prevPage.withStyle((style) -> style.withClickEvent(new ClickEvent(
-                    ClickEvent.Action.RUN_COMMAND,
+            prevPage.withStyle((style) -> style.withClickEvent(new ClickEvent.RunCommand(
                     command.replace("%page_nr%", String.valueOf(page - 1))
             )));
         }
 
         MutableComponent nextPage = Component.literal(">>").withColor(config.secondaryValue());
-        nextPage.withStyle((style) -> style.withClickEvent(new ClickEvent(
-                ClickEvent.Action.RUN_COMMAND,
+        nextPage.withStyle((style) -> style.withClickEvent(new ClickEvent.RunCommand(
                 command.replace("%page_nr%", String.valueOf(page + 1))
         )));
 

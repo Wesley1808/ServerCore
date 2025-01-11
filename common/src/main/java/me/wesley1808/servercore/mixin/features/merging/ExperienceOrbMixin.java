@@ -17,7 +17,7 @@ public class ExperienceOrbMixin {
     }
 
     @ModifyArg(
-            method = "scanForEntities",
+            method = "scanForMerges",
             require = 0,
             at = @At(
                     value = "INVOKE",
