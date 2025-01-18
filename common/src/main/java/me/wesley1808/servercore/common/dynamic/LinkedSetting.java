@@ -39,7 +39,7 @@ public class LinkedSetting {
 
     private boolean shouldModify(int value) {
         int compared = Integer.compare(value, this.dynamicSetting.get());
-        return compared != 0 && (this.next != null || this.prev != null)
+        return compared != 0
                && (compared < 0 || (!this.isMaximum() && (this.next == null || this.next.isMaximum())))
                && (compared > 0 || (!this.isMinimum() && (this.prev == null || this.prev.isMinimum())));
     }
