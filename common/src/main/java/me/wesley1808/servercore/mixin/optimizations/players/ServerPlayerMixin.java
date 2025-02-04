@@ -41,7 +41,7 @@ public class ServerPlayerMixin {
             method = "<init>",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ServerPlayer;moveTo(Lnet/minecraft/world/phys/Vec3;FF)V"
+                    target = "Lnet/minecraft/server/level/ServerPlayer;snapTo(Lnet/minecraft/world/phys/Vec3;FF)V"
             )
     )
     private boolean servercore$noop(ServerPlayer player, Vec3 sharedSpawnPos, float yRot, float xRot) {
