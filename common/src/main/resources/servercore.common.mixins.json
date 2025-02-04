@@ -46,6 +46,7 @@
     "features.ticking.VillagerMixin",
     "optimizations.biome_lookups.NaturalSpawnerMixin",
     "optimizations.command_blocks.BaseCommandBlockMixin",
+    "optimizations.misc.BlockGetterMixin",
     "optimizations.misc.MapItemSavedDataMixin",
     "optimizations.misc.PathFinderMixin",
     "optimizations.players.PlayerListMixin",

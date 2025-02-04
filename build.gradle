@@ -66,7 +66,6 @@ publishMods {
 
     def nameFormat = "ServerCore %s ${version.get()}"
     def fabric = findProject(':fabric')
-    def forge = findProject(':forge')
     def neoforge = findProject(':neoforge')
 
     def curseforgeOpts = curseforgeOptions {
@@ -96,24 +95,6 @@ publishMods {
             file = fabricJar
             modLoaders.add("fabric")
             displayName = nameFormat.formatted("Fabric")
-        }
-    }
-
-    if (forge != null) {
-        def forgeJar = forge.remapJar.archiveFile
-
-        curseforge("CurseForge - Forge") {
-            from curseforgeOpts
-            file = forgeJar
-            modLoaders.add("forge")
-            displayName = nameFormat.formatted("Forge")
-        }
-
-        modrinth("Modrinth - Forge") {
-            from modrinthOpts
-            file = forgeJar
-            modLoaders.add("forge")
-            displayName = nameFormat.formatted("Forge")
         }
     }
 
