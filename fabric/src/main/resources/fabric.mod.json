@@ -20,8 +20,7 @@
     ]
   },
   "mixins": [
-    "servercore.common.mixins.json",
-    "servercore.fabric.mixins.json"
+    "servercore.common.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.15.2",
