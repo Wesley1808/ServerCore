@@ -26,9 +26,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * lightning should strike. This int is a random number from 0 to 100000 * 2,
  * the multiplication is required to keep the probability the same.
  * <p>
- * Ice and snow: We just generate a single random number 0-16 and increment
- * it, while checking if it's 0 for the current chunk.
- * <p>
  * Depending on configuration for things that tick in a chunk, this is a
  * 5-10% improvement.
  * <p>
