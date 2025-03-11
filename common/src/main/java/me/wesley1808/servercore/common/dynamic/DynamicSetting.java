@@ -14,7 +14,6 @@ public enum DynamicSetting {
             (value) -> String.format("%d%%", value),
             (manager, value) -> DynamicManager.modifyMobcaps(value)
     ),
-    // TODO: As of 1.21.5 this setting is no longer responsible for random ticks
     CHUNK_TICK_DISTANCE(2, 256, 10,
             "Chunk-tick distance",
             String::valueOf

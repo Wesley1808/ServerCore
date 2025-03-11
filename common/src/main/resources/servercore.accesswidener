@@ -22,8 +22,12 @@ accessible field net/minecraft/world/level/Level blockEntityTickers Ljava/util/L
 accessible method net/minecraft/server/level/ChunkMap anyPlayerCloseEnoughForSpawning (Lnet/minecraft/world/level/ChunkPos;)Z
 accessible method net/minecraft/server/level/ServerChunkCache getVisibleChunkIfPresent (J)Lnet/minecraft/server/level/ChunkHolder;
 accessible method net/minecraft/world/level/LocalMobCapCalculator getPlayersNear (Lnet/minecraft/world/level/ChunkPos;)Ljava/util/List;
+accessible method net/minecraft/server/level/ChunkMap forEachBlockTickingChunk (Ljava/util/function/Consumer;)V
 
 accessible field net/minecraft/server/level/ChunkHolder UNLOADED_LEVEL_CHUNK_FUTURE Ljava/util/concurrent/CompletableFuture;
+accessible field net/minecraft/server/level/DistanceManager simulationChunkTracker Lnet/minecraft/server/level/SimulationChunkTracker;
+accessible field net/minecraft/server/level/SimulationChunkTracker chunks Lit/unimi/dsi/fastutil/longs/Long2ByteMap;
+accessible field net/minecraft/server/level/DistanceManager simulationDistance I
 accessible field net/minecraft/world/level/LocalMobCapCalculator chunkMap Lnet/minecraft/server/level/ChunkMap;
 accessible field net/minecraft/world/level/StructureManager level Lnet/minecraft/world/level/LevelAccessor;
 accessible field net/minecraft/world/level/Level threadSafeRandom Lnet/minecraft/util/RandomSource;
