@@ -9,8 +9,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Optional;
-
 @Mixin(ServerPlayer.class)
 public class ServerPlayerMixin {
 
@@ -23,8 +21,8 @@ public class ServerPlayerMixin {
         }
     }
 
-    @Inject(method = "loadAndSpawnEnderpearls", at = @At("HEAD"), cancellable = true)
-    private void servercore$preventEnderpearlLoading(Optional<CompoundTag> optional, CallbackInfo ci) {
+    @Inject(method = "loadAndSpawnEnderPearls", at = @At("HEAD"), cancellable = true)
+    private void servercore$preventEnderpearlLoading(CompoundTag tag, CallbackInfo ci) {
         // Prevents enderpearls from being loaded from playerdata.
         if (Config.get().features().preventEnderpearlChunkLoading()) {
             ci.cancel();
