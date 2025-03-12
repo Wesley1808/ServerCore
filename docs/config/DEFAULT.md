@@ -58,6 +58,13 @@ dynamic:
   enabled: false
   # The average MSPT to target.
   target-mspt: 35
+  # The default values for dynamic settings.
+  # If left unspecified, the maximum value will be used.
+  # Note: adding view / simulation distance here will override their value in server.properties.
+  default-values:
+    MOBCAP_PERCENTAGE: 100
+    CHUNK_TICK_DISTANCE: 10
+
   # The settings that will be decreased when the server is overloaded, in the specified order.
   # You can remove settings from the list that you don't want to be dynamically adjusted.
   # ► max = The maximum value the server will increase the setting to.
@@ -131,7 +138,7 @@ breeding-cap:
 # Gives more control over mob spawning.
 mob-spawning:
   # Mobcap settings for zombie reinforcements.
-  # ► enforce-mobcaps = Whether to enforce mobcaps for this type of mobspawning.
+  # ► enforce-mobcap = Whether to enforce mobcaps for this type of mobspawning.
   # ► additional-capacity = Additional capacity for this specific mobcap. Decides how much it can spawn over the regular mobcap.
   # It is recommended to allow them to spawn a bit over the regular mobcap as they would otherwise never get a chance to spawn.
   zombie-reinforcements:

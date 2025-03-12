@@ -1,6 +1,7 @@
 package me.wesley1808.servercore.common.config.data.dynamic;
 
 import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.wesley1808.servercore.common.config.impl.dynamic.DynamicConfigImpl;
 import me.wesley1808.servercore.common.config.impl.dynamic.SettingImpl;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
@@ -14,6 +15,7 @@ import space.arim.dazzleconf.annote.SubSection;
 import space.arim.dazzleconf.sorter.AnnotationBasedSorter.Order;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DynamicConfig {
     @Order(1)
@@ -30,6 +32,16 @@ public interface DynamicConfig {
     int targetMspt();
 
     @Order(3)
+    @ConfKey("default-values")
+    @ConfComments({
+            "The default values for dynamic settings.",
+            "If left unspecified, the maximum value will be used.",
+            "Note: adding view / simulation distance here will override their value in server.properties."
+    })
+    @DefaultObject("defaultDynamicValues")
+    Map<DynamicSetting, Integer> defaultValues();
+
+    @Order(4)
     @ConfKey("dynamic-settings")
     @DefaultObject("defaultSettings")
     @ConfComments({
@@ -44,6 +56,17 @@ public interface DynamicConfig {
 
     default DynamicConfig optimizedCopy() {
         return new DynamicConfigImpl(this);
+    }
+
+    static Map<DynamicSetting, Integer> defaultDynamicValues() {
+        DynamicSetting[] values = {DynamicSetting.CHUNK_TICK_DISTANCE, DynamicSetting.MOBCAP_PERCENTAGE};
+
+        Object2IntOpenHashMap<DynamicSetting> map = new Object2IntOpenHashMap<>();
+        for (DynamicSetting setting : values) {
+            map.put(setting, setting.getDefaultValue());
+        }
+
+        return map;
     }
 
     static List<Setting> defaultSettings() {
