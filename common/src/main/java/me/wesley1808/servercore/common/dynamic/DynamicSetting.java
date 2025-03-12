@@ -1,10 +1,13 @@
 package me.wesley1808.servercore.common.dynamic;
 
+import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.data.dynamic.Setting;
 import me.wesley1808.servercore.common.utils.Environment;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
 
@@ -52,6 +55,14 @@ public enum DynamicSetting {
         this.defaultValue = defaultValue;
         this.maxValue = defaultValue;
         this.value = defaultValue;
+    }
+
+    public static void initDefaultValues() {
+        Map<DynamicSetting, Integer> defaultValues = Config.get().dynamic().defaultValues();
+        defaultValues.forEach((setting, value) -> {
+            int clampedValue = Mth.clamp(value, setting.minimumBound, setting.maximumBound);
+            setting.set(clampedValue, null);
+        });
     }
 
     public static void recalculateValues(List<Setting> settings) {
@@ -105,15 +116,15 @@ public enum DynamicSetting {
         return this.maximumBound;
     }
 
+    public int getDefaultValue() {
+        return this.defaultValue;
+    }
+
     public String getFormattedName() {
         return this.formattedName;
     }
 
     public String getFormattedValue() {
         return this.valueFormatter.apply(this.value);
-    }
-
-    public int getMax() {
-        return this.maxValue;
     }
 }
