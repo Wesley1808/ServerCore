@@ -1,5 +1,7 @@
 pluginManagement {
     repositories {
+        // TODO: Temporary fix for https://github.com/architectury/architectury-loom/issues/271
+        maven { url "https://repo.redlance.org/public/" }
         maven { url "https://maven.architectury.dev/" }
         maven { url "https://maven.fabricmc.net/" }
         maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
@@ -9,4 +11,4 @@ pluginManagement {
 
 include("common")
 include("fabric")
-//include("neoforge")
+include("neoforge")

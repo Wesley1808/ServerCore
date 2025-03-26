@@ -1,4 +1,4 @@
-package me.wesley1808.servercore.mixin.optimizations.misc;
+package me.wesley1808.servercore.fabric.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;

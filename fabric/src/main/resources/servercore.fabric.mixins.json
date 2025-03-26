@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.wesley1808.servercore.fabric.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "BlockGetterMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
