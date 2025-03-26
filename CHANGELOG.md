@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.5.9]
+
+### Added
+- Added default configurable values for dynamic settings.
+
+### Fixed
+- Fixed not being able to only specify a single dynamic setting in the config.
+
+### Changed
+- Chunks in vanilla can now tick if they're loaded by a ticket that allows simulation, not just when players are nearby.
+  - Chunk-tick-distance now checks the distance to the nearest simulating ticket instead of the nearest player.
+  - Since spawning and block-ticking chunks are now separate, ticking chunk cache now caches both of them.
+
 ## [1.5.8]
 
 ### Added
