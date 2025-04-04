@@ -17,6 +17,7 @@ subprojects {
 
     repositories {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url "https://maven.impactdev.net/repository/development/" }
         mavenCentral()
     }
 

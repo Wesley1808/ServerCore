@@ -6,6 +6,7 @@
   "plugin": "me.wesley1808.servercore.mixin.ServerCoreMixinPlugin",
   "mixins": [
     "MinecraftServerMixin",
+    "compat.cobblemon.PokemonEntityMixin",
     "features.activation_range.EntityMixin",
     "features.activation_range.ServerLevelMixin",
     "features.activation_range.fixes.CatMixin",

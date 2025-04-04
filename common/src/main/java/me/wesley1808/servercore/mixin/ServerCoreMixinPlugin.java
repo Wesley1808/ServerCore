@@ -2,6 +2,7 @@ package me.wesley1808.servercore.mixin;
 
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.OptimizationConfig;
+import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import me.wesley1808.servercore.common.utils.Environment;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
+    private static final String COMPAT_MIXIN_PACKAGE = "compat.";
     private String mixinPackage;
 
     @Override
@@ -28,6 +30,10 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
         String path = mixinClassName.substring(this.mixinPackage.length());
         OptimizationConfig config = Config.optimizations();
         boolean shouldApply = true;
+
+        if (path.startsWith(COMPAT_MIXIN_PACKAGE)) {
+            shouldApply &= shouldEnableCompatMixin(path);
+        }
 
         if (path.startsWith("optimizations.sync_loads")) {
             shouldApply &= config.reduceSyncLoads();
@@ -54,6 +60,12 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
         }
 
         return shouldApply;
+    }
+
+    private boolean shouldEnableCompatMixin(String path) {
+        String compatPath = path.substring(COMPAT_MIXIN_PACKAGE.length());
+        String modId = compatPath.substring(0, compatPath.indexOf('.'));
+        return PlatformHelper.isModLoaded(modId);
     }
 
     @Override
