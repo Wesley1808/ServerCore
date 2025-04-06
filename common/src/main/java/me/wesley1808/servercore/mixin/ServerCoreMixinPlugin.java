@@ -55,7 +55,7 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             shouldApply &= config.cancelDuplicateFluidTicks();
         }
 
-        if (path.startsWith("optimizations.ticking.chunk.random")) {
+        if (path.startsWith("optimizations.ticking.chunk")) {
             shouldApply &= !Environment.MOD_MOONRISE;
         }
 

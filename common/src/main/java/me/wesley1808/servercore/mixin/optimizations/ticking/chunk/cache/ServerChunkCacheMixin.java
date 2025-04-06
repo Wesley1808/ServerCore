@@ -47,7 +47,6 @@ public class ServerChunkCacheMixin {
         this.servercore$refreshTickingCache = this.servercore$tickCount++ % 20 == 0;
     }
 
-    // TODO: Check for moonrise compatibility on 1.21.5 release
     @Redirect(
             method = "tickChunks(Lnet/minecraft/util/profiling/ProfilerFiller;J)V",
             at = @At(
