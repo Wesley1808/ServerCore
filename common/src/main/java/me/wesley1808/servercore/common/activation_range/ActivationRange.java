@@ -17,8 +17,9 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Bee;
-import net.minecraft.world.entity.animal.sheep.Sheep;
+import net.minecraft.world.entity.animal.HappyGhast;
 import net.minecraft.world.entity.animal.horse.Llama;
+import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.entity.boss.EnderDragonPart;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
@@ -26,11 +27,13 @@ import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Ghast;
+import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.entity.schedule.Activity;
-import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.entity.vehicle.AbstractBoat;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -183,7 +186,7 @@ public class ActivationRange {
         }
 
         // quick checks.
-        if (entity.isInWater() && entity.isPushedByFluid() && !(entity instanceof AgeableMob || entity instanceof Villager || entity instanceof Boat)) {
+        if (entity.isInWater() && canBeImmunizedInWater(entity)) {
             return 100;
         }
 
@@ -196,7 +199,7 @@ public class ActivationRange {
         }
 
         if (!(entity instanceof AbstractArrow projectile)) {
-            if (!entity.onGround() && !entity.isInWater() && !(entity instanceof FlyingMob || entity instanceof Bat)) {
+            if (!entity.onGround() && canBeImmunizedWhileFlying(entity)) {
                 return 10;
             }
         } else if (!projectile.isInGround()) {
@@ -261,6 +264,20 @@ public class ActivationRange {
             }
         }
         return -1;
+    }
+
+    private static boolean canBeImmunizedInWater(Entity entity) {
+        return entity.isPushedByFluid() &&
+               !(entity instanceof AgeableMob) &&
+               !(entity instanceof AbstractBoat);
+    }
+
+    private static boolean canBeImmunizedWhileFlying(Entity entity) {
+        return !entity.isInWater() &&
+               !(entity instanceof Phantom) &&
+               !(entity instanceof Bat) &&
+               !(entity instanceof Ghast) &&
+               !(entity instanceof HappyGhast);
     }
 
     /**

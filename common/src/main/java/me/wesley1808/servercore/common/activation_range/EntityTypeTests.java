@@ -1,7 +1,10 @@
 package me.wesley1808.servercore.common.activation_range;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.ambient.AmbientCreature;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.animal.WaterAnimal;
@@ -27,7 +30,6 @@ public class EntityTypeTests {
     public static final EntityTypeTest<? super Entity, ?> NEUTRAL = register("neutral", NeutralMob.class);
     public static final EntityTypeTest<? super Entity, ?> WATER_ANIMAL = register("water_animal", WaterAnimal.class);
     public static final EntityTypeTest<? super Entity, ?> FLYING_ANIMAL = register("flying_animal", FlyingAnimal.class);
-    public static final EntityTypeTest<? super Entity, ?> FLYING_MONSTER = register("flying_monster", FlyingMob.class);
     public static final EntityTypeTest<? super Entity, ?> VILLAGER = register("villager", Npc.class);
     public static final EntityTypeTest<? super Entity, ?> PROJECTILE = register("projectile", Projectile.class);
 
