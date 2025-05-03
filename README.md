@@ -21,11 +21,11 @@ Works on both dedicated servers and singleplayer!
 - Several patches & optimizations to improve performance and reduce lagspikes, which shouldn't make any noticeable changes during gameplay.
 
 
-- Several configurable features that can heavily reduce lag, but have a slight impact on gameplay depending on the configuration.
+- Many configurable features that can heavily reduce lag, but have a slight impact on gameplay depending on the configuration.
 
-### Warning
->Some of the above optimizations use algorithms that may alter vanilla mechanics in the slightest.\
->These patches should all have an on/off switch in the config. If one does not, feel free to report it.
+#### Be advised
+>By default, ServerCore should not alter vanilla behavior. Features that do are disabled by default.\
+>It is advised to configure this mod to your own requirements for the best balance between speed and behavior.
 
 ## Features
 
@@ -59,7 +59,7 @@ ___
 
 #### More configurable mobspawning
 
-Allows you to modify the spawnrate and mobcaps of each individual spawngroup.
+Allows you to modify the spawnrate and vanilla mobcaps of each individual spawngroup.
 It also provides optional functionality to force mobcaps to apply to zombie reinforcements, spawners and nether portal randomticks.
 
 ___
@@ -115,7 +115,7 @@ ___
 
 ___
 
-### Config
+### Configuration
 
 By default, ServerCore will disable most of its changes that can affect vanilla behavior.\
 This way you can safely install the mod without having to worry about breaking things.
