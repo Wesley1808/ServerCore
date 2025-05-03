@@ -1,7 +1,6 @@
 package me.wesley1808.servercore.mixin.optimizations.players;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -41,7 +40,7 @@ public class PlayerListMixin {
     )
     private void servercore$moveToSpawn(
             Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci,
-            @Local(ordinal = 0) Optional<CompoundTag> playerData,
+            @Local(ordinal = 0) Optional<?> playerData,
             @Local(ordinal = 1) ServerLevel level
     ) {
         if (playerData.isEmpty()) {

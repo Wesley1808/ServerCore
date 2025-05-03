@@ -3,9 +3,8 @@ package me.wesley1808.servercore.mixin.optimizations.command_blocks;
 import com.mojang.brigadier.ParseResults;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.BaseCommandBlock;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -47,7 +46,7 @@ public class BaseCommandBlockMixin {
     }
 
     @Inject(method = "load", at = @At(value = "RETURN"))
-    private void servercore$resetCache(CompoundTag tag, HolderLookup.Provider provider, CallbackInfo ci) {
+    private void servercore$resetCache(ValueInput input, CallbackInfo ci) {
         this.servercore$parsed = null;
     }
 

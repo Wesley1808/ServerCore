@@ -1,9 +1,9 @@
 package me.wesley1808.servercore.mixin.features.ender_pearls;
 
 import me.wesley1808.servercore.common.config.Config;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.projectile.ThrownEnderpearl;
+import net.minecraft.world.level.storage.ValueInput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,7 +22,7 @@ public class ServerPlayerMixin {
     }
 
     @Inject(method = "loadAndSpawnEnderPearls", at = @At("HEAD"), cancellable = true)
-    private void servercore$preventEnderpearlLoading(CompoundTag tag, CallbackInfo ci) {
+    private void servercore$preventEnderpearlLoading(ValueInput input, CallbackInfo ci) {
         // Prevents enderpearls from being loaded from playerdata.
         if (Config.get().features().preventEnderpearlChunkLoading()) {
             ci.cancel();
