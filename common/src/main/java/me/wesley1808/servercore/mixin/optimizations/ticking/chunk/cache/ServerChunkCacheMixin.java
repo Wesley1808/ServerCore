@@ -5,6 +5,7 @@ import com.mojang.datafixers.DataFixer;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.wesley1808.servercore.common.utils.Util;
 import net.minecraft.server.level.ChunkMap;
+import net.minecraft.server.level.DistanceManager;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.progress.ChunkProgressListener;
@@ -16,7 +17,9 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.entity.ChunkStatusUpdateListener;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.LevelStorageSource;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,6 +33,9 @@ import java.util.function.Supplier;
 
 @Mixin(value = ServerChunkCache.class, priority = 900)
 public class ServerChunkCacheMixin {
+    @Shadow
+    @Final
+    private DistanceManager distanceManager;
     @Unique
     private final ObjectArrayList<LevelChunk> servercore$blockTickingChunks = new ObjectArrayList<>();
     @Unique
@@ -61,7 +67,9 @@ public class ServerChunkCacheMixin {
         }
 
         for (LevelChunk chunk : this.servercore$blockTickingChunks) {
-            if (chunk.loaded) consumer.accept(chunk);
+            if (this.servercore$refreshTickingCache || this.distanceManager.inEntityTickingRange(chunk.getPos().toLong())) {
+                consumer.accept(chunk);
+            }
         }
     }
 
