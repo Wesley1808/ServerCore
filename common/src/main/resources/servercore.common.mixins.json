@@ -53,7 +53,7 @@
     "optimizations.players.ServerPlayerMixin",
     "optimizations.sync_loads.BeeMixin",
     "optimizations.sync_loads.DynamicGameEventListenerMixin",
-    "optimizations.sync_loads.GroundPathNavigationMixin",
+    "optimizations.sync_loads.LevelMixin",
     "optimizations.sync_loads.MapItemMixin",
     "optimizations.sync_loads.RemoveBlockGoalMixin",
     "optimizations.sync_loads.ServerLevelMixin",
