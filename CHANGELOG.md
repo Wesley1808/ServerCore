@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.5.11]
+
+### Added
+
+- Patch to prevent sync loads caused by block entity updates (mostly vaults and trial spawners).
+
+### Fixed
+
+- Ticking chunk cache allowing border chunks to tick (rarely causing a sync load) 
+
 ## [1.5.10]
 
 ### Fixed
