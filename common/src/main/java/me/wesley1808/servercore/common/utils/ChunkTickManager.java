@@ -2,11 +2,12 @@ package me.wesley1808.servercore.common.utils;
 
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import net.minecraft.server.level.ChunkLevel;
+import net.minecraft.server.level.FullChunkStatus;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
 
 public class ChunkTickManager {
-    public static final int ENTITY_TICKING_LEVEL = 31;
+    public static final int ENTITY_TICKING_LEVEL = ChunkLevel.byStatus(FullChunkStatus.ENTITY_TICKING);
 
     public static boolean isChunkTickable(ChunkPos pos, ServerPlayer player) {
         return isWithinChunkDistance(player.chunkPosition().getChessboardDistance(pos));

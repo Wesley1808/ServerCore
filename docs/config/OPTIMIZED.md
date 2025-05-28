@@ -43,6 +43,10 @@ features:
   # ► Enderpearls will load / unload with chunks again instead of with their owner joining / leaving the game.
   # Note: Toggling this setting may cause some old enderpearls from before the toggle to be lost.
   prevent-enderpearl-chunkloading: true
+  # Whether the chunk-tick-distance dynamic setting should affect random ticks.
+  # Enabling this will stop chunks from performing random ticks when they are outside of this distance from any player.
+  # That includes chunks loaded by enderpearls or portals, breaking vanilla behavior.
+  chunk-tick-distance-affects-random-ticks: false
   # Prevents lagspikes caused by players moving into unloaded chunks.
   prevent-moving-into-unloaded-chunks: true
   # The amount of seconds between auto-saves when /save-on is active.
