@@ -49,8 +49,6 @@
     "optimizations.command_blocks.BaseCommandBlockMixin",
     "optimizations.misc.MapItemSavedDataMixin",
     "optimizations.misc.PathFinderMixin",
-    "optimizations.players.PlayerListMixin",
-    "optimizations.players.ServerPlayerMixin",
     "optimizations.sync_loads.BeeMixin",
     "optimizations.sync_loads.DynamicGameEventListenerMixin",
     "optimizations.sync_loads.LevelMixin",

@@ -102,7 +102,7 @@ public class Statistics {
 
     public List<Entity> getEntitiesNear(ServerPlayer player) {
         List<Entity> list = new ObjectArrayList<>();
-        for (Entity entity : player.serverLevel().getAllEntities()) {
+        for (Entity entity : player.level().getAllEntities()) {
             if (this.isNearby(player, entity.chunkPosition())) {
                 list.add(entity);
             }
