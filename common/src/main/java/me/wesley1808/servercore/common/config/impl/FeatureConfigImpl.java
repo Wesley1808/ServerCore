@@ -4,6 +4,7 @@ import me.wesley1808.servercore.common.config.data.FeatureConfig;
 
 public class FeatureConfigImpl implements FeatureConfig {
     private final boolean preventEnderpearlChunkLoading;
+    private final boolean chunkTickDistanceAffectsRandomTicks;
     private final boolean preventMovingIntoUnloadedChunks;
     private final int autosaveIntervalSeconds;
     private final int xpMergeChance;
@@ -14,6 +15,7 @@ public class FeatureConfigImpl implements FeatureConfig {
 
     public FeatureConfigImpl(FeatureConfig source) {
         this.preventEnderpearlChunkLoading = source.preventEnderpearlChunkLoading();
+        this.chunkTickDistanceAffectsRandomTicks = source.chunkTickDistanceAffectsRandomTicks();
         this.preventMovingIntoUnloadedChunks = source.preventMovingIntoUnloadedChunks();
         this.autosaveIntervalSeconds = source.autosaveIntervalSeconds();
         this.xpMergeChance = source.xpMergeFraction();
@@ -26,6 +28,11 @@ public class FeatureConfigImpl implements FeatureConfig {
     @Override
     public boolean preventEnderpearlChunkLoading() {
         return this.preventEnderpearlChunkLoading;
+    }
+
+    @Override
+    public boolean chunkTickDistanceAffectsRandomTicks() {
+        return this.chunkTickDistanceAffectsRandomTicks;
     }
 
     @Override
