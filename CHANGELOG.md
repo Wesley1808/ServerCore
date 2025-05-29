@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.5.12]
+
+### Added
+
+- Added `chunk-tick-distance-affects-random-ticks` option to control whether chunk-tick-distance affects random ticks.
+  - chunk-tick-distance will still affect mobspawning regardless of this setting.
+  - enabling this setting will bring back old behavior, stopping random ticks in chunks too far away from players - even chunks simulated by enderpearl or portal loading.
+
+### Fixed
+
+- Fixed chunk-tick-distance stopping pearl/portal loaded chunks from random ticking (breaking vanilla behavior by default). 
+  This old behavior is now hidden behind a config option.
+
 ## [1.5.11]
 
 ### Added
