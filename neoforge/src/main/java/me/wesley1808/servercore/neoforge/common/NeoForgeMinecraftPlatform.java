@@ -1,10 +1,14 @@
 package me.wesley1808.servercore.neoforge.common;
 
+import com.google.gson.JsonParser;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.JsonOps;
 import me.wesley1808.servercore.common.services.platform.MinecraftPlatform;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.server.permission.PermissionAPI;
@@ -28,8 +32,11 @@ public class NeoForgeMinecraftPlatform implements MinecraftPlatform {
 
     @Override
     public Component parseText(MinecraftServer server, String input) {
-        return Component.Serializer.fromJson(GsonComponentSerializer.gson().serialize(
-                MiniMessage.miniMessage().deserialize(input)
-        ), server.registryAccess());
+        String json = GsonComponentSerializer.gson().serialize(MiniMessage.miniMessage().deserialize(input));
+        return ComponentSerialization.CODEC
+                .decode(server.registryAccess().createSerializationContext(JsonOps.INSTANCE), JsonParser.parseString(json))
+                .result()
+                .map(Pair::getFirst)
+                .orElse(Component.empty());
     }
 }
