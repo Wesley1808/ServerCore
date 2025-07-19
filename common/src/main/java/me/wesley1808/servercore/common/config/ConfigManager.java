@@ -131,6 +131,10 @@ public class ConfigManager<C extends Copyable> {
         return this.data;
     }
 
+    public boolean isLoaded() {
+        return this.data != null;
+    }
+
     private void copyAndSetData(C source) {
         // noinspection unchecked
         this.data = (C) source.optimizedCopy();
