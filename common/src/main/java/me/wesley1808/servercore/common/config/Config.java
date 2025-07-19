@@ -22,11 +22,12 @@ public class Config {
     }
 
     public static void loadOptimizationConfig() {
-        OPTIMIZATION_MANAGER.reload();
+        if (!OPTIMIZATION_MANAGER.isLoaded()) {
+            OPTIMIZATION_MANAGER.reload();
+        }
     }
 
     public static boolean reloadConfigs() {
-        Config.loadOptimizationConfig();
         boolean success = Config.getOrCreateConfigManager().reload();
         Config.loadChanges();
         return success;

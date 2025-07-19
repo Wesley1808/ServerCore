@@ -3,8 +3,10 @@
   "minVersion": "0.8",
   "package": "me.wesley1808.servercore.fabric.mixin",
   "compatibilityLevel": "JAVA_16",
+  "plugin": "me.wesley1808.servercore.mixin.ServerCoreMixinPlugin",
   "mixins": [
-    "BlockGetterMixin"
+    "optimizations.misc.BlockGetterMixin",
+    "optimizations.sync_loads.BlockGetterMixin"
   ],
   "injectors": {
     "defaultRequire": 1

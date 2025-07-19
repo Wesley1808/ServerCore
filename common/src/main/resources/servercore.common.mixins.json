@@ -54,7 +54,6 @@
     "optimizations.sync_loads.LevelMixin",
     "optimizations.sync_loads.MapItemMixin",
     "optimizations.sync_loads.RemoveBlockGoalMixin",
-    "optimizations.sync_loads.ServerLevelMixin",
     "optimizations.sync_loads.SleepInBedMixin",
     "optimizations.sync_loads.StructureCheckMixin",
     "optimizations.tickets.ChunkGeneratorMixin",
