@@ -24,8 +24,8 @@
     "servercore.fabric.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.15.2",
-    "minecraft": ">=1.21.5-",
+    "fabricloader": ">=0.17.0",
+    "minecraft": ">=1.21.6-",
     "fabric-api-base": "*",
     "fabric-command-api-v2": "*",
     "fabric-lifecycle-events-v1": "*"
