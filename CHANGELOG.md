@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.14]
+
+### Fixed
+
+- Fixed a bug with `reduce-sync-loads` where really high-velocity entities weren't detecting collisions correctly, such as enderpearls from pearl cannons.
+
 ## [1.5.12]
 
 ### Added
