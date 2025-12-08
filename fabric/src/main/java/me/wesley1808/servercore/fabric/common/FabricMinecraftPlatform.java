@@ -8,6 +8,7 @@ import me.wesley1808.servercore.common.services.platform.MinecraftPlatform;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.permissions.PermissionLevel;
 
 public class FabricMinecraftPlatform implements MinecraftPlatform {
     private final NodeParser parser = NodeParser.builder()
@@ -16,7 +17,7 @@ public class FabricMinecraftPlatform implements MinecraftPlatform {
             .build();
 
     @Override
-    public boolean hasPermission(CommandSourceStack source, String node, int level) {
+    public boolean hasPermission(CommandSourceStack source, String node, PermissionLevel level) {
         String permission = String.format("%s.%s", ServerCore.MODID, node);
         return Permissions.check(source, permission, level);
     }

@@ -52,8 +52,8 @@ allprojects {
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
-    var formattedVersion = "${mod_version}+${minecraft}"
-    archivesBaseName = project.archives_base_name
+    base.setArchivesName(project.archives_base_name)
+    def formattedVersion = "${mod_version}+${minecraft}"
 
     version = formattedVersion
     group = project.maven_group

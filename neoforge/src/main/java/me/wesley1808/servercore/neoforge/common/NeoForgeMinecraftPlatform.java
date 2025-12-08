@@ -11,13 +11,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permission;
+import net.minecraft.server.permissions.PermissionLevel;
 import net.neoforged.neoforge.server.permission.PermissionAPI;
 import net.neoforged.neoforge.server.permission.nodes.PermissionNode;
 
 public class NeoForgeMinecraftPlatform implements MinecraftPlatform {
     @Override
-    public boolean hasPermission(CommandSourceStack source, String node, int level) {
-        if (source.hasPermission(level)) {
+    public boolean hasPermission(CommandSourceStack source, String node, PermissionLevel level) {
+        if (source.permissions().hasPermission(new Permission.HasCommandLevel(level))) {
             return true;
         }
 

@@ -14,6 +14,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.permissions.PermissionLevel;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
@@ -39,12 +40,12 @@ public class ServerCoreCommand {
 
     private static LiteralArgumentBuilder<CommandSourceStack> reloadConfig() {
         return literal("reload")
-                .requires(Permission.require("command.config", 2))
+                .requires(Permission.require("command.config", PermissionLevel.GAMEMASTERS))
                 .executes(ctx -> reload(ctx.getSource()));
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> settings() {
-        var settings = literal("settings").requires(Permission.require("command.settings", 2));
+        var settings = literal("settings").requires(Permission.require("command.settings", PermissionLevel.GAMEMASTERS));
         for (DynamicSetting setting : DynamicSetting.values()) {
             settings.then(literal(setting.name().toLowerCase())
                     .then(argument(VALUE, integer(setting.getLowerBound(), setting.getUpperBound()))

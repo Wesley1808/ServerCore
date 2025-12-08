@@ -19,6 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +37,7 @@ import static net.minecraft.commands.arguments.EntityArgument.player;
 public class StatisticsCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        var statistics = literal("statistics").requires(Permission.require("command.statistics", 2));
+        var statistics = literal("statistics").requires(Permission.require("command.statistics", PermissionLevel.GAMEMASTERS));
         statistics.executes(ctx -> displayOverview(ctx.getSource()));
 
         for (StatisticType type : StatisticType.values()) {

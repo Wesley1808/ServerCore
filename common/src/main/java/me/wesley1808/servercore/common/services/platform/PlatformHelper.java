@@ -4,6 +4,7 @@ import me.wesley1808.servercore.common.ServerCore;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.permissions.PermissionLevel;
 
 import java.nio.file.Path;
 import java.util.Optional;
@@ -37,7 +38,7 @@ public final class PlatformHelper {
         return minecraftPlatform.parseText(server, input);
     }
 
-    public static boolean hasPermission(CommandSourceStack source, String node, int level) {
+    public static boolean hasPermission(CommandSourceStack source, String node, PermissionLevel level) {
         return minecraftPlatform.hasPermission(source, node, level);
     }
 
