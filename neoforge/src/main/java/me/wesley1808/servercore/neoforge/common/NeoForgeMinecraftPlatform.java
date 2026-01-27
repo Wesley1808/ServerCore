@@ -3,6 +3,7 @@ package me.wesley1808.servercore.neoforge.common;
 import com.google.gson.JsonParser;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.JsonOps;
+import me.wesley1808.servercore.common.services.PermNode;
 import me.wesley1808.servercore.common.services.platform.MinecraftPlatform;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
@@ -11,25 +12,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.permissions.Permission;
-import net.minecraft.server.permissions.PermissionLevel;
 import net.neoforged.neoforge.server.permission.PermissionAPI;
 import net.neoforged.neoforge.server.permission.nodes.PermissionNode;
 
 public class NeoForgeMinecraftPlatform implements MinecraftPlatform {
     @Override
-    public boolean hasPermission(CommandSourceStack source, String node, PermissionLevel level) {
-        if (source.permissions().hasPermission(new Permission.HasCommandLevel(level))) {
-            return true;
-        }
-
+    public boolean hasPermission(CommandSourceStack source, PermNode node) {
         ServerPlayer player = source.getPlayer();
-        PermissionNode<Boolean> permission = NeoForgePermissions.getPermissionNode(node);
-        if (player == null || permission == null) {
-            return false;
+        if (player != null) {
+            PermissionNode<Boolean> permission = NeoForgePermissions.getPermissionNode(node.id());
+            return PermissionAPI.getPermission(player, permission);
         }
-
-        return PermissionAPI.getPermission(player, permission);
+        return node.defaultResolver().test(source.permissions());
     }
 
     @Override

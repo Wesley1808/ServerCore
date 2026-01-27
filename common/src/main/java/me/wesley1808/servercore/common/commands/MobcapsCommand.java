@@ -6,6 +6,7 @@ import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.data.CommandConfig;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.services.Formatter;
+import me.wesley1808.servercore.common.services.Permission;
 import me.wesley1808.servercore.common.utils.Mobcaps;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -20,7 +21,10 @@ import static net.minecraft.commands.Commands.literal;
 public class MobcapsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         if (Config.get().commands().mobcapsCommandEnabled()) {
-            dispatcher.register(literal("mobcaps").executes(ctx -> mobcaps(ctx.getSource(), ctx.getSource().getPlayerOrException())));
+            dispatcher.register(literal("mobcaps")
+                    .requires(Permission.require(Permission.COMMAND_MOBCAPS))
+                    .executes(ctx -> mobcaps(ctx.getSource(), ctx.getSource().getPlayerOrException()))
+            );
         }
     }
 

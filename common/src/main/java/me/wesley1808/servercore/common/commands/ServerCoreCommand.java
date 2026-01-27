@@ -14,7 +14,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.server.permissions.PermissionLevel;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
@@ -25,7 +24,7 @@ public class ServerCoreCommand {
     private static final String VALUE = "value";
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        var node = literal("servercore");
+        var node = literal("servercore").requires(Permission.require(Permission.COMMAND_ROOT));
 
         node.then(reloadConfig());
         node.then(settings());
@@ -35,17 +34,20 @@ public class ServerCoreCommand {
         }
 
         dispatcher.register(node);
-        dispatcher.register(literal("sc").redirect(node.build()));
+        dispatcher.register(literal("sc")
+                .requires(Permission.require(Permission.COMMAND_ROOT))
+                .redirect(node.build())
+        );
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> reloadConfig() {
         return literal("reload")
-                .requires(Permission.require("command.config", PermissionLevel.GAMEMASTERS))
+                .requires(Permission.require(Permission.COMMAND_CONFIG))
                 .executes(ctx -> reload(ctx.getSource()));
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> settings() {
-        var settings = literal("settings").requires(Permission.require("command.settings", PermissionLevel.GAMEMASTERS));
+        var settings = literal("settings").requires(Permission.require(Permission.COMMAND_SETTINGS));
         for (DynamicSetting setting : DynamicSetting.values()) {
             settings.then(literal(setting.name().toLowerCase())
                     .then(argument(VALUE, integer(setting.getLowerBound(), setting.getUpperBound()))

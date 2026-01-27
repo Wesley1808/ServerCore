@@ -2,6 +2,7 @@ package me.wesley1808.servercore.neoforge.common;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import me.wesley1808.servercore.common.ServerCore;
+import me.wesley1808.servercore.common.services.Permission;
 import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent;
 import net.neoforged.neoforge.server.permission.nodes.PermissionNode;
 import net.neoforged.neoforge.server.permission.nodes.PermissionTypes;
@@ -9,11 +10,7 @@ import net.neoforged.neoforge.server.permission.nodes.PermissionTypes;
 import java.util.Map;
 
 public class NeoForgePermissions {
-    private static final Map<String, PermissionNode<Boolean>> PERMISSIONS = NeoForgePermissions.build(
-            "command.config",
-            "command.settings",
-            "command.statistics"
-    );
+    private static final Map<String, PermissionNode<Boolean>> PERMISSIONS = NeoForgePermissions.build();
 
     public static PermissionNode<Boolean> getPermissionNode(String node) {
         return PERMISSIONS.get(node);
@@ -25,11 +22,13 @@ public class NeoForgePermissions {
         }
     }
 
-    private static Map<String, PermissionNode<Boolean>> build(String... nodes) {
+    private static Map<String, PermissionNode<Boolean>> build() {
         Map<String, PermissionNode<Boolean>> permissions = new Object2ObjectOpenHashMap<>();
-        for (String node : nodes) {
-            permissions.put(node, new PermissionNode<>(ServerCore.MODID, node, PermissionTypes.BOOLEAN, (x, y, z) -> false));
-        }
+        Permission.visitPermissions(node -> {
+            permissions.put(node.id(), new PermissionNode<>(ServerCore.MODID, node.id(), PermissionTypes.BOOLEAN, (player, uuid, context) -> {
+                return player != null && node.defaultResolver().test(player.permissions());
+            }));
+        });
         return permissions;
     }
 }

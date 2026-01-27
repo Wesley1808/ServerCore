@@ -4,11 +4,11 @@ import eu.pb4.placeholders.api.ParserContext;
 import eu.pb4.placeholders.api.parsers.NodeParser;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import me.wesley1808.servercore.common.ServerCore;
+import me.wesley1808.servercore.common.services.PermNode;
 import me.wesley1808.servercore.common.services.platform.MinecraftPlatform;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.permissions.PermissionLevel;
 
 public class FabricMinecraftPlatform implements MinecraftPlatform {
     private final NodeParser parser = NodeParser.builder()
@@ -17,9 +17,9 @@ public class FabricMinecraftPlatform implements MinecraftPlatform {
             .build();
 
     @Override
-    public boolean hasPermission(CommandSourceStack source, String node, PermissionLevel level) {
-        String permission = String.format("%s.%s", ServerCore.MODID, node);
-        return Permissions.check(source, permission, level);
+    public boolean hasPermission(CommandSourceStack source, PermNode node) {
+        String permission = String.format("%s.%s", ServerCore.MODID, node.id());
+        return Permissions.getPermissionValue(source, permission).orElseGet(() -> node.defaultResolver().test(source.permissions()));
     }
 
     @Override

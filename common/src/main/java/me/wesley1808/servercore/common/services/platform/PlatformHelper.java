@@ -1,10 +1,10 @@
 package me.wesley1808.servercore.common.services.platform;
 
 import me.wesley1808.servercore.common.ServerCore;
+import me.wesley1808.servercore.common.services.PermNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.permissions.PermissionLevel;
 
 import java.nio.file.Path;
 import java.util.Optional;
@@ -38,8 +38,8 @@ public final class PlatformHelper {
         return minecraftPlatform.parseText(server, input);
     }
 
-    public static boolean hasPermission(CommandSourceStack source, String node, PermissionLevel level) {
-        return minecraftPlatform.hasPermission(source, node, level);
+    public static boolean hasPermission(CommandSourceStack source, PermNode node) {
+        return minecraftPlatform.hasPermission(source, node);
     }
 
     private static <T> T load(Class<T> clazz) {
