@@ -30,7 +30,10 @@ public class ServerCoreCommand {
         node.then(settings());
 
         if (Config.get().commands().statusCommandEnabled()) {
-            node.then(literal("status").executes(ctx -> getStatus(ctx.getSource())));
+            node.then(literal("status")
+                    .requires(Permission.require(Permission.COMMAND_STATUS))
+                    .executes(ctx -> getStatus(ctx.getSource()))
+            );
         }
 
         dispatcher.register(node);
