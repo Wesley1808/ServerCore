@@ -32,7 +32,10 @@ public abstract class MobMixin extends LivingEntity {
     @Override
     public void servercore$inactiveTick() {
         super.servercore$inactiveTick();
-        this.goalSelector.servercore$inactiveTick();
-        this.targetSelector.servercore$inactiveTick();
+
+        if (!this.isRemoved()) {
+            this.goalSelector.servercore$inactiveTick();
+            this.targetSelector.servercore$inactiveTick();
+        }
     }
 }

@@ -26,7 +26,7 @@ public class NetherPortalBlockMixin {
     private boolean servercore$enforceMobCap(boolean isValidSpawn, BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         return isValidSpawn && Mobcaps.canSpawnForCategory(
                 level,
-                new ChunkPos(pos),
+                ChunkPos.containing(pos),
                 EntityType.ZOMBIFIED_PIGLIN.getCategory(),
                 Config.get().mobSpawning().portalRandomTicks()
         );

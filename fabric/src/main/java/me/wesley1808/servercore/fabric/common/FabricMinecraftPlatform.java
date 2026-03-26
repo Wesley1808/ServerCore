@@ -24,6 +24,6 @@ public class FabricMinecraftPlatform implements MinecraftPlatform {
 
     @Override
     public Component parseText(MinecraftServer server, String input) {
-        return this.parser.parseText(input, ParserContext.of());
+        return this.parser.parseComponent(input, ParserContext.of());
     }
 }

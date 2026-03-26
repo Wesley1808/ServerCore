@@ -1,4 +1,4 @@
-accessWidener v1 named
+accessWidener v2 official
 
 # Entity Activation Range
 accessible method net/minecraft/world/entity/animal/bee/Bee$BeePollinateGoal isPollinating ()Z
@@ -30,7 +30,7 @@ accessible field net/minecraft/server/level/SimulationChunkTracker chunks Lit/un
 accessible field net/minecraft/server/level/DistanceManager simulationDistance I
 accessible field net/minecraft/world/level/LocalMobCapCalculator chunkMap Lnet/minecraft/server/level/ChunkMap;
 accessible field net/minecraft/world/level/StructureManager level Lnet/minecraft/world/level/LevelAccessor;
-accessible field net/minecraft/world/level/Level threadSafeRandom Lnet/minecraft/util/RandomSource;
+accessible field net/minecraft/world/level/Level soundSeedGenerator Lnet/minecraft/util/RandomSource;
 accessible field net/minecraft/server/level/ChunkMap level Lnet/minecraft/server/level/ServerLevel;
 accessible field net/minecraft/world/level/block/state/BlockBehaviour hasCollision Z
 accessible field net/minecraft/world/level/chunk/LevelChunk loaded Z

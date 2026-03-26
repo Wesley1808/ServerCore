@@ -13,13 +13,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public interface BlockGetterMixin {
 
     @Redirect(
-            method = "method_17743",
+            method = "lambda$clip$0",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/level/BlockGetter;getFluidState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/material/FluidState;"
             )
     )
-    private FluidState servercore$fastFluidCheck(BlockGetter getter, BlockPos pos, @Local(ordinal = 0) BlockState state) {
-        return state.getFluidState();
+    private FluidState servercore$fastFluidCheck(BlockGetter getter, BlockPos pos, @Local(name = "blockState") BlockState blockState) {
+        return blockState.getFluidState();
     }
 }

@@ -51,6 +51,6 @@ public class LevelChunkMixin implements ILevelChunk {
     @Inject(method = "<init>(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/world/level/chunk/UpgradeData;Lnet/minecraft/world/ticks/LevelChunkTicks;Lnet/minecraft/world/ticks/LevelChunkTicks;J[Lnet/minecraft/world/level/chunk/LevelChunkSection;Lnet/minecraft/world/level/chunk/LevelChunk$PostLoadProcessor;Lnet/minecraft/world/level/levelgen/blending/BlendingData;)V", at = @At("RETURN"))
     private void servercore$initLightingTick(Level level, ChunkPos chunkPos, UpgradeData upgradeData, LevelChunkTicks<?> levelChunkTicks, LevelChunkTicks<?> levelChunkTicks2, long l, LevelChunkSection[] levelChunkSections, LevelChunk.PostLoadProcessor postLoadProcessor, BlendingData blendingData, CallbackInfo ci) {
         // noinspection deprecation
-        this.servercore$lightningTick = level.threadSafeRandom.nextInt(100000) << 1;
+        this.servercore$lightningTick = level.soundSeedGenerator.nextInt(100000) << 1;
     }
 }

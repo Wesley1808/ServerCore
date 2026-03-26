@@ -27,6 +27,6 @@ public class EntityStatisticEntry extends StatisticEntry<Entity> {
     }
 
     private boolean isActive(Entity entity, ServerLevel level) {
-        return !entity.servercore$isInactive() && level.getChunkSource().chunkMap.getDistanceManager().inEntityTickingRange(entity.chunkPosition().toLong());
+        return !entity.servercore$isInactive() && level.getChunkSource().chunkMap.getDistanceManager().inEntityTickingRange(entity.chunkPosition().pack());
     }
 }

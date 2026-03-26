@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockGetter.class)
 public interface BlockGetterMixin {
 
-    @Inject(method = "method_17743", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "lambda$clip$0", at = @At("HEAD"), cancellable = true)
     private void servercore$onlyRaytraceIfLoaded(ClipContext context, BlockPos pos, CallbackInfoReturnable<BlockHitResult> cir) {
         if (this instanceof Level level && !ChunkManager.hasChunk(level, pos)) {
             Vec3 vec3 = context.getFrom().subtract(context.getTo());

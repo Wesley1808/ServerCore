@@ -26,15 +26,20 @@ public abstract class AgeableMobMixin extends PathfinderMob {
     @Shadow
     public abstract void setAge(int age);
 
+    @Shadow
+    public abstract boolean canAgeUp();
+
     @Override
     public void servercore$inactiveTick() {
         super.servercore$inactiveTick();
 
-        final int age = this.getAge();
-        if (age < 0) {
-            this.setAge(age + 1);
-        } else if (age > 0) {
-            this.setAge(age - 1);
+        if (this.isAlive() && this.canAgeUp()) {
+            final int age = this.getAge();
+            if (age < 0) {
+                this.setAge(age + 1);
+            } else if (age > 0) {
+                this.setAge(age - 1);
+            }
         }
     }
 }

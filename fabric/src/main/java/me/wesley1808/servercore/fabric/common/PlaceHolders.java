@@ -2,9 +2,10 @@ package me.wesley1808.servercore.fabric.common;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import eu.pb4.placeholders.api.PlaceholderHandler;
+import eu.pb4.placeholders.api.Placeholder;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
+import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.utils.statistics.Statistics;
 import net.minecraft.resources.Identifier;
@@ -54,8 +55,7 @@ public class PlaceHolders {
 
         register("entity_count", (ctx, arg) -> {
             Statistics statistics = Statistics.getInstance(ctx.server());
-            ServerPlayer player = ctx.player();
-            if (player != null && Objects.equals(arg, "nearby")) {
+            if (ctx.player() instanceof ServerPlayer player && Objects.equals(arg, "nearby")) {
                 return PlaceholderResult.value(String.valueOf(statistics.getEntitiesNear(player).size()));
             }
 
@@ -64,8 +64,7 @@ public class PlaceHolders {
 
         register("block_entity_count", (ctx, arg) -> {
             Statistics statistics = Statistics.getInstance(ctx.server());
-            ServerPlayer player = ctx.player();
-            if (player != null && Objects.equals(arg, "nearby")) {
+            if (ctx.player() instanceof ServerPlayer player && Objects.equals(arg, "nearby")) {
                 return PlaceholderResult.value(String.valueOf(statistics.getBlockEntitiesNear(player).size()));
             }
 
@@ -81,7 +80,7 @@ public class PlaceHolders {
         }
     }
 
-    private static void register(String name, PlaceholderHandler handler) {
-        Placeholders.register(Identifier.fromNamespaceAndPath("servercore", name), handler);
+    private static void register(String name, Placeholder.Handler<ServerPlaceholderContext, String> handler) {
+        Placeholders.registerServer(Identifier.fromNamespaceAndPath("servercore", name), handler);
     }
 }

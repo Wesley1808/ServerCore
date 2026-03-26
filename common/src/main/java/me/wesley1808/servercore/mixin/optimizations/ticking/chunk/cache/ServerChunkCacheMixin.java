@@ -66,7 +66,7 @@ public class ServerChunkCacheMixin {
         }
 
         for (LevelChunk chunk : this.servercore$blockTickingChunks) {
-            if (this.servercore$refreshTickingCache || this.distanceManager.inEntityTickingRange(chunk.getPos().toLong())) {
+            if (this.servercore$refreshTickingCache || this.distanceManager.inEntityTickingRange(chunk.getPos().pack())) {
                 consumer.accept(chunk);
             }
         }

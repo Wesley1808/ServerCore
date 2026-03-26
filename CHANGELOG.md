@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.16]
+
+### Fixed
+
+- Fixed some small inconsistencies with activation range inactive entity ticks.
+
 ## [1.5.14]
 
 ### Fixed

@@ -54,7 +54,7 @@ public abstract class VillagerMixin extends AbstractVillager {
         // Check half as often if not lobotomized for the last 3+ consecutive checks
         if (this.tickCount % (this.servercore$notLobotomizedCount > 3 ? 600 : 300) == 0) {
 
-            this.servercore$lobotomized = !this.getTags().contains(EntityTags.EXCLUDE_FROM_LOBOTOMIZATION) && (
+            this.servercore$lobotomized = !this.entityTags().contains(EntityTags.EXCLUDE_FROM_LOBOTOMIZATION) && (
                     this.isPassenger() || !this.servercore$canTravel()
             );
 

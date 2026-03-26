@@ -22,6 +22,16 @@ configurations {
         canBeResolved = true
         canBeConsumed = false
     }
+
+    apiElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
+
+    runtimeElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
 }
 
 repositories {
@@ -32,7 +42,7 @@ dependencies {
     neoForge "net.neoforged:neoforge:${project.neoforged_version}"
 
     // Common
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    common(project(path: ":common")) { transitive false }
     shadowBundle(project(path: ":common", configuration: "transformProductionNeoForge"))
 
     // Configuration
@@ -52,32 +62,33 @@ dependencies {
     }
 
     // Allows running other mods in dev environment
-    modLocalRuntime(fileTree(dir: 'runtime-mods', include: '*.jar'))
+    localRuntime(fileTree(dir: 'runtime-mods', include: '*.jar'))
 }
 
 tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
     archiveAppendix.set("neoforge")
 }
 
-shadowJar {
-    exclude "architectury.common.json"
+jar {
+    archiveClassifier = "raw"
+}
 
+shadowJar {
+    dependsOn(jar)
+    mainSpec.sourcePaths.clear()
+    from(zipTree(jar.archiveFile))
+
+    exclude "architectury.common.json"
     relocateDependency(shadowJar, "net.kyori")
     mergeServiceFiles()
+    // TODO: atAccessWideners.add('servercore.accesswidener')
 
     configurations = [project.configurations.shadowBundle]
-    archiveClassifier = 'dev-shadow'
+    archiveClassifier = null
 }
 
 private static void relocateDependency(com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar shadowJar, String pattern) {
     shadowJar.relocate(pattern, "servercore_libs.${pattern}")
-}
-
-remapJar {
-    input.set shadowJar.archiveFile
-    dependsOn shadowJar
-    archiveClassifier.set null
-    atAccessWideners.add('servercore.accesswidener')
 }
 
 components.java {

@@ -28,7 +28,7 @@ public abstract class BaseSpawnerMixin {
                     ordinal = 0
             )
     )
-    private void servercore$enforceMobcap(ServerLevel level, BlockPos pos, CallbackInfo ci, @Local(ordinal = 0) Entity entity) {
+    private void servercore$enforceMobcap(ServerLevel level, BlockPos pos, CallbackInfo ci, @Local(name = "entity") Entity entity) {
         boolean canSpawn = Mobcaps.canSpawnForCategory(
                 level,
                 entity.chunkPosition(),

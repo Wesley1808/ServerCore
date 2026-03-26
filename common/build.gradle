@@ -1,10 +1,10 @@
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${project.fabric_version}"
+    implementation "net.fabricmc:fabric-loader:${project.fabric_version}"
 
-    // Mod compatibility
-    modCompileOnly("com.cobblemon:mod:${project.cobblemon_version}") { transitive = false }
+    // Mod compatibility - TODO: when cobblemon updates to 26.1
+    // compileOnly("com.cobblemon:mod:${project.cobblemon_version}") { transitive = false }
 }
 
 architectury {

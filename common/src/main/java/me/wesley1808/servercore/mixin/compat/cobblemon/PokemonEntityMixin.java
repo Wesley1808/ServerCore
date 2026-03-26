@@ -1,12 +1,6 @@
 package me.wesley1808.servercore.mixin.compat.cobblemon;
 
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.parrot.ShoulderRidingEntity;
-import net.minecraft.world.level.Level;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-
+/* TODO
 @Mixin(value = PokemonEntity.class, remap = false)
 public abstract class PokemonEntityMixin extends ShoulderRidingEntity {
     @Shadow
@@ -30,3 +24,4 @@ public abstract class PokemonEntityMixin extends ShoulderRidingEntity {
         this.ticksLived++;
     }
 }
+*/

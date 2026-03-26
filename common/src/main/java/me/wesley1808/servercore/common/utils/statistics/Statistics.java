@@ -116,7 +116,7 @@ public class Statistics {
         for (TickingBlockEntity blockEntity : player.level().blockEntityTickers) {
             BlockPos pos = blockEntity.getPos();
             // noinspection ConstantConditions - Lithium's sleeping block entities can have a null position.
-            if (pos != null && this.isNearby(player, new ChunkPos(pos))) {
+            if (pos != null && this.isNearby(player, ChunkPos.containing(pos))) {
                 list.add(blockEntity);
             }
         }

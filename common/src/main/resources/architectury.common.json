@@ -1,11 +1,11 @@
 {
   "accessWidener": "servercore.accesswidener",
   "injected_interfaces": {
-    "net/minecraft/class_1297": [
+    "net/minecraft/world/entity/Entity": [
       "me/wesley1808/servercore/common/interfaces/activation_range/Inactive",
       "me/wesley1808/servercore/common/interfaces/activation_range/ActivationEntity"
     ],
-    "net/minecraft/class_1355": [
+    "net/minecraft/world/entity/ai/goal/GoalSelector": [
       "me/wesley1808/servercore/common/interfaces/activation_range/Inactive"
     ]
   }

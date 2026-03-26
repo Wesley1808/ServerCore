@@ -22,6 +22,16 @@ configurations {
         canBeResolved = true
         canBeConsumed = false
     }
+
+    apiElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
+
+    runtimeElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
 }
 
 repositories {
@@ -30,20 +40,20 @@ repositories {
 
 dependencies {
     // Fabric Loader
-    modImplementation "net.fabricmc:fabric-loader:${project.fabric_version}"
+    implementation "net.fabricmc:fabric-loader:${project.fabric_version}"
 
     // Common
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    common(project(path: ":common")) { transitive false }
     shadowBundle(project(path: ":common", configuration: "transformProductionFabric"))
 
     // Fabric API
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_api}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_api}")
 
     // Permission API
-    modImplementation(include("me.lucko:fabric-permissions-api:${project.permission_api}"))
+    implementation(include("me.lucko:fabric-permissions-api:${project.permission_api}"))
 
     // Placeholder API
-    modImplementation(include("eu.pb4:placeholder-api:${project.placeholder_api}"))
+    implementation(include("eu.pb4:placeholder-api:${project.placeholder_api}"))
 
     // Configuration
     runtimeOnly(include("org.yaml:snakeyaml:${project.snakeyaml}"))
@@ -55,17 +65,18 @@ tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
     archiveAppendix.set("fabric")
 }
 
-shadowJar {
-    exclude "architectury.common.json"
-    configurations = [project.configurations.shadowBundle]
-    archiveClassifier = 'dev-shadow'
+jar {
+    archiveClassifier = "raw"
 }
 
-remapJar {
-    injectAccessWidener = true
-    input.set shadowJar.archiveFile
-    dependsOn shadowJar
-    archiveClassifier.set null
+shadowJar {
+    dependsOn(jar)
+    mainSpec.sourcePaths.clear()
+    from(zipTree(jar.archiveFile))
+
+    exclude "architectury.common.json"
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = null
 }
 
 components.java {

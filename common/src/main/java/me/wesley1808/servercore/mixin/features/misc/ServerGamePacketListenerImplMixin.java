@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.mixin.features.misc;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.utils.ChunkManager;
 import net.minecraft.network.Connection;
@@ -20,7 +21,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 /**
  * Based on: Paper (Add-option-to-prevent-players-from-moving-into-unloaded-chunks.patch)
@@ -43,7 +43,6 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
 
     @Inject(
             method = "handleMoveVehicle",
-            locals = LocalCapture.CAPTURE_FAILHARD,
             cancellable = true,
             at = @At(
                     value = "INVOKE",
@@ -52,26 +51,45 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
                     ordinal = 0
             )
     )
-    private void servercore$handleMoveVehicle(ServerboundMoveVehiclePacket packet, CallbackInfo ci, Entity entity, ServerLevel serverLevel, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, float yRot, float xRot, double l, double m, double n) {
-        if (this.servercore$shouldPreventMovement(serverLevel, entity, fromX, fromZ, toX, toY, toZ)) {
-            this.connection.send(ClientboundMoveVehiclePacket.fromEntity(entity));
+    private void servercore$handleMoveVehicle(
+            ServerboundMoveVehiclePacket packet, CallbackInfo ci,
+            @Local(name = "level") ServerLevel level,
+            @Local(name = "vehicle") Entity vehicle,
+            @Local(name = "oldX") double oldX,
+            @Local(name = "oldZ") double oldZ,
+            @Local(name = "targetX") double targetX,
+            @Local(name = "targetY") double targetY,
+            @Local(name = "targetZ") double targetZ
+    ) {
+        if (this.servercore$shouldPreventMovement(level, vehicle, oldX, oldZ, targetX, targetY, targetZ)) {
+            this.connection.send(ClientboundMoveVehiclePacket.fromEntity(vehicle));
             ci.cancel();
         }
     }
 
     @Inject(
             method = "handleMovePlayer",
-            locals = LocalCapture.CAPTURE_FAILHARD,
             cancellable = true,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ServerPlayer;getBoundingBox()Lnet/minecraft/world/phys/AABB;",
+                    target = "Lnet/minecraft/server/level/ServerPlayer;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
                     ordinal = 0
             )
     )
-    private void servercore$handleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci, ServerLevel serverLevel, float yRot, float xRot, double toX, double toY, double toZ, double fromX, double fromY, double fromZ) {
-        if (this.servercore$shouldPreventMovement(serverLevel, this.player, fromX, fromZ, toX, toY, toZ)) {
-            this.teleport(fromX, fromY, fromZ, yRot, xRot);
+    private void servercore$handleMovePlayer(
+            ServerboundMovePlayerPacket packet, CallbackInfo ci,
+            @Local(name = "level") ServerLevel level,
+            @Local(name = "targetYRot") float targetYRot,
+            @Local(name = "targetYRot") float targetXRot,
+            @Local(name = "targetX") double targetX,
+            @Local(name = "targetY") double targetY,
+            @Local(name = "targetZ") double targetZ,
+            @Local(name = "startX") double startX,
+            @Local(name = "startY") double startY,
+            @Local(name = "startZ") double startZ
+    ) {
+        if (this.servercore$shouldPreventMovement(level, this.player, startX, startZ, targetX, targetY, targetZ)) {
+            this.teleport(startX, startY, startZ, targetYRot, targetXRot);
             ci.cancel();
         }
     }

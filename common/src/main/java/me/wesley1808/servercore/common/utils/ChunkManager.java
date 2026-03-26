@@ -77,7 +77,7 @@ public class ChunkManager {
 
     @Nullable
     private static ChunkHolder getChunkHolder(ServerLevel level, int chunkX, int chunkZ) {
-        return level.getChunkSource().getVisibleChunkIfPresent(ChunkPos.asLong(chunkX, chunkZ));
+        return level.getChunkSource().getVisibleChunkIfPresent(ChunkPos.pack(chunkX, chunkZ));
     }
 
     public static boolean hasChunk(Level level, BlockPos pos) {
@@ -97,7 +97,7 @@ public class ChunkManager {
     public static boolean hasChunk(ServerLevel level, ChunkHolder holder) {
         if (Environment.MOD_MOONRISE) {
             ChunkPos pos = holder.getPos();
-            return level.getChunkSource().hasChunk(pos.x, pos.z);
+            return level.getChunkSource().hasChunk(pos.x(), pos.z());
         }
 
         return getChunkFromHolder(holder) != null;

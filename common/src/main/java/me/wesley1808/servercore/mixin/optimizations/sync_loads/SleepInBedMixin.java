@@ -24,8 +24,8 @@ public class SleepInBedMixin {
                     ordinal = 0
             )
     )
-    private void servercore$onlyProcessIfLoaded(ServerLevel level, LivingEntity owner, CallbackInfoReturnable<Boolean> cir, @Local(ordinal = 0) GlobalPos globalPos) {
-        if (!ChunkManager.hasChunk(level, globalPos.pos())) {
+    private void servercore$onlyProcessIfLoaded(ServerLevel level, LivingEntity owner, CallbackInfoReturnable<Boolean> cir, @Local(name = "target") GlobalPos target) {
+        if (!ChunkManager.hasChunk(level, target.pos())) {
             cir.setReturnValue(false);
         }
     }

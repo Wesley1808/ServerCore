@@ -30,7 +30,7 @@ public class PistonMovingBlockEntityMixin {
                     shift = At.Shift.AFTER
             )
     )
-    private static void servercore$onPushEntity(Level level, BlockPos pos, float f, PistonMovingBlockEntity piston, CallbackInfo ci, @Local(ordinal = 0) Entity entity) {
+    private static void servercore$onPushEntity(Level level, BlockPos pos, float f, PistonMovingBlockEntity piston, CallbackInfo ci, @Local(name = "entity") Entity entity) {
         MinecraftServer server = level.getServer();
         if (server != null) {
             final int tick = server.getTickCount() + 10;
