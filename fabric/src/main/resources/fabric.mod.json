@@ -23,6 +23,7 @@
     "servercore.common.mixins.json",
     "servercore.fabric.mixins.json"
   ],
+  "accessWidener": "servercore.accesswidener",
   "depends": {
     "fabricloader": ">=0.17.0",
     "minecraft": ">=26.1-",
