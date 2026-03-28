@@ -80,7 +80,7 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
             ServerboundMovePlayerPacket packet, CallbackInfo ci,
             @Local(name = "level") ServerLevel level,
             @Local(name = "targetYRot") float targetYRot,
-            @Local(name = "targetYRot") float targetXRot,
+            @Local(name = "targetXRot") float targetXRot,
             @Local(name = "targetX") double targetX,
             @Local(name = "targetY") double targetY,
             @Local(name = "targetZ") double targetZ,
