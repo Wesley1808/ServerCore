@@ -1,12 +1,21 @@
 pluginManagement {
     repositories {
+        gradlePluginPortal()
+
         maven { url "https://maven.architectury.dev/" }
         maven { url "https://maven.fabricmc.net/" }
-        maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
-        gradlePluginPortal()
+
+        maven {
+            name 'spongepowered-repo'
+            url 'https://repo.spongepowered.org/repository/maven-public/'
+            content {
+                includeModule('net.minecraftforge', 'DiffPatch')
+                includeModule('de.oceanlabs.mcp', 'mcinjector')
+            }
+        }
     }
 }
 
 include("common")
 include("fabric")
-//include("neoforge")
+include("neoforge")
