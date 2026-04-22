@@ -44,7 +44,7 @@ public abstract class VillagerMixin extends AbstractVillager {
                     target = "Lnet/minecraft/world/entity/ai/Brain;tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;)V"
             )
     )
-    private boolean servercore$shouldTickBrain(Brain<Villager> brain, ServerLevel level, LivingEntity livingEntity) {
+    private boolean servercore$shouldTickBrain(Brain<Villager> brain, ServerLevel level, LivingEntity body) {
         FeatureConfig config = Config.get().features();
         return !config.lobotomizeVillagers() || !this.servercore$isLobotomized() || this.tickCount % config.lobotomizedTickInterval() == 0 || this.isUnderWater();
     }

@@ -39,7 +39,7 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
     }
 
     @Shadow
-    public abstract void teleport(double x, double y, double z, float yaw, float pitch);
+    public abstract void teleport(double x, double y, double z, float yRot, float xRot);
 
     @Inject(
             method = "handleMoveVehicle",

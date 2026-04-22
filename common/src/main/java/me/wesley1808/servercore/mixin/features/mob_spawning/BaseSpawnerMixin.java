@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BaseSpawner.class)
 public abstract class BaseSpawnerMixin {
     @Shadow
-    protected abstract void delay(Level level, BlockPos blockPos);
+    protected abstract void delay(Level level, BlockPos pos);
 
     @Inject(
             method = "serverTick",

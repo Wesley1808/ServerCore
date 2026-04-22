@@ -43,7 +43,7 @@ public class ServerChunkCacheMixin {
     private int servercore$tickCount;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void servercore$onInit(ServerLevel serverLevel, LevelStorageSource.LevelStorageAccess levelStorageAccess, DataFixer dataFixer, StructureTemplateManager structureTemplateManager, Executor executor, ChunkGenerator chunkGenerator, int i, int j, boolean bl, ChunkStatusUpdateListener chunkStatusUpdateListener, Supplier<?> supplier, CallbackInfo ci) {
+    private void servercore$onInit(ServerLevel level, LevelStorageSource.LevelStorageAccess levelStorage, DataFixer fixerUpper, StructureTemplateManager structureTemplateManager, Executor executor, ChunkGenerator generator, int viewDistance, int simulationDistance, boolean syncWrites, ChunkStatusUpdateListener chunkStatusListener, Supplier<?> overworldDataStorage, CallbackInfo ci) {
         this.servercore$tickCount = Util.WORLD_COUNTER.getAndIncrement();
     }
 
@@ -59,7 +59,7 @@ public class ServerChunkCacheMixin {
                     target = "Lnet/minecraft/server/level/ChunkMap;forEachBlockTickingChunk(Ljava/util/function/Consumer;)V"
             )
     )
-    private void servercore$cacheBlockTickingChunks$notTheCauseOfTickLag(ChunkMap chunkMap, Consumer<LevelChunk> consumer) {
+    private void servercore$cacheBlockTickingChunks$notTheCauseOfTickLag(ChunkMap chunkMap, Consumer<LevelChunk> tickingChunkConsumer) {
         if (this.servercore$refreshTickingCache) {
             this.servercore$blockTickingChunks.clear();
             chunkMap.forEachBlockTickingChunk(this.servercore$blockTickingChunks::add);
@@ -67,7 +67,7 @@ public class ServerChunkCacheMixin {
 
         for (LevelChunk chunk : this.servercore$blockTickingChunks) {
             if (this.servercore$refreshTickingCache || this.distanceManager.inEntityTickingRange(chunk.getPos().pack())) {
-                consumer.accept(chunk);
+                tickingChunkConsumer.accept(chunk);
             }
         }
     }
@@ -79,9 +79,9 @@ public class ServerChunkCacheMixin {
                     target = "Lnet/minecraft/server/level/ChunkMap;collectSpawningChunks(Ljava/util/List;)V"
             )
     )
-    private boolean servercore$cacheSpawnTickingChunks(ChunkMap chunkMap, List<LevelChunk> spawningChunks) {
+    private boolean servercore$cacheSpawnTickingChunks(ChunkMap chunkMap, List<LevelChunk> output) {
         if (this.servercore$refreshTickingCache) {
-            spawningChunks.clear();
+            output.clear();
             return true;
         }
         return false;
@@ -95,7 +95,7 @@ public class ServerChunkCacheMixin {
                     target = "Lnet/minecraft/server/level/ServerChunkCache;tickSpawningChunk(Lnet/minecraft/world/level/chunk/LevelChunk;JLjava/util/List;Lnet/minecraft/world/level/NaturalSpawner$SpawnState;)V"
             )
     )
-    private boolean servercore$ignoreUnloadedSpawnTicks(ServerChunkCache chunkCache, LevelChunk chunk, long l, List<MobCategory> categories, NaturalSpawner.SpawnState spawnState) {
+    private boolean servercore$ignoreUnloadedSpawnTicks(ServerChunkCache chunkCache, LevelChunk chunk, long timeDiff, List<MobCategory> spawningCategories, NaturalSpawner.SpawnState spawnCookie) {
         return chunk.loaded;
     }
 
@@ -108,7 +108,7 @@ public class ServerChunkCacheMixin {
                     target = "Lnet/minecraft/util/Util;shuffle(Ljava/util/List;Lnet/minecraft/util/RandomSource;)V"
             )
     )
-    private void servercore$cancelShuffle(List<LevelChunk> spawningChunks, RandomSource randomSource) {
+    private void servercore$cancelShuffle(List<LevelChunk> list, RandomSource random) {
         // NO-OP
     }
 

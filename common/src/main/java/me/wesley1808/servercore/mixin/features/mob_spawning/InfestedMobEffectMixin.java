@@ -4,7 +4,7 @@ import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.utils.Mobcaps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,11 +23,11 @@ public class InfestedMobEffectMixin {
                     ordinal = 0
             )
     )
-    private void servercore$enforceMobcap(ServerLevel level, LivingEntity entity, int amplifier, DamageSource source, float damage, CallbackInfo ci) {
+    private void servercore$enforceMobcap(ServerLevel level, LivingEntity mob, int amplifier, DamageSource source, float damage, CallbackInfo ci) {
         boolean canSpawn = Mobcaps.canSpawnForCategory(
                 level,
-                entity.chunkPosition(),
-                EntityType.SILVERFISH.getCategory(),
+                mob.chunkPosition(),
+                EntityTypes.SILVERFISH.getCategory(),
                 Config.get().mobSpawning().infested()
         );
 

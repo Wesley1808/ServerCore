@@ -20,10 +20,10 @@ public class AnimalMakeLoveMixin {
                     target = "Lnet/minecraft/world/entity/animal/Animal;spawnChildFromBreeding(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/animal/Animal;)V"
             )
     )
-    private boolean servercore$enforceBreedCap(Animal owner, ServerLevel level, Animal mate) {
+    private boolean servercore$enforceBreedCap(Animal owner, ServerLevel level, Animal partner) {
         BreedingCapConfig config = Config.get().breedingCap();
         if (config.enabled() && config.animals().exceedsLimit(owner)) {
-            BreedingCap.resetLove(owner, mate);
+            BreedingCap.resetLove(owner, partner);
             return false;
         }
 

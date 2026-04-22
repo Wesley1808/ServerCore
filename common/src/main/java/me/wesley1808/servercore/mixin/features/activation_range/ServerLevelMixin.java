@@ -37,7 +37,7 @@ public class ServerLevelMixin {
                     target = "Lnet/minecraft/world/level/entity/EntityTickList;forEach(Ljava/util/function/Consumer;)V"
             )
     )
-    private void servercore$activateEntities(BooleanSupplier booleanSupplier, CallbackInfo ci) {
+    private void servercore$activateEntities(BooleanSupplier haveTime, CallbackInfo ci) {
         final int currentTick = this.server.getTickCount();
         if (currentTick % 20 == 0) {
             ActivationRange.activateEntities((ServerLevel) (Object) this, currentTick);
@@ -70,7 +70,7 @@ public class ServerLevelMixin {
                     target = "Lnet/minecraft/world/entity/Entity;rideTick()V"
             )
     )
-    private boolean servercore$shouldTickPassenger(Entity passenger, Entity vehicle, Entity ignored) {
+    private boolean servercore$shouldTickPassenger(Entity passenger, Entity vehicle, Entity entity) {
         if (ActivationRange.checkIfActive(passenger, this.server.getTickCount())) {
             passenger.servercore$setInactive(false);
             passenger.tickCount++;

@@ -27,7 +27,7 @@ public class MobCategoryMixin implements IMobCategory {
     private int servercore$spawnInterval;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void servercore$onInit(String enumName, int index, String name, int max, boolean isFriendly, boolean isPersistent, int despawnDistance, CallbackInfo ci) {
+    private void servercore$onInit(String enumName, int index, String name, String debugAbbreviation, int max, boolean isFriendly, boolean isPersistent, int despawnDistance, CallbackInfo ci) {
         this.servercore$originalCapacity = max;
         this.servercore$modifiedCapacity = max;
         this.servercore$spawnInterval = isPersistent ? 400 : 1;

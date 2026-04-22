@@ -17,7 +17,7 @@ public abstract class TadpoleMixin extends AbstractFish {
     }
 
     @Shadow
-    protected abstract void setAge(int i);
+    protected abstract void setAge(int newAge);
 
     @Override
     public void servercore$inactiveTick() {

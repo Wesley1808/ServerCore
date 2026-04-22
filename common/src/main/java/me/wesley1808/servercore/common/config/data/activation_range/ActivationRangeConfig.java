@@ -6,6 +6,7 @@ import me.wesley1808.servercore.common.activation_range.EntityTypeTests;
 import me.wesley1808.servercore.common.config.impl.activation_range.CustomActivationTypeImpl;
 import me.wesley1808.servercore.common.config.serialization.EntityTypeSerializer;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import space.arim.dazzleconf.annote.ConfComments;
 import space.arim.dazzleconf.annote.ConfDefault.DefaultBoolean;
 import space.arim.dazzleconf.annote.ConfDefault.DefaultInteger;
@@ -100,15 +101,15 @@ public interface ActivationRangeConfig {
             "► If an entity matches multiple activation types, the one highest in the list will be used. The conditions accept the following formats:",
             "  - Entity type matching    |   Uses the entity type's identifier.  |  'minecraft:zombie' matches zombies, but for example not husks or drowned.",
             "  - Typeof class matching   |   Uses the 'typeof:' prefix.          |  'typeof:monster' matches all monsters.",
-            "► Available typeof classes: mob, monster, raider, neutral, ambient, animal, water_animal, flying_animal, villager, projectile."
+            "► Available typeof classes: mob, monster, raider, neutral, ambient, animal, water_animal, villager, projectile."
     })
     List<@SubSection CustomActivationType> activationTypes();
 
     static Set<EntityType<?>> defaultExcludedEntityTypes() {
         return Sets.newHashSet(
-                EntityType.HOPPER_MINECART,
-                EntityType.WARDEN,
-                EntityType.GHAST
+                EntityTypes.HOPPER_MINECART,
+                EntityTypes.WARDEN,
+                EntityTypes.GHAST
         );
     }
 
@@ -127,15 +128,15 @@ public interface ActivationRangeConfig {
                         16, 20, 30, false, false
                 ),
                 new CustomActivationTypeImpl("zombie",
-                        Lists.newArrayList(EntityType.ZOMBIE, EntityType.HUSK),
+                        Lists.newArrayList(EntityTypes.ZOMBIE, EntityTypes.HUSK),
                         16, 20, 20, true, false
                 ),
                 new CustomActivationTypeImpl("monster-below",
-                        Lists.newArrayList(EntityType.CREEPER, EntityType.SLIME, EntityType.MAGMA_CUBE, EntityType.HOGLIN),
+                        Lists.newArrayList(EntityTypes.CREEPER, EntityTypes.SLIME, EntityTypes.MAGMA_CUBE, EntityTypes.HOGLIN),
                         32, 20, 20, true, true
                 ),
                 new CustomActivationTypeImpl("flying-monster",
-                        Lists.newArrayList(EntityType.GHAST, EntityType.PHANTOM),
+                        Lists.newArrayList(EntityTypes.GHAST, EntityTypes.PHANTOM),
                         48, 20, 20, true, false
                 ),
                 new CustomActivationTypeImpl("monster",

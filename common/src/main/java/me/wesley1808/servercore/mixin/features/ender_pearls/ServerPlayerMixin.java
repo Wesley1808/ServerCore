@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ServerPlayerMixin {
 
     @Inject(method = "registerEnderPearl", at = @At("HEAD"), cancellable = true)
-    private void servercore$preventEnderpearlRegistration(ThrownEnderpearl enderpearl, CallbackInfo ci) {
+    private void servercore$preventEnderpearlRegistration(ThrownEnderpearl enderPearl, CallbackInfo ci) {
         // Prevents enderpearls from being registered to players.
         // This prevents the game from unloading and saving the pearls with the player.
         if (Config.get().features().preventEnderpearlChunkLoading()) {
@@ -22,7 +22,7 @@ public class ServerPlayerMixin {
     }
 
     @Inject(method = "loadAndSpawnEnderPearls", at = @At("HEAD"), cancellable = true)
-    private void servercore$preventEnderpearlLoading(ValueInput input, CallbackInfo ci) {
+    private void servercore$preventEnderpearlLoading(ValueInput playerInput, CallbackInfo ci) {
         // Prevents enderpearls from being loaded from playerdata.
         if (Config.get().features().preventEnderpearlChunkLoading()) {
             ci.cancel();

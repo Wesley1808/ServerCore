@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class BeeMixin extends Animal {
     @Shadow
     @Nullable
-    BlockPos hivePos;
+    private BlockPos hivePos;
 
     private BeeMixin(EntityType<? extends Animal> entityType, Level level) {
         super(entityType, level);

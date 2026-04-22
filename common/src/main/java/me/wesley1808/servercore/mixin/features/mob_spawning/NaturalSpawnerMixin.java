@@ -13,8 +13,8 @@ import java.util.List;
 @Mixin(value = NaturalSpawner.class, priority = 900)
 public class NaturalSpawnerMixin {
 
-    @ModifyVariable(method = "getFilteredSpawningCategories", at = @At("HEAD"), index = 3, argsOnly = true)
-    private static boolean servercore$alwaysSpawnPersistent(boolean shouldSpawnPersistent) {
+    @ModifyVariable(method = "getFilteredSpawningCategories", at = @At("HEAD"), argsOnly = true, name = "spawnPersistent")
+    private static boolean servercore$alwaysSpawnPersistent(boolean spawnPersistent) {
         // We control how often persistent mobs spawn through the spawn interval.
         return true;
     }

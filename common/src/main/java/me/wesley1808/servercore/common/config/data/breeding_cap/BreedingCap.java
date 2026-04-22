@@ -1,10 +1,7 @@
 package me.wesley1808.servercore.common.config.data.breeding_cap;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -19,7 +16,7 @@ import java.util.Set;
 
 public interface BreedingCap {
     Map<EntityType<?>, Set<EntityType<?>>> CUSTOM_TYPES = Map.of(
-            EntityType.FROG, Set.of(EntityType.TADPOLE, EntityType.FROG)
+            EntityTypes.FROG, Set.of(EntityTypes.TADPOLE, EntityTypes.FROG)
     );
 
     @Order(1)

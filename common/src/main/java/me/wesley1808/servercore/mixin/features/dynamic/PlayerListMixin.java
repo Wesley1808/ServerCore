@@ -11,12 +11,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PlayerListMixin {
 
     @Inject(method = "setViewDistance", at = @At("HEAD"))
-    private void servercore$updateViewDistance(int value, CallbackInfo ci) {
-        DynamicSetting.VIEW_DISTANCE.set(value, null);
+    private void servercore$updateViewDistance(int viewDistance, CallbackInfo ci) {
+        DynamicSetting.VIEW_DISTANCE.set(viewDistance, null);
     }
 
     @Inject(method = "setSimulationDistance", at = @At("HEAD"))
-    private void servercore$updateSimulationDistance(int value, CallbackInfo ci) {
-        DynamicSetting.SIMULATION_DISTANCE.set(value, null);
+    private void servercore$updateSimulationDistance(int simulationDistance, CallbackInfo ci) {
+        DynamicSetting.SIMULATION_DISTANCE.set(simulationDistance, null);
     }
 }

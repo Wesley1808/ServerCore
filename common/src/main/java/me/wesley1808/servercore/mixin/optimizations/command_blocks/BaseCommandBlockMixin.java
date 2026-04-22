@@ -35,13 +35,13 @@ public class BaseCommandBlockMixin {
                     target = "Lnet/minecraft/commands/Commands;performPrefixedCommand(Lnet/minecraft/commands/CommandSourceStack;Ljava/lang/String;)V"
             )
     )
-    private void servercore$useCachedParseResults(Commands commands, CommandSourceStack source, String command) {
+    private void servercore$useCachedParseResults(Commands commands, CommandSourceStack sender, String command) {
         String cmd = command.startsWith("/") ? command.substring(1) : command;
         if (this.servercore$parsed == null) {
-            this.servercore$parsed = commands.getDispatcher().parse(cmd, source);
+            this.servercore$parsed = commands.getDispatcher().parse(cmd, sender);
             commands.performCommand(this.servercore$parsed, cmd);
         } else {
-            commands.performCommand(Commands.mapSource(this.servercore$parsed, (s) -> source), cmd);
+            commands.performCommand(Commands.mapSource(this.servercore$parsed, (s) -> sender), cmd);
         }
     }
 

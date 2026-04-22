@@ -31,7 +31,7 @@ public class ThrownEnderPearlMixin {
                     target = "Lnet/minecraft/world/entity/Entity;placePortalTicket(Lnet/minecraft/core/BlockPos;)V"
             )
     )
-    private boolean servercore$preventEnderpearlChunkLoading(Entity entity, BlockPos blockPos) {
+    private boolean servercore$preventEnderpearlChunkLoading(Entity entity, BlockPos ticketPosition) {
         return !Config.get().features().preventEnderpearlChunkLoading();
     }
 }

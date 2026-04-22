@@ -13,14 +13,14 @@ import org.spongepowered.asm.mixin.Shadow;
 public abstract class BeeMixin extends Animal {
     @Shadow
     @Nullable
-    BlockPos hivePos;
+    private BlockPos hivePos;
 
     protected BeeMixin(EntityType<? extends Animal> entityType, Level level) {
         super(entityType, level);
     }
 
     @Shadow
-    abstract boolean isHiveValid();
+    protected abstract boolean isHiveValid();
 
     @Override
     public void servercore$inactiveTick() {

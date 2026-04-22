@@ -6,7 +6,7 @@ import me.wesley1808.servercore.common.utils.Mobcaps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +27,7 @@ public class NetherPortalBlockMixin {
         return isValidSpawn && Mobcaps.canSpawnForCategory(
                 level,
                 ChunkPos.containing(pos),
-                EntityType.ZOMBIFIED_PIGLIN.getCategory(),
+                EntityTypes.ZOMBIFIED_PIGLIN.getCategory(),
                 Config.get().mobSpawning().portalRandomTicks()
         );
     }

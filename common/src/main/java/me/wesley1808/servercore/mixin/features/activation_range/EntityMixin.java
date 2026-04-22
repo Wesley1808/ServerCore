@@ -71,7 +71,7 @@ public class EntityMixin implements Inactive, ActivationEntity {
                     shift = At.Shift.BEFORE
             )
     )
-    public void servercore$onPistonMove(MoverType moverType, Vec3 vec3, CallbackInfo ci) {
+    public void servercore$onPistonMove(MoverType moverType, Vec3 delta, CallbackInfo ci) {
         MinecraftServer server = this.level.getServer();
         if (server != null) {
             final int ticks = server.getTickCount() + 20;
@@ -82,7 +82,7 @@ public class EntityMixin implements Inactive, ActivationEntity {
 
     // ServerCore - Prevent inactive entities from getting extreme velocities.
     @Inject(method = "push(DDD)V", at = @At("HEAD"), cancellable = true)
-    public void servercore$ignorePushingWhileInactive(double x, double y, double z, CallbackInfo ci) {
+    public void servercore$ignorePushingWhileInactive(double xa, double ya, double za, CallbackInfo ci) {
         if (this.servercore$isInactive && !this.level.isClientSide()) {
             ci.cancel();
         }

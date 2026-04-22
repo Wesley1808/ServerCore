@@ -36,11 +36,11 @@ public class StructureCheckMixin {
                     shift = At.Shift.BEFORE
             )
     )
-    private void servercore$skipInvalidBiomes(ChunkPos chunkPos, Structure structure, StructurePlacement structurePlacement, boolean skipKnownStructures, CallbackInfoReturnable<StructureCheckResult> cir) {
+    private void servercore$skipInvalidBiomes(ChunkPos pos, Structure structure, StructurePlacement placement, boolean requireUnreferenced, CallbackInfoReturnable<StructureCheckResult> cir) {
         // Quick checks to validate the biome for certain structures without performing expensive noise calculations.
         // This is mainly done to significantly speed up locating buried treasures.
-        BlockPos pos = this.servercore$getRoughStructurePosition(structure, chunkPos);
-        if (pos != null && !this.servercore$isBiomeValid(structure, pos)) {
+        BlockPos blockPos = this.servercore$getRoughStructurePosition(structure, pos);
+        if (blockPos != null && !this.servercore$isBiomeValid(structure, blockPos)) {
             cir.setReturnValue(StructureCheckResult.START_NOT_PRESENT);
         }
     }

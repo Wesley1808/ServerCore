@@ -24,7 +24,7 @@ public abstract class AgeableMobMixin extends PathfinderMob {
     public abstract int getAge();
 
     @Shadow
-    public abstract void setAge(int age);
+    public abstract void setAge(int newAge);
 
     @Shadow
     public abstract boolean canAgeUp();

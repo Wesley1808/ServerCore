@@ -53,9 +53,9 @@ public class PathFinderMixin {
                     target = "Ljava/util/stream/Stream;collect(Ljava/util/stream/Collector;)Ljava/lang/Object;"
             )
     )
-    private Object servercore$reduceStreams(Stream<?> stream, Collector<?, ?, ?> collector, PathNavigationRegion region, Mob mob, Set<BlockPos> positions) {
-        Object2ObjectOpenHashMap<Target, BlockPos> map = new Object2ObjectOpenHashMap<>(positions.size());
-        for (BlockPos pos : positions) {
+    private Object servercore$reduceStreams(Stream<?> stream, Collector<?, ?, ?> collector, PathNavigationRegion level, Mob entity, Set<BlockPos> targets) {
+        Object2ObjectOpenHashMap<Target, BlockPos> map = new Object2ObjectOpenHashMap<>(targets.size());
+        for (BlockPos pos : targets) {
             map.put(this.nodeEvaluator.getTarget(pos.getX(), pos.getY(), pos.getZ()), pos);
         }
 

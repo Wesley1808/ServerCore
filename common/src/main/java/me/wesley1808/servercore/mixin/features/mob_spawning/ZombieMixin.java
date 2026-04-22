@@ -5,6 +5,7 @@ import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.utils.Mobcaps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.level.Level;
@@ -28,7 +29,7 @@ public abstract class ZombieMixin extends Monster {
         return canSpawnMonsters && Mobcaps.canSpawnForCategory(
                 level,
                 this.chunkPosition(),
-                EntityType.ZOMBIE.getCategory(),
+                EntityTypes.ZOMBIE.getCategory(),
                 Config.get().mobSpawning().zombieReinforcements()
         );
     }
