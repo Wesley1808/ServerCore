@@ -11,7 +11,7 @@ public abstract class ServerCore {
 
     public final void initialize() {
         PlatformHelper.initialize();
-        Config.reloadConfigs();
+        Config.reload();
 
         LOGGER.info("[ServerCore] Loaded V{}!", PlatformHelper.getVersion());
     }

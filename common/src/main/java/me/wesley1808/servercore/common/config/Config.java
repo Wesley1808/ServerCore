@@ -1,7 +1,6 @@
 package me.wesley1808.servercore.common.config;
 
 import me.wesley1808.servercore.common.dynamic.DynamicManager;
-import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.interfaces.IMobCategory;
 
 public class Config {
@@ -27,16 +26,15 @@ public class Config {
         }
     }
 
-    public static boolean reloadConfigs() {
+    public static boolean reload() {
         boolean success = Config.getOrCreateConfigManager().reload();
-        Config.loadChanges();
+        Config.onChanged();
         return success;
     }
 
-    public static void loadChanges() {
+    public static void onChanged() {
         DynamicManager.reload();
         IMobCategory.reload();
-        DynamicManager.modifyMobcaps(DynamicSetting.MOBCAP_PERCENTAGE.get());
     }
 
     private static ConfigManager<MainConfig> getOrCreateConfigManager() {
