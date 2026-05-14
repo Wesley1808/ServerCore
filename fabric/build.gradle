@@ -49,9 +49,6 @@ dependencies {
     // Fabric API
     implementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_api}")
 
-    // Permission API
-    implementation(include("me.lucko:fabric-permissions-api:${project.permission_api}"))
-
     // Placeholder API
     implementation(include("eu.pb4:placeholder-api:${project.placeholder_api}"))
 

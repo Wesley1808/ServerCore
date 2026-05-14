@@ -2,12 +2,12 @@ package me.wesley1808.servercore.fabric.common;
 
 import eu.pb4.placeholders.api.ParserContext;
 import eu.pb4.placeholders.api.parsers.NodeParser;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import me.wesley1808.servercore.common.ServerCore;
 import me.wesley1808.servercore.common.services.PermNode;
 import me.wesley1808.servercore.common.services.platform.MinecraftPlatform;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 
 public class FabricMinecraftPlatform implements MinecraftPlatform {
@@ -18,8 +18,8 @@ public class FabricMinecraftPlatform implements MinecraftPlatform {
 
     @Override
     public boolean hasPermission(CommandSourceStack source, PermNode node) {
-        String permission = String.format("%s.%s", ServerCore.MODID, node.id());
-        return Permissions.getPermissionValue(source, permission).orElseGet(() -> node.defaultResolver().test(source.permissions()));
+        Identifier permission = Identifier.fromNamespaceAndPath(ServerCore.MODID, node.id());
+        return source.checkPermission(permission).orElseGet(() -> node.defaultResolver().test(source.permissions()));
     }
 
     @Override
