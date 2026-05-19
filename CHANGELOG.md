@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.17]
+
+### Fixed
+
+- Fixed incompatibility with sable (ray casting in sublevels)
+- Fixed default dynamic setting values not always initializing properly
+
 ## [1.5.16]
 
 ### Fixed
@@ -22,7 +29,7 @@
 
 ### Fixed
 
-- Fixed chunk-tick-distance stopping pearl/portal loaded chunks from random ticking (breaking vanilla behavior by default). 
+- Fixed chunk-tick-distance stopping pearl/portal loaded chunks from random ticking (breaking vanilla behavior by default).
   This old behavior is now hidden behind a config option.
 
 ## [1.5.11]
@@ -33,7 +40,7 @@
 
 ### Fixed
 
-- Ticking chunk cache allowing border chunks to tick (rarely causing a sync load) 
+- Ticking chunk cache allowing border chunks to tick (rarely causing a sync load)
 
 ## [1.5.10]
 

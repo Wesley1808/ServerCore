@@ -59,6 +59,10 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             shouldApply &= !Environment.MOD_MOONRISE;
         }
 
+        if (path.equals("optimizations.sync_loads.BlockGetterMixin")) {
+            shouldApply &= !Environment.MOD_SABLE;
+        }
+
         return shouldApply;
     }
 

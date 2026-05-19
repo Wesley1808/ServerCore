@@ -7,4 +7,5 @@ public class Environment {
     public static final boolean MOD_SPARK = PlatformHelper.isModLoaded("spark");
     public static final boolean MOD_VMP = PlatformHelper.isModLoaded("vmp");
     public static final boolean MOD_MOONRISE = PlatformHelper.isModLoaded("moonrise");
+    public static final boolean MOD_SABLE = PlatformHelper.isModLoaded("sable");
 }
