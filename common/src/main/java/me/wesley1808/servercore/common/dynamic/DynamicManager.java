@@ -21,7 +21,7 @@ public class DynamicManager {
 
     public DynamicManager(MinecraftServer server) {
         this.server = server;
-        DynamicSetting.initDefaultValues();
+        DynamicSetting.initDefaultValues(this);
     }
 
     public static DynamicManager getInstance(MinecraftServer server) {
