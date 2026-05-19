@@ -1,5 +1,47 @@
 # Changelog
 
+## [1.5.17]
+
+### Fixed
+
+- Fixed incompatibility with sable (ray casting in sublevels)
+- Fixed default dynamic setting values not always initializing properly
+
+## [1.5.16]
+
+### Fixed
+
+- Fixed some small inconsistencies with activation range inactive entity ticks.
+
+## [1.5.14]
+
+### Fixed
+
+- Fixed a bug with `reduce-sync-loads` where really high-velocity entities weren't detecting collisions correctly, such as enderpearls from pearl cannons.
+
+## [1.5.12]
+
+### Added
+
+- Added `chunk-tick-distance-affects-random-ticks` option to control whether chunk-tick-distance affects random ticks.
+  - chunk-tick-distance will still affect mobspawning regardless of this setting.
+  - enabling this setting will bring back old behavior, stopping random ticks in chunks too far away from players - even chunks simulated by enderpearl or portal loading.
+
+### Fixed
+
+- Fixed chunk-tick-distance stopping pearl/portal loaded chunks from random ticking (breaking vanilla behavior by default).
+  This old behavior is now hidden behind a config option.
+
+## [1.5.11]
+
+### Added
+
+- Patch to prevent sync loads caused by block entity updates (mostly vaults and trial spawners).
+
+### Fixed
+
+- Ticking chunk cache allowing border chunks to tick (rarely causing a sync load)
+
 ## [1.5.10]
 
 ### Fixed
@@ -20,8 +62,8 @@
 ### Changed
 
 - Chunks in vanilla can now tick if they're loaded by a ticket that allows simulation, not just when players are nearby.
-    - Chunk-tick-distance now checks the distance to the nearest simulating ticket instead of the nearest player.
-    - Since spawning and block-ticking chunks are now separate, ticking chunk cache now caches both of them.
+  - Chunk-tick-distance now checks the distance to the nearest simulating ticket instead of the nearest player.
+  - Since spawning and block-ticking chunks are now separate, ticking chunk cache now caches both of them.
 
 ## [1.5.8]
 
@@ -100,9 +142,9 @@
 ### Changed
 
 - `mobcap-modifier` was replaced with `additional-capacity` in the mobspawning configuration.
-    - Uses a constant value instead of a modifier as it isn't affected by changes in mobcap percentage.
-    - Very low mobcap percentages could otherwise cause spawners and such to basically never spawn with some
-      configurations.
+  - Uses a constant value instead of a modifier as it isn't affected by changes in mobcap percentage.
+  - Very low mobcap percentages could otherwise cause spawners and such to basically never spawn with some
+    configurations.
 
 ## [1.5.0]
 
@@ -114,9 +156,9 @@
 - Expanded upon activation range by making activation types fully configurable.
 - Improved the `/statistics entities` command to show how many mobs are affected by activation range.
 - Added a much requested mobspawning configuration:
-    - Has the ability to modify the spawnrate and mobcaps of each individual spawngroup.
-    - Provides optional functionality to force mobcaps to apply to zombie reinforcements, spawners and nether portal
-      randomticks.
+  - Has the ability to modify the spawnrate and mobcaps of each individual spawngroup.
+  - Provides optional functionality to force mobcaps to apply to zombie reinforcements, spawners and nether portal
+    randomticks.
 
 ### Fixed
 
