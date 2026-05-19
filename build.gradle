@@ -2,7 +2,7 @@ import org.jetbrains.changelog.Changelog
 
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.7-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.13-SNAPSHOT" apply false
     id "me.modmuss50.mod-publish-plugin" version "0.+"
     id 'org.jetbrains.changelog' version '2.+'
 }
@@ -18,6 +18,15 @@ subprojects {
     repositories {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         maven { url "https://maven.impactdev.net/repository/development/" }
+
+        maven {
+            name 'luck-repo'
+            url 'https://repo.lucko.me/'
+            content {
+                includeModule 'me.lucko', 'spark-api'
+            }
+        }
+
         mavenCentral()
     }
 
@@ -43,8 +52,8 @@ allprojects {
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
-    var formattedVersion = "${mod_version}+${minecraft}"
-    archivesBaseName = project.archives_base_name
+    base.setArchivesName(project.archives_base_name)
+    def formattedVersion = "${mod_version}+${minecraft}"
 
     version = formattedVersion
     group = project.maven_group
@@ -67,7 +76,6 @@ publishMods {
 
     def nameFormat = "ServerCore %s ${version.get()}"
     def fabric = findProject(':fabric')
-    def forge = findProject(':forge')
     def neoforge = findProject(':neoforge')
 
     def curseforgeOpts = curseforgeOptions {
@@ -97,24 +105,6 @@ publishMods {
             file = fabricJar
             modLoaders.add("fabric")
             displayName = nameFormat.formatted("Fabric")
-        }
-    }
-
-    if (forge != null) {
-        def forgeJar = forge.remapJar.archiveFile
-
-        curseforge("CurseForge - Forge") {
-            from curseforgeOpts
-            file = forgeJar
-            modLoaders.add("forge")
-            displayName = nameFormat.formatted("Forge")
-        }
-
-        modrinth("Modrinth - Forge") {
-            from modrinthOpts
-            file = forgeJar
-            modLoaders.add("forge")
-            displayName = nameFormat.formatted("Forge")
         }
     }
 
