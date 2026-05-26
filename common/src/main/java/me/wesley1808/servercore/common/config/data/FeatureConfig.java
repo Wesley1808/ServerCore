@@ -6,7 +6,6 @@ import space.arim.dazzleconf.annote.ConfDefault.DefaultDouble;
 import space.arim.dazzleconf.annote.ConfDefault.DefaultInteger;
 import space.arim.dazzleconf.annote.ConfKey;
 import space.arim.dazzleconf.annote.IntegerRange;
-import space.arim.dazzleconf.annote.NumericRange;
 import space.arim.dazzleconf.sorter.AnnotationBasedSorter.Order;
 
 public interface FeatureConfig {
@@ -57,14 +56,12 @@ public interface FeatureConfig {
     @Order(6)
     @ConfKey("xp-merge-radius")
     @DefaultDouble(0.5)
-    @NumericRange(min = 0.5)
     @ConfComments("The radius in blocks that experience orbs will merge at.")
     double xpMergeRadius();
 
     @Order(7)
     @ConfKey("item-merge-radius")
     @DefaultDouble(0.5)
-    @NumericRange(min = 0.5)
     @ConfComments("The radius in blocks that items will merge at.")
     double itemMergeRadius();
 

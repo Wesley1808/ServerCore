@@ -10,7 +10,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class ItemEntityMixin {
 
     @ModifyConstant(method = "mergeWithNeighbours", require = 0, constant = @Constant(doubleValue = 0.5))
-    private double servercore$modifyMergeRadius(double constant) {
-        return Config.get().features().itemMergeRadius();
+    private double servercore$modifyMergeRadius(double original) {
+        double radius = Config.get().features().itemMergeRadius();
+        return radius < 0.0 ? original : radius;
     }
 }

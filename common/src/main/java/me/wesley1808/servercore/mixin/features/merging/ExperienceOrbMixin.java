@@ -24,7 +24,8 @@ public class ExperienceOrbMixin {
                     target = "Lnet/minecraft/world/phys/AABB;inflate(D)Lnet/minecraft/world/phys/AABB;"
             )
     )
-    private double servercore$modifyMergeRadius(double value) {
-        return Config.get().features().xpMergeRadius();
+    private double servercore$modifyMergeRadius(double original) {
+        double radius = Config.get().features().xpMergeRadius();
+        return radius < 0.0 ? original : radius;
     }
 }
