@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.18]
+
+### Changed
+
+- Reduced config restrictions on xp/item merge radius.
+- Removed prevent sync load patch for raycasting as it was too intrusive and not important (better mod compatibility).
+- Added despawn-distance config setting for mobcaps.
+
 ## [1.5.17]
 
 ### Fixed
