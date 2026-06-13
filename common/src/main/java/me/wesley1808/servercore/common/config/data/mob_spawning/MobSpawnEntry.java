@@ -19,4 +19,9 @@ public interface MobSpawnEntry {
     @ConfKey("spawn-interval")
     @IntegerRange(min = 1)
     int spawnInterval();
+
+    @Order(4)
+    @ConfKey("despawn-distance")
+    @IntegerRange(min = 24)
+    int despawnDistance();
 }

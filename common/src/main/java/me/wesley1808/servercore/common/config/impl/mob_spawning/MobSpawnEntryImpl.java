@@ -7,17 +7,20 @@ public class MobSpawnEntryImpl implements MobSpawnEntry {
     private final MobCategory category;
     private final int capacity;
     private final int spawnInterval;
+    private final int despawnDistance;
 
     public MobSpawnEntryImpl(MobSpawnEntry source) {
         this.category = source.category();
         this.capacity = source.capacity();
         this.spawnInterval = source.spawnInterval();
+        this.despawnDistance = source.despawnDistance();
     }
 
-    public MobSpawnEntryImpl(MobCategory category, int capacity, int spawnInterval) {
+    public MobSpawnEntryImpl(MobCategory category, int capacity, int spawnInterval, int despawnDistance) {
         this.category = category;
         this.capacity = capacity;
         this.spawnInterval = spawnInterval;
+        this.despawnDistance = despawnDistance;
     }
 
     @Override
@@ -33,5 +36,10 @@ public class MobSpawnEntryImpl implements MobSpawnEntry {
     @Override
     public int spawnInterval() {
         return this.spawnInterval;
+    }
+
+    @Override
+    public int despawnDistance() {
+        return this.despawnDistance;
     }
 }
