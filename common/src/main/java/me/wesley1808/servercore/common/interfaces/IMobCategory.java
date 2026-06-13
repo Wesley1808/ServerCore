@@ -11,7 +11,7 @@ public interface IMobCategory {
 
     void servercore$modifyCapacity(double modifier);
 
-    void servercore$modifySpawningConfig(int max, int interval);
+    void servercore$modifySpawningConfig(MobSpawnEntry config);
 
     static IMobCategory of(MobCategory category) {
         return (IMobCategory) (Object) category;
@@ -31,11 +31,11 @@ public interface IMobCategory {
 
     static void reload() {
         for (MobSpawnEntry entry : Config.get().mobSpawning().categories()) {
-            IMobCategory.modify(entry.category(), entry.capacity(), entry.spawnInterval());
+            IMobCategory.modify(entry);
         }
     }
 
-    private static void modify(MobCategory category, int max, int interval) {
-        IMobCategory.of(category).servercore$modifySpawningConfig(max, interval);
+    private static void modify(MobSpawnEntry config) {
+        IMobCategory.of(config.category()).servercore$modifySpawningConfig(config);
     }
 }

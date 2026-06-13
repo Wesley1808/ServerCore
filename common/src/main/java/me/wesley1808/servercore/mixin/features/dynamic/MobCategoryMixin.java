@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.mixin.features.dynamic;
 
+import me.wesley1808.servercore.common.config.data.mob_spawning.MobSpawnEntry;
 import me.wesley1808.servercore.common.interfaces.IMobCategory;
 import net.minecraft.world.entity.MobCategory;
 import org.spongepowered.asm.mixin.*;
@@ -14,6 +15,10 @@ public class MobCategoryMixin implements IMobCategory {
     @Shadow
     @Final
     private int max;
+    @Mutable
+    @Shadow
+    @Final
+    private int despawnDistance;
     @Unique
     private int servercore$originalCapacity;
     @Unique
@@ -52,8 +57,9 @@ public class MobCategoryMixin implements IMobCategory {
     }
 
     @Override
-    public void servercore$modifySpawningConfig(int max, int interval) {
-        this.max = max;
-        this.servercore$spawnInterval = interval;
+    public void servercore$modifySpawningConfig(MobSpawnEntry config) {
+        this.max = config.capacity();
+        this.despawnDistance = config.despawnDistance();
+        this.servercore$spawnInterval = config.spawnInterval();
     }
 }

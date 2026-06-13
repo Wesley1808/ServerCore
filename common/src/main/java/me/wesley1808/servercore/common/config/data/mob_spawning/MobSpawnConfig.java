@@ -47,9 +47,11 @@ public interface MobSpawnConfig {
     @DefaultObject("defaultCategories")
     @ConfComments({
             "A list of mob categories with their respective mobcap and spawn interval.",
-            "► category = The vanilla spawn category.",
+            "This setting lets you modify the values in vanilla's mobcap implementation.",
+            "► category = The mob spawning category.",
             "► mobcap = The maximum amount of entities in the same category that can spawn near a player.",
-            "► spawn-interval = The interval between spawn attempts in ticks. Higher values mean less frequent spawn attempts.",
+            "► spawn-interval = The interval between spawn attempts in ticks. Higher values will make mobs spawn much slower.",
+            "► despawn-distance = The distance in blocks from players where non-persistent mobs of this category will immediately despawn.",
     })
     List<@SubSection MobSpawnEntry> categories();
 
@@ -60,7 +62,8 @@ public interface MobSpawnConfig {
                 entries.add(new MobSpawnEntryImpl(
                         category,
                         IMobCategory.getOriginalCapacity(category),
-                        category.isPersistent() ? 400 : 1
+                        category.isPersistent() ? 400 : 1,
+                        category.getDespawnDistance()
                 ));
             }
         }
