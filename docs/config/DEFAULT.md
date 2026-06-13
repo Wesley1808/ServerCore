@@ -161,37 +161,46 @@ mob-spawning:
     additional-capacity: 32
 
   # A list of mob categories with their respective mobcap and spawn interval.
-  # ► category = The vanilla spawn category.
+  # This setting lets you modify the values in vanilla's mobcap implementation.
+  # ► category = The mob spawning category.
   # ► mobcap = The maximum amount of entities in the same category that can spawn near a player.
-  # ► spawn-interval = The interval between spawn attempts in ticks. Higher values mean less frequent spawn attempts.
+  # ► spawn-interval = The interval between spawn attempts in ticks. Higher values will make mobs spawn much slower.
+  # ► despawn-distance = The distance in blocks from players where non-persistent mobs of this category will immediately despawn.
   categories:
     - category: 'MONSTER'
       mobcap: 70
       spawn-interval: 1
+      despawn-distance: 128
 
     - category: 'CREATURE'
       mobcap: 10
       spawn-interval: 400
+      despawn-distance: 128
 
     - category: 'AMBIENT'
       mobcap: 15
       spawn-interval: 1
+      despawn-distance: 128
 
     - category: 'AXOLOTLS'
       mobcap: 5
       spawn-interval: 1
+      despawn-distance: 128
 
     - category: 'UNDERGROUND_WATER_CREATURE'
       mobcap: 5
       spawn-interval: 1
+      despawn-distance: 128
 
     - category: 'WATER_CREATURE'
       mobcap: 5
       spawn-interval: 1
+      despawn-distance: 128
 
     - category: 'WATER_AMBIENT'
       mobcap: 20
       spawn-interval: 1
+      despawn-distance: 64
 
 # Settings for commands and their formatting.
 commands:
