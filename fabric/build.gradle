@@ -61,8 +61,12 @@ dependencies {
     runtimeOnly(include("space.arim.dazzleconf:dazzleconf-ext-snakeyaml:${project.dazzleconf}"))
 }
 
-tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
+tasks.withType(Jar).configureEach {
     archiveAppendix.set("fabric")
+}
+
+loom {
+//    injectAccessWidener(tasks.named('jar'))
 }
 
 jar {

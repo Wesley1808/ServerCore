@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     id "com.gradleup.shadow" version "9.3.0"
 }
@@ -69,6 +71,12 @@ tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
     archiveAppendix.set("neoforge")
 }
 
+loom {
+    neoForge {
+        convertAccessWideners(tasks.named('shadowJar') as TaskProvider<? extends Jar>, 'servercore.accesswidener')
+    }
+}
+
 jar {
     archiveClassifier = "raw"
 }
@@ -81,13 +89,12 @@ shadowJar {
     exclude "architectury.common.json"
     relocateDependency(shadowJar, "net.kyori")
     mergeServiceFiles()
-    // TODO: atAccessWideners.add('servercore.accesswidener')
 
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = null
 }
 
-private static void relocateDependency(com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar shadowJar, String pattern) {
+private static void relocateDependency(ShadowJar shadowJar, String pattern) {
     shadowJar.relocate(pattern, "servercore_libs.${pattern}")
 }
 
