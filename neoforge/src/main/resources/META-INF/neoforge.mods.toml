@@ -22,13 +22,13 @@ config = "servercore.common.mixins.json"
 [[dependencies.servercore]]
 modId = "minecraft"
 required = true
-versionRange = "[26.1,)"
+versionRange = "[26.2,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.servercore]]
 modId = "neoforge"
 required = true
-versionRange = "[26.1.2.22-beta,)"
+versionRange = "[26.2.0.0-beta,)"
 ordering = "NONE"
 side = "BOTH"
