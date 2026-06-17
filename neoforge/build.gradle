@@ -67,7 +67,7 @@ dependencies {
     localRuntime(fileTree(dir: 'runtime-mods', include: '*.jar'))
 }
 
-tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
+tasks.withType(Jar).configureEach {
     archiveAppendix.set("neoforge")
 }
 

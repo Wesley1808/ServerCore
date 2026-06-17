@@ -63,7 +63,7 @@ tasks.withType(Jar).configureEach {
 }
 
 loom {
-//    injectAccessWidener(tasks.named('jar'))
+    injectAccessWidener(tasks.named('shadowJar') as TaskProvider<? extends Jar>)
 }
 
 jar {
