@@ -25,6 +25,7 @@
     "features.activation_range.inactive_ticks.TadpoleMixin",
     "features.activation_range.inactive_ticks.VillagerMixin",
     "features.breeding_cap.AllayMixin",
+    "features.breeding_cap.DriedGhastBlockMixin",
     "features.breeding_cap.ThrownEggMixin",
     "features.breeding_cap.tasks.AnimalMakeLoveMixin",
     "features.breeding_cap.tasks.BreedGoalMixin",
