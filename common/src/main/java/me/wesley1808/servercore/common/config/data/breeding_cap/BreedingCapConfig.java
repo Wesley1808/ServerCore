@@ -24,6 +24,15 @@ public interface BreedingCapConfig {
     })
     BreedingCap villagers();
 
+    @Order(2)
+    @SubSection
+    @ConfKey("happy-ghasts")
+    @ConfComments({
+            "The breeding cap for happy ghasts.",
+            "Dried ghast blocks will wait until there is space in the breeding cap to hatch."
+    })
+    BreedingCap happyGhasts();
+
     @Order(3)
     @SubSection
     @ConfKey("animals")

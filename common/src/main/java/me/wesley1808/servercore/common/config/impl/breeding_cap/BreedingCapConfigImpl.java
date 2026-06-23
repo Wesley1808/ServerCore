@@ -6,11 +6,13 @@ import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCapConfi
 public class BreedingCapConfigImpl implements BreedingCapConfig {
     private final boolean enabled;
     private final BreedingCap villagers;
+    private final BreedingCap happyGhasts;
     private final BreedingCap animals;
 
     public BreedingCapConfigImpl(BreedingCapConfig source) {
         this.enabled = source.enabled();
         this.villagers = new BreedingCapImpl(source.villagers());
+        this.happyGhasts = new BreedingCapImpl(source.happyGhasts());
         this.animals = new BreedingCapImpl(source.animals());
     }
 
@@ -22,6 +24,11 @@ public class BreedingCapConfigImpl implements BreedingCapConfig {
     @Override
     public BreedingCap villagers() {
         return this.villagers;
+    }
+
+    @Override
+    public BreedingCap happyGhasts() {
+        return this.happyGhasts;
     }
 
     @Override

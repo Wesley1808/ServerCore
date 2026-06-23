@@ -139,6 +139,13 @@ breeding-cap:
     range: 64
     unlimited-height: false
 
+  # The breeding cap for happy ghasts.
+  # Dried ghast blocks will wait until there is space in the breeding cap to hatch.
+  happy-ghasts:
+    limit: 48
+    range: 64
+    unlimited-height: false
+
   # The breeding cap for animals.
   # Note that this cap only checks for animals of the same type.
   # If the limit is 32 you can still breed 32 cows and 32 pigs next to each other.
