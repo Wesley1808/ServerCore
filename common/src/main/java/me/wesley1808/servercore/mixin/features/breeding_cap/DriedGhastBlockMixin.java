@@ -5,7 +5,7 @@ import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.data.breeding_cap.BreedingCapConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.DriedGhastBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,6 +23,6 @@ public class DriedGhastBlockMixin {
     )
     private boolean servercore$enforceBreedCap(DriedGhastBlock instance, ServerLevel level, BlockPos position, BlockState state) {
         BreedingCapConfig config = Config.get().breedingCap();
-        return !config.enabled() || !config.happyGhasts().exceedsLimit(EntityTypes.HAPPY_GHAST, level, position);
+        return !config.enabled() || !config.happyGhasts().exceedsLimit(EntityType.HAPPY_GHAST, level, position);
     }
 }
