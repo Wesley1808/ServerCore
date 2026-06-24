@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.19]
+
+### Fixed
+
+- Fixed mobcaps not updating on /sc reload.
+
 ## [1.5.18]
 
 ### Changed

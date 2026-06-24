@@ -17,7 +17,8 @@ subprojects {
 
     repositories {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-        maven { url "https://maven.impactdev.net/repository/development/" }
+        maven { url "https://artefacts.cobblemon.com/releases" }
+        maven { url "https://artefacts.cobblemon.com/snapshots" }
 
         maven {
             name 'luck-repo'
