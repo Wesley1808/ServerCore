@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.5.19]
+
+### Added
+
+- Added a breeding cap config option for happy ghasts.
+
+### Fixed
+
+- Fixed mobcaps not updating on /sc reload.
+
 ## [1.5.18]
 
 ### Changed
