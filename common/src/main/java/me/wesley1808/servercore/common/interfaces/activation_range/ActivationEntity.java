@@ -19,8 +19,6 @@ public interface ActivationEntity {
 
     void servercore$setInactive(boolean active);
 
-    void servercore$incFullTickCount();
-
     default int servercore$getFullTickCount() {
         return 0;
     }

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class NaturalSpawnerMixin {
 
     @Redirect(
-            method = {"mobsAt", "getRandomSpawnMobAt"},
+            method = "getRandomSpawnMobAt",
             require = 0,
             at = @At(
                     value = "INVOKE",

@@ -1,5 +1,6 @@
 package me.wesley1808.servercore.mixin.features.activation_range;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import me.wesley1808.servercore.common.activation_range.ActivationRange;
 import me.wesley1808.servercore.common.config.data.activation_range.ActivationType;
 import me.wesley1808.servercore.common.interfaces.activation_range.ActivationEntity;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -61,6 +63,21 @@ public class EntityMixin implements Inactive, ActivationEntity {
         final Entity entity = (Entity) (Object) this;
         this.servercore$activationType = ActivationRange.initializeEntityActivationType(entity);
         this.servercore$excluded = level == null || ActivationRange.isExcluded(entity);
+    }
+
+    // ServerCore - Only increase server entity tick count when ticked.
+    // Increasing the tick count whilst inactive can break entity behavior.
+    @WrapWithCondition(
+            method = "commonTick",
+            at = @At(
+                    value = "FIELD",
+                    target = "net/minecraft/world/entity/Entity.tickCount:I",
+                    opcode = Opcodes.PUTFIELD
+            )
+    )
+    private boolean servercore$replaceTickCount(Entity entity, int value) {
+        ++this.servercore$fullTickCount;
+        return this.level.isClientSide();
     }
 
     @Inject(
@@ -142,11 +159,6 @@ public class EntityMixin implements Inactive, ActivationEntity {
     @Override
     public int servercore$getFullTickCount() {
         return this.servercore$fullTickCount;
-    }
-
-    @Override
-    public void servercore$incFullTickCount() {
-        this.servercore$fullTickCount++;
     }
 
     @Override

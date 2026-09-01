@@ -6,13 +6,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.BooleanSupplier;
@@ -82,19 +80,5 @@ public class ServerLevelMixin {
             vehicle.positionRider(passenger);
             return false;
         }
-    }
-
-    // ServerCore - Only increase tick count when ticked.
-    // Increasing the tick count whilst inactive can break entity behavior.
-    @Redirect(
-            method = {"tickNonPassenger", "tickPassenger"},
-            at = @At(
-                    value = "FIELD",
-                    target = "net/minecraft/world/entity/Entity.tickCount:I",
-                    opcode = Opcodes.PUTFIELD
-            )
-    )
-    private void servercore$redirectTickCount(Entity entity, int value) {
-        entity.servercore$incFullTickCount();
     }
 }

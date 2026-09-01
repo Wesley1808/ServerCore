@@ -28,7 +28,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 @Mixin(value = ServerChunkCache.class, priority = 900)
 public class ServerChunkCacheMixin {
@@ -43,7 +42,7 @@ public class ServerChunkCacheMixin {
     private int servercore$tickCount;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void servercore$onInit(ServerLevel level, LevelStorageSource.LevelStorageAccess levelStorage, DataFixer fixerUpper, StructureTemplateManager structureTemplateManager, Executor executor, ChunkGenerator generator, int viewDistance, int simulationDistance, boolean syncWrites, ChunkStatusUpdateListener chunkStatusListener, Supplier<?> overworldDataStorage, CallbackInfo ci) {
+    private void servercore$onInit(ServerLevel level, LevelStorageSource.LevelStorageAccess levelStorage, DataFixer fixerUpper, StructureTemplateManager structureTemplateManager, Executor executor, ChunkGenerator generator, int viewDistance, int simulationDistance, boolean syncWrites, ChunkStatusUpdateListener chunkStatusListener, CallbackInfo ci) {
         this.servercore$tickCount = Util.WORLD_COUNTER.getAndIncrement();
     }
 

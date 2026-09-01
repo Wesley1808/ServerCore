@@ -31,6 +31,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPacketListenerImpl {
+    @Unique
+    private boolean servercore$mayPreventPlayerMovement;
+
     @Shadow
     public ServerPlayer player;
 
@@ -68,7 +71,7 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
     }
 
     @Inject(
-            method = "handleMovePlayer",
+            method = "handlePlayerPositionChange",
             cancellable = true,
             at = @At(
                     value = "INVOKE",
@@ -76,8 +79,10 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
                     ordinal = 0
             )
     )
-    private void servercore$handleMovePlayer(
-            ServerboundMovePlayerPacket packet, CallbackInfo ci,
+    private void servercore$handlePlayerPositionChange(
+            double requestedX, double requestedY, double requestedZ,
+            float requestedYRot, float requestedXRot,
+            boolean isOnGround, boolean horizontalCollision, CallbackInfo ci,
             @Local(name = "level") ServerLevel level,
             @Local(name = "targetYRot") float targetYRot,
             @Local(name = "targetXRot") float targetXRot,
@@ -88,10 +93,20 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
             @Local(name = "startY") double startY,
             @Local(name = "startZ") double startZ
     ) {
-        if (this.servercore$shouldPreventMovement(level, this.player, startX, startZ, targetX, targetY, targetZ)) {
+        if (this.servercore$mayPreventPlayerMovement && this.servercore$shouldPreventMovement(level, this.player, startX, startZ, targetX, targetY, targetZ)) {
             this.teleport(startX, startY, startZ, targetYRot, targetXRot);
             ci.cancel();
         }
+    }
+
+    @Inject(method = "handleMovePlayer", at = @At(value = "HEAD"))
+    private void servercore$preHandleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci) {
+        this.servercore$mayPreventPlayerMovement = true;
+    }
+
+    @Inject(method = "handleMovePlayer", at = @At(value = "RETURN"))
+    private void servercore$postHandleMovePlayer(ServerboundMovePlayerPacket packet, CallbackInfo ci) {
+        this.servercore$mayPreventPlayerMovement = false;
     }
 
     @Unique
