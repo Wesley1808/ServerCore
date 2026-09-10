@@ -46,13 +46,13 @@ public class ServerChunkCacheMixin {
         this.servercore$tickCount = Util.WORLD_COUNTER.getAndIncrement();
     }
 
-    @Inject(method = "tickChunks(Lnet/minecraft/util/profiling/ProfilerFiller;J)V", at = @At("HEAD"))
+    @Inject(method = "tickChunks(Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At("HEAD"))
     private void servercore$beforeChunkTicks(CallbackInfo ci) {
         this.servercore$refreshTickingCache = this.servercore$tickCount++ % 20 == 0;
     }
 
     @Redirect(
-            method = "tickChunks(Lnet/minecraft/util/profiling/ProfilerFiller;J)V",
+            method = "tickChunks(Lnet/minecraft/util/profiling/ProfilerFiller;)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/level/ChunkMap;forEachBlockTickingChunk(Ljava/util/function/Consumer;)V"
@@ -72,7 +72,7 @@ public class ServerChunkCacheMixin {
     }
 
     @WrapWithCondition(
-            method = "tickChunks(Lnet/minecraft/util/profiling/ProfilerFiller;J)V",
+            method = "tickChunks(Lnet/minecraft/util/profiling/ProfilerFiller;)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/level/ChunkMap;collectSpawningChunks(Ljava/util/List;)V"
@@ -88,19 +88,19 @@ public class ServerChunkCacheMixin {
 
     // Don't try to tick cached unloaded chunks
     @WrapWithCondition(
-            method = "tickChunks(Lnet/minecraft/util/profiling/ProfilerFiller;J)V",
+            method = "tickChunks(Lnet/minecraft/util/profiling/ProfilerFiller;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ServerChunkCache;tickSpawningChunk(Lnet/minecraft/world/level/chunk/LevelChunk;JLjava/util/List;Lnet/minecraft/world/level/NaturalSpawner$SpawnState;)V"
+                    target = "Lnet/minecraft/server/level/ServerChunkCache;tickSpawningChunk(Lnet/minecraft/world/level/chunk/LevelChunk;Ljava/util/List;Lnet/minecraft/world/level/NaturalSpawner$SpawnState;)V"
             )
     )
-    private boolean servercore$ignoreUnloadedSpawnTicks(ServerChunkCache chunkCache, LevelChunk chunk, long timeDiff, List<MobCategory> spawningCategories, NaturalSpawner.SpawnState spawnCookie) {
+    private boolean servercore$ignoreUnloadedSpawnTicks(ServerChunkCache chunkCache, LevelChunk chunk, List<MobCategory> spawningCategories, NaturalSpawner.SpawnState spawnCookie) {
         return chunk.loaded;
     }
 
     // Don't shuffle the chunk list.
     @Redirect(
-            method = "tickChunks(Lnet/minecraft/util/profiling/ProfilerFiller;J)V",
+            method = "tickChunks(Lnet/minecraft/util/profiling/ProfilerFiller;)V",
             require = 0,
             at = @At(
                     value = "INVOKE",
@@ -112,7 +112,7 @@ public class ServerChunkCacheMixin {
     }
 
     @Redirect(
-            method = "tickChunks(Lnet/minecraft/util/profiling/ProfilerFiller;J)V",
+            method = "tickChunks(Lnet/minecraft/util/profiling/ProfilerFiller;)V",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/util/List;clear()V"
