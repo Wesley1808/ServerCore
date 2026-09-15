@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.20]
+
+### Added
+
+- Added support for 26.3
+
 ## [1.5.19]
 
 ### Added
