@@ -9,7 +9,7 @@ modId = "servercore"
 version = "${version}"
 displayName = "ServerCore"
 displayURL = "https://github.com/Wesley1808/ServerCore"
-logoFile = "icon.png"
+iconFile = "icon.png"
 authors = "Wesley1808"
 
 description = '''
