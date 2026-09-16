@@ -11,16 +11,16 @@ import me.wesley1808.servercore.common.utils.statistics.Statistics;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.time.Duration;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 public class PlaceHolders {
     // Caches expensive to calculate global values for 1 tick.
     // This way we won't have to re-calculate these values for every single player on the same tick.
     private static final Cache<String, String> CACHE = CacheBuilder.newBuilder()
-            .expireAfterWrite(50, TimeUnit.MILLISECONDS)
+            .expireAfterWrite(Duration.ofMillis(50))
             .build();
 
     public static void register() {

@@ -47,9 +47,9 @@ dependencies {
     common(project(path: ":common")) { transitive false }
     shadowBundle(project(path: ":common", configuration: "transformProductionNeoForge"))
 
-    // MixinExtras - include 0.5.5 as fabric loader 0.19.5 includes it and archloom compiles the common source mixins with it.
-    // Neoforge, still using 0.5.4 without this, will fail to load mixins compiled with 0.5.5.
-    // TODO: Remove when neoforge updates to 0.5.5
+    // MixinExtras - require v0.5.5 because archloom uses fabric mixin to compile common sources mixins.
+    // Fabric loader 0.19.5 uses a mixin version that v0.5.4 and below is not compatible with.
+    // TODO: Remove when neoforge updates to v0.5.5
     implementation(include("io.github.llamalad7:mixinextras-neoforge:${project.mixin_extras}"))
 
     // Configuration
@@ -67,9 +67,6 @@ dependencies {
         exclude group: "org.intellij"
         exclude group: "org.jetbrains"
     }
-
-    // Allows running other mods in dev environment
-    localRuntime(fileTree(dir: 'runtime-mods', include: '*.jar'))
 }
 
 tasks.withType(Jar).configureEach {
