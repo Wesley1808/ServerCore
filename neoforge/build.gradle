@@ -47,11 +47,6 @@ dependencies {
     common(project(path: ":common")) { transitive false }
     shadowBundle(project(path: ":common", configuration: "transformProductionNeoForge"))
 
-    // MixinExtras - require v0.5.5 because archloom uses fabric mixin to compile common sources mixins.
-    // Fabric loader 0.19.5 uses a mixin version that v0.5.4 and below is not compatible with.
-    // TODO: Remove when neoforge updates to v0.5.5
-    implementation(include("io.github.llamalad7:mixinextras-neoforge:${project.mixin_extras}"))
-
     // Configuration
     include(forgeRuntimeLibrary("org.yaml:snakeyaml:${project.snakeyaml}"))
     include(forgeRuntimeLibrary("space.arim.dazzleconf:dazzleconf-core:${project.dazzleconf}"))

@@ -14,7 +14,6 @@ import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerCommonPacketListenerImpl;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -113,6 +112,6 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
     private boolean servercore$shouldPreventMovement(ServerLevel level, Entity entity, double fromX, double fromZ, double toX, double toY, double toZ) {
         return Config.get().features().preventMovingIntoUnloadedChunks()
                && (fromX != toX || fromZ != toZ)
-               && !ChunkManager.areChunksLoadedForMove(level, entity.getBoundingBox().expandTowards(new Vec3(toX, toY, toZ).subtract(entity.position())));
+               && !ChunkManager.areChunksLoadedForMove(level, entity, toX, toZ);
     }
 }

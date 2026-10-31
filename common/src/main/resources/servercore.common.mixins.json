@@ -54,8 +54,6 @@
     "optimizations.sync_loads.MapItemMixin",
     "optimizations.sync_loads.RemoveBlockGoalMixin",
     "optimizations.sync_loads.SleepInBedMixin",
-    "optimizations.tickets.ChunkGeneratorMixin",
-    "optimizations.tickets.NaturalSpawnerMixin",
     "optimizations.ticking.chunk.cache.ServerChunkCacheMixin",
     "optimizations.ticking.chunk.random.LevelChunkMixin",
     "optimizations.ticking.chunk.random.LiquidBlockMixin",

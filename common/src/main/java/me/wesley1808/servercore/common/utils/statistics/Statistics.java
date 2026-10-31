@@ -129,7 +129,8 @@ public class Statistics {
         for (ServerLevel level : this.server.getAllLevels()) {
             if (onlyLoaded) {
                 for (ChunkHolder holder : level.getChunkSource().chunkMap.visibleChunkMap.values()) {
-                    if (ChunkManager.hasChunk(level, holder)) {
+                    ChunkPos pos = holder.getPos();
+                    if (ChunkManager.hasChunk(level, pos.x(), pos.z())) {
                         count++;
                     }
                 }

@@ -14,6 +14,7 @@ accessible method net/minecraft/world/level/LocalMobCapCalculator$MobCounts <ini
 
 accessible field net/minecraft/server/level/ChunkMap visibleChunkMap Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 accessible field net/minecraft/world/level/NaturalSpawner$SpawnState localMobCapCalculator Lnet/minecraft/world/level/LocalMobCapCalculator;
+accessible field net/minecraft/world/level/NaturalSpawner MAGIC_NUMBER I
 accessible field net/minecraft/world/level/LocalMobCapCalculator playerMobCounts Ljava/util/Map;
 accessible field net/minecraft/world/level/LocalMobCapCalculator$MobCounts counts Lit/unimi/dsi/fastutil/objects/Object2IntMap;
 accessible field net/minecraft/world/level/Level blockEntityTickers Ljava/util/List;
