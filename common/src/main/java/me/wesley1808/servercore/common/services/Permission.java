@@ -14,6 +14,7 @@ public class Permission {
     public static final PermNode COMMAND_ROOT = register("command.root", user -> true);
     public static final PermNode COMMAND_STATUS = register("command.status", user -> true);
     public static final PermNode COMMAND_MOBCAPS = register("command.mobcaps", user -> true);
+    public static final PermNode COMMAND_MOBCAPS_GLOBAL = register("command.mobcaps.global", user -> true);
     public static final PermNode COMMAND_CONFIG = register("command.config", user -> user.hasPermission(Permissions.COMMANDS_GAMEMASTER));
     public static final PermNode COMMAND_SETTINGS = register("command.settings", user -> user.hasPermission(Permissions.COMMANDS_GAMEMASTER));
     public static final PermNode COMMAND_STATISTICS = register("command.statistics", user -> user.hasPermission(Permissions.COMMANDS_GAMEMASTER));

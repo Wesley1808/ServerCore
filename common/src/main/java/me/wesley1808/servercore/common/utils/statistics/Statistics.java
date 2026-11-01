@@ -5,12 +5,12 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.interfaces.IMinecraftServer;
-import me.wesley1808.servercore.common.utils.ChunkManager;
 import me.wesley1808.servercore.common.utils.statistics.entry.EntityStatisticEntry;
 import me.wesley1808.servercore.common.utils.statistics.entry.StatisticEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ChunkLevel;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -18,6 +18,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.TickingBlockEntity;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -124,13 +125,14 @@ public class Statistics {
         return list;
     }
 
-    public int getChunkCount(boolean onlyLoaded) {
+    public int getChunkCount(ChunkStatus status) {
+        int targetTickLevel = ChunkLevel.byStatus(status);
         int count = 0;
+
         for (ServerLevel level : this.server.getAllLevels()) {
-            if (onlyLoaded) {
+            if (status != ChunkStatus.EMPTY) {
                 for (ChunkHolder holder : level.getChunkSource().chunkMap.visibleChunkMap.values()) {
-                    ChunkPos pos = holder.getPos();
-                    if (ChunkManager.hasChunk(level, pos.x(), pos.z())) {
+                    if (holder.getTicketLevel() <= targetTickLevel) {
                         count++;
                     }
                 }

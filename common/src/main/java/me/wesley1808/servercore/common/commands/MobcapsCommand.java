@@ -28,6 +28,7 @@ public class MobcapsCommand {
                     .requires(Permission.require(Permission.COMMAND_MOBCAPS))
                     .executes(ctx -> mobcaps(ctx.getSource(), false))
                     .then(literal("global")
+                            .requires(Permission.require(Permission.COMMAND_MOBCAPS_GLOBAL))
                             .executes(ctx -> mobcaps(ctx.getSource(), true))
                     )
             );
@@ -36,17 +37,20 @@ public class MobcapsCommand {
 
     private static int mobcaps(CommandSourceStack source, boolean global) {
         CommandConfig config = Config.get().commands();
+        ServerPlayer player = source.getPlayer();
+        boolean isGlobal = global || player == null;
+
         source.sendSuccess(() -> {
             MutableComponent component = Component.empty();
 
-            Component title = Formatter.parse("<c:#tertiary>Mobcaps <c:#primary>(<c:#tertiary>%s</c>)".formatted(
+            Component title = Formatter.parse("<c:#tertiary>%s Mobcaps <c:#primary>(<c:#tertiary>%s</c>)".formatted(
+                    isGlobal ? "Global" : "Local",
                     DynamicSetting.MOBCAP_PERCENTAGE.getFormattedValue()
             ), source.getServer());
 
             Formatter.addLines(component, 16, config.primaryValue(), title);
 
-            ServerPlayer player = source.getPlayer();
-            if (global || player == null) {
+            if (isGlobal) {
                 appendGlobalMobcaps(source, component);
             } else {
                 appendPerPlayerMobcaps(player, component);

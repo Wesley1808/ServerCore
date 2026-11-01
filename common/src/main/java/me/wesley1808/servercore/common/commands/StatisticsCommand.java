@@ -21,6 +21,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.TickingBlockEntity;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -91,7 +92,7 @@ public class StatisticsCommand {
             ), source.getServer()));
 
             component.append(Formatter.parse("\n<dark_gray>» <c:#primary>Total chunk count: <c:#secondary>%d".formatted(
-                    statistics.getChunkCount(true)
+                    statistics.getChunkCount(ChunkStatus.FULL)
             ), source.getServer()));
 
             component.append(Formatter.parse("\n<dark_gray>» <c:#primary>Total entity count: <c:#secondary>%d".formatted(

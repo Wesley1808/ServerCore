@@ -10,6 +10,7 @@ import me.wesley1808.servercore.common.dynamic.DynamicSetting;
 import me.wesley1808.servercore.common.utils.statistics.Statistics;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 
 import java.time.Duration;
 import java.util.Objects;
@@ -50,7 +51,8 @@ public class PlaceHolders {
         register("chunk_count", (ctx, arg) -> {
             Statistics statistics = Statistics.getInstance(ctx.server());
             boolean onlyLoaded = Objects.equals(arg, "loaded");
-            return cachedValue(onlyLoaded ? "chunk_count_loaded" : "chunk_count", () -> String.valueOf(statistics.getChunkCount(onlyLoaded)));
+            ChunkStatus status = onlyLoaded ? ChunkStatus.FULL : ChunkStatus.EMPTY;
+            return cachedValue(onlyLoaded ? "chunk_count_loaded" : "chunk_count", () -> String.valueOf(statistics.getChunkCount(status)));
         });
 
         register("entity_count", (ctx, arg) -> {
