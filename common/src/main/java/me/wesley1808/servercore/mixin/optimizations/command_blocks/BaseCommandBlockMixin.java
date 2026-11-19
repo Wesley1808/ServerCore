@@ -1,11 +1,11 @@
 package me.wesley1808.servercore.mixin.optimizations.command_blocks;
 
-import com.mojang.brigadier.ParseResults;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.ParseBox;
+import net.minecraft.commands.ParseContext;
 import net.minecraft.world.level.BaseCommandBlock;
 import net.minecraft.world.level.storage.ValueInput;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,8 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = BaseCommandBlock.class, priority = 2000)
 public class BaseCommandBlockMixin {
     @Unique
-    @Nullable
-    private ParseResults<CommandSourceStack> servercore$parsed;
+    private ParseBox.Result servercore$parsed;
 
     @Redirect(
             method = "performCommand",
@@ -38,10 +37,10 @@ public class BaseCommandBlockMixin {
     private void servercore$useCachedParseResults(Commands commands, CommandSourceStack sender, String command) {
         String cmd = command.startsWith("/") ? command.substring(1) : command;
         if (this.servercore$parsed == null) {
-            this.servercore$parsed = commands.getDispatcher().parse(cmd, sender);
-            commands.performCommand(this.servercore$parsed, cmd);
+            this.servercore$parsed = commands.parseBox().parse(command, ParseContext.of(sender));
+            Commands.performCommand(sender, this.servercore$parsed, cmd);
         } else {
-            commands.performCommand(Commands.mapSource(this.servercore$parsed, (s) -> sender), cmd);
+            Commands.performCommand(sender, this.servercore$parsed, cmd);
         }
     }
 

@@ -14,6 +14,7 @@ import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerCommonPacketListenerImpl;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -88,12 +89,10 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
             @Local(name = "targetX") double targetX,
             @Local(name = "targetY") double targetY,
             @Local(name = "targetZ") double targetZ,
-            @Local(name = "startX") double startX,
-            @Local(name = "startY") double startY,
-            @Local(name = "startZ") double startZ
+            @Local(name = "start") Vec3 start
     ) {
-        if (this.servercore$mayPreventPlayerMovement && this.servercore$shouldPreventMovement(level, this.player, startX, startZ, targetX, targetY, targetZ)) {
-            this.teleport(startX, startY, startZ, targetYRot, targetXRot);
+        if (this.servercore$mayPreventPlayerMovement && this.servercore$shouldPreventMovement(level, this.player, start.x, start.z, targetX, targetY, targetZ)) {
+            this.teleport(start.x, start.y, start.z, targetYRot, targetXRot);
             ci.cancel();
         }
     }

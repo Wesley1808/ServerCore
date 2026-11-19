@@ -45,7 +45,6 @@
     "features.mob_spawning.NetherPortalBlockMixin",
     "features.mob_spawning.ZombieMixin",
     "features.ticking.VillagerMixin",
-    "optimizations.biome_lookups.NaturalSpawnerMixin",
     "optimizations.command_blocks.BaseCommandBlockMixin",
     "optimizations.misc.PathFinderMixin",
     "optimizations.sync_loads.BeeMixin",

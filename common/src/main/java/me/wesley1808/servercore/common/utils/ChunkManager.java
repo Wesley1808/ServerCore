@@ -1,19 +1,15 @@
 package me.wesley1808.servercore.common.utils;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.QuartPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -51,15 +47,6 @@ public class ChunkManager {
 
     public static boolean hasChunk(LevelAccessor level, int chunkX, int chunkZ) {
         return getChunkNow(level, chunkX, chunkZ) != null;
-    }
-
-    @NotNull
-    public static Holder<Biome> getRoughBiome(LevelAccessor level, BlockPos pos) {
-        ChunkAccess chunk = getChunkNow(level, pos);
-        int quartX = QuartPos.fromBlock(pos.getX());
-        int quartY = QuartPos.fromBlock(pos.getY());
-        int quartZ = QuartPos.fromBlock(pos.getZ());
-        return chunk != null ? chunk.getNoiseBiome(quartX, quartY, quartZ) : level.getUncachedNoiseBiome(quartX, quartY, quartZ);
     }
 
     public static boolean areChunksLoadedForMove(LevelAccessor level, Entity entity, double toX, double toZ) {

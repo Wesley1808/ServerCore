@@ -39,15 +39,6 @@ public interface OptimizationConfig extends Copyable {
     boolean optimizeCommandBlocks();
 
     @Order(4)
-    @ConfKey("fast-biome-lookups")
-    @DefaultBoolean(false)
-    @ConfComments({
-            "Can significantly reduce time spent on mobspawning, but isn't as accurate as vanilla on biome borders.",
-            "This may cause mobs from another biome to spawn a few blocks across a biome border (this does not affect structure spawning!)."
-    })
-    boolean fastBiomeLookups();
-
-    @Order(5)
     @ConfKey("cancel-duplicate-fluid-ticks")
     @DefaultBoolean(false)
     @ConfComments({

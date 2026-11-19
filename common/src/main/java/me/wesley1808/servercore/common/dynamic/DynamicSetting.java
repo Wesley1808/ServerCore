@@ -3,7 +3,6 @@ package me.wesley1808.servercore.common.dynamic;
 import me.wesley1808.servercore.common.config.Config;
 import me.wesley1808.servercore.common.config.data.dynamic.Setting;
 import me.wesley1808.servercore.common.utils.Environment;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -62,7 +61,7 @@ public enum DynamicSetting {
     public static void initDefaultValues(DynamicManager manager) {
         Map<DynamicSetting, Integer> defaultValues = Config.get().dynamic().defaultValues();
         defaultValues.forEach((setting, value) -> {
-            int clampedValue = Mth.clamp(value, setting.minimumBound, setting.maximumBound);
+            int clampedValue = Math.clamp(value, setting.minimumBound, setting.maximumBound);
             setting.set(clampedValue, manager);
         });
 

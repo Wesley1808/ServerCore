@@ -12,49 +12,46 @@ import me.wesley1808.servercore.common.services.Permission;
 import me.wesley1808.servercore.common.services.platform.PlatformHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.IntegerArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-
-import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
-import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
-import static net.minecraft.commands.Commands.argument;
-import static net.minecraft.commands.Commands.literal;
 
 public class ServerCoreCommand {
     private static final String VALUE = "value";
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        var node = literal("servercore").requires(Permission.require(Permission.COMMAND_ROOT));
+        var node = Commands.literal("servercore").requires(Permission.require(Permission.COMMAND_ROOT));
 
         node.then(reloadConfig());
         node.then(settings());
 
         if (Config.get().commands().statusCommandEnabled()) {
-            node.then(literal("status")
+            node.then(Commands.literal("status")
                     .requires(Permission.require(Permission.COMMAND_STATUS))
                     .executes(ctx -> getStatus(ctx.getSource()))
             );
         }
 
-        dispatcher.register(node);
-        dispatcher.register(literal("sc")
+        var commandNode = dispatcher.register(node);
+        dispatcher.register(Commands.literal("sc")
                 .requires(Permission.require(Permission.COMMAND_ROOT))
-                .redirect(node.build())
+                .redirect(commandNode)
         );
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> reloadConfig() {
-        return literal("reload")
+        return Commands.literal("reload")
                 .requires(Permission.require(Permission.COMMAND_CONFIG))
                 .executes(ctx -> reload(ctx.getSource()));
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> settings() {
-        var settings = literal("settings").requires(Permission.require(Permission.COMMAND_SETTINGS));
+        var settings = Commands.literal("settings").requires(Permission.require(Permission.COMMAND_SETTINGS));
         for (DynamicSetting setting : DynamicSetting.values()) {
-            settings.then(literal(setting.name().toLowerCase())
-                    .then(argument(VALUE, integer(setting.getLowerBound(), setting.getUpperBound()))
-                            .executes(ctx -> modifyDynamic(ctx.getSource(), getInteger(ctx, VALUE), setting))
+            settings.then(Commands.literal(setting.name().toLowerCase())
+                    .then(Commands.argument(VALUE, IntegerArgument.integer(setting.getLowerBound(), setting.getUpperBound()))
+                            .executes(ctx -> modifyDynamic(ctx.getSource(), IntegerArgument.getInteger(ctx, VALUE), setting))
                     )
             );
         }

@@ -39,10 +39,6 @@ public class ServerCoreMixinPlugin implements IMixinConfigPlugin {
             shouldApply &= config.reduceSyncLoads();
         }
 
-        if (path.startsWith("optimizations.biome_lookups")) {
-            shouldApply &= config.fastBiomeLookups();
-        }
-
         if (path.startsWith("optimizations.command_blocks")) {
             shouldApply &= config.optimizeCommandBlocks();
         }

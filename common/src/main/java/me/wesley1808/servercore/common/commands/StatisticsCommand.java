@@ -14,6 +14,9 @@ import me.wesley1808.servercore.common.utils.statistics.StatisticType;
 import me.wesley1808.servercore.common.utils.statistics.Statistics;
 import me.wesley1808.servercore.common.utils.statistics.entry.StatisticEntry;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.IntegerArgument;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -27,44 +30,37 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
-import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
-import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
-import static net.minecraft.commands.Commands.argument;
-import static net.minecraft.commands.Commands.literal;
-import static net.minecraft.commands.arguments.EntityArgument.getPlayer;
-import static net.minecraft.commands.arguments.EntityArgument.player;
-
 public class StatisticsCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        var statistics = literal("statistics").requires(Permission.require(Permission.COMMAND_STATISTICS));
+        var statistics = Commands.literal("statistics").requires(Permission.require(Permission.COMMAND_STATISTICS));
         statistics.executes(ctx -> displayOverview(ctx.getSource()));
 
         for (StatisticType type : StatisticType.values()) {
-            statistics.then(literal(type.getCommandFormat())
+            statistics.then(Commands.literal(type.getCommandFormat())
                     .executes(ctx -> display(ctx, type, 1))
-                    .then(argument("page", integer(1))
-                            .executes(ctx -> display(ctx, type, getInteger(ctx, "page")))
+                    .then(Commands.argument("page", IntegerArgument.integer(1))
+                            .executes(ctx -> display(ctx, type, IntegerArgument.getInteger(ctx, "page")))
                     )
 
-                    .then(literal("byType")
+                    .then(Commands.literal("byType")
                             .executes(ctx -> display(ctx, type, GroupBy.TYPE, 1))
-                            .then(argument("page", integer(1))
-                                    .executes(ctx -> display(ctx, type, GroupBy.TYPE, getInteger(ctx, "page")))
+                            .then(Commands.argument("page", IntegerArgument.integer(1))
+                                    .executes(ctx -> display(ctx, type, GroupBy.TYPE, IntegerArgument.getInteger(ctx, "page")))
                             )
 
-                            .then(argument("player", player())
-                                    .executes(ctx -> display(ctx, type, 1, getPlayer(ctx, "player")))
-                                    .then(argument("page", integer(1))
-                                            .executes(ctx -> display(ctx, type, getInteger(ctx, "page"), getPlayer(ctx, "player")))
+                            .then(Commands.argument("player", EntityArgument.player())
+                                    .executes(ctx -> display(ctx, type, 1, EntityArgument.getPlayer(ctx, "player")))
+                                    .then(Commands.argument("page", IntegerArgument.integer(1))
+                                            .executes(ctx -> display(ctx, type, IntegerArgument.getInteger(ctx, "page"), EntityArgument.getPlayer(ctx, "player")))
                                     )
                             )
                     )
 
-                    .then(literal("byPlayer")
+                    .then(Commands.literal("byPlayer")
                             .executes(ctx -> display(ctx, type, GroupBy.PLAYER, 1))
-                            .then(argument("page", integer(1))
-                                    .executes(ctx -> display(ctx, type, GroupBy.PLAYER, getInteger(ctx, "page")))
+                            .then(Commands.argument("page", IntegerArgument.integer(1))
+                                    .executes(ctx -> display(ctx, type, GroupBy.PLAYER, IntegerArgument.getInteger(ctx, "page")))
                             )
                     )
             );
