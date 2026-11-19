@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.21]
+
+### Added
+
+- Added /mobcaps global command to view the global mobcap in your current dimension.
+
 ## [1.5.20]
 
 ### Added

@@ -88,9 +88,9 @@ A setting that allows you to reduce the distance at which chunks can tick (mob s
 
 - /servercore status - Gives information about the current dynamic settings.
 
-- /mobcaps - Displays current per-player mobcaps for each spawn group.
+- /mobcaps \[global] - Displays current mobcaps for each spawn group.
 
-- /statistics entities | block-entities - Displays performance related statistics.
+- /statistics \[entities | block-entities] - Displays performance related statistics.
 
 ___
 
